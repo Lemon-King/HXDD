@@ -5,11 +5,11 @@ HXDD: A Heretic and Hexen Wad Merging Tool
 HXDD creates a singular ipk3 from Heretic and Hexen's iWADs.
 You'll find all four classes, Heretic's Episodes, Hexen, and DeathKings of the Dark Citadel are all available in episode selection.
 
-###Required Software
+### Required Software
 * Java
 * A copy of Heretic, Hexen, DeathKings, and GZDoom
 
-####Usage
+#### Usage
 From the folder you have HXDD.jar unzipped to, copy the following files into the folder named **wads**.
 * heretic.wad
 * hexen.wad
