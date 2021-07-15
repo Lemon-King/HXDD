@@ -18,6 +18,18 @@
 *.zip
 *.tar.gz
 *.rar
+*.ipk3
+*.pdn
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# local files
+.idea/
+mtrop/
+libs/
+out/
+ipk3/
+wads/
+target/
+Temporary/

@@ -1,0 +1,91 @@
+
+// Heretic Splash
+splash Water
+{
+   smallclass      WaterSplashBase
+   smallclip      12
+   smallsound      world/drip
+
+   baseclass      WaterSplashBase
+   chunkclass      WaterSplash
+   chunkxvelshift   8
+   chunkyvelshift   8
+   chunkzvelshift   8
+   chunkbasezvel   2
+   sound         world/watersplash
+   noalert
+}
+
+splash Sludge
+{
+   smallclass      SludgeSplash
+   smallclip      12
+   smallsound      world/sludgegloop
+
+   baseclass      SludgeSplash
+   chunkclass      SludgeChunk
+   chunkxvelshift   8
+   chunkyvelshift   8
+   chunkzvelshift   8
+   chunkbasezvel   1
+   sound         world/sludgegloop
+   noalert
+}
+
+splash Lava
+{
+   smallclass      LavaSplash
+   smallclip      12
+   smallsound      world/lavasizzle
+
+   baseclass      LavaSplash
+   chunkclass      LavaSmoke
+   chunkxvelshift   -1
+   chunkyvelshift   -1
+   chunkzvelshift   7
+   chunkbasezvel   1
+   sound         world/lavasizzle
+   noalert
+}
+
+// Heretic Flats
+terrain LavaHeretic
+{
+	splash			Lava
+	footclip		10
+	liquid
+}
+
+// Hexen Flats
+terrain LavaHexen
+{
+	splash			Lava
+	footclip		10
+	liquid
+	damageamount	5
+	damagetype		lava
+	damagetimemask	31
+	damageonland
+}
+
+terrain Ice
+{
+	// A friction > 1 is actually less friction
+	friction 1.70824008138
+
+	// Ice doesn't actually do any damage. This is just so that things
+	// that freeze to death take longer to melt on this terrain.
+	damagetype ice
+}
+
+
+floor FLTWAWA1 Water
+floor FLTFLWW1 Water
+floor FLTLAVA1 Lava
+floor FLATHUH1 Lava
+floor FLTSLUD1 Sludge
+floor FLAT517 Ice
+floor X_005 Water
+floor X_001 LavaHexen
+floor X_009 Sludge
+floor F_033 Ice

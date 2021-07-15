@@ -1,0 +1,517 @@
+
+// --- Cluster 1 ---
+
+map MAP01 "WINNOWING HALL"
+{
+	next = "MAP02"
+	cluster = 7
+	sky1 = "SKY2X", 0
+	sky2 = "SKY3X", 0
+	lightning
+	cdtrack = 13
+	NoIntermission
+}
+
+map MAP02 "SEVEN PORTALS"
+{
+	next = "MAP03"
+	cluster = 7
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 2
+	NoIntermission
+}
+
+map MAP03 "GUARDIAN OF ICE"
+{
+	next = "MAP04"
+	cluster = 7
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 22
+	NoIntermission
+}
+
+map MAP04 "GUARDIAN OF FIRE"
+{
+	next = "MAP05"
+	cluster = 7
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 15
+	NoIntermission
+}
+
+map MAP05 "GUARDIAN OF STEEL"
+{
+	next = "MAP06"
+	cluster = 7
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 9
+	NoIntermission
+}
+
+map MAP06 "BRIGHT CRUCIBLE"
+{
+	next = "MAP07"
+	cluster = 7
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 21
+	NoIntermission
+}
+
+// --- Cluster 2 ---
+
+map MAP13 "SHADOW WOOD"
+{
+	next = "MAP08"
+	cluster = 8
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY1X", 0.3125
+	doublesky 
+	cdtrack = 8
+	NoIntermission
+}
+
+map MAP08 "DARKMERE"
+{
+	next = "MAP09"
+	cluster = 8
+	sky1 = "SKYFOG2", 0.078125
+	sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = fogmap
+	cdtrack = 14
+	NoIntermission
+}
+
+map MAP09 "CAVES OF CIRCE"
+{
+	next = "MAP10"
+	cluster = 8
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY1X", 0.3125
+	doublesky 
+	cdtrack = 20
+	NoIntermission
+}
+
+map MAP10 "WASTELANDS"
+{
+	next = "MAP11"
+	cluster = 8
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY1X", 0.3125
+	doublesky 
+	cdtrack = 6
+	NoIntermission
+}
+
+map MAP11 "SACRED GROVE"
+{
+	next = "MAP12"
+	cluster = 8
+	sky1 = "SKYFOG2", 0.078125
+	sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = fogmap
+	cdtrack = 5
+	NoIntermission
+}
+
+map MAP12 "HYPOSTYLE"
+{
+	next = "MAP13"
+	cluster = 8
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY1X", 0.3125
+	doublesky 
+	cdtrack = 16
+	NoIntermission
+}
+
+// --- Cluster 3 ---
+
+map MAP27 "HERESIARCH'S SEMINARY"
+{
+	next = "MAP14"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 19
+	NoIntermission
+}
+
+map MAP28 "DRAGON CHAPEL"
+{
+	next = "MAP15"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 17
+	NoIntermission
+}
+
+map MAP30 "GRIFFIN CHAPEL"
+{
+	next = "MAP16"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 10
+	NoIntermission
+}
+
+map MAP31 "DEATHWIND CHAPEL"
+{
+	next = "MAP17"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 18
+	NoIntermission
+}
+
+map MAP32 "ORCHARD OF LAMENTATIONS"
+{
+	next = "MAP18"
+	cluster = 9
+	sky1 = "SKYFOG2", 0.078125
+	sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = fogmap
+	cdtrack = 22
+	NoIntermission
+}
+
+map MAP33 "SILENT REFECTORY"
+{
+	next = "MAP19"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 21
+	NoIntermission
+}
+
+map MAP34 "WOLF CHAPEL"
+{
+	next = "MAP20"
+	cluster = 9
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	cdtrack = 14
+	NoIntermission
+}
+
+// --- Cluster 4 ---
+
+map MAP21 "FORSAKEN OUTPOST"
+{
+	next = "MAP21"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 20
+	NoIntermission
+}
+
+map MAP22 "CASTLE OF GRIEF"
+{
+	next = "MAP22"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 12
+	NoIntermission
+}
+
+map MAP23 "GIBBET"
+{
+	next = "MAP23"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 15
+	NoIntermission
+}
+
+map MAP24 "EFFLUVIUM"
+{
+	next = "MAP24"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 8
+	NoIntermission
+}
+
+map MAP25 "DUNGEONS"
+{
+	next = "MAP25"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 19
+	NoIntermission
+}
+
+map MAP26 "DESOLATE GARDEN"
+{
+	next = "MAP26"
+	cluster = 10
+	sky1 = "SKY2X", 0.1953125
+	sky2 = "SKY3X", 0.1953125
+	lightning 
+	cdtrack = 3
+	NoIntermission
+}
+
+// --- Cluster 5 ---
+
+map MAP35 "NECROPOLIS"
+{
+	next = "MAP27"
+	cluster = 5
+	sky1 = "SKY2X", 0.15625
+	sky2 = "SKY3X", 0.15625
+	lightning 
+	cdtrack = 16
+	NoIntermission
+}
+
+map MAP36 "ZEDEK'S TOMB"
+{
+	next = "MAP28"
+	cluster = 5
+	sky1 = "SKY2X", 0.15625
+	sky2 = "SKY3X", 0.15625
+	lightning 
+	cdtrack = 10
+	NoIntermission
+}
+
+map MAP37 "MENELKIR'S TOMB"
+{
+	next = "MAP29"
+	cluster = 5
+	sky1 = "SKY4X", 0.15625
+	sky2 = "SKY4X", 0.15625
+	cdtrack = 11
+	NoIntermission
+}
+
+map MAP38 "TRADUCTUS' TOMB"
+{
+	next = "MAP30"
+	cluster = 5
+	sky1 = "SKY2X", 0.15625
+	sky2 = "SKY3X", 0.15625
+	lightning 
+	cdtrack = 9
+	NoIntermission
+}
+
+map MAP39 "VIVARIUM"
+{
+	next = "MAP31"
+	cluster = 5
+	sky1 = "SKY2X", 0.15625
+	sky2 = "SKY3X", 0.15625
+	lightning 
+	cdtrack = 17
+	NoIntermission
+}
+
+map MAP40 "DARK CRUCIBLE"
+{
+	next = "EndChess"
+	cluster = 5
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	cdtrack = 2
+	NoIntermission
+}
+
+// --- Miscellaneous maps ---
+
+map MAP07 "SHADOW WOOD"
+{
+	warptrans = 70
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY1X", 0.3125
+	doublesky
+	NoIntermission
+}
+
+map MAP14 "SWAMP DEMO"
+{
+	warptrans = 71
+	sky1 = "SKYFOG2", 0.078125
+	sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = fogmap
+	NoIntermission
+}
+
+map MAP29 "NADA"
+{
+	warptrans = 72
+	sky1 = "SKYWALL2", 0.2734375
+	sky2 = "SKY4X", 0
+	doublesky 
+	NoIntermission
+}
+
+map MAP42 "ERIC'S WHIRLWIND O' DEATH"
+{
+	sky1 = "SKY2X", 0
+	sky2 = "SKY3X", 0
+	lightning 
+	NoIntermission
+}
+
+map MAP43 "MAYA"
+{
+	sky1 = "SKY4X", 0
+	sky2 = "SKY4X", 0
+	NoIntermission
+}
+
+map MAP50 "THE BADLANDS"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP51 "CAVES OF ASCENSION"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP52 "LOWER CRYPTS"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP53 "THE HYPOSTYLE HALL"
+{
+	sky1 = "SKY4X", 0.1953125
+	sky2 = "SKY4X", 0.1953125
+	NoIntermission
+}
+
+map MAP54 "THE SANCTORIUM"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP55 "THE ATHENAEUM"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP56 "THE CLERIC'S CITADEL"
+{
+	sky1 = "SKYWALL", 0
+	sky2 = "SKY4X", 0.1953125
+	doublesky 
+	NoIntermission
+}
+
+map MAP60 "PROGRAMMER MAP"
+{
+	sky1 = "SKY1X", 0.3125
+	NoIntermission
+}
+
+map MAP90 "BGOKEY"
+{
+	sky1 = "SKY1X", 0
+	NoIntermission
+}
+
+map MAP92 "PAUL MAP"
+{
+	sky1 = "SKY1X", 0.078125
+	NoIntermission
+}
+
+map MAP93 "PAUL MAP2"
+{
+	sky1 = "SKY1X", 0.078125
+	NoIntermission
+}
+
+map MAP95 "CJR@RAVENSOFT.COM"
+{
+	sky1 = "SKY1X", 0
+	NoIntermission
+}
+
+map MAP96 "SOUND DEVELOPMENT MAP"
+{
+	sky1 = "SKY1X", 0
+	NoIntermission
+}
+
+// Clusters
+
+cluster 7
+{
+	hub
+	exittext = "clus7msg"
+	exittextislump
+	pic = "interpic"
+}
+
+cluster 8
+{
+	hub
+	exittext = "clus8msg"
+	exittextislump
+	pic = "interpic"
+}
+
+cluster 9
+{
+	hub
+	exittext = "clus9msg"
+	exittextislump
+	pic = "interpic"
+}
+
+cluster 10
+{
+	hub
+	exittext = "clus10msg"
+	exittextislump
+	pic = "interpic"
+}
