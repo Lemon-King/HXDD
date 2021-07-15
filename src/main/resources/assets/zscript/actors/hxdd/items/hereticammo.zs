@@ -1,4 +1,7 @@
 
+//
+//  Bag of Holding
+//
 class MultiClassBagOfHolding : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
