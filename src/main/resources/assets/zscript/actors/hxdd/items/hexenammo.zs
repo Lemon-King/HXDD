@@ -55,7 +55,7 @@ class HXDDRandomMana3 : RandomSpawner {
     Default {
         DropItem "PhoenixRodAmmo";
         DropItem "PhoenixRodHefty";
-        DropItem "MaceAmmoAmmo";
-        DropItem "MaceAmmoHefty";
+        DropItem "MaceAmmo";
+        DropItem "MaceHefty";
     }
 }
