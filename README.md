@@ -9,7 +9,7 @@ You'll find all four classes, Heretic's Episodes, Hexen, and DeathKings of the D
 * Java
 * A copy of Heretic, Hexen, DeathKings, and GZDoom
 
-#### Usage
+### Usage
 From the folder you have HXDD.jar unzipped to, copy the following files into the folder named **wads**.
 * heretic.wad
 * hexen.wad
@@ -32,3 +32,6 @@ compatibility between games.
 GZDoom's pk3 assets are also processed too, due to filtering rules between Heretic and Hexen.
 
 Once complete copy the result **HXXD.ipk3** to your GZDoom iwad folder.
+
+### Libraries
+HXDD makes use of [DoomStruct](https://github.com/MTrop/DoomStruct) by Mtrop and [zt-zip](https://github.com/zeroturnaround/zt-zip) by ZeroTurnaround.
