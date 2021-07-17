@@ -126,7 +126,9 @@ public class ZipAssets {
         try {
             File fileOutput = new File(path);
             Picture p = new Picture();
-            p.readBytes(in);
+
+            byte[] bytesGraphic = GetBytesFromInputStream(in);
+            p.fromBytes(bytesGraphic);
 
             PNGPicture pngImg = GraphicUtils.createPNGImage(p, pal);
             int offsetX = p.getOffsetX();
@@ -144,7 +146,8 @@ public class ZipAssets {
     private void ExtractAsFullscreen(String path, InputStream in, Palette pal, int[] dimensions) {
         try {
             File fileOutput = new File(path);
-            byte[] bytesGraphic = in.readAllBytes();
+
+            byte[] bytesGraphic = GetBytesFromInputStream(in);
 
             Picture p = new Picture();
             p.setDimensions(dimensions[0], dimensions[1]);
@@ -156,5 +159,22 @@ public class ZipAssets {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private byte[] GetBytesFromInputStream(InputStream in) {
+        byte[] bytes = new byte[0];
+        try {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[4];
+            while ((nRead = in.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            bytes = buffer.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bytes;
     }
 }
