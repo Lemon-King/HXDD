@@ -48,9 +48,7 @@ public class Settings {
 
         // Per Wad Settings
         p_config.put("MapNameHeader_heretic", "");
-
         p_config.put("MapNameHeader_hexen", "");
-
         p_config.put("MapNameHeader_hexdd", "DD_");
 
 

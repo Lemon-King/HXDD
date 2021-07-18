@@ -3,6 +3,7 @@ package lemon.hxdd;
 import net.mtrop.doom.Wad;
 import net.mtrop.doom.WadBuffer;
 import net.mtrop.doom.WadFile;
+import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.util.MapUtils;
 import org.zeroturnaround.zip.NameMapper;
 import org.zeroturnaround.zip.ZipUtil;
@@ -78,7 +79,7 @@ public class PK3Builder {
     private void OrganizeAssets() {
         System.out.println("Organizing assets");
 
-        // Renaming conflicting sprite names: https://zdoom.org/wiki/Sprite#Conflicting_sprite_names
+        // Rename conflicting sprite names: https://zdoom.org/wiki/Sprite#Conflicting_sprite_names
         this.organizedFiles.get("heretic").BatchRename("sprites", "BLOD", "BLUD", "startsWith");
         this.organizedFiles.get("heretic").BatchRename("sprites", "HEAD", "LICH", "startsWith");
 
@@ -109,7 +110,7 @@ public class PK3Builder {
         this.organizedFiles.get("hexdd").BatchRename("lumps", "CLUS1MSG", "CLUS11MSG", "equals");
         this.organizedFiles.get("hexdd").BatchRename("lumps", "CLUS2MSG", "CLUS12MSG", "equals");
 
-        // Remove heretic Sky and copy Hexen Sky in its place.
+        // Remove Heretic Sky and copy Hexen Sky in its place.
         this.organizedFiles.get("heretic").BatchRemove("flats", "F_SKY1", "equals");
         this.organizedFiles.get("hexen").CopyFile("flats", "F_SKY", "F_SKY1");
 
@@ -324,13 +325,14 @@ public class PK3Builder {
                 return name;
             }
         });
+        CreateHexenPalettePK3();
         try {
             System.out.println("Cleaning up temporary data");
             FileUtils.deleteDirectory(fileTemporary);
+            System.out.println("\nComplete! Copy HXDD.ipk3 to your GZDOOM wad folder and select it from the start menu!");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("\nComplete! Copy HXDD.ipk3 to your GZDOOM wad folder and select it from the start menu!");
     }
 
     private void CleanTemporaryFolder() {
@@ -338,10 +340,26 @@ public class PK3Builder {
             String pathTemporary = (String) Settings.getInstance().Get("PathTemporary");
             File fileTemporary = new File(pathTemporary);
             if (fileTemporary.exists()) {
-                FileUtils.cleanDirectory(new File(pathTemporary));
+                FileUtils.cleanDirectory(fileTemporary);
             }
         } catch (IOException e) {
             //e.printStackTrace();
+        }
+    }
+
+    // Create Hexen focused palette PK3 for wads using palette textures
+    private void CreateHexenPalettePK3() {
+        String pathSourceFiles = (String) Settings.getInstance().Get("PathSourceWads");
+        try {
+            WadFile wadFile = new WadFile(pathSourceFiles + "hexen.wad");
+            Palette pal = wadFile.getDataAs("playpal", Palette.class);
+            File pk3File = new File("./hxdd_hexen_palette.pk3");
+            ZipUtil.createEmpty(pk3File);
+            ZipUtil.addEntry(pk3File, "PLAYPAL.lmp", pal.toBytes());
+            wadFile.close();
+            System.out.println("Created Hexen Palette PK3");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
