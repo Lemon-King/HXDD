@@ -35,8 +35,8 @@ public class Settings {
 
     private void SetDefaults() {
         // General Settings
-        p_config.put("PathSourceWads", ".\\wads\\");
-        p_config.put("PathTemporary", ".\\temp\\");
+        p_config.put("PathSourceWads", "./wads/");
+        p_config.put("PathTemporary", "./temp/");
 
         p_config.put("MenuTheme", "heretic");
         //p_config.put("StartupMusic", "hexen");

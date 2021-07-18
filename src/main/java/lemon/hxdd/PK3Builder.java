@@ -213,7 +213,7 @@ public class PK3Builder {
                 Wad wad = new WadFile(wadPath + wadName + ".wad");
 
                 System.out.println("Exporting Maps from " + wadName + ".wad");
-                String path = (String) Settings.getInstance().Get("PathTemporary") + "\\maps\\";
+                String path = (String) Settings.getInstance().Get("PathTemporary") + "/maps/";
 
                 String mapSetHeader = (String) Settings.getInstance().Get("MapNameHeader_" + wadName);
 

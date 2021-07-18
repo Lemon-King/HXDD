@@ -34,7 +34,7 @@ public class ZipAssets {
             fileOutputFolder.mkdirs();
         }
 
-        ZipUtil.unpackEntry(new File(wadPath + this.zipFile), input, new File(TemporaryPath + "\\" + output));
+        ZipUtil.unpackEntry(new File(wadPath + this.zipFile), input, new File(TemporaryPath + "/" + output));
     }
 
     byte[] ExtractFileAsData(String path) {
@@ -56,7 +56,7 @@ public class ZipAssets {
                 if (!zipEntry.isDirectory() && zipEntry.getName().startsWith(input)) {
                     String fileName = zipEntry.getName();
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
-                    File fileOutput = new File(TemporaryPath + output + "\\" + cleanedName);
+                    File fileOutput = new File(TemporaryPath + output + "/" + cleanedName);
                     OutputStream outputStream = new FileOutputStream(fileOutput);
                     IOUtils.copy(in, outputStream);
                 }
@@ -98,7 +98,7 @@ public class ZipAssets {
                     }
                     try {
                         if (fileName.contains(".lmp")) {
-                            String path = TemporaryPath + output + "\\" + cleanedName.replace("lmp", "png");
+                            String path = TemporaryPath + output + "/" + cleanedName.replace("lmp", "png");
                             if (graphicDimensions != null) {
                                 ExtractAsFullscreen(path, in, finalPal, graphicDimensions);
                             } else {
@@ -106,7 +106,7 @@ public class ZipAssets {
                             }
                         } else {
                             try {
-                                File fileOutput = new File(TemporaryPath + output + "\\" + cleanedName);
+                                File fileOutput = new File(TemporaryPath + output + "/" + cleanedName);
                                 OutputStream outputStream = new FileOutputStream(fileOutput);
                                 IOUtils.copy(in, outputStream);
                             } catch (IOException fileNotFoundException) {

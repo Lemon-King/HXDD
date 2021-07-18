@@ -90,7 +90,7 @@ public class AssetExtractor {
         this.CreateFolder(path);
 
         try {
-            FileOutputStream fos = new FileOutputStream(path + "\\" + this.mf.outputName.toLowerCase(), false);
+            FileOutputStream fos = new FileOutputStream(path + "/" + this.mf.outputName.toLowerCase(), false);
             fos.write(data);
             fos.close();
         } catch (IOException e) {
@@ -102,7 +102,7 @@ public class AssetExtractor {
         String path = (String) Settings.getInstance().Get("PathTemporary");
         this.CreateFolder(path);
 
-        path = path + "\\" + this.mf.outputName;
+        path = path + "/" + this.mf.outputName;
         try {
             String lumpString = new String(data, Charset.defaultCharset());
             PrintWriter out = new PrintWriter(path);
@@ -117,7 +117,7 @@ public class AssetExtractor {
 
     // Sprites, Patches, and UI Graphics
     private void GraphicsExport(byte[] data, Palette pal) {
-        String path = Settings.getInstance().Get("PathTemporary") + "\\" + this.mf.folder + "\\";
+        String path = Settings.getInstance().Get("PathTemporary") + "/" + this.mf.folder + "/";
         String imagePath = path + this.mf.outputName + ".png";
         this.CreateFolder(path);
 
@@ -146,7 +146,7 @@ public class AssetExtractor {
     }
 
     private void FlatExport(byte[] data, Palette pal) {
-        String path = Settings.getInstance().Get("PathTemporary") + "\\flats\\";
+        String path = Settings.getInstance().Get("PathTemporary") + "/flats/";
         String imagePath = path + this.mf.outputName + ".png";
         this.CreateFolder(path);
 
@@ -169,7 +169,7 @@ public class AssetExtractor {
     }
 
     private void SoundExport() {
-        String path = Settings.getInstance().Get("PathTemporary") + "\\sounds\\";
+        String path = Settings.getInstance().Get("PathTemporary") + "/sounds/";
         this.CreateFolder(path);
 
         Boolean AudioResample = (Boolean) Settings.getInstance().Get("AudioResample");
@@ -212,7 +212,7 @@ public class AssetExtractor {
     }
 
     private void MusicExport() {
-        String path = Settings.getInstance().Get("PathTemporary") + "\\music\\";
+        String path = Settings.getInstance().Get("PathTemporary") + "/music/";
         String filePath = path + mf.outputName;
         this.CreateFolder(path);
         try {
