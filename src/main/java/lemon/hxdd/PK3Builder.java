@@ -34,6 +34,7 @@ public class PK3Builder {
             ExportMaps();
             ActorFactory actors = new ActorFactory();
             actors.Create();
+            actors.CreateEditorNums();
             ExportHXDDFiles();
             Bundle();
         }
