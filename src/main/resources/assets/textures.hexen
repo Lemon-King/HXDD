@@ -1197,10 +1197,10 @@ Texture "SEWER14", 128, 128
 //	Patch "SKY2", 0, 0
 //}
 
-Texture "SKY3", 256, 200
-{
-	Patch "SKY2A", 0, 0
-}
+//Texture "SKY3", 256, 200
+//{
+//	Patch "SKY2A", 0, 0
+//}
 
 //Texture "SKY4", 256, 200
 //{
