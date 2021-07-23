@@ -25,6 +25,8 @@ class HXDDIronlich : Ironlich replaces Ironlich
 	}
 }
 
+// KNIGHT
+
 class HXDDKnight : Knight replaces Knight
 {
 	Default
@@ -33,6 +35,18 @@ class HXDDKnight : Knight replaces Knight
 	}
 }
 
+class HXDDKnightGhost : KnightGhost replaces KnightGhost
+{
+	Default
+	{
+		DropItem "MultiClassCrossbowAmmo", 84, 5;
+	}
+}
+
+// KNIGHT
+
+// MUMMY
+
 class HXDDMummy : Mummy replaces Mummy
 {
 	Default
@@ -40,6 +54,32 @@ class HXDDMummy : Mummy replaces Mummy
 		DropItem "MultiClassGoldWandAmmo", 84, 3;
 	}
 }
+
+class HXDDMummyLeader : MummyLeader replaces MummyLeader
+{
+	Default
+	{
+		DropItem "MultiClassGoldWandAmmo", 84, 3;
+	}
+}
+
+class HXDDMummyGhost : MummyGhost replaces MummyGhost
+{
+	Default
+	{
+		DropItem "MultiClassGoldWandAmmo", 84, 3;
+	}
+}
+
+class HXDDMummyLeaderGhost : MummyLeaderGhost replaces MummyLeaderGhost
+{
+	Default
+	{
+		DropItem "MultiClassGoldWandAmmo", 84, 3;
+	}
+}
+
+// MUMMY
 
 class HXDDSnake : Snake replaces Snake
 {

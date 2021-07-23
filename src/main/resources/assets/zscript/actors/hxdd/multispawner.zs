@@ -40,14 +40,14 @@ class MultiSpawner : RandomSpawner
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            String playerClass = CVar.FindCVar("PlayerClass").GetString();
-            if (playerClass == "Corvus") {
+            String playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
+            if (playerClass == "corvus") {
                 return self.Corvus;
-            } else if (playerClass == "Fighter") {
+            } else if (playerClass == "fighter") {
                 return self.Fighter;
-            } else if (playerClass == "Cleric") {
+            } else if (playerClass == "cleric") {
                 return self.Cleric;
-            } else if (playerClass == "Mage") {
+            } else if (playerClass == "mage") {
                 return self.Mage;
             } else {
                 // Spawn Fallback Item, should make things less weird with mods like Walpurgis
@@ -60,14 +60,14 @@ class MultiSpawner : RandomSpawner
     String GetGameSpawnSelect() {
         String mapName = Level.MapName.MakeLower();
         int mapPrefix = Level.MapName.IndexOf("MAP");
-        if ( mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m" ) {
+        if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
             // Map follows E#M# format.
             return "heretic";
-        } else if ( mapPrefix != -1 ) {
+        } else if (mapPrefix != -1) {
             // Map follow MAP## or DD_MAP## format.
             return "hexen";
         } else {
-            return "hxdd";
+            return "heretic";
         }
     }
 	// Override this to decide what to spawn in some other way.
