@@ -26,10 +26,10 @@ map DD_MAP43 "SUMP"
 {
 	next = "DD_MAP4"
 	cluster = 11
-	Sky1 = SKYFOG2, 0.078125
-	Sky1 = SKYFOG, 0.234375
+	Sky1 = "SKYFOG2", 0.078125
+	Sky1 = "SKYFOG", 0.234375
 	doublesky 
-	fadetable = fogmap
+	fadetable = "fogmap"
 	cdtrack = 22
 	NoIntermission
 }
@@ -247,7 +247,7 @@ map DD_MAP35 "DEATHFOG"
 	Sky1 = "SKYFOG2", 0.078125
 	Sky1 = "SKYFOG", 0.234375
 	doublesky 
-	fadetable = fogmap
+	fadetable = "fogmap"
 	cdtrack = 16
 	NoIntermission
 }

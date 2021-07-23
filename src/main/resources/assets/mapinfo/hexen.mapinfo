@@ -82,7 +82,7 @@ map MAP08 "DARKMERE"
 	sky1 = "SKYFOG2", 0.078125
 	sky2 = "SKYFOG", 0.234375
 	doublesky 
-	fadetable = fogmap
+	fadetable = "fogmap"
 	cdtrack = 14
 	NoIntermission
 }
@@ -185,7 +185,7 @@ map MAP32 "ORCHARD OF LAMENTATIONS"
 	sky1 = "SKYFOG2", 0.078125
 	sky2 = "SKYFOG", 0.234375
 	doublesky 
-	fadetable = fogmap
+	fadetable = "fogmap"
 	cdtrack = 22
 	NoIntermission
 }
@@ -363,7 +363,7 @@ map MAP14 "SWAMP DEMO"
 	sky1 = "SKYFOG2", 0.078125
 	sky2 = "SKYFOG", 0.234375
 	doublesky 
-	fadetable = fogmap
+	fadetable = "fogmap"
 	NoIntermission
 }
 
