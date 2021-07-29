@@ -49,7 +49,7 @@ public class AssetExtractor {
     private void ExportData(byte[] data, Palette pal) {
         if (mf.decodeType == "lumps") {
             LumpExport(data);
-        } else if (mf.decodeType == "textlump") {
+        } else if (mf.decodeType == "textlumps") {
             TextLumpExport(data);
         } else if (mf.decodeType == "graphics" || mf.decodeType == "patches" || mf.decodeType == "sprites") {
             GraphicsExport(data, pal);
@@ -90,7 +90,7 @@ public class AssetExtractor {
         this.CreateFolder(path);
 
         try {
-            FileOutputStream fos = new FileOutputStream(path + "/" + this.mf.outputName.toLowerCase(), false);
+            FileOutputStream fos = new FileOutputStream(path + "/" + this.mf.outputName.toLowerCase() + ".lmp", false);
             fos.write(data);
             fos.close();
         } catch (IOException e) {

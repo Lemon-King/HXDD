@@ -2,7 +2,6 @@
 
 Texture "BANNER1", 64, 128
 {
-	NullTexture
 	Patch "WALL04", 0, 0
 	Patch "WALL522", 11, 12
 }

@@ -34,7 +34,7 @@ public class PK3Builder {
             ExportMaps();
             ActorFactory actors = new ActorFactory();
             actors.Create();
-            //actors.CreateEditorNums();
+            actors.CreateEditorNums();
             ExportHXDDFiles();
             Bundle();
         }
@@ -110,6 +110,10 @@ public class PK3Builder {
         this.organizedFiles.get("hexen").BatchRename("lumps", "CLUS4MSG", "CLUS10MSG", "equals");
         this.organizedFiles.get("hexdd").BatchRename("lumps", "CLUS1MSG", "CLUS11MSG", "equals");
         this.organizedFiles.get("hexdd").BatchRename("lumps", "CLUS2MSG", "CLUS12MSG", "equals");
+
+        this.organizedFiles.get("hexdd").BatchRename("lumps", "WIN1MSG", "WIN4MSG", "equals");
+        this.organizedFiles.get("hexdd").BatchRename("lumps", "WIN2MSG", "WIN5MSG", "equals");
+        this.organizedFiles.get("hexdd").BatchRename("lumps", "WIN3MSG", "WIN6MSG", "equals");
 
         // Remove Heretic Sky and copy Hexen Sky in its place.
         this.organizedFiles.get("heretic").BatchRemove("flats", "F_SKY1", "equals");

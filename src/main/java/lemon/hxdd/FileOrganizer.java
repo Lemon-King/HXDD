@@ -25,9 +25,12 @@ class FileOrganizer {
     };
 
     static String[] GameLumps = {
-            "animdefs", "sndinfo", "sndseq",
-            "win1msg", "win2msg", "win3msg",
-            "clus1msg", "clus2msg", "clus3msg", "clus4msg"
+            "animdefs", "sndinfo", "sndseq"
+    };
+
+    static String[] TextLumps = {
+        "win1msg", "win2msg", "win3msg",
+        "clus1msg", "clus2msg", "clus3msg", "clus4msg"
     };
 
     public FileOrganizer() {
@@ -64,8 +67,14 @@ class FileOrganizer {
                 // This will let files be unique and not fight over a single entry.
                 MetaFile mf = new MetaFile(entryName, "lumps", wadName);
                 mf.decodeType = "lumps";
-                mf.outputName = entryName + "." + wadName;
-                this.entryMaps.get("lumps").put(entryName + "." + wadName, mf);
+                mf.outputName = entryName;
+                this.entryMaps.get("lumps").put(entryName, mf);
+            } else if (Arrays.asList(TextLumps).contains(entryName.toLowerCase())) {
+                // TextLumps should be renamed per game as to prevent conflicts
+                MetaFile mf = new MetaFile(entryName, "lumps", wadName);
+                mf.decodeType = "textlumps";
+                mf.outputName = entryName;
+                this.entryMaps.get("lumps").put(entryName, mf);
             } else if (!Arrays.asList(EntryIgnoreList).contains(entryName)) {
                 if (entry.isMarker()) {
                     if (entryName.contains("_START")) {

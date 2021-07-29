@@ -175,7 +175,6 @@ episode e5m1
 	name = "$MNU_DEMESNE"
 	key = "s"
 	extended
-
 }
 
 episode MAP01
@@ -188,7 +187,7 @@ episode MAP01
 episode DD_MAP41
 {
 	name = "Deathkings of the Dark Citadel"
-	key = "n"
+	key = "k"
 	optional
 }
 
