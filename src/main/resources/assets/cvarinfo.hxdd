@@ -1,6 +1,3 @@
-
-user noarchive cheat latch string hxdd_playerclass = "";
-
 // Hexen egg artwork (Gold)
 user bool hxdd_hexen_artiegg = false;
 

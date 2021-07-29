@@ -49,12 +49,5 @@ class HXDDWorldEventHandler : EventHandler {
         } else if (mapPrefix != -1) {
         	HexenReplacements();
         }
-
-        CVar cvarHxddPlayerClass = CVar.FindCVar("hxdd_playerclass");
-        String hxddPlayerClass = cvarHxddPlayerClass.GetString();
-        if (hxddPlayerClass == "") {
-            String playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
-            cvarHxddPlayerClass.SetString(playerClass);
-        }
     }
 }

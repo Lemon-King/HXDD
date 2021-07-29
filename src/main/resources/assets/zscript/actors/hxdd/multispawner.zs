@@ -40,10 +40,9 @@ class MultiSpawner : RandomSpawner
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            String playerClass = CVar.FindCVar("hxdd_playerclass").GetString().MakeLower();
-            if (playerClass == "") {
-                playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
-            }
+            // Get player display name
+            PlayerInfo p = players[0];
+            String playerClass = p.mo.GetPrintableDisplayName(p.cls).MakeLower();
             if (playerClass == "corvus") {
                 return self.Corvus;
             } else if (playerClass == "fighter") {
