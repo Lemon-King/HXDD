@@ -40,7 +40,10 @@ class MultiSpawner : RandomSpawner
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            String playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
+            String playerClass = CVar.FindCVar("hxdd_playerclass").GetString().MakeLower();
+            if (playerClass == "") {
+                playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
+            }
             if (playerClass == "corvus") {
                 return self.Corvus;
             } else if (playerClass == "fighter") {
@@ -59,12 +62,12 @@ class MultiSpawner : RandomSpawner
 
     String GetGameSpawnSelect() {
         String mapName = Level.MapName.MakeLower();
-        int mapPrefix = Level.MapName.IndexOf("MAP");
+        int mapPrefix = mapName.IndexOf("map");
         if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
             // Map follows E#M# format.
             return "heretic";
         } else if (mapPrefix != -1) {
-            // Map follow MAP## or DD_MAP## format.
+            // Map follow MAP## or **_MAP## format.
             return "hexen";
         } else {
             return "heretic";

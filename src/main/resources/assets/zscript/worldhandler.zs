@@ -42,12 +42,19 @@ class HXDDWorldEventHandler : EventHandler {
     
     override void WorldLoaded(WorldEvent e) {
         String mapName = Level.MapName.MakeLower();
-        int mapPrefix = Level.MapName.IndexOf("MAP");
+        int mapPrefix = mapName.IndexOf("map");
         if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
             // Map follows E#M# format.
         	HereticReplacements();
         } else if (mapPrefix != -1) {
         	HexenReplacements();
+        }
+
+        CVar cvarHxddPlayerClass = CVar.FindCVar("hxdd_playerclass");
+        String hxddPlayerClass = cvarHxddPlayerClass.GetString();
+        if (hxddPlayerClass == "") {
+            String playerClass = CVar.FindCVar("PlayerClass").GetString().MakeLower();
+            cvarHxddPlayerClass.SetString(playerClass);
         }
     }
 }
