@@ -19,6 +19,8 @@ class MultiSpawner : RandomSpawner
     String Cleric;
     String Mage;
 
+    int readyState;
+
     virtual void Bind() {
         self.SpawnSelect = "GameSelect";
         self.Heretic = "Unknown";
@@ -75,7 +77,35 @@ class MultiSpawner : RandomSpawner
 	// Override this to decide what to spawn in some other way.
 	// Return the class name, or 'None' to spawn nothing, or 'Unknown' to spawn an error marker.
 	override Name ChooseSpawn() {
-        Bind();
         return SpawnSelector();
 	}
+
+	override void BeginPlay() {
+        Bind();
+
+        PlayerInfo p = players[0];
+        if (p.cls != null) {
+            Super.BeginPlay();
+            readyState = 1;
+        } else {
+            readyState = 2;
+        }
+	}
+
+    override void PostBeginPlay()
+    {
+        PlayerInfo p = players[0];
+        if (p.cls != null && readyState == 1) {
+            Super.PostBeginPlay();
+        }
+    }
+
+    override void Tick()
+    {
+        Super.Tick();
+        if (readyState == 2) {
+            BeginPlay();
+            PostBeginPlay();
+        }
+    }
 }
