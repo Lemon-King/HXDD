@@ -153,13 +153,13 @@ public class ActorFactory {
                         if (type.equals("spawnnums")) {
                             offset = 200;
                         } else {
-                            offset = 20000;
+                            offset = 11000;
                         }
                     } else if (game.equals("hexen")) {
                         if (type.equals("spawnnums")) {
                             offset = 400;
                         } else {
-                            offset = 30000;
+                            offset = 22000;
                         }
                     }
 
