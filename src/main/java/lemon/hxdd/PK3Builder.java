@@ -15,7 +15,13 @@ import java.util.*;
 
 public class PK3Builder {
     static String[] iwadNames = {"heretic", "hexen", "hexdd"};
-    static String[] pk3Names = {"brightmaps", "game_support", "game_widescreen_gfx", "gzdoom", "lights"};   // NYI
+    static String[] requiredPK3s = {
+            "gzdoom", "game_support"
+    };
+    static String[] optionalPK3s = {
+            "brightmaps", "game_widescreen_gfx", "lights",
+            // todo: Add neoworm frozen sprite support
+    };
 
     public Map<String, FileOrganizer> organizedFiles;
 
@@ -50,7 +56,7 @@ public class PK3Builder {
                 missingFiles.add(wadName + ".wad");
             }
         });
-        Arrays.asList(pk3Names).forEach((wadName) -> {
+        Arrays.asList(requiredPK3s).forEach((wadName) -> {
             String fileName = pathSourceFiles + wadName + ".pk3";
             File fileTemporary = new File(fileName);
             if (!fileTemporary.exists()) {
@@ -81,27 +87,33 @@ public class PK3Builder {
         System.out.println("Organizing assets");
 
         // Rename conflicting sprite names: https://zdoom.org/wiki/Sprite#Conflicting_sprite_names
+        // Heretic
         this.organizedFiles.get("heretic").BatchRename("sprites", "BLOD", "BLUD", "startsWith");
         this.organizedFiles.get("heretic").BatchRename("sprites", "HEAD", "LICH", "startsWith");
 
+        // Hexen (Follows order from: https://github.com/coelckers/gzdoom/blob/c1a8776a154d91657e7288df46855df932fcbf37/src/d_main.cpp#L2302)
+        this.organizedFiles.get("hexen").BatchRename("sprites", "BARL", "ZBAR", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "ARM1", "AR_1", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "ARM2", "AR_2", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "ARM3", "AR_3", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "ARM4", "AR_4", "startsWith");
-
-        this.organizedFiles.get("hexen").BatchRename("sprites", "BARL", "ZBAR", "startsWith");
-
-        this.organizedFiles.get("hexen").BatchRename("sprites", "CAND", "BCAN", "startsWith");
-
-        this.organizedFiles.get("hexen").BatchRename("sprites", "EGGM", "PRKM", "startsWith");
-        this.organizedFiles.get("hexen").BatchRename("sprites", "GIBS", "POL5", "startsWith");
-        this.organizedFiles.get("hexen").BatchRename("sprites", "ROCK", "ROKK", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "SUIT", "ZSUI", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "TRE1", "ZTRE", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "TRE2", "TRES", "startsWith");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "CAND", "BCAN", "startsWith");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "ROCK", "ROKK", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "WATR", "HWAT", "startsWith");
-
+        this.organizedFiles.get("hexen").BatchRename("sprites", "GIBS", "POL5", "startsWith");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "EGGM", "PRKM", "startsWith");
         this.organizedFiles.get("hexen").BatchRename("sprites", "INVU", "DEFN", "startsWith");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "ARTIINVU", "ARTIDEFN", "equals");
+
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRF", "MNTRU", "equals");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRG", "MNTRV", "equals");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRH", "MNTRW", "equals");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRI", "MNTRX", "equals");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRJ", "MNTRY", "equals");
+        this.organizedFiles.get("hexen").BatchRename("sprites", "MNTRK", "MNTRZ", "equals");
 
         // Rename cluster messages follow new cluster order
         this.organizedFiles.get("hexen").BatchRename("lumps", "CLUS1MSG", "CLUS7MSG", "equals");
@@ -219,18 +231,17 @@ public class PK3Builder {
                 Wad wad = new WadFile(wadPath + wadName + ".wad");
 
                 System.out.println("Exporting Maps from " + wadName + ".wad");
-                String path = (String) Settings.getInstance().Get("PathTemporary") + "/maps/";
+                String path = Settings.getInstance().Get("PathTemporary") + "/maps/";
+                File dirFile = new File(path);
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs();
+                }
 
                 String mapSetHeader = (String) Settings.getInstance().Get("MapNameHeader_" + wadName);
 
                 for (int headerIndex : MapUtils.getAllMapIndices(wad)) {
                     String headerName = wad.getEntry(headerIndex).getName();
                     String mapPath = path + mapSetHeader + headerName + ".wad";
-
-                    File dirFile = new File(path + mapSetHeader);
-                    if (!dirFile.exists()) {
-                        dirFile.mkdirs();
-                    }
                     try {
                         WadBuffer.extract(wad, MapUtils.getMapEntries(wad, headerName)).writeToFile(new File(mapPath));
                         //System.out.println("Exported map " + headerName);
@@ -249,46 +260,60 @@ public class PK3Builder {
     // TODO: Move this mess into FileOrganizer.
     private static void ExtractFilesFromGZDoomSupportPK3s() {
         final int[] WidescreenGraphicDimensions = {560, 200};
+        final String[] menuGraphics = new String[]{"final1.lmp", "final2.lmp", "help1.lmp", "help2.lmp", "mape1.lmp", "mape2.lmp", "mape3.lmp", "title.lmp"};
+        final String pathSourceFiles = (String) Settings.getInstance().Get("PathSourceWads");
 
         System.out.println("Exporting GZDOOM assets");
 
         ZipAssets zipGZDoom = new ZipAssets("gzdoom.pk3");
         zipGZDoom.ExtractSingleFile("filter/game-heretic/sndinfo.txt", "sndinfo.hereticgz");
+        zipGZDoom.ExtractSingleFile("filter/game-heretic/sndseq.txt", "sndseq.hereticgz");
+        zipGZDoom.ExtractSingleFile("filter/game-heretic/animated.lmp", "animated.heretic");
         zipGZDoom.ExtractSingleFile("filter/game-hexen/sndinfo.txt", "sndinfo.hexengz");
 
         ZipAssets zipGameSupport = new ZipAssets("game_support.pk3");
         zipGameSupport.ExtractSingleFile("filter/heretic/sprofs.txt", "sprofs.heretic");
         zipGameSupport.ExtractSingleFile("filter/hexen/sprofs.txt", "sprofs.hexen");
 
-        ZipAssets zipLights = new ZipAssets("lights.pk3");
-        zipLights.ExtractSingleFile("filter/heretic/gldefs.txt", "gldefs.heretic");
-        zipLights.ExtractSingleFile("filter/hexen/gldefs.txt", "gldefs.hexen");
+        File fileLights = new File(pathSourceFiles + "lights.pk3");
+        if (fileLights.exists()) {
+            ZipAssets zipLights = new ZipAssets("lights.pk3");
+            zipLights.ExtractSingleFile("filter/heretic/gldefs.txt", "gldefs.heretic");
+            zipLights.ExtractSingleFile("filter/hexen/gldefs.txt", "gldefs.hexen");
+        }
 
-        ZipAssets zipBrights = new ZipAssets("brightmaps.pk3");
-        zipBrights.ExtractSingleFile("filter/heretic/gldefs.bm", "gldefs.bmheretic");
-        zipBrights.ExtractSingleFile("filter/hexen/gldefs.bm", "gldefs.bmhexen");
+        File fileBrights = new File(pathSourceFiles + "lights.pk3");
+        if (fileBrights.exists()) {
+            ZipAssets zipBrights = new ZipAssets("brightmaps.pk3");
+            zipBrights.ExtractSingleFile("filter/heretic/gldefs.bm", "gldefs.bmheretic");
+            zipBrights.ExtractSingleFile("filter/hexen/gldefs.bm", "gldefs.bmhexen");
+        }
 
-        ZipAssets zipWide = new ZipAssets("game_widescreen_gfx.pk3");
-        zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/sprites/", "sprites", "heretic", null, null);
-        zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/sprites/", "sprites", "hexen", null, null);
-        zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "heretic", new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
-        zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"h2bar.lmp", "h2top.lmp"}, null);
-        zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
+        File fileWide = new File(pathSourceFiles + "lights.pk3");
+        ZipAssets zipWide = null;
+        if (fileWide.exists()) {
+            zipWide = new ZipAssets("game_widescreen_gfx.pk3");
+            zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/sprites/", "sprites", "heretic", null, null);
+            zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/sprites/", "sprites", "hexen", null, null);
 
+            zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "heretic", new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
+            zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"h2bar.lmp", "h2top.lmp"}, null);
+            zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
+        }
 
         // Title Selection, Heretic, Heretic Shadows, Hexen, or HexDD.
         // If extended entry exists in heretic.wad
         String menuTheme = (String) Settings.getInstance().Get("MenuTheme");
         if (menuTheme.equals("heretic") || menuTheme.equals("hereticclassic")) {
-            String[] wideGraphics = new String[]{"final1.lmp", "final2.lmp", "help1.lmp", "help2.lmp", "mape1.lmp", "mape2.lmp", "mape3.lmp", "title.lmp"};
-
-            zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "heretic", wideGraphics, WidescreenGraphicDimensions);
+            if (zipWide != null) {
+                zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "heretic", menuGraphics, WidescreenGraphicDimensions);
+            }
             zipGameSupport.ExtractFilesFromFolderAndConvert("filter/game-heretic/fonts/defbigfont/", "fonts/defbigfont", "heretic", null, null);
             zipGameSupport.ExtractFilesFromFolderAndConvert("filter/game-heretic/fonts/defsmallfont/", "fonts/defsmallfont", "heretic", null, null);
         } else if (menuTheme.equals("hexen") || menuTheme.equals("hexdd")) {
-            String[] wideGraphics = new String[]{"final1.lmp", "final2.lmp", "help1.lmp", "help2.lmp", "mape1.lmp", "mape2.lmp", "mape3.lmp", "title.lmp"};
-
-            zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "hexen", wideGraphics, WidescreenGraphicDimensions);
+            if (zipWide != null) {
+                zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", menuGraphics, WidescreenGraphicDimensions);
+            }
             zipGameSupport.ExtractFilesFromFolderAndConvert("filter/game-hexen/fonts/defbigfont/", "fonts/defbigfont", "hexen", null, null);
             zipGameSupport.ExtractFilesFromFolderAndConvert("filter/game-hexen/fonts/defsmallfont/", "fonts/defsmallfont", "hexen", null, null);
         }

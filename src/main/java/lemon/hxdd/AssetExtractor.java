@@ -130,10 +130,8 @@ public class AssetExtractor {
             // Get grAB offsets from DOOM Format and add to PNG output
             int offsetX = p.getOffsetX();
             int offsetY = p.getOffsetY();
-            if (offsetX != 0 || offsetY != 0) {
-                pngImg.setOffsetX(offsetX);
-                pngImg.setOffsetY(offsetY);
-            }
+            pngImg.setOffsetX(offsetX);
+            pngImg.setOffsetY(offsetY);
 
             File newFile = new File(imagePath);
             pngImg.writeBytes(new FileOutputStream(newFile, false));

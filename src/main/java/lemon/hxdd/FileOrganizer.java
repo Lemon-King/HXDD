@@ -66,8 +66,6 @@ class FileOrganizer {
             } else if (Arrays.asList(GameLumps).contains(entryName.toLowerCase())) {
                 // This will let files be unique and not fight over a single entry.
                 MetaFile mf = new MetaFile(entryName, "lumps", wadName);
-                mf.decodeType = "lumps";
-                mf.outputName = entryName;
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(TextLumps).contains(entryName.toLowerCase())) {
                 // TextLumps should be renamed per game as to prevent conflicts
