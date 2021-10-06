@@ -177,16 +177,30 @@ episode e5m1
 	extended
 }
 
+episode e5m1
+{
+	name = "$MNU_DEMESNE"
+	key = "s"
+	extended
+}
+
+episode e6m1
+{
+	name = "$MNU_FATEPTH"
+	key = "f"
+	extended
+}
+
 episode MAP01
 {
-	name = "Hexen - Beyond Heretic"
+	name = "$MNU_HEXEN"
 	key = "b"
 	optional
 }
 
 episode DD_MAP41
 {
-	name = "Deathkings of the Dark Citadel"
+	name = "$MNU_HEXDD"
 	key = "k"
 	optional
 }

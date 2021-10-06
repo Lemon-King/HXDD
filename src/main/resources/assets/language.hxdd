@@ -1,0 +1,9 @@
+[enu default]
+
+MNU_FATEPTH = "Fate's Path";
+HHUSTR_E6M1 = "Raven's Lair";
+HHUSTR_E6M2 = "The Water Shrine";
+HHUSTR_E6M3 = "American's Legacy";
+
+MNU_HEXEN = "Hexen - Beyond Heretic";
+MNU_HEXDD = "Deathkings of the Dark Citadel";
