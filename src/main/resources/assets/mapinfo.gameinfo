@@ -177,13 +177,6 @@ episode e5m1
 	extended
 }
 
-episode e5m1
-{
-	name = "$MNU_DEMESNE"
-	key = "s"
-	extended
-}
-
 episode e6m1
 {
 	name = "$MNU_FATEPTH"
