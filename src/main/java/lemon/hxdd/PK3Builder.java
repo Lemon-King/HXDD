@@ -12,6 +12,7 @@ import org.zeroturnaround.zip.commons.FileUtils;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PK3Builder {
     static String[] iwadNames = {"heretic", "hexen", "hexdd"};
@@ -193,7 +194,11 @@ public class PK3Builder {
         Map<String, WadFile> Wads = new HashMap<String, WadFile>();
 
         fo.entryMaps.forEach((sourceName, mftype) -> {
-            System.out.println("Extracting " + sourceName);
+            int total = mftype.size();
+            AtomicInteger count = new AtomicInteger();
+
+            ProgressBar pbar = new ProgressBar("Extracting " + sourceName);
+            pbar.SetPercent((float)0);
             mftype.forEach((mfKey, mf) -> {
                 //System.out.println(key + " " + mfKey + " " + mf.source + ":" + mf.inputName + ":" + mf.outputName);
                 try {
@@ -209,8 +214,10 @@ public class PK3Builder {
                 AssetExtractor ae = new AssetExtractor(mf, w);
                 if (mf.sourcePK3 != null) {
                     ae.ExtractFromPK3();
+                    pbar.SetPercent((float)count.incrementAndGet() / (float)total);
                 } else {
                     ae.ExtractFromWad();
+                    pbar.SetPercent((float)count.incrementAndGet() / (float)total);
                 }
             });
         });
