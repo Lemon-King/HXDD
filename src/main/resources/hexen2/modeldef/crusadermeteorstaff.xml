@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="CWeapMeteorStaff">
+        <Path folder="models" />
+        <Model file="w_l3_c2.md3" model="0" />
+        <Skin file="w_l3_c2_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapMeteorStaff">
+        <Path folder="models" />
+        <Model file="meteor.md3" model="0" />
+        <Skin file="meteor_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="CWMI" frames="1" model="0" comment="Idle"/>
+
+        <Animation key="CWMS" frames="18" model="0" comment="Select / Deselect"/>
+
+        <Animation key="CWMF" frames="9" model="0" comment="Fire"/>
+    </Group>
+    <Group class="CWeapMeteorStaff_Meteor">
+        <Path folder="models" />
+        <Model file="tempmeteor.md3" model="0" />
+        <Skin file="tempmeteor_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="ICE1" frames="1" model="0" comment="Ref"/>
+    </Group>
+</MetaModelDef>

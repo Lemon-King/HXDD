@@ -1,0 +1,68 @@
+$random Hexen2PlayerWaterMovement       { hexen2/player/swim1 hexen2/player/swim2 }
+
+$random Hexen2PlayerGib                 { hexen2/player/gib1 hexen2/player/gib2 }
+
+$random Hexen2PlayerMaleDeath           { hexen2/player/paldie1 hexen2/player/paldie2 }
+$random Hexen2PlayerMalePain            { hexen2/player/palpain1 hexen2/player/palpain2 }
+$random Hexen2PlayerMaleGaspCough       { hexen2/player/palgasp1 hexen2/player/palgasp2 }
+
+$alias	Hexen2PlayerLand		        hexen2/player/land
+$alias	Hexen2PlayerMaleCrazyDeath	    hexen2/player/paldieh2
+$alias	Hexen2PlayerMaleBurnDeath    	hexen2/misc/null
+$alias	Hexen2PlayerMaleXDeath		    Hexen2PlayerGib
+$alias	Hexen2PlayerMaleGrunt     	    hexen2/mummy/step
+$alias	Hexen2PlayerMaleFallingScream	hexen2/misc/null
+$alias	Hexen2PlayerMaleSplat		    hexen2/player/paldieh2
+$alias	Hexen2PlayerMaleFailedUse 	    hexen2/misc/null
+$alias	Hexen2PlayerMaleFailed   	    hexen2/misc/warning
+$alias	Hexen2PlayerMaleJump		    hexen2/player/paljmp
+
+$random Hexen2PlayerFemaleDeath         { hexen2/player/assdie1 hexen2/player/assdie2 }
+$random Hexen2PlayerFemalePain          { hexen2/player/asspain1 hexen2/player/asspain2 }
+$random Hexen2PlayerFemaleGaspCough     { hexen2/player/assgasp1 hexen2/player/assgasp2 }
+
+$alias	Hexen2PlayerFemaleCrazyDeath	hexen2/player/assdieh2
+$alias	Hexen2PlayerFemaleBurnDeath    	hexen2/misc/null
+$alias	Hexen2PlayerFemaleXDeath		Hexen2PlayerGib
+$alias	Hexen2PlayerFemaleGrunt     	hexen2/mummy/step
+$alias	Hexen2PlayerFemaleFallingScream	hexen2/misc/null
+$alias	Hexen2PlayerFemaleSplat		    hexen2/player/assdieh2
+$alias	Hexen2PlayerFemaleFailedUse 	hexen2/misc/null
+$alias	Hexen2PlayerFemaleFailed 	    hexen2/misc/warning
+$alias	Hexen2PlayerFemaleJump		    hexen2/player/assjmp
+
+$playeralias	hexen2male	male	*death		    Hexen2PlayerMaleDeath
+$playeralias	hexen2male	male	*crazydeath	    Hexen2PlayerMaleCrazyDeath
+$playeralias	hexen2male	male	*burndeath	    Hexen2PlayerMaleBurnDeath
+$playeralias	hexen2male	male	*xdeath		    Hexen2PlayerMaleXDeath
+$playeralias	hexen2male	male	*pain100	    Hexen2PlayerMalePain
+$playersounddup	hexen2male	male	*pain75		    *pain100
+$playersounddup	hexen2male	male	*pain50		    *pain100
+$playersounddup	hexen2male	male	*pain25		    *pain100
+$playeralias	hexen2male	male	*grunt		    Hexen2PlayerMaleGrunt
+$playeralias	hexen2male	male	*land		    Hexen2PlayerLand
+$playeralias	hexen2male	male	*poison		    Hexen2PlayerMaleGaspCough
+$playeralias	hexen2male	male	*falling	    Hexen2PlayerMaleFallingScream
+$playeralias	hexen2male	male	*splat		    Hexen2PlayerMaleSplat
+$playeralias	hexen2male	male	*usefail	    Hexen2PlayerMaleFailedUse
+$playeralias	hexen2male	male	*puzzfail	    Hexen2PlayerMaleFailed
+$playeralias	hexen2male	male	*jump		    Hexen2PlayerMaleJump
+$playeralias	hexen2male	male	*weaponlaugh	hexen2/weapons/weappkup
+
+$playeralias	hexen2female	female	*death		    Hexen2PlayerFemaleDeath
+$playeralias	hexen2female	female	*crazydeath	    Hexen2PlayerFemaleCrazyDeath
+$playeralias	hexen2female	female	*burndeath	    Hexen2PlayerFemaleBurnDeath
+$playeralias	hexen2female	female	*xdeath		    Hexen2PlayerFemaleXDeath
+$playeralias	hexen2female	female	*pain100	    Hexen2PlayerFemalePain
+$playersounddup	hexen2female	female	*pain75		    *pain100
+$playersounddup	hexen2female	female	*pain50		    *pain100
+$playersounddup	hexen2female	female	*pain25		    *pain100
+$playeralias	hexen2female	female	*grunt		    Hexen2PlayerFemaleGrunt
+$playeralias	hexen2female	female	*land		    Hexen2PlayerLand
+$playeralias	hexen2female	female	*poison		    Hexen2PlayerFemaleGaspCough
+$playeralias	hexen2female	female	*falling	    Hexen2PlayerFemaleFallingScream
+$playeralias	hexen2female	female	*splat		    Hexen2PlayerFemaleSplat
+$playeralias	hexen2female	female	*usefail	    Hexen2PlayerFemaleFailedUse
+$playeralias	hexen2female	female	*puzzfail	    Hexen2PlayerFemaleFailed
+$playeralias	hexen2female	female	*jump		    Hexen2PlayerFemaleJump
+$playeralias	hexen2female	female	*weaponlaugh    hexen2/weapons/weappkup

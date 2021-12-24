@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<MetaModelDef class="NecromancerPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="necro.md3" model="0" />
+        <Skin file="necro_skin0.png" model="0" />
+
+        <Scale value="1.05 1.05 1.05" />
+
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
+        <!--
+        <Animation key="PDE" frames="20" model="0" comment="Death"/>
+        <Animation key="PDD" frames="20" model="0" comment="Death: Decap"/>
+        -->
+        <Frame skip="40" />
+
+        <Animation key="PAH" frames="8" model="0" comment="Attack: Hands"/>
+        <Animation key="PFH" frames="15" model="0" comment="Fly: Hands"/>
+        <Animation key="PPH" frames="8" model="0" comment="Pain: Hands"/>
+        <Animation key="PRH" frames="12" model="0" comment="Run: Hands"/>
+        <Animation key="PSH" frames="12" model="0" comment="Stand: Hands"/>
+
+        <Animation key="PASI" frames="12" model="0" comment="Attack: Sickle"/>
+        <Animation key="PFSI" frames="15" model="0" comment="Fly: Sickle"/>
+        <Animation key="PPSI" frames="8" model="0" comment="Pain: Sickle"/>
+        <Animation key="PRSI" frames="12" model="0" comment="Run: Sickle"/>
+        <Animation key="PSSI" frames="12" model="0" comment="Stand: Sickle"/>
+
+        <Animation key="PAST" frames="8" model="0" comment="Attack: Staff"/>
+        <Animation key="PFST" frames="15" model="0" comment="Fly: Staff"/>
+        <Animation key="PPST" frames="8" model="0" comment="Pain: Staff"/>
+        <Animation key="PRST" frames="12" model="0" comment="Run: Staff"/>
+        <Animation key="PSST" frames="12" model="0" comment="Stand: Staff"/>
+    </Group>
+</MetaModelDef>

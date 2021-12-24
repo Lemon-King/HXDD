@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<MetaModelDef class="CrusaderPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="crusader.md3" model="0" />
+        <Skin file="crusader_skin0.png" model="0" />
+
+        <Scale value="1.1 1.1 1.1" />
+
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
+
+        <!--
+        <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
+        <Animation key="PDE" frames="20" model="0" comment="Death"/>
+        -->
+        <Frame skip="48" />
+
+        <Animation key="PFH" frames="15" model="0" comment="Fly: Hammer"/>
+        <Animation key="PAH" frames="10" model="0" comment="Attack: Hammer"/>
+        <Animation key="PPH" frames="8" model="0" comment="Pain: Hammer"/>
+        <Animation key="PSH" frames="13" model="0" comment="Stand: Hammer"/>
+        <Animation key="PRH" frames="12" model="0" comment="Run: Hammer"/>
+
+        <Animation key="PFIS" frames="15" model="0" comment="Fly: Ice Staff"/>
+        <Animation key="PPIS" frames="8" model="0" comment="Pain: Ice Staff"/>
+        <Animation key="PRIS" frames="12" model="0" comment="Run: Ice Staff"/>
+        <Animation key="PAIS" frames="4" model="0" comment="Attack: Ice Staff"/>
+        <Animation key="PSIS" frames="13" model="0" comment="Stand: Ice Staff"/>
+
+        <Animation key="PAJ" frames="13" model="0" comment="Action: Jump"/>
+
+        <Animation key="PFS" frames="15" model="0" comment="Fly: Staff"/>
+        <Animation key="PPS" frames="8" model="0" comment="Pain: Staff"/>
+        <Animation key="PRS" frames="12" model="0" comment="Run: Staff"/>
+        <Animation key="PAS" frames="5" model="0" comment="Attack: Staff"/>
+        <Animation key="PSS" frames="13" model="0" comment="Stand: Staff"/>
+    </Group>
+</MetaModelDef>

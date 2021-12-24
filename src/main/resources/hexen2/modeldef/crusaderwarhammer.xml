@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<MetaModelDef class="CWeapWarhammer">
+    <Group>
+        <Path folder="models" />
+        <Model file="warhamer.md3" model="0" />
+        <Skin file="warhamer_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="CWCH" frames="12" model="0" comment="Chop"/>
+        <Animation key="CWHA" frames="10" model="0" comment="Hack"/>
+        <Animation key="CWLR" frames="11" model="0" comment="Left to Right"/>
+
+        <Animation key="CWR" frames="4" model="0" comment="Return"/>
+
+        <Animation key="CWRL" frames="13" model="0" comment="Right to Left"/>
+
+        <Animation key="CWSL" frames="9" model="0" comment="Select / Deselect"/>
+
+        <Animation key="CWTH" frames="10" model="0" comment="Throw"/>
+
+        <Animation key="CWID" frames="1" model="0" comment="Idle"/>
+    </Group>
+</MetaModelDef>

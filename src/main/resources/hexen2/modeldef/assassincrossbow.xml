@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="AWeapCrossbow">
+        <Path folder="models" />
+        <Model file="w_l2_c4.md3" model="0" />
+        <Skin file="w_l2_c4_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="AWeapCrossbow">
+        <Path folder="models" />
+        <Model file="crossbow.md3" model="0" />
+        <Skin file="crossbow_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="AXBS" frames="15" model="0" comment="Select / Deselect"/>
+
+        <Animation key="AXBA" frames="19" model="0" comment="Shoot"/>
+    </Group>
+    <Group class="AWeapCrossbow_Bolt">
+        <Path folder="models" />
+        <Model file="arrow.md3" model="0" />
+        <Skin file="arrow_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="BOLT" frames="1" model="0" comment="Bolt"/>
+    </Group>
+    <Group class="AWeapCrossbow_FlamingBolt">
+        <Path folder="models" />
+        <Model file="flaming.md3" model="0" />
+        <Skin file="flaming_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="BOLT" frames="9" model="0" comment="Flaming Bolt"/>
+    </Group>
+</MetaModelDef>

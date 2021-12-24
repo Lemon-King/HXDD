@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<MetaModelDef class="PWeapGauntlet">
+    <Group>
+        <Path folder="models" />
+        <Model file="gauntlet.md3" model="0" />
+        <Skin file="gauntlet_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PGAR" frames="1" model="0" comment="Root"/>
+
+        <Animation key="PGAA" frames="13" model="0" comment="Attack 1"/>
+        <Animation key="PGAB" frames="16" model="0" comment="Attack 2"/>
+        <Animation key="PGAC" frames="12" model="0" comment="Attack 3"/>
+
+        <!-- Skipping ahead to get Attack Animation 4 -->
+        <Frame skip="14" />
+        <Animation key="PGAD" frames="13" model="0" comment="Attack 4"/>
+
+        <!-- Skipping back to get select / deselect -->
+        <Frame skip="-27" />
+        <Animation key="PGTA" frames="14" model="0" comment="Select / Deselect (Gauntlet Tap)"/>
+    </Group>
+</MetaModelDef>

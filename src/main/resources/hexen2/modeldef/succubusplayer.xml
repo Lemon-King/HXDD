@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<MetaModelDef class="SuccubusPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="succubus.md3" model="0" />
+        <Skin file="succubus_skin0.png" model="0" />
+
+        <Scale value="1.05 1.05 1.05" />
+
+        <Flag name="USEACTORROLL" />
+
+        <!-- Skip Ref Pose -->
+        <Frame skip="1" />
+
+        <Animation key="PRH" frames="12" model="0" comment="Run: Blood Fire"/>
+        <Animation key="PRR" frames="12" model="0" comment="Run: Acid Rune / Firestorm"/>
+        <Animation key="PRS" frames="12" model="0" comment="Run: Tempest Staff"/>
+
+        <Animation key="PSH" frames="13" model="0" comment="Stand: Blood Fire"/>
+        <Animation key="PSR" frames="13" model="0" comment="Stand: Acid Rune / Firestorm"/>
+        <Animation key="PSS" frames="13" model="0" comment="Stand: Tempest Staff"/>
+
+        <Animation key="PAH" frames="8" model="0" comment="Attack: Blood Fire"/>
+        <Animation key="PAR" frames="8" model="0" comment="Attack: Acid Rune / Firestorm"/>
+        <Animation key="PAS" frames="8" model="0" comment="Attack: Tempest Staff"/>
+
+        <Animation key="PPH" frames="7" model="0" comment="Pain: Blood Fire"/>
+        <Animation key="PPR" frames="7" model="0" comment="Pain: Acid Rune / Firestorm"/>
+        <Animation key="PPS" frames="7" model="0" comment="Pain: Tempest Staff"/>
+
+        <Animation key="PFH" frames="15" model="0" comment="Fly: Blood Fire"/>
+        <Animation key="PFR" frames="15" model="0" comment="Fly: Acid Rune / Firestorm"/>
+        <Animation key="PFS" frames="15" model="0" comment="Fly: Tempest Staff"/>
+
+        <Animation key="PAJ" frames="15" model="0" comment="Action: Jump"/>
+
+        <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
+
+        <!--
+        <Animation key="PDE" frames="20" model="0" comment="Death"/>
+        <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
+        -->
+        <Frame skip="48" />
+    </Group>
+</MetaModelDef>

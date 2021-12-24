@@ -10,13 +10,18 @@ class MultiClassBagOfHolding : MultiSpawner {
         self.Fighter = "ArtiBoostMana";
         self.Cleric = "ArtiBoostMana";
         self.Mage = "ArtiBoostMana";
+        self.Paladin = "ArtiBoostMana";
+        self.Crusader = "ArtiBoostMana";
+        self.Necromancer = "ArtiBoostMana";
+        self.Assassin = "ArtiBoostMana";
+        self.Succubus = "ArtiBoostMana";
     }
 }
 
 //
 //  Gold Wand Ammo
 //
-// Only Corvus should receive ammo drops on the starter weapon level
+// Only Corvus should receive ammo drops with the starter weapon
 class MultiClassGoldWandAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
@@ -25,6 +30,11 @@ class MultiClassGoldWandAmmo : MultiSpawner {
         self.Fighter = "none";
         self.Cleric = "none";
         self.Mage = "none";
+        self.Paladin = "none";
+        self.Crusader = "none";
+        self.Necromancer = "none";
+        self.Assassin = "none";
+        self.Succubus = "none";
     }
 }
 
@@ -37,6 +47,11 @@ class MultiClassGoldWandHefty : MultiSpawner {
         self.Fighter = "Mana1";
         self.Cleric = "Mana1";
         self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
@@ -51,6 +66,11 @@ class MultiClassCrossbowAmmo : MultiSpawner {
         self.Fighter = "Mana1";
         self.Cleric = "Mana1";
         self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
@@ -62,6 +82,11 @@ class MultiClassCrossbowHefty : MultiSpawner {
         self.Fighter = "Mana2";
         self.Cleric = "Mana2";
         self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
@@ -76,6 +101,11 @@ class MultiClassBlasterAmmo : MultiSpawner {
         self.Fighter = "Mana1";
         self.Cleric = "Mana1";
         self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
@@ -87,6 +117,11 @@ class MultiClassBlasterHefty : MultiSpawner {
         self.Fighter = "Mana2";
         self.Cleric = "Mana2";
         self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
@@ -101,6 +136,11 @@ class MultiClassSkullRodAmmo : MultiSpawner {
         self.Fighter = "Mana2";
         self.Cleric = "Mana2";
         self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
@@ -112,6 +152,11 @@ class MultiClassSkullRodHefty : MultiSpawner {
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
@@ -126,6 +171,11 @@ class MultiClassPhoenixRodAmmo : MultiSpawner {
         self.Fighter = "Mana2";
         self.Cleric = "Mana2";
         self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
@@ -137,6 +187,11 @@ class MultiClassPhoenixRodHefty : MultiSpawner {
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
@@ -151,6 +206,11 @@ class MultiClassMaceAmmo : MultiSpawner {
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
@@ -162,5 +222,10 @@ class MultiClassMaceHefty : MultiSpawner {
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }

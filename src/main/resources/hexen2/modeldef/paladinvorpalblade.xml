@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="PWeapVorpalSword">
+        <Path folder="models" />
+        <Model file="w_l2_c1.md3" model="0" />
+        <Skin file="w_l2_c1_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="PWeapVorpalSword">
+        <Path folder="models" />
+        <Model file="vorpal.md3" model="0" />
+        <Skin file="vorpal_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PSWR" frames="1" model="0" comment="Root"/>
+
+        <Animation key="PSWA" frames="22" model="0" comment="Motion 2"/>
+        <Animation key="PSWB" frames="13" model="0" comment="Motion 3"/>
+        <Animation key="PSWC" frames="5" model="0" comment="Motion 6"/>
+    </Group>
+    <Group class="PWeapVorpalSword_Swipe">
+        <Path folder="models" />
+        <Model file="vorpswip.md3" model="0" />
+        <Skin file="vorpswip_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <AngleOffset value="-180" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SWIP" frames="7" model="0" comment="Root"/>
+    </Group>
+    <Group class="PWeapVorpalSword_MissileWaveA">
+        <Path folder="models" />
+        <Model file="vorpshot.md3" model="0" />
+        <Skin file="vorpshot_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SHKS" frames="15" model="0" comment="Start"/>
+        <Animation key="SHKL" frames="15" model="0" comment="Loop"/>
+    </Group>
+    <Group class="PWeapVorpalSword_MissileWaveB">
+        <Path folder="models" />
+        <Model file="vorpshot.md3" model="0" />
+        <Skin file="vorpshot_skin1.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SHKS" frames="15" model="0" comment="Start"/>
+        <Animation key="SHKL" frames="15" model="0" comment="Loop"/>
+    </Group>
+    <Group class="PWeapVorpalSword_Shock">
+        <Path folder="models" />
+        <Model file="vorpshk2.md3" model="0" />
+        <Skin file="vorpshk2_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SHOK" frames="1" model="0" comment="Root"/>
+    </Group>
+    <Group class="PWeapVorpalSword_Shock">
+        <Path folder="models" />
+        <Model file="vorpshk2.md3" model="0" />
+        <Skin file="vorpshk2_skin1.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SHOK" frames="1" model="0" framecharoffset="1" comment="Root"/>
+    </Group>
+</MetaModelDef>

@@ -15,7 +15,7 @@ class CVarAltSpawnSelector : RandomSpawner
     String AltSpawn;
 
     virtual void Bind() {
-        self.CvarOption = "unknown";
+        self.CvarOption = "Unknown";
         self.PrimarySpawn = "Unknown";
         self.AltSpawn = "Unknown";
     }
@@ -28,7 +28,7 @@ class CVarAltSpawnSelector : RandomSpawner
             return self.AltSpawn;
         } else {
             String selector[2] = {self.PrimarySpawn, self.AltSpawn};
-            return selector[Random(0, 1)];
+            return selector[Random[AltSpawner](0, 1)];
         }
         return "Unknown";
     }

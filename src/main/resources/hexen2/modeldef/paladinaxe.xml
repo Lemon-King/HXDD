@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="PWeapAxe">
+        <Path folder="models" />
+        <Model file="w_l3_c1.md3" model="0" />
+        <Skin file="w_l3_c1_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="PWeapAxe">
+        <Path folder="models" />
+        <Model file="axe.md3" model="0" />
+        <Skin file="axe_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <!-- Axe has a fair amount of frame reuse -->
+        <Animation key="PAXR" frames="1" model="0" comment="Root"/>
+
+        <Animation key="PAXA" frames="19" model="0" comment="Attack"/>
+
+        <Frame index="4" />
+        <Animation key="PAXS" frames="12" model="0" comment="Select / Deselect"/>
+    </Group>
+    <Group class="PWeapAxe_BladeProjectile">
+        <Path folder="models" />
+        <Model file="axblade.md3" model="0" />
+        <Skin file="axblade_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="AXEP" frames="5" model="0" comment="Loop"/>
+    </Group>
+    <Group class="PWeapAxe_BladeProjectileTail">
+        <Path folder="models" />
+        <Model file="axtail.md3" model="0" />
+        <Skin file="axtail_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="TAIL" frames="2" model="0" comment="Loop"/>
+    </Group>
+</MetaModelDef>

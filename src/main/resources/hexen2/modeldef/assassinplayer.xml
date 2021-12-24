@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<MetaModelDef class="AssassinPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="assassin.md3" model="0" />
+        <Skin file="assassin_skin0.png" model="0" />
+
+        <Scale value="1.1 1.1 1.1" />
+
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PAD" frames="11" model="0" comment="Attack: Dagger"/>
+        <Animation key="PAS" frames="4" model="0" comment="Attack: Staff"/>
+        <Animation key="PAX" frames="4" model="0" comment="Attack: Crossbow"/>
+
+        <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
+
+        <!--
+        <Animation key="PDE" frames="20" model="0" comment="Death"/>
+        <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
+        -->
+        <Frame skip="48" />
+
+        <Animation key="PFD" frames="15" model="0" comment="Fly: Dagger"/>
+        <Animation key="PFS" frames="15" model="0" comment="Fly: Staff"/>
+        <Animation key="PFX" frames="15" model="0" comment="Fly: Crossbow"/>
+
+        <Animation key="PAJ" frames="12" model="0" comment="Ability: Jump"/>
+
+        <Animation key="PPD" frames="7" model="0" comment="Pain: Dagger"/>
+        <Animation key="PPS" frames="7" model="0" comment="Pain: Staff"/>
+        <Animation key="PPX" frames="7" model="0" comment="Pain: Crossbow"/>
+
+        <Animation key="PRD" frames="12" model="0" comment="Run: Dagger"/>
+        <Animation key="PRS" frames="12" model="0" comment="Run: Staff"/>
+        <Animation key="PRX" frames="12" model="0" comment="Run: Crossbow"/>
+
+        <Animation key="PSD" frames="13" model="0" comment="Stand: Dagger"/>
+        <Animation key="PSS" frames="13" model="0" comment="Stand: Staff"/>
+        <Animation key="PSX" frames="13" model="0" comment="Stand: Crossbow"/>
+    </Group>
+</MetaModelDef>

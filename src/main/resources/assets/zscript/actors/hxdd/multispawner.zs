@@ -10,53 +10,127 @@ class MultiSpawner : RandomSpawner
     String SpawnSelect;
 
     String GameSelect;
+    String Doom;
     String Heretic;
     String Hexen;
 
     String Fallback;
+    String DoomMarine;
     String Corvus;
     String Fighter;
     String Cleric;
     String Mage;
+    String Paladin;
+    String Crusader;
+    String Assassin;
+    String Necromancer;
+    String Succubus;
+
+    property GameSelect: GameSelect;
+    property Doom: Doom;
+    property Heretic: Heretic;
+    property Hexen: Hexen;
+    property Fallback: Fallback;
+    property DoomMarine: DoomMarine;
+    property Corvus: Corvus;
+    property Fighter: Fighter;
+    property Cleric: Cleric;
+    property Mage: Mage;
+    property Paladin: Paladin;
+    property Crusader: Crusader;
+    property Assassin: Assassin;
+    property Necromancer: Necromancer;
+    property Succubus: Succubus;
 
     int readyState;
 
     virtual void Bind() {
         self.SpawnSelect = "GameSelect";
+        self.Doom = "Unknown";
         self.Heretic = "Unknown";
         self.Hexen = "Unknown";
         self.Fallback = "Unknown";
+        self.DoomMarine = "Unknown";
         self.Corvus = "Unknown";
         self.Fighter = "Unknown";
         self.Cleric = "Unknown";
         self.Mage = "Unknown";
+        self.Paladin = "Unknown";
+        self.Crusader = "Unknown";
+        self.Assassin = "Unknown";
+        self.Necromancer = "Unknown";
+        self.Succubus = "Unknown";
     }
 
     Name SpawnSelector() {
         if (self.SpawnSelect == "GameSelect") {
-            String environment = GetGameSpawnSelect();
-            if (environment == "heretic") {
-                return self.Heretic;
-            } else if (environment == "hexen") {
-                return self.Hexen;
+            int gameType = gameinfo.gametype;
+            if (gameType & GAME_Doom) {
+                return self.Doom;
+            } else if (gameType & GAME_Raven) {
+                String environment = GetGameSpawnSelect();
+                if (environment ~== "heretic") {
+                    return self.Heretic;
+                } else if (environment ~== "hexen") {
+                    return self.Hexen;
+                }
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            // Get player display name
+            // Get player class name
             PlayerInfo p = players[0];
-            String playerClass = p.mo.GetPrintableDisplayName(p.cls).MakeLower();
-            if (playerClass == "corvus") {
-                return self.Corvus;
-            } else if (playerClass == "fighter") {
-                return self.Fighter;
-            } else if (playerClass == "cleric") {
-                return self.Cleric;
-            } else if (playerClass == "mage") {
-                return self.Mage;
-            } else {
-                // Spawn Fallback Item, should make things less weird with mods like Walpurgis
-                return self.Fallback;
+            //String playerClass = p.mo.GetPrintableDisplayName(p.cls);
+
+            String spawn = "Unknown";
+            /*
+            if (playerClass ~== "marine") {
+                spawn = self.DoomMarine;
+            } else if (playerClass ~== "corvus") {
+                spawn = self.Corvus;
+            } else if (playerClass ~== "fighter") {
+                spawn = self.Fighter;
+            } else if (playerClass ~== "cleric") {
+                spawn = self.Cleric;
+            } else if (playerClass ~== "mage") {
+                spawn = self.Mage;
+            } else if (playerClass ~== "paladin") {
+                spawn = self.Paladin;
+            } else if (playerClass ~== "crusader") {
+                spawn = self.Crusader;
+            } else if (playerClass ~== "assassin") {
+                spawn = self.Assassin;
+            } else if (playerClass ~== "necromancer") {
+                spawn = self.Necromancer;
+            } else if (playerClass ~== "demoness") {
+                spawn = self.succubus;
             }
+            */
+            if (p is "DoomPlayer") {
+                spawn = self.DoomMarine;
+            } else if (p is "HereticPlayer") {
+                spawn = self.Corvus;
+            } else if (p is "FighterPlayer") {
+                spawn = self.Fighter;
+            } else if (p is "ClericPlayer") {
+                spawn = self.Cleric;
+            } else if (p is "MagePlayer") {
+                spawn = self.Mage;
+            } else if (p is "PaladinPlayer") {
+                spawn = self.Paladin;
+            } else if (p is "CrusaderPlayer") {
+                spawn = self.Crusader;
+            } else if (p is "AssassinPlayer") {
+                spawn = self.Assassin;
+            } else if (p is "NecromancerPlayer") {
+                spawn = self.Necromancer;
+            } else if (p is "SuccubusPlayer") {
+                spawn = self.succubus;
+            }
+            if (spawn == "Unknown") {
+                // Spawn Fallback Item, should make things less weird with mods like Walpurgis
+                spawn = self.Fallback;
+            }
+            return spawn;
         }
         return "Unknown";
     }

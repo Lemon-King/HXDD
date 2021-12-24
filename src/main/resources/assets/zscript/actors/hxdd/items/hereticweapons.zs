@@ -23,6 +23,11 @@ class MultiClassGauntlets : MultiSpawner {
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
@@ -34,6 +39,10 @@ class MultiClassCrossbow : MultiSpawner {
         self.Fighter = "FWeapAxe";
         self.Cleric = "CWeapStaff";
         self.Mage = "MWeapFrost";
+
+        self.Crusader = "CWeapIceMace";
+
+        self.Assassin = "AWeapCrossbow";
     }
 }
 

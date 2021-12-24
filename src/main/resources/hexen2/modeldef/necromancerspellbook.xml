@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="NWeapMagicMissile">
+        <Path folder="models" />
+        <Model file="w_l2_c3.md3" model="0" />
+        <Skin file="w_l2_c3_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapBoneShards">
+        <Path folder="models" />
+        <Model file="w_l3_c3.md3" model="0" />
+        <Skin file="w_l3_c3_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapMagicMissile">
+        <Path folder="models" />
+        <Model file="spllbook.md3" model="0" />
+        <Skin file="spllbook_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="NBBF" frames="12" model="0" comment="Attack: Bone Shards"/>
+
+        <Animation key="NBBM" frames="13" model="0" comment="Switch: Bone Shards to Magic Missiles"/>
+        <Animation key="NBMB" frames="14" model="0" comment="Switch: Magic Missiles to Bone Shards"/>
+
+        <Animation key="NBBI" frames="22" model="0" comment="Idle: Bone Shards"/>
+
+        <Animation key="NBMF" frames="8" model="0" comment="Attack: Magic Missiles"/>
+
+        <Animation key="NBMI" frames="22" model="0" comment="Idle: Magic Missiles"/>
+
+        <Animation key="NBMS" frames="20" model="0" comment="Select / Deselect: Magic Missiles"/>
+
+        <Animation key="NBBS" frames="7" model="0" comment="Select / Deselect: Bone Shards"/>
+    </Group>
+    <Group class="NWeapBoneShards">
+        <Path folder="models" />
+        <Model file="spllbook.md3" model="0" />
+        <Skin file="spllbook_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="NBBF" frames="12" model="0" comment="Attack: Bone Shards"/>
+
+        <Animation key="NBBM" frames="13" model="0" comment="Switch: Bone Shards to Magic Missiles"/>
+        <Animation key="NBMB" frames="14" model="0" comment="Switch: Magic Missiles to Bone Shards"/>
+
+        <Animation key="NBBI" frames="22" model="0" comment="Idle: Bone Shards"/>
+
+        <Animation key="NBMF" frames="8" model="0" comment="Attack: Magic Missiles"/>
+
+        <Animation key="NBMI" frames="22" model="0" comment="Idle: Magic Missiles"/>
+
+        <Animation key="NBMS" frames="20" model="0" comment="Select / Deselect: Magic Missiles"/>
+
+        <Animation key="NBBS" frames="7" model="0" comment="Select / Deselect: Bone Shards"/>
+    </Group>
+    <Group class="NWeapSpellbook_Flash">
+        <Path folder="models" />
+        <Model file="handfx.md3" model="0" />
+        <Skin file="handfx_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="HDFX" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapSpellbook_MagicMissile">
+        <Path folder="models" />
+        <Model file="ball.md3" model="0" />
+        <Skin file="ball_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapSpellbook_MissileStar">
+        <Path folder="models" />
+        <Model file="star.md3" model="0" />
+        <Skin file="star_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapSpellbook_BoneShot">
+        <Path folder="models" />
+        <Model file="boneshot.md3" model="0" />
+        <Skin file="boneshot_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BONE" frames="1" model="0" comment="Bone Shot Model"/>
+    </Group>
+    <Group class="NWeapSpellbook_BoneShotPower">
+        <Path folder="models" />
+        <Model file="bonelump.md3" model="0" />
+        <Skin file="bonelump_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BONE" frames="1" model="0" comment="Bone Lump Model"/>
+    </Group>
+    <Group class="NWeapSpellbook_BoneShotPowerShrapnel">
+        <Path folder="models" />
+        <Model file="boneshrd.md3" model="0" />
+        <Skin file="boneshrd_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BONE" frames="1" model="0" comment="Bone Shrapnel Model"/>
+    </Group>
+</MetaModelDef>

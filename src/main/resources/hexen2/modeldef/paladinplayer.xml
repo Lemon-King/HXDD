@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<MetaModelDef class="PaladinPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="paladin.md3" model="0" />
+        <Skin file="paladin_skin0.png" model="0" />
+
+        <Scale value="1.1 1.1 1.1" />
+
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PAG" frames="11" model="0" comment="Attack: Gauntlet"/>
+        <Animation key="PAST" frames="4" model="0" comment="Attack: Staff"/>
+        <Animation key="PASA" frames="12" model="0" comment="Attack: Sword/Axe"/>
+
+        <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
+        <!--
+        <Animation key="PDE" frames="20" model="0" comment="Death"/>
+        <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
+        -->
+        <Frame skip="48" />
+
+        <Animation key="PFG" frames="15" model="0" comment="Fly: Gauntlet"/>
+        <Animation key="PFST" frames="15" model="0" comment="Fly: Staff"/>
+        <Animation key="PFSA" frames="15" model="0" comment="Fly: Sword/Axe"/>
+
+        <Animation key="PAJ" frames="12" model="0" comment="Action: Jump"/>
+
+        <Animation key="PPG" frames="7" model="0" comment="Pain: Gauntlet"/>
+        <Animation key="PPST" frames="7" model="0" comment="Pain: Staff"/>
+        <Animation key="PPSA" frames="7" model="0" comment="Pain: Sword/Axe"/>
+
+        <Animation key="PRG" frames="12" model="0" comment="Run: Gauntlet"/>
+        <Animation key="PRST" frames="12" model="0" comment="Run: Staff"/>
+        <Animation key="PRSA" frames="12" model="0" comment="Run: Sword/Axe"/>
+
+        <Animation key="PSG" frames="13" model="0" comment="Stand: Gauntlet"/>
+        <Animation key="PSST" frames="13" model="0" comment="Stand: Staff"/>
+        <Animation key="PSSA" frames="13" model="0" comment="Stand: Sword/Axe"/>
+    </Group>
+</MetaModelDef>

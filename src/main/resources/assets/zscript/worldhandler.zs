@@ -41,13 +41,17 @@ class HXDDWorldEventHandler : EventHandler {
     }
     
     override void WorldLoaded(WorldEvent e) {
+        int gameType = gameinfo.gametype;
         String mapName = Level.MapName.MakeLower();
         int mapPrefix = mapName.IndexOf("map");
-        if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
-            // Map follows E#M# format.
-        	HereticReplacements();
-        } else if (mapPrefix != -1) {
-        	HexenReplacements();
+        if (gameType & GAME_Doom) {
+        } else if (gameType & Game_Raven) {
+            if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
+                // Map follows E#M# format.
+                HereticReplacements();
+            } else if (mapPrefix != -1) {
+                HexenReplacements();
+            }
         }
     }
 }

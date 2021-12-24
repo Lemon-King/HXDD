@@ -35,8 +35,10 @@ public class Settings {
 
     private void SetDefaults() {
         // General Settings
-        p_config.put("PathSourceWads", "./wads/");
         p_config.put("PathTemporary", "./temp/");
+        p_config.put("PathSourceWads", "./wads/");
+        p_config.put("PathHexen2", "./hexen2/");
+        p_config.put("PathNoesis", "./noesis/");
 
         p_config.put("MenuTheme", "heretic");
         //p_config.put("StartupMusic", "hexen");
@@ -51,6 +53,15 @@ public class Settings {
         p_config.put("MapNameHeader_hexen", "");
         p_config.put("MapNameHeader_hexdd", "DD_");
 
+        // Hexen II stuff
+        p_config.put("ModelDefCoalesceData", false);
+        p_config.put("Hexen2_UseMultiPass", true);   // Exports using multiple passes by lmp to png, transparency, and brightmap conversion.
+        p_config.put("Hexen2_RenameNecromancerToWarlock", false);
+
+        p_config.put("Use32bitNoesis", false);
+
+        // Builds HXDD as a Doom Mod
+        p_config.put("Mode_DoomGameplayMod", false);
 
         System.out.println("Settings: defaults loaded");
     }

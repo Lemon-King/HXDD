@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="SWeapBloodRain">
+        <Path folder="models" />
+        <Model file="sucwp1.md3" model="0" />
+        <Skin file="sucwp1_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SWA" frames="12" model="0" comment="Fire"/>
+
+        <Animation key="SWIB" frames="24" model="0" comment="Idle: Bob"/>
+        <Animation key="SWIJ" frames="24" model="0" comment="Idle: Jelly Fingers"/>
+
+        <Animation key="SWSE" frames="20" model="0" comment="Select + Deselect"/>
+    </Group>
+    <Group class="SWeapBloodMissile">
+        <Path folder="models" />
+        <Model file="sucwp1p.md3" model="0" />
+        <Skin file="sucwp1p_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="BMIS" frames="4" model="0" comment="Loop"/>
+    </Group>
+</MetaModelDef>

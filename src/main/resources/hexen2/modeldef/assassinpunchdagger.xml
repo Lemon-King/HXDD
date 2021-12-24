@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<MetaModelDef class="AWeapPunchDagger">
+    <Group>
+        <Path folder="models" />
+        <Model file="punchdgr.md3" model="0" />
+        <Skin file="punchdgr_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="APDR" frames="1" model="0" comment="Root"/>
+
+        <Animation key="APDA" frames="8" model="0" comment="Fire"/>
+        <Animation key="APDB" frames="12" model="0" comment="Fire"/>
+        <Animation key="APDC" frames="12" model="0" comment="Fire"/>
+        <Animation key="APDD" frames="13" model="0" comment="Fire"/>
+
+        <Animation key="APDS" frames="8" model="0" comment="Select / Deselect"/>
+    </Group>
+</MetaModelDef>

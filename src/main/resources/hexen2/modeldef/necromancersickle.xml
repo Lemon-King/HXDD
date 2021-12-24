@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<MetaModelDef>
+    <Group class="NWeapSickle">
+        <Path folder="models" />
+        <Model file="sickle.md3" model="0" />
+        <Skin file="sickle_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="NWSR" frames="1" model="0" comment="Root"/>
+
+        <Animation key="NWSA" frames="9" model="0" comment="Attack: A"/>
+        <Animation key="NWSB" frames="10" model="0" comment="Attack: B"/>
+        <Animation key="NWSC" frames="10" model="0" comment="Attack: C (Unused)"/>
+
+        <Animation key="NWSS" frames="10" model="0" comment="Select / Deselect"/>
+    </Group>
+</MetaModelDef>
