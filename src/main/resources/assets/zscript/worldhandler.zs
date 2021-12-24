@@ -54,4 +54,34 @@ class HXDDWorldEventHandler : EventHandler {
             }
         }
     }
+    override void PlayerSpawned(PlayerEvent e) {
+        PlayerPawn p = PlayerPawn(players[e.PlayerNumber].mo);
+        Progression prog = Progression(p.FindInventory("Progression"));
+        if (prog == NULL) {
+            p.GiveInventory("Progression", 1);
+            if (prog != NULL) {
+                console.printf("Progression activated for Player %d.", e.PlayerNumber);
+            }
+        }
+    }
+
+    override void WorldThingDied (WorldEvent e) {
+        if (e.thing && e.thing.bIsMonster && e.thing.bCOUNTKILL && e.thing.target && e.thing.target.player) {
+            if (e.thing.target.player.mo is "PlayerPawn") {
+                PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
+                if (pt.FindInventory("Progression")) {
+                    Progression prog = Progression(pt.FindInventory("Progression"));
+                    double exp = 0;
+                    if (prog != NULL) {
+                        exp = prog.GiveExperienceByTargetHealth(e.thing);
+                    }
+
+                    if (e.thing.target.player.mo is "HXDDPlayerPawn") {
+                        HXDDPlayerPawn player = HXDDPlayerPawn(e.thing.target.player.mo);
+                        player.OnKill(e.thing, exp);
+                    }
+                }
+            }
+        }
+    }
 }
