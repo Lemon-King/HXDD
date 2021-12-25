@@ -88,7 +88,7 @@
 
         <Animation key="HDFX" frames="1" model="0" comment="Pickup Item"/>
     </Group>
-    <Group class="NWeapSpellbook_MagicMissile">
+    <Group class="NWeapSpellbook_MissileFlare">
         <Path folder="models" />
         <Model file="ball.md3" model="0" />
         <Skin file="ball_skin0.png" model="0" />
@@ -100,7 +100,19 @@
 
         <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
     </Group>
-    <Group class="NWeapSpellbook_MissileStar">
+    <Group class="NWeapSpellbook_MissileStarA">
+        <Path folder="models" />
+        <Model file="star.md3" model="0" />
+        <Skin file="star_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="NWeapSpellbook_MissileStarB">
         <Path folder="models" />
         <Model file="star.md3" model="0" />
         <Skin file="star_skin0.png" model="0" />
