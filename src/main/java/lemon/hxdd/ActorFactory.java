@@ -6,14 +6,13 @@ import org.zeroturnaround.zip.ZipUtil;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 
-// No way I'm writing out all those Heretic and Hexen Actors
 // Automate creation of Game Unique MapInfo DoomEdNums and SpawnNums.
-// TODO: Add Mapper Compatible IDs
 public class ActorFactory {
-    private static List<String> TypeOrder = Arrays.asList("doomednums", "spawnnums");
-    private static List<String> GameOrder = Arrays.asList("heretic", "hexen");
+    private static final List<String> TypeOrder = Arrays.asList("doomednums", "spawnnums");
+    private static final List<String> GameOrder = Arrays.asList("heretic", "hexen");
 
     public void Create() {
         String path = Settings.getInstance().Get("PathTemporary") + "/zscript/actors/hxdd/";
@@ -139,30 +138,18 @@ public class ActorFactory {
             PrintWriter writerEditornums = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/" + editornumsFileName);
             AddGeneratedByTag(writerEditornums);
 
+            AtomicInteger nextId = new AtomicInteger();
             TypeOrder.forEach((type) -> {
-                if (type == "doomednums") {
+                if (Objects.equals(type, "doomednums")) {
+                    nextId.set(11000);
                     writerEditornums.print("\nDoomEdNums\n");
-                } else if (type == "spawnnums") {
+                } else if (Objects.equals(type, "spawnnums")) {
+                    nextId.set(200);
                     writerEditornums.print("\nSpawnNums\n");
                 }
                 writerEditornums.print("{\n");
 
                 GameOrder.forEach((game) -> {
-                    int offset = 0;
-                    if (game.equals("heretic")) {
-                        if (type.equals("spawnnums")) {
-                            offset = 200;
-                        } else {
-                            offset = 11000;
-                        }
-                    } else if (game.equals("hexen")) {
-                        if (type.equals("spawnnums")) {
-                            offset = 400;
-                        } else {
-                            offset = 22000;
-                        }
-                    }
-
                     // Properties matches GZDOOM's format and does the job.
                     Properties p = new Properties();
                     String filePath = "gameinfo/" + type + "." + game;
@@ -189,7 +176,7 @@ public class ActorFactory {
                     Map<String, String> actorMap = (Map)p;
                     SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
                     for (String key : keys) {
-                        int spawnNum = Integer.parseInt(key) + offset;
+                        int spawnNum = nextId.getAndIncrement();
                         String value = actorMap.get(key);
                         writerEditornums.print(spawnNum + " = " + value + "\n");
                     }
