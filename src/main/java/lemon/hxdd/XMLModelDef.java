@@ -18,28 +18,25 @@ public class XMLModelDef {
     private final String fileName;
     private int frameCounter = 0;
 
-    private static final String TAB_SPACE = "    ";
-
     XMLModelDef(String fileName) {
         this.fileName = fileName;
     }
 
     public void Parse() {
         try {
-            boolean SETTING_COALESCED = (boolean) Settings.getInstance().Get("ModelDefCoalesceData");
+            boolean Setting_Coalesced = (boolean) Settings.getInstance().Get("ModelDefCoalesceData");
             String modelDefPath = "modeldef." + this.fileName.toLowerCase().replace(".xml", "");
-            if (SETTING_COALESCED) {
+            if (Setting_Coalesced) {
                 modelDefPath = "modeldef.hexen2";
             }
-            FileWriter fw = new FileWriter(Settings.getInstance().Get("PathTemporary") + modelDefPath, SETTING_COALESCED);
+            FileWriter fw = new FileWriter(Settings.getInstance().Get("PathTemporary") + modelDefPath, Setting_Coalesced);
             PrintWriter out = new PrintWriter(fw);
 
             final String[] filePath = {"hexen2/modeldef/" + this.fileName};
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            final Document[] dxml = new Document[1];
-            Document xml;
 
+            final Document[] dxml = new Document[1];
             try {
                 String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
                 if (protocol.equals("jar")) {
@@ -62,10 +59,14 @@ public class XMLModelDef {
                     assert in != null;
                     in.close();
                 }
-                xml = dxml[0];
+                Document xml = dxml[0];
 
                 String className = "";
                 Element XMDHeader = xml.getDocumentElement();
+                if (!XMDHeader.getNodeName().equals("XMLModelDef")) {
+                    // Not a valid XMLModelDef file, skip
+                    return;
+                }
                 if (XMDHeader.hasAttribute("class")) {
                     className = XMDHeader.getAttributeNode("class").getValue();
                 }
@@ -75,7 +76,7 @@ public class XMLModelDef {
                 int groupCount = groups.getLength();
 
                 for (int i = 0; i < groupCount; i++) {
-                    if (groups.item(i).getNodeName().matches("Group")) {
+                    if (groups.item(i).getNodeName().equals("Group")) {
 
                         Node nodeClass = groups.item(i).getAttributes().getNamedItem("class");
                         if (nodeClass != null) {
@@ -171,27 +172,27 @@ public class XMLModelDef {
     }
     private void WritePath(PrintWriter out, NamedNodeMap attributes) {
         String folder = attributes.getNamedItem("folder").getNodeValue();
-        out.print(TAB_SPACE + "Path " + "\"" + folder + "\"\n");
+        out.print(Shared.TAB_SPACE + "Path " + "\"" + folder + "\"\n");
     }
     private void WriteModel(PrintWriter out, NamedNodeMap attributes) {
         // Model # "file.ext"
         String model = attributes.getNamedItem("model").getNodeValue();
         String file = attributes.getNamedItem("file").getNodeValue();
-        out.print(TAB_SPACE + "Model " + model + " \"" + file + "\"\n");
+        out.print(Shared.TAB_SPACE + "Model " + model + " \"" + file + "\"\n");
     }
     private void WriteSkin(PrintWriter out, NamedNodeMap attributes) {
         // Skin # "file.ext"
         String model = attributes.getNamedItem("model").getNodeValue();
         String file = attributes.getNamedItem("file").getNodeValue();
-        out.print(TAB_SPACE + "Skin " + model + " \"" + file + "\"\n");
+        out.print(Shared.TAB_SPACE + "Skin " + model + " \"" + file + "\"\n");
     }
     private void WriteKeyValue(PrintWriter out, String key, NamedNodeMap attributes) {
         String value = attributes.getNamedItem("value").getNodeValue();
-        out.print(TAB_SPACE + key + " " + value + "\n");
+        out.print(Shared.TAB_SPACE + key + " " + value + "\n");
     }
     private void WriteFlag(PrintWriter out, NamedNodeMap attributes) {
         String name = attributes.getNamedItem("name").getNodeValue();
-        out.print(TAB_SPACE + name + "\n");
+        out.print(Shared.TAB_SPACE + name + "\n");
     }
     private void WriteAnimation(PrintWriter out, NamedNodeMap attributes) {
         String key = attributes.getNamedItem("key").getNodeValue();
@@ -200,7 +201,7 @@ public class XMLModelDef {
 
         Node nodeComment = attributes.getNamedItem("comment");
         if (nodeComment != null) {
-            out.print("\n" +TAB_SPACE + "// " + nodeComment.getNodeValue() + "\n");
+            out.print("\n" + Shared.TAB_SPACE + "// " + nodeComment.getNodeValue() + "\n");
         } else {
             out.print("\n\n");
         }
@@ -225,16 +226,16 @@ public class XMLModelDef {
             String alphaIndexChar = GetCharFromInt(charIndex++ % 26);
 
             if (animationLetterFrames.toString().equals("")) {
-                animationLetterFrames.append(TAB_SPACE + "// ").append(AnimationId).append(" A");
+                animationLetterFrames.append(Shared.TAB_SPACE + "// ").append(AnimationId).append(" A");
             } else {
                 animationLetterFrames.append(alphaIndexChar);
             }
-            buffer.add(TAB_SPACE + "FrameIndex " + AnimationId + " " + alphaIndexChar + " " + model + " " + frame + "\n");
+            buffer.add(Shared.TAB_SPACE + "FrameIndex " + AnimationId + " " + alphaIndexChar + " " + model + " " + frame + "\n");
         }
         int frameEnd = this.frameCounter - 1;
 
         out.print(animationLetterFrames + "\n");
-        out.printf(TAB_SPACE + "// " + "Frames: %d - %d\n", frameStart, frameEnd);
+        out.printf(Shared.TAB_SPACE + "// " + "Frames: %d - %d\n", frameStart, frameEnd);
         for (String s : buffer) {
             out.print(s);
         }
