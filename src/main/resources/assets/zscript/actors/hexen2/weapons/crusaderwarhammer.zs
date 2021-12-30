@@ -1,4 +1,4 @@
-// Paladin Weapon: Gauntlets
+// Crusader Weapon: Warhammer
 
 class CWeapWarhammer : CrusaderWeapon
 {
