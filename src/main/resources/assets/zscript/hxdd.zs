@@ -56,6 +56,7 @@
 // Assassin Weapons
 #include "zscript/actors/hexen2/weapons/assassinpunchdagger.zs"
 #include "zscript/actors/hexen2/weapons/assassincrossbow.zs"
+#include "zscript/actors/hexen2/weapons/assassingrenades.zs"
 
 // Necromancer Weapons
 #include "zscript/actors/hexen2/weapons/necromancersickle.zs"
