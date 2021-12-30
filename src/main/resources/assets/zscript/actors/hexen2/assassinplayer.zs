@@ -31,7 +31,7 @@ class AssassinPlayer : HXDDPlayerPawn
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "AWeapPunchDagger";
 		Player.WeaponSlot 2, "AWeapCrossbow";
-		Player.WeaponSlot 3, "FWeapHammer";
+		Player.WeaponSlot 3, "AWeapGrenades";
 		Player.WeaponSlot 4, "FWeapQuietus";
 
 		HXDDPlayerPawn.DefaultArmorMode "hexen";
@@ -41,7 +41,7 @@ class AssassinPlayer : HXDDPlayerPawn
 		HXDDPlayerPawn.WeaponFallbackAnimations 4;
 		HXDDPlayerPawn.Weapon1AnimationSet "AWeapPunchDagger", 1;
 		HXDDPlayerPawn.Weapon2AnimationSet "AWeapCrossbow", 2;
-		HXDDPlayerPawn.Weapon3AnimationSet "FWeapHammer", 3;
+		HXDDPlayerPawn.Weapon3AnimationSet "AWeapGrenades", 3;
 		HXDDPlayerPawn.Weapon4AnimationSet "FWeapQuietus", 4;
 		
 		Player.ColorRange 0, 0;

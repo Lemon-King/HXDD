@@ -1,4 +1,4 @@
-// Crusader
+// Assassin
 
 class CrusaderPlayer : HXDDPlayerPawn
 {

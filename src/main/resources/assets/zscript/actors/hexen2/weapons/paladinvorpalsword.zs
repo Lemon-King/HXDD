@@ -1,10 +1,9 @@
-// Paladin Weapon: Vorpal Sword
-
+// ref: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/vorpal.hc
 class PWeapVorpalSword : PaladinWeapon
 {
 	Default
 	{
-		Weapon.SelectionOrder 1500;
+		Weapon.SelectionOrder 1600;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 0;
 		Weapon.AmmoType1 "Mana1";
@@ -60,7 +59,7 @@ class PWeapVorpalSword : PaladinWeapon
 			return;
 		}
 
-        Ammo ammoMana1 = Ammo((Player.mo.FindInventory("mana1", true)));
+        Ammo ammoMana1 = Ammo((Player.mo.FindInventory("Mana1", true)));
         int amount = ammoMana1.amount;
 
 		Weapon weapon = player.ReadyWeapon;
@@ -78,7 +77,7 @@ class PWeapVorpalSword : PaladinWeapon
 			return;
 		}
 
-        Ammo ammoMana1 = Ammo((Player.mo.FindInventory("mana1", true)));
+        Ammo ammoMana1 = Ammo((Player.mo.FindInventory("Mana1", true)));
         int amount = ammoMana1.amount;
 
 		Weapon weapon = player.ReadyWeapon;
@@ -129,7 +128,7 @@ class PWeapVorpalSword : PaladinWeapon
 				swipe.pitch = swipe.target.pitch;
 				swipe.roll = swipe.target.roll;
 
-				Vector3 pos = (swipe.target.x, swipe.target.y - (sin(angle) * 10), player.viewz - (cos(angle) * 10));
+				Vector3 pos = (swipe.target.pos.x, swipe.target.pos.y - (sin(angle) * 10), player.viewz - (cos(angle) * 10));
 				swipe.SetOrigin(pos, true);
 			}
 		}
@@ -210,7 +209,7 @@ class PWeapVorpalSword_Swipe : Actor {
 		pitch = self.target.pitch;
 		roll = self.target.roll;
 
-		Vector3 pos = (self.target.x, self.target.y, self.playerInfo.viewz - 10);
+		Vector3 pos = (self.target.pos.x, self.target.pos.y, self.playerInfo.viewz - 10);
 		SetOrigin(pos, true);
 	}
 }
@@ -299,11 +298,10 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 
 		Speed 31.25;
 		//Radius 5;
-		Radius 10;
+		Radius 15;
 		Height 10;
 		DamageType "Electric";		// flavor
 		Projectile;
-        //SeeSound "hexen2/necro/mmfire";
 		DeathSound "hexen2/weapons/explode";
 		Obituary "$OB_MPMWEAPFROST";
         Scale 1.0;
@@ -412,7 +410,8 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 				damageMulti = 1.0;
 			}
          	int damage = random[VorpalWave](30, 60) * damageMulti;
-         	tracer.DamageMobj(self, target, damage, 'Electric');
+         	int newDamage = tracer.DamageMobj(self, target, damage, 'Electric');
+			tracer.TraceBleed(newDamage > 0 ? newDamage : damage, self);
 		}
 	}
 

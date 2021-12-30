@@ -1,4 +1,4 @@
-// Paladin
+// Assassin
 
 class PaladinPlayer : HXDDPlayerPawn
 {

@@ -45,6 +45,8 @@ class SuccubusWeapon : Hexen2Weapon
 }
 
 class Hexen2Projectile: Actor {
+	ParticleGenerator pg;
+    
     double veerAmount;
 	property veerAmount: veerAmount;
 
@@ -142,17 +144,18 @@ class Hexen2Projectile: Actor {
         }
         if (lockEntity == self || !lockEntity) {
             if (random[homing](0.0, 1.0) < 0.3) {
-                Actor nextEntity = GetEntitiesInRange(100.0);
+                Actor nextEntity = RoughMonsterSearch(100, true, false, 90); //GetEntitiesInRange(100.0);
                 if (nextEntity) {
                     oldLockEntity = lockEntity;
                     lockEntity = nextEntity;
-                    console.printf("New Target: %s", lockEntity.GetClassName());
+                    //console.printf("New Target: %s", lockEntity.GetClassName());
                 }
             }
         }
         if (lockEntity == self || !lockEntity) {
             return false;
         }
+        /*
         if (entityIsVisible) {
             // do homing
             Vector3 newDir = (0,0,0);
@@ -178,6 +181,8 @@ class Hexen2Projectile: Actor {
                 vel += (olddir * oldvelmult + huntdir) * newveldiv * speed * speed_mod;
             }
         }
+        */
+        A_SeekerMissile(2, turnTime);
         Veer();
 
         return true;
@@ -240,7 +245,8 @@ class Hexen2Weapon: Weapon {
         
         // Get velocity
         vector3 aimpos;
-        if(player && crosshairConverge) {
+        if(player && crosshairConverge)
+        {
             FLineTraceData lt;
             LineTrace(a, 1024*1024, p, 0, player.viewz-pos.z, 0, data:lt);
             aimPos = lt.HitLocation;

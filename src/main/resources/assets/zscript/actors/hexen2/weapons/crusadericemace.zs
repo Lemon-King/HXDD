@@ -1,10 +1,8 @@
-// Crusader Weapon: Ice Mace
-
 class CWeapIceMace : CrusaderWeapon
 {
 	Default
 	{
-		Weapon.SelectionOrder 3500;
+		Weapon.SelectionOrder 1600;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 0;
 		Weapon.AmmoType1 "Mana1";

@@ -1,11 +1,10 @@
-// Demoness Weapon: Blood Rain
 
 class SWeapBloodRain : SuccubusWeapon
 {
 	Default
 	{
 		+NOGRAVITY
-		Weapon.SelectionOrder 1000;
+		Weapon.SelectionOrder 3500;
 		Weapon.AmmoUse 0;
 		Weapon.AmmoGive 150;
 		Weapon.KickBack 150;
@@ -82,9 +81,7 @@ class SWeapBloodMissile : Actor
 
 	Default {
 		DamageFunction 0;
-		+HITTRACER
-		+ZDOOMTRANS
-		+SPAWNSOUNDSOURCE
+		+HITTRACER +ZDOOMTRANS +SPAWNSOUNDSOURCE
 
 		Speed 25;
 		Radius 8;

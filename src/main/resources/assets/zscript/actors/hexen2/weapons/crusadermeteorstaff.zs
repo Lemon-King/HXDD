@@ -1,10 +1,11 @@
-// Crusader Weapon: Meteor Staff
+
+// https://github.com/videogamepreservation/hexen2/blob/master/H2W/HCode/meteor.hc
 
 class CWeapMeteorStaff : CrusaderWeapon
 {
 	Default
 	{
-		Weapon.SelectionOrder 3500;
+		Weapon.SelectionOrder 1000;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 0;
 		Weapon.AmmoType1 "Mana2";
@@ -50,8 +51,9 @@ class CWeapMeteorStaff : CrusaderWeapon
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (weapon.bAltFire))
+			if (!weapon.DepleteAmmo(weapon.bAltFire)) {
 				return;
+			}
 		}
 
 		// Spawn first then recoil

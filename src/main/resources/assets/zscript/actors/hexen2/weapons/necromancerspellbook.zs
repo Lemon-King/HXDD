@@ -1,10 +1,11 @@
-// Necromancer Weapon: Magic Missiles & Bone Shards
 
 // Both Magic Missiles and Bone Shards share a single model
 // Homing needs to be fixed, but otherwise functional
 
 class NWeapMagicMissile: NWeapSpellbook {
 	Default {
+		Weapon.SelectionOrder 1600;
+		
 		Weapon.AmmoType1 "Mana1";
 		Weapon.AmmoUse 2;
 		Weapon.AmmoGive 25;
@@ -245,12 +246,10 @@ class NWeapSpellbook : NecromancerWeapon
             }
 		}
 
-		/* Unused
 		Actor flash = SpawnFirstPerson("NWeapSpellbook_Flash", 30, 10, -3, false, 0, 0);
 		flash.angle = angle;
 		flash.pitch = pitch;
 		flash.roll = roll;
-		*/
 
 		// All 3 projectiles use veer
 		// Make this work: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/hcode/projbhvr.hc#L51
@@ -306,7 +305,7 @@ class NWeapSpellbook_Flash : Actor {
 	double tickDuration;
 	property tickDuration: tickDuration;
 
-	double vroll;
+	double avelocityz;
 
 	Default {
 		+NOBLOCKMAP
@@ -314,10 +313,10 @@ class NWeapSpellbook_Flash : Actor {
 		+ZDOOMTRANS
 
 		RenderStyle "Add";
-		Alpha 1.0f;
+		Alpha 0.3f;
 		Scale 6.0f;
 
-        NWeapSpellbook_Flash.tickDuration .2f;
+        NWeapSpellbook_Flash.tickDuration 0.75;
 	}
 	States
 	{
@@ -329,32 +328,32 @@ class NWeapSpellbook_Flash : Actor {
     override void PostBeginPlay() {
         Super.PostBeginPlay();
 
-		vroll = frandom(0.0f, 1.0f) * 360.0f;
-        let mat = HXDD_GM_Matrix.fromEulerAngles(0, 0, vroll);
-        mat = mat.multiplyVector3((angle, 0, 0));
-        vector3 apr = mat.asVector3(false);
+		avelocityz = frandom(360,720) / 32.0;
+		roll = frandom(0.0, 360.0);
     }
 
+	// Broken, needs to match up
 	override void Tick() {
 		Super.Tick();
 
-		vroll += 6.25;
-        let mat = HXDD_GM_Matrix.fromEulerAngles(0, 0, vroll);
-        mat = mat.multiplyVector3((angle, 0, 0));
-        vector3 apr = mat.asVector3(false);
+		Scale.x += 0.05;
+		Scale.y += 0.05;
+
+		roll += -avelocityz;
 
 		if (tickDuration <= 0.0f) {
 			Destroy();
 		}
-		if (tickDuration <= 0.1f) {
-			Alpha = tickDuration * 10.0f;
+		if (tickDuration <= 0.75 * 0.5) {
+			Alpha = self.Default.Alpha * (tickDuration / (0.75 * 0.5));
 		}
 
-		tickDuration -= 35.0f / 1000.0f;
+		tickDuration -= 35.0f / 100.0f;
 	}
 }
 
 // Combines into a single object
+// FX Incorrect
 class NWeapSpellbook_MissileStar : Actor {
 	Actor parent;
 	Default {
@@ -435,6 +434,9 @@ class NWeapSpellbook_MagicMissilePower : NWeapSpellbook_MagicMissile {
         Super.BeginPlay();
         Speed = 0;
     }
+	override void Tick() {
+		Super.Tick();
+	}
 }
 
 class NWeapSpellbook_MagicMissile : Hexen2Projectile {
@@ -487,6 +489,21 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
 		NWeapSpellbook_MissileFlare(attachedActors[0]).parent = self;
 		NWeapSpellbook_MissileStar(attachedActors[1]).parent = self;
 		NWeapSpellbook_MissileStar(attachedActors[2]).parent = self;
+
+        pg = ParticleGenerator(Spawn("ParticleGenerator"));
+        pg.Attach(self);
+        pg.color[0] = (52, 44, 80);
+        pg.color[1] = (172, 172, 212);
+        pg.origin[0] = (-24, -24, self.height + -12);
+        pg.origin[1] = (24, 24, self.height - 12);
+        pg.velocity[0] = (0, 0, -24);
+        pg.velocity[1] = (0, 0, 0);
+        pg.startalpha = 1.0;
+        pg.sizestep = 0.05;
+		pg.flag_fullBright = true;
+		pg.actorParticleTypes.push("ParticleTestA");
+		pg.actorParticleTypes.push("ParticleTestB");
+		pg.actorParticleTypes.push("ParticleTestC");
     }
 
 	override void Tick() {
@@ -530,6 +547,7 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
 		attachedActors[0].Destroy();
 		attachedActors[1].Destroy();
 		attachedActors[2].Destroy();
+		pg.Remove();
 
 		angle = 0;
 		pitch = 0;

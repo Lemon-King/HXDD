@@ -1,10 +1,13 @@
-// Assassin Weapon: Crossbow
+
+// https://github.com/videogamepreservation/hexen2/blob/master/H2W/HCode/crossbow.hc
+
+// Damage may need tuning
 
 class AWeapCrossbow : AssassinWeapon
 {
 	Default
 	{
-		Weapon.SelectionOrder 3500;
+		Weapon.SelectionOrder 1600;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 0;
 		Weapon.AmmoType1 "Mana1";
@@ -88,25 +91,28 @@ class AWeapCrossbow : AssassinWeapon
 
 class AWeapCrossbow_Bolt: Actor {
 	double tickDuration;
-
 	property tickDuration: tickDuration;
 
-	double traceDamage;
+	bool isFalling;
+
+	vector3 avelocity;
 
 	Default {
 		DamageFunction 0;
-		+HITTRACER +ZDOOMTRANS +SPAWNSOUNDSOURCE
+		+HITTRACER
+		+ZDOOMTRANS
+		+SPAWNSOUNDSOURCE
 
 		Speed 10;
 		Radius 4;
 		Height 4;
-		Damage 15;
+		//Damage 15;
 		Projectile;
 		ActiveSound "hexen2/assassin/arrowfly";
 		DeathSound "hexen2/assassin/arrowbrk";
 		Obituary "$OB_MPMWEAPFROST";
 
-        AWeapCrossbow_Bolt.tickDuration 142.8571428571429; // ~5 seconds
+        AWeapCrossbow_Bolt.tickDuration 2.0; // ~2 seconds
 	}
 
 	States
@@ -115,15 +121,13 @@ class AWeapCrossbow_Bolt: Actor {
 		BOLT A -1;
 		Loop;
 	Death:
-		TNT1 A 1;
-	//	WHT1 ABCDE 2;
+		TNT1 A 1 A_GetDamage;
 		Stop;
 	}
 
     override void BeginPlay() {
         Super.BeginPlay();
         Speed = (800.0f + (frandom[BoltSpeed](0.0f, 1.0f) * 500.0f)) / 32.0f;
-		traceDamage = 15.0f;
     }
 
 	override void Tick() {
@@ -132,28 +136,45 @@ class AWeapCrossbow_Bolt: Actor {
 		if (InStateSequence(CurState, self.Findstate("Death"))) {
 			return;
 		}
-		if (tickDuration <= 0) {
-		//	Destroy();
+
+		self.angle += avelocity.x;
+		self.pitch += avelocity.y;
+		self.roll += avelocity.z;
+
+		if (tickDuration <= 0 && !isFalling) {
+			isFalling = true;
+			avelocity = (50.0 / 32.0, 50.0 / 32.0, 50.0 / 32.0);
+
+			double zFall = frandom[boltzfall](-60.0 / 32.0,-150.0 / 32.0);
+			A_ChangeVelocity(0, 0, zFall, CVF_RELATIVE, AAPTR_DEFAULT);
 		}
 
-		//tickDuration -= 1.0f;
+		tickDuration -= 32.0 / 1000.0;
 	}
 
-	void A_GetDamage() {
-        //A_SetRenderStyle(0.5f, STYLE_Add);
+	action void A_GetDamage() {
+		if (self is "AWeapCrossbow_FlamingBolt") {
+			A_Explode(40, 64, XF_HURTSOURCE, true, 0, 0, 0, "None", "Fire");
+			return;
+		}
 		if (tracer) {
-         	tracer.DamageMobj(self, target, traceDamage, "None");
-			Spawn("AWeapCrossbow_BoltFlash", self.pos);
-			// Spawn Particles
+			Actor fxDamage = Actor(Spawn("AWeapCrossbow_BoltFlash"));
+			fxDamage.angle = self.angle;
+			fxDamage.pitch = self.pitch;
+			fxDamage.roll = self.roll;
+			fxDamage.SetOrigin(self.pos, false);
+
+         	tracer.DamageMobj(self, target, 10, "None");
 		} else {
-			Spawn("AWeapCrossbow_BoltPuff", self.pos);
+			Actor fxPuff = Actor(Spawn("AWeapCrossbow_BoltPuff"));
+			fxPuff.SetOrigin(self.pos, false);
 		}
 	}
 }
 
 class AWeapCrossbow_FlamingBolt: AWeapCrossbow_Bolt {
     Default {
-        Damage 40;
+        //Damage 40;
         //SeeSound "hexen2/assassin/firefblt";
     }
 	States
@@ -172,9 +193,9 @@ class AWeapCrossbow_BoltPuff: Actor {
 	Default {
 		+NOBLOCKMAP
 		+NOGRAVITY
-		//RenderStyle "Add";
-		Alpha 1.0f;
-		VSpeed 1.0f;
+		RenderStyle "Translucent";
+		Alpha 0.8;
+		VSpeed 1.0;
 	}
 	States {
 		Spawn:
@@ -184,6 +205,9 @@ class AWeapCrossbow_BoltPuff: Actor {
 }
 
 class AWeapCrossbow_BoltFlash: Actor {
+	double tickDuration;
+	property tickDuration: tickDuration;
+	vector3 avelocity;
 
 	Default {
 		+NOBLOCKMAP
@@ -191,18 +215,37 @@ class AWeapCrossbow_BoltFlash: Actor {
 		+ALLOWPARTICLES
 		+ZDOOMTRANS
 		RenderStyle "Add";
-		Alpha 0.4f;
+		Alpha 0.9;
+		Scale 0.1;
+
+		AWeapCrossbow_BoltFlash.tickDuration 0.3;
 	}
 	States {
 		Spawn:
-			STON ABCDABCDABCD 2;
-			Stop;
+			FLSH A 1 Bright;
+			Loop;
 	}
 
+    override void BeginPlay() {
+        Super.BeginPlay();
+		double zvelz = frandom(200.0/32.0, 700.0/32.0);
+		avelocity = (0,0, zvelz);
+    }
 
 	override void Tick() {
 		Super.Tick();
 
-		roll += 12.0f;
+		self.angle += avelocity.x;
+		self.pitch += avelocity.y;
+		self.roll += avelocity.z;
+
+		Scale.x += 0.05;
+		Scale.y += 0.05;
+
+		if (tickDuration <= 0 ) {
+			self.Destroy();
+		}
+
+		tickDuration -= 32.0 / 1000.0;
 	}
 }

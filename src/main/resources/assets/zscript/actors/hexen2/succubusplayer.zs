@@ -1,4 +1,4 @@
-// Demoness
+// Assassin
 
 class SuccubusPlayer : HXDDPlayerPawn
 {
