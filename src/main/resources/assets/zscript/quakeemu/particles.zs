@@ -1,6 +1,12 @@
 
-// Simple Quake Engine like Particle FX Generator
-// With support for Actor Particles
+/*
+** Simple Quake Engine like Particle FX Generator
+** With support for Actor Particles
+**
+** "If particles used real sprites instead of blocks, they could be much
+** more useful." - Randy Heit
+** https://github.com/coelckers/gzdoom/blob/4bcea0ab783c667940008a5cab6910b7a826f08c/src/playsim/p_effect.cpp#L33
+*/
 
 // TODO: Insert open source license thats seperate from the main mod
 // Allowing users to use this file in their projects as they choose
@@ -32,8 +38,6 @@ class ParticleGenerator: Actor {
     bool flag_relang;
     bool flag_notimefreeze;
 
-    int pid;
-
     Default {
 		Height 0;
 		+NOBLOCKMAP
@@ -62,7 +66,7 @@ class ParticleGenerator: Actor {
         Super.Tick();
 
         if ((!self.target && self.tickDuration == 0) || (self.tickDuration != 0 && self.ticks > self.tickDuration)) {
-            self.Destroy();
+            self.Remove();
             return;
         }
 
@@ -115,7 +119,7 @@ class ParticleGenerator: Actor {
 
                 int totalActorParticleTypes = self.actorParticleTypes.size();
                 if (totalActorParticleTypes > 0) {
-                    String tActor = self.actorParticleTypes[random(0, totalActorParticleTypes - 1)];
+                    String tActor = CustomActorType(i);
                     ActorParticle p = ActorParticle(Spawn(tActor));
                     if (p) {
                         p.c_lifetime = ticksLifetime;
@@ -147,6 +151,10 @@ class ParticleGenerator: Actor {
 
     // Programmatic overrides for more finely controlled particle effects
     // Defaults use predefined and randomly defined ranges
+    virtual String CustomActorType(int index) {
+        int totalActorParticleTypes = self.actorParticleTypes.size();
+        return self.actorParticleTypes[random(0, totalActorParticleTypes - 1)];
+    }
     virtual double CustomLifetime(int index) {
         return lifetime;
     }
@@ -213,6 +221,7 @@ class ParticleGenerator: Actor {
 
 // A needlessly complex particle that can look pretty and do neat things
 // Such as interacting with the world and causing chaos
+// HW Renderer: https://github.com/coelckers/gzdoom/blob/1c3e0f1a755677f480b21ee1cd8c2c80343f9202/src/rendering/hwrenderer/scene/hw_sprites.cpp#L1202
 class ActorParticle: Actor {
     double c_lifetime;
     double c_size;
@@ -244,13 +253,17 @@ class ActorParticle: Actor {
     override void PostBeginPlay() {
         Super.PostBeginPlay();
 
-        self.Scale.x *= (1/32) * self.c_size;
-        self.Scale.y *= (1/32) * self.c_size;
-        self.A_SetSize(self.Scale.x, self.Scale.x);
+        double glFactor = 1.0/7.0;
+
+        self.Scale.x *= glFactor;
+        self.Scale.y *= glFactor;
+        self.Scale.x *= self.c_size;
+        self.Scale.y *= self.c_size;
+        self.A_SetSize(self.Scale.x, self.Scale.y);
 
         self.SetOrigin(self.c_origin, false);
 
-        if (self.c_fadestep < 0) {
+        if (self.c_fadestep < 0 && self.c_lifetime > 0) {
             self.c_fadestep = FadeFromLifetime(self.c_lifetime);
         }
     }
@@ -258,11 +271,12 @@ class ActorParticle: Actor {
     override void Tick() {
         Super.Tick();
 
-		double oldtrans = self.Alpha;
+        double glFactor = 1.0/7.0;
+
 		self.Alpha -= self.c_fadestep;
-		self.Scale.x += self.c_sizestep;
-		self.Scale.y += self.c_sizestep;
-        A_SetSize(self.Scale.x, self.Scale.x);
+		self.Scale.x += self.c_sizestep * glFactor;
+		self.Scale.y += self.c_sizestep * glFactor;
+        A_SetSize(self.Scale.x, self.Scale.y);
 
         /*
 		double floorz;
@@ -274,49 +288,18 @@ class ActorParticle: Actor {
         */
 
 		if (self.Alpha <= 0 || --self.c_lifetime <= 0 || (self.c_size <= 0)) {
-            self.Destroy();
+            self.Remove();
 		}
-        
+
 		self.c_velocity += self.c_accel;
         self.A_ChangeVelocity(self.c_velocity.x, self.c_velocity.y, self.c_velocity.z, CVF_REPLACE, AAPTR_DEFAULT);
+    }
+
+    virtual void Remove() {
+        self.Destroy();
     }
 
     double FadeFromLifetime(double a) {
         return 1.0 / a;
     }
-}
-
-class ParticleTestA: ActorParticle {
-    Default {
-        RenderStyle "Add";
-        Scale (1/8);
-    }
-	States {
-        Spawn:
-            FX16 D 2;
-            FX16 E 2;
-            Loop;
-	}
-}
-class ParticleTestB: ActorParticle {
-    Default {
-        RenderStyle "Add";
-        Scale (1/24);
-    }
-	States {
-        Spawn:
-            FSFX NOPQRST 2;
-            Loop;
-	}
-}
-class ParticleTestC: ActorParticle {
-    Default {
-        RenderStyle "Add";
-        Scale (1/50);
-    }
-	States {
-        Spawn:
-            FX00 CDEF 2;
-            Loop;
-	}
 }
