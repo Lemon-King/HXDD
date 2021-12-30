@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="NWeapSickle">
         <Path folder="models" />
         <Model file="sickle.md3" model="0" />
@@ -18,4 +18,4 @@
 
         <Animation key="NWSS" frames="10" model="0" comment="Select / Deselect"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

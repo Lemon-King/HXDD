@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef class="AWeapPunchDagger">
+<XMLModelDef class="AWeapPunchDagger">
     <Group>
         <Path folder="models" />
         <Model file="punchdgr.md3" model="0" />
@@ -19,4 +19,4 @@
 
         <Animation key="APDS" frames="8" model="0" comment="Select / Deselect"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="NWeapMagicMissile">
         <Path folder="models" />
         <Model file="w_l2_c3.md3" model="0" />
@@ -160,4 +160,4 @@
 
         <Animation key="BONE" frames="1" model="0" comment="Bone Shrapnel Model"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

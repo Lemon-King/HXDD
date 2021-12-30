@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef class="CWeapWarhammer">
+<XMLModelDef class="CWeapWarhammer">
     <Group>
         <Path folder="models" />
         <Model file="warhamer.md3" model="0" />
@@ -24,4 +24,4 @@
 
         <Animation key="CWID" frames="1" model="0" comment="Idle"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

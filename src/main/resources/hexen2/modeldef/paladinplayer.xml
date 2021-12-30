@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef class="PaladinPlayer">
+<XMLModelDef class="PaladinPlayer">
     <Group>
         <Path folder="models" />
         <Model file="paladin.md3" model="0" />
@@ -38,4 +38,4 @@
         <Animation key="PSST" frames="13" model="0" comment="Stand: Staff"/>
         <Animation key="PSSA" frames="13" model="0" comment="Stand: Sword/Axe"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

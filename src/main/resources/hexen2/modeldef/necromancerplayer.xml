@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef class="NecromancerPlayer">
+<XMLModelDef class="NecromancerPlayer">
     <Group>
         <Path folder="models" />
         <Model file="necro.md3" model="0" />
@@ -34,4 +34,4 @@
         <Animation key="PRST" frames="12" model="0" comment="Run: Staff"/>
         <Animation key="PSST" frames="12" model="0" comment="Stand: Staff"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="AWeapGrenades">
+        <Path folder="models" />
+        <Model file="w_l3_c4.md3" model="0" />
+        <Skin file="w_l3_c4_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="AWeapGrenades">
+        <Path folder="models" />
+        <Model file="v_assgr.md3" model="0" />
+        <Skin file="v_assgr_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="AGRS" frames="6" model="0" comment="Select / Deselect"/>
+
+        <Animation key="AGRI" frames="1" model="0" comment="Idle"/>
+
+        <Animation key="AGRT" frames="12" model="0" comment="Shoot (Frame 15 blends poorly)"/>
+    </Group>
+    <Group class="AWeapGrenades_Grenade">
+        <Path folder="models" />
+        <Model file="assgren.md3" model="0" />
+        <Skin file="assgren_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="GREN" frames="1" model="0" comment="Grenade Projectile"/>
+    </Group>
+</XMLModelDef>

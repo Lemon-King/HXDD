@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef class="SuccubusPlayer">
+<XMLModelDef class="SuccubusPlayer">
     <Group>
         <Path folder="models" />
         <Model file="succubus.md3" model="0" />
@@ -42,4 +42,4 @@
         -->
         <Frame skip="48" />
     </Group>
-</MetaModelDef>
+</XMLModelDef>

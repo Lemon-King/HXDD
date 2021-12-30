@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="AWeapCrossbow">
         <Path folder="models" />
         <Model file="w_l2_c4.md3" model="0" />
@@ -53,4 +53,16 @@
 
         <Animation key="BOLT" frames="9" model="0" comment="Flaming Bolt"/>
     </Group>
-</MetaModelDef>
+    <Group class="AWeapCrossbow_BoltFlash">
+        <Path folder="models" />
+        <Model file="arrowhit.md3" model="0" />
+        <Skin file="arrowhit_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="FLSH" frames="1" model="0" comment="Arrow Hit FX"/>
+    </Group>
+</XMLModelDef>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="SWeapBloodRain">
         <Path folder="models" />
         <Model file="sucwp1.md3" model="0" />
@@ -30,4 +30,4 @@
 
         <Animation key="BMIS" frames="4" model="0" comment="Loop"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="CWeapMeteorStaff">
         <Path folder="models" />
         <Model file="w_l3_c2.md3" model="0" />
@@ -42,4 +42,4 @@
 
         <Animation key="ICE1" frames="1" model="0" comment="Ref"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

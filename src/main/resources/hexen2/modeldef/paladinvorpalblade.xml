@@ -70,8 +70,8 @@
     </Group>
     <Group class="PWeapVorpalSword_Shock">
         <Path folder="models" />
-        <Model file="vorpshk2.md3" model="0" />
-        <Skin file="vorpshk2_skin0.png" model="0" />
+        <Model file="vorpshok.md3" model="0" />
+        <Skin file="vorpshok_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
 
@@ -82,8 +82,8 @@
     </Group>
     <Group class="PWeapVorpalSword_Shock">
         <Path folder="models" />
-        <Model file="vorpshk2.md3" model="0" />
-        <Skin file="vorpshk2_skin1.png" model="0" />
+        <Model file="vorpshok.md3" model="0" />
+        <Skin file="vorpshok_skin1.png" model="0" />
 
         <Scale value="1 1 1" />
 
