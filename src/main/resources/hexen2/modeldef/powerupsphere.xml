@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="H2PowerupSphere_GoodSphere">
+        <Path folder="models" />
+        <Model file="goodsphr.md3" model="0" />
+        <Skin file="goodsphr_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="H2PowerupSphere_Cross">
+        <Path folder="models" />
+        <Model file="cross.md3" model="0" />
+        <Skin file="cross_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="CRSS" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="H2PowerupSphere_EvilSphere">
+        <Path folder="models" />
+        <Model file="soulball.md3" model="0" />
+        <Skin file="soulball_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="H2PowerupSphere_Skull">
+        <Path folder="models" />
+        <Model file="soulskul.md3" model="0" />
+        <Skin file="soulskul_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SKLL" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+</XMLModelDef>
