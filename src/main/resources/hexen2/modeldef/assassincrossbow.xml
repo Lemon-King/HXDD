@@ -6,6 +6,7 @@
         <Skin file="w_l2_c4_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
