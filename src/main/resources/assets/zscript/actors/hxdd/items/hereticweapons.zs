@@ -39,9 +39,9 @@ class MultiClassCrossbow : MultiSpawner {
         self.Fighter = "FWeapAxe";
         self.Cleric = "CWeapStaff";
         self.Mage = "MWeapFrost";
-
+        self.Paladin = "PWeapVorpalSword";
         self.Crusader = "CWeapIceMace";
-
+        self.Necromancer = "NWeapMagicMissile";
         self.Assassin = "AWeapCrossbow";
     }
 }
@@ -51,9 +51,14 @@ class MultiClassBlaster : MultiSpawner {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "Blaster";
         self.Corvus = "Blaster";
-        self.Fighter = "FWeapHammer";
-        self.Cleric = "CWeapFlame";
-        self.Mage = "MWeapLightning";
+        self.Fighter = "FWeaponPiece1";
+        self.Cleric = "CWeaponPiece1";
+        self.Mage = "MWeaponPiece1";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
@@ -62,9 +67,13 @@ class MultiClassSkullRod : MultiSpawner {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "SkullRod";
         self.Corvus = "SkullRod";
-        self.Fighter = "FWeaponPiece1";
-        self.Cleric = "CWeaponPiece1";
-        self.Mage = "MWeaponPiece1";
+        self.Fighter = "FWeapHammer";
+        self.Cleric = "CWeapFlame";
+        self.Mage = "MWeapLightning";
+        self.Paladin = "PWeapAxe";
+        self.Crusader = "CWeapMeteorStaff";
+        self.Necromancer = "NWeapBoneShards";
+        self.Assassin = "AWeapGrenades";
     }
 }
 
