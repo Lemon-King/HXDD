@@ -1,6 +1,6 @@
 
 // Random Hexen Ammo for now
-class MultiClassMana1 : MultiSpawner {
+class MultiClassMana1: MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "Mana1";
@@ -48,7 +48,7 @@ class MultiClassMana3: MultiSpawner {
     }
 }
 
-class HXDDRandomMana1 : RandomSpawner {
+class HXDDRandomMana1: RandomSpawner {
     Default {
         DropItem "GoldWandAmmo";
         DropItem "GoldWandHefty";
@@ -57,7 +57,7 @@ class HXDDRandomMana1 : RandomSpawner {
     }
 }
 
-class HXDDRandomMana2 : RandomSpawner {
+class HXDDRandomMana2: RandomSpawner {
     Default {
         DropItem "BlasterAmmo";
         DropItem "BlasterHefty";
@@ -66,7 +66,7 @@ class HXDDRandomMana2 : RandomSpawner {
     }
 }
 
-class HXDDRandomMana3 : RandomSpawner {
+class HXDDRandomMana3: RandomSpawner {
     Default {
         DropItem "PhoenixRodAmmo";
         DropItem "PhoenixRodHefty";

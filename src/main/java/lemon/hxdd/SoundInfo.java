@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.Collections;
 
 public class SoundInfo {
-    public void Write() {
+    public void Export() {
         try {
             String SettingPathTemp = (String)Settings.getInstance().Get("PathTemporary");
             FileWriter fw = new FileWriter(SettingPathTemp + "sndinfo.hexen2", false);

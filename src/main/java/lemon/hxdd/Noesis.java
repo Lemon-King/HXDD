@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 // http://richwhitehouse.com/noesis/nms/index.php?content=userman
 
@@ -43,7 +44,7 @@ public class Noesis {
         Run(args);
     }
 
-    static public void ExportAsset(String assetPath, String outputFolder, String[] options) {
+    static public void ExportAsset(String assetPath, String outputFolder, ArrayList<String> options) {
         String fileName = new File(assetPath).getName();
         String target = "";
         String textpre = "";

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<MetaModelDef>
+<XMLModelDef>
     <Group class="PWeapVorpalSword">
         <Path folder="models" />
         <Model file="w_l2_c1.md3" model="0" />
@@ -93,4 +93,4 @@
 
         <Animation key="SHOK" frames="1" model="0" framecharoffset="1" comment="Root"/>
     </Group>
-</MetaModelDef>
+</XMLModelDef>

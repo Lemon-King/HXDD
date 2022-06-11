@@ -17,7 +17,7 @@
 
         <Animation key="SWSE" frames="20" model="0" comment="Select + Deselect"/>
     </Group>
-    <Group class="SWeapBloodMissile">
+    <Group class="SWeapBloodRain_Missile">
         <Path folder="models" />
         <Model file="sucwp1p.md3" model="0" />
         <Skin file="sucwp1p_skin0.png" model="0" />

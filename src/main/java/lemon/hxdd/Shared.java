@@ -1,8 +1,8 @@
 package lemon.hxdd;
 
 import net.mtrop.doom.graphics.Palette;
+import org.zeroturnaround.zip.commons.FileUtils;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,11 +12,18 @@ public class Shared {
     public static final String TAB_SPACE = "    ";
     public static final String TAB_SPACE_DOUBLE = TAB_SPACE + TAB_SPACE;
 
+    public static void CreateDirectory(String path) {
+        File dirFile = new File(path);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+    }
+
     public static Palette GetHexen2Palette() {
-        String pathHexen2Gfx = Settings.getInstance().Get("PathHexen2") + "/data1/gfx/";
+        String Setting_PathHexen2 = (String)Settings.getInstance().Get("PathHexen2");
         Palette pal = new Palette();
         try {
-            File filePal = new File(pathHexen2Gfx + "palette.lmp");
+            File filePal = new File(Setting_PathHexen2 + "/data1/gfx/palette.lmp");
             FileInputStream fis = new FileInputStream(filePal);
             pal.readBytes(fis);
             fis.close();
@@ -30,9 +37,10 @@ public class Shared {
         pal.setColor(0, 100, 100, 100);
         return pal;
     }
+    /*
     public static Palette GetHexen2BrightmapPalette() {
         Palette pal = GetHexen2Palette();
-        Palette palBrightmap = new Palette();
+        Palette newPal = new Palette();
         for (int i = 0; i < Palette.NUM_COLORS; i++) {
             int[] cv = new int[3];
             int argb = pal.getColorARGB(i);
@@ -41,11 +49,12 @@ public class Shared {
             cv[2] = (0x000000ff & argb);
             int cvmax = Arrays.stream(cv).max().getAsInt();
             int color = 0;
-            if (i >= Palette.NUM_COLORS - 17) {
+            if (i == 255) {        // only color 255 is considered bright
                 color = cvmax;
             }
-            palBrightmap.setColor(i, color, color, color);
+            newPal.setColor(i, color, color, color);
         }
-        return palBrightmap;
+        return newPal;
     }
+    */
 }

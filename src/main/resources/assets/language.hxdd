@@ -1,9 +1,67 @@
+
 [enu default]
 
-MNU_FATEPTH = "Fate's Path";
-HHUSTR_E6M1 = "Raven's Lair";
-HHUSTR_E6M2 = "The Water Shrine";
-HHUSTR_E6M3 = "American's Legacy";
+/*
+ *  HXDD
+ */
+HXDD_INFO1 = "HXDD: Version %s";
+HXDD_INFO2 = "By: %s";
+HXDD_INFO3 = "Date: %s";
 
-MNU_HEXEN = "Hexen - Beyond Heretic";
-MNU_HEXDD = "Deathkings of the Dark Citadel";
+/*
+ *  MENU
+ */
+
+// Paladin
+//MNU_APPRENTICE = "APPRENTICE";    // already localized
+MNU_SQUIRE = "SQUIRE";
+MNU_ADEPT = "ADEPT";
+MNU_LORD = "LORD";
+MNU_JUSTICIAR = "JUSTICIAR";
+
+// Crusader
+MNU_GALLANT = "GALLANT";
+MNU_HOLYAVENGER = "HOLY AVENGER";
+MNU_DIVINEHERO = "DIVINE HERO";
+MNU_LEGEND = "LEGEND";
+MNU_MYTH = "MYTH";
+
+// Necromancer
+MNU_ACOLYTE = "ACOLYTE";        // use for lowest?
+MNU_SORCERER = "SORCERER";
+MNU_DARKSERVANT = "DARK SERVANT";
+MNU_WARLOCK = "WARLOCK";
+MNU_LICHKING = "LICH KING";
+MNU_ARCHLICH = "ARCH LICH";
+
+// Assassin
+MNU_ROGUE = "ROGUE";
+MNU_CUTTHROAT = "CUTTHROAT";
+MNU_EXECUTIONER = "EXECUTIONER";
+MNU_WIDOWMAKER = "WIDOW MAKER";
+MNU_NIGHTSTALKER = "NIGHT STALKER";
+
+// Succubus
+MNU_LARVA = "LARVA";
+MNU_SPAWN = "SPAWN";
+MNU_FIEND = "FIEND";
+MNU_SHEBITCH = "SHE BITCH";
+MNU_DEVIL_ALT = "DEVIL";                // Alt for MNU_SHEBITCH
+MNU_BROODMOTHER = "BROOD MOTHER";
+MNU_ARCHDEVIL_ALT = "ARCH DEVIL";       // Alt for MNU_BROODMOTHER
+
+/*
+ *  WEAPONS
+ */
+
+/*
+ *  ITEMS
+ */
+
+/*
+ *  MESSAGES
+ */
+
+/*
+ *  MISC
+ */

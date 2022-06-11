@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
 
-// Much like WADAssets, this grabs assets from GZDoom's folders.
+// Much like WADAssets, this will extract assets from GZDoom's pk3 files.
 // ref: https://github.com/zeroturnaround/zt-zip
 public class ZipAssets {
     String zipFile;

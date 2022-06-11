@@ -1,0 +1,43 @@
+Graphic optional P_HWALK1, 112, 136
+{
+	Graphic "M_HBOX", 0, 0
+	Graphic "M_HWALK1", 24, 12 { useoffsets }
+}
+
+Graphic optional P_HWALK2, 112, 136
+{
+	Graphic "M_HBOX", 0, 0
+	Graphic "M_HWALK2", 24, 12 { useoffsets }
+}
+
+Graphic optional P_HWALK3, 112, 136
+{
+	Graphic "M_HBOX", 0, 0
+	Graphic "M_HWALK3", 24, 12 { useoffsets }
+}
+
+Graphic optional P_HWALK4, 112, 136
+{
+	Graphic "M_HBOX", 0, 0
+	Graphic "M_HWALK4", 24, 12 { useoffsets }
+}
+
+Texture "SKY1X", 256, 200
+{
+	Patch "SKY1X", 0, 0
+}
+
+Texture "SKY2X", 256, 200
+{
+	Patch "SKY2X", 0, 0
+}
+
+Texture "SKY3X", 256, 200
+{
+	Patch "SKY2A", 0, 0
+}
+
+Texture "SKY4X", 256, 200
+{
+	Patch "SKY3X", 0, 0
+}

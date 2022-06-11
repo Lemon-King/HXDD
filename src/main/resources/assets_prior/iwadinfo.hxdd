@@ -1,0 +1,10 @@
+IWad
+{
+	Name = "HXDD"
+	Game = "Heretic"
+	Config = "HXDD"
+	AutoName = "raven.hxdd"
+	StartupType = "Hexen"
+	Compatibility = "Extended", "Poly1", "Poly2"
+	BannerColors = "f0 f0 f0", "6b 3c 18"
+}

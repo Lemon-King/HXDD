@@ -49,6 +49,7 @@
 
         <Animation key="ICE1" frames="1" model="0" comment="Ref"/>
     </Group>
+    <!--
     <Group class="CWeapIceMace_IceShot2">
         <Path folder="models" />
         <Model file="iceshot2.md3" model="0" />
@@ -62,4 +63,5 @@
 
         <Animation key="ICE2" frames="1" model="0" comment="Ref"/>
     </Group>
+    -->
 </XMLModelDef>

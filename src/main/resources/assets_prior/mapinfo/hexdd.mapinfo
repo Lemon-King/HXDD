@@ -1,0 +1,312 @@
+// --- Cluster 1 ---
+
+map DD_MAP41 "RUINED VILLAGE"
+{
+	next = "DD_MAP42"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 13
+	NoIntermission
+}
+
+map DD_MAP42 "BLIGHT"
+{
+	next = "DD_MAP43"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 2
+	NoIntermission
+}
+
+map DD_MAP43 "SUMP"
+{
+	next = "DD_MAP44"
+	cluster = 11
+	Sky1 = "SKYFOG2", 0.078125
+	Sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = "fogmap"
+	cdtrack = 22
+	NoIntermission
+}
+
+map DD_MAP44 "CATACOMB"
+{
+	next = "DD_MAP45"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 15
+	NoIntermission
+}
+
+map DD_MAP45 "BADLANDS"
+{
+	next = "DD_MAP46"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 9
+	NoIntermission
+}
+
+map DD_MAP46 "BRACKENWOOD"
+{
+	next = "DD_MAP47"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 21
+	NoIntermission
+}
+
+map DD_MAP47 "PYRE"
+{
+	next = "DD_MAP48"
+	cluster = 11
+	Sky1 = "SKYWALL", 0
+	Sky2 = "SKY1X", 0.15625
+	doublesky 
+	cdtrack = 14
+	NoIntermission
+}
+
+// --- Cluster 2 ---
+
+map DD_MAP48 "CONSTABLE'S GATE"
+{
+	next = "DD_MAP49"
+	cluster = 12
+	Sky1 = "SKYWALL2", 0
+	Sky2 = "SKY2X", 0.234375
+	doublesky 
+	cdtrack = 8
+	NoIntermission
+}
+
+map DD_MAP49 "TREASURY"
+{
+	next = "DD_MAP50"
+	cluster = 12
+	Sky1 = "SKYWALL2", 0
+	Sky2 = "SKY2X", 0.234375
+	doublesky 
+	cdtrack = 20
+	NoIntermission
+}
+
+map DD_MAP50 "MARKET PLACE"
+{
+	next = "DD_MAP51"
+	cluster = 12
+	Sky1 = "SKYWALL2", 0
+	Sky2 = "SKY2X", 0.234375
+	doublesky 
+	cdtrack = 6
+	NoIntermission
+}
+
+map DD_MAP51 "LOCUS REQUIESCAT"
+{
+	next = "DD_MAP52"
+	cluster = 12
+	Sky1 = "SKY2X", 0
+	Sky2 = "SKY3X", 0
+	lightning 
+	cdtrack = 5
+	NoIntermission
+}
+
+map DD_MAP52 "ORDEAL"
+{
+	next = "DD_MAP53"
+	cluster = 12
+	Sky1 = "SKYWALL2", 0
+	Sky2 = "SKY2X", 0.234375
+	doublesky 
+	cdtrack = 16
+	NoIntermission
+}
+
+map DD_MAP53 "ARMORY"
+{
+	next = "DD_MAP54"
+	cluster = 12
+	Sky1 = "SKYWALL2", 0
+	Sky2 = "SKY2X", 0.234375
+	doublesky 
+	cdtrack = 18
+	NoIntermission
+}
+
+// --- Cluster 3 ---
+
+map DD_MAP54 "NAVE"
+{
+	next = "DD_MAP55"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 15
+	NoIntermission
+}
+
+map DD_MAP55 "CHANTRY"
+{
+	next = "DD_MAP56"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 9
+	NoIntermission
+}
+
+map DD_MAP56 "ABATTOIR"
+{
+	next = "DD_MAP57"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 19
+	NoIntermission
+}
+
+map DD_MAP57 "DARK WATCH"
+{
+	next = "DD_MAP58"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 17
+	NoIntermission
+}
+
+map DD_MAP58 "CLOACA"
+{
+	next = "DD_MAP59"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 8
+	NoIntermission
+}
+
+map DD_MAP59 "ICE HOLD"
+{
+	next = "DD_MAP60"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 6
+	NoIntermission
+}
+
+map DD_MAP60 "DARK CITADEL"
+{
+	next = "DD_MAP61"
+	cluster = 13
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 15
+	NoIntermission
+}
+
+// --- Cluster 4 ---
+
+map DD_MAP33 "TRANSIT"
+{
+	next = "DD_MAP34"
+	cluster = 14
+	Sky1 = "SKY1X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 7
+	NoIntermission
+}
+
+map DD_MAP34 "OVER N UNDER"
+{
+	next = "DD_MAP35"
+	cluster = 14
+	Sky1 = "SKY1X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 13
+	NoIntermission
+}
+
+map DD_MAP35 "DEATHFOG"
+{
+	next = "DD_MAP36"
+	cluster = 14
+	Sky1 = "SKYFOG2", 0.078125
+	Sky2 = "SKYFOG", 0.234375
+	doublesky 
+	fadetable = "fogmap"
+	cdtrack = 16
+	NoIntermission
+}
+
+map DD_MAP36 "CASTLE OF PAIN"
+{
+	next = "DD_MAP37"
+	cluster = 14
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 9
+	NoIntermission
+}
+
+map DD_MAP37 "SEWER PIT"
+{
+	next = "DD_MAP38"
+	cluster = 14
+	Sky1 = "SKY4X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 3
+	NoIntermission
+}
+
+map DD_MAP38 "THE ROSE"
+{
+	next = "DD_MAP36"
+	cluster = 14
+	Sky1 = "SKY1X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 10
+	NoIntermission
+}
+
+map DD_MAP83 "TEST"
+{
+	next = "DD_MAP37"
+	cluster = 14
+	Sky1 = "SKY1X", 0
+	Sky2 = "SKY4X", 0
+	cdtrack = 10
+	NoIntermission
+}
+
+cluster 11
+{
+	hub
+	exittext = "clus11msg"
+	exittextislump
+	music = "hub"
+	pic = "interpic"
+}
+
+cluster 12
+{
+	hub
+	exittext = "clus12msg"
+	exittextislump
+	music = "hub"
+	pic = "interpic"
+}
+

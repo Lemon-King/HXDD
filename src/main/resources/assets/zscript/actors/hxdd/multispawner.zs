@@ -1,12 +1,11 @@
-// Compatability Spawner for Heretic / Hexen between Classes and Map Types (E#M# & Map##).
+// Shared Spawner for Heretic / Hexen between Classes and Map Types (E#M# & Map##).
 // ref: https://forum.zdoom.org/viewtopic.php?t=67338&p=1136552
 // ref: https://forum.zdoom.org/viewtopic.php?f=122&t=70725
 // ref: https://github.com/coelckers/gzdoom/blob/master/wadsrc/static/zscript/actors/shared/randomspawner.zs
 
 // Random spawner ----------------------------------------------------------
 
-class MultiSpawner : RandomSpawner
-{
+class MultiSpawner: RandomSpawner {
     String SpawnSelect;
 
     String GameSelect;
@@ -49,6 +48,7 @@ class MultiSpawner : RandomSpawner
         self.Doom = "Unknown";
         self.Heretic = "Unknown";
         self.Hexen = "Unknown";
+
         self.Fallback = "Unknown";
         self.DoomMarine = "Unknown";
         self.Corvus = "Unknown";
@@ -68,21 +68,20 @@ class MultiSpawner : RandomSpawner
             if (gameType & GAME_Doom) {
                 return self.Doom;
             } else if (gameType & GAME_Raven) {
-                String environment = GetGameSpawnSelect();
-                if (environment ~== "heretic") {
+                int gameType = GetGameType();
+                if (gameType == GAME_Heretic) {
                     return self.Heretic;
-                } else if (environment ~== "hexen") {
+                } else if (gameType == GAME_Hexen) {
                     return self.Hexen;
                 }
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            // Get player class name
+            // Get player class name, placeholder until multi items are in
             PlayerInfo p = players[0];
-            //String playerClass = p.mo.GetPrintableDisplayName(p.cls);
+            String playerClass = p.mo.GetPrintableDisplayName(p.cls);
 
             String spawn = "Unknown";
-            /*
             if (playerClass ~== "marine") {
                 spawn = self.DoomMarine;
             } else if (playerClass ~== "corvus") {
@@ -104,28 +103,6 @@ class MultiSpawner : RandomSpawner
             } else if (playerClass ~== "demoness") {
                 spawn = self.succubus;
             }
-            */
-            if (p is "DoomPlayer") {
-                spawn = self.DoomMarine;
-            } else if (p is "HereticPlayer") {
-                spawn = self.Corvus;
-            } else if (p is "FighterPlayer") {
-                spawn = self.Fighter;
-            } else if (p is "ClericPlayer") {
-                spawn = self.Cleric;
-            } else if (p is "MagePlayer") {
-                spawn = self.Mage;
-            } else if (p is "PaladinPlayer") {
-                spawn = self.Paladin;
-            } else if (p is "CrusaderPlayer") {
-                spawn = self.Crusader;
-            } else if (p is "AssassinPlayer") {
-                spawn = self.Assassin;
-            } else if (p is "NecromancerPlayer") {
-                spawn = self.Necromancer;
-            } else if (p is "SuccubusPlayer") {
-                spawn = self.succubus;
-            }
             if (spawn == "Unknown") {
                 // Spawn Fallback Item, should make things less weird with mods like Walpurgis
                 spawn = self.Fallback;
@@ -135,17 +112,17 @@ class MultiSpawner : RandomSpawner
         return "Unknown";
     }
 
-    String GetGameSpawnSelect() {
+    int GetGameType() {
         String mapName = Level.MapName.MakeLower();
         int mapPrefix = mapName.IndexOf("map");
         if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
             // Map follows E#M# format.
-            return "heretic";
+            return GAME_Heretic;
         } else if (mapPrefix != -1) {
             // Map follow MAP## or **_MAP## format.
-            return "hexen";
+            return GAME_Hexen;
         } else {
-            return "heretic";
+            return GAME_Heretic;
         }
     }
 	// Override this to decide what to spawn in some other way.
@@ -166,16 +143,14 @@ class MultiSpawner : RandomSpawner
         }
 	}
 
-    override void PostBeginPlay()
-    {
+    override void PostBeginPlay() {
         PlayerInfo p = players[0];
         if (p.cls != null && readyState == 1) {
             Super.PostBeginPlay();
         }
     }
 
-    override void Tick()
-    {
+    override void Tick() {
         Super.Tick();
         if (readyState == 2) {
             BeginPlay();

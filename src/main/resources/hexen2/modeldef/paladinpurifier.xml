@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="PWeapPurifierPiece1">
+        <Path folder="models" />
+        <Model file="w_l41_c1.md3" model="0" />
+        <Skin file="w_l41_c1_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="PWeapPurifierPiece2">
+        <Path folder="models" />
+        <Model file="w_l42_c1.md3" model="0" />
+        <Skin file="w_l42_c1_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="PWeapPurifier">
+        <Path folder="models" />
+        <Model file="purifier.md3" model="0" />
+        <Skin file="purifier_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PROT" frames="1" model="0" comment="Root Pose"/>
+
+        <Animation key="P1FL" frames="3" model="0" comment="Fire 1 Left"/>
+        <Animation key="P1FR" frames="3" model="0" comment="Fire 1 Right"/>
+        <Animation key="P2FL" frames="3" model="0" comment="Fire 2 Left"/>
+        <Animation key="P2FR" frames="3" model="0" comment="Fire 2 Right"/>
+        <Animation key="P3FR" frames="3" model="0" comment="Fire 3 Right"/>
+
+        <Animation key="PBIG" frames="9" model="0" comment="Powered Shot"/>
+
+        <Animation key="PSEL" frames="12" model="0" comment="Select / Deselect"/>
+    </Group>
+    <Group class="PWeapPurifier_Missile">
+        <Path folder="models" />
+        <Model file="purfir1.md3" model="0" />
+        <Skin file="purfir1_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="MISS" frames="1" model="0" comment="Root Pose"/>
+    </Group>
+    <Group class="PWeapPurifier_DragonBall">
+        <Path folder="models" />
+        <Model file="drgnball.md3" model="0" />
+        <Skin file="drgnball_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="DBLL" frames="1" model="0" comment="Root Pose"/>
+    </Group>
+    <Group class="PWeapPurifier_PuffRing">
+        <Path folder="models" />
+        <Model file="ring.md3" model="0" />
+        <Skin file="ring_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="RING" frames="1" model="0" comment="Root Pose"/>
+    </Group>
+</XMLModelDef>

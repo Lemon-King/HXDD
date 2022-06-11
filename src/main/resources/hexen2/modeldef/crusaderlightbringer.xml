@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="CWeapLightbringerPiece1">
+        <Path folder="models" />
+        <Model file="w_l41_c2.md3" model="0" />
+        <Skin file="w_l41_c2_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringerPiece2">
+        <Path folder="models" />
+        <Model file="w_l42_c2.md3" model="0" />
+        <Skin file="w_l42_c2_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringer">
+        <Path folder="models" />
+        <Model file="sunstaff.md3" model="0" />
+        <Skin file="sunstaff_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="SCYC" frames="10" model="0" comment="Fire Cycle"/>
+
+        <Animation key="SUNF" frames="4" model="0" comment="Fire"/>
+        <Animation key="SIDL" frames="26" model="0" comment="Idle (First 26)"/>
+        <Animation key="SIDE" frames="5" model="0" comment="Idle (Remaining 5)"/>
+
+        <Animation key="SSEL" frames="14" model="0" comment="Select / Deselect"/>
+
+        <Animation key="SSTL" frames="5" model="0" comment="Settle"/>
+    </Group>
+    <Group class="CWeapLightbringer_Ball">
+        <Path folder="models" />
+        <Model file="stsunsf4.md3" model="0" />
+        <Skin file="stsunsf4_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringer_Ball_Inner">
+        <Path folder="models" />
+        <Model file="stsunsf3.md3" model="0" />
+        <Skin file="stsunsf3_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringer_Beam">
+        <Path folder="models" />
+        <Model file="stsunsf2.md3" model="0" />
+        <Skin file="stsunsf2_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BEAM" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringer_Beam_Animated">
+        <Path folder="models" />
+        <Model file="stsunsf5.md3" model="0" />
+        <Skin file="stsunsf5_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BEAM" frames="7" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="CWeapLightbringer_Beam_Inner">
+        <Path folder="models" />
+        <Model file="stsunsf1.md3" model="0" />
+        <Skin file="stsunsf1.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="BEAM" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+</XMLModelDef>

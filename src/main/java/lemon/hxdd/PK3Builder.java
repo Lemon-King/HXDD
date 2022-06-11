@@ -6,13 +6,21 @@ import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.util.MapUtils;
 import org.zeroturnaround.zip.NameMapper;
+import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
 import org.zeroturnaround.zip.commons.FileUtils;
+import org.zeroturnaround.zip.commons.IOUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.*;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.ZipEntry;
 
 public class PK3Builder {
     static String[] iwadNames = {"heretic", "hexen", "hexdd"};
@@ -24,25 +32,54 @@ public class PK3Builder {
             // todo: Add neoworm frozen sprite support
     };
 
-    public Map<String, FileOrganizer> organizedFiles;
+    // Support for Hexen II + Expansion paks
+    // pak0.pak & pak1.pak can be found via Steam & GOG versions of Hexen II.
+    // pak3.pak (Optional) is included in Portals of Praveus, sets flag enabling Demoness Class
 
-    public PK3Builder() {
-        this.organizedFiles = new HashMap<>();
-    }
+    static String[] pakNames = {"pak0.pak", "pak1.pak", "pak3.pak"};
+
+    public Map<String, FileOrganizer> organizedFiles = new HashMap<>();
 
     public void Assemble() {
         if (HasRequiredFiles()) {
             CleanTemporaryFolder(); // if the folder exists, wipe it.
+
             ParseAssets();
             OrganizeAssets();
+
             FileOrganizer merged = MergeAssets();
             ExtractAssets(merged);
+            FixPatches();
+
             ExtractFilesFromGZDoomSupportPK3s();
+
             ExportMaps();
+
             ActorFactory actors = new ActorFactory();
             actors.Create();
             actors.CreateEditorNums();
+
+            // If Noesis zip or folder with exe is found, try Hexen 2 paks
+            if (Noesis.CheckAndInstall()) {
+                ArrayList<String> paks = PAKData.Extract();
+
+                PAKData.ExportAssets();
+
+                if (paks.contains("pak3")) {
+                    // Set Portals flag as needed
+                }
+                // If Hexen II paks are found export data
+                XMLModelDef xmd = new XMLModelDef();
+                xmd.Export();
+                SoundInfo si = new SoundInfo();
+                si.Export();
+                // Copy packaged HXDD Hexen II data
+                // Copy Hexen II enabled files
+                // else go to Bundle
+            }
+
             ExportHXDDFiles();
+
             Bundle();
         }
     }
@@ -85,7 +122,7 @@ public class PK3Builder {
     }
 
     private void OrganizeAssets() {
-        System.out.println("Organizing assets");
+        System.out.println("Organizing asset tables");
 
         // Rename conflicting sprite names: https://zdoom.org/wiki/Sprite#Conflicting_sprite_names
         // Heretic
@@ -172,7 +209,7 @@ public class PK3Builder {
 
     private FileOrganizer MergeAssets() {
         // Takes organized wad / pk3 data and merges it into a single meta hashmap.
-        System.out.println("Merging assets");
+        System.out.println("Merging assets tables");
         FileOrganizer merged = new FileOrganizer();
         Arrays.asList(iwadNames).forEach((wadName) -> {
             FileOrganizer from = organizedFiles.get(wadName);
@@ -198,9 +235,7 @@ public class PK3Builder {
             AtomicInteger count = new AtomicInteger();
 
             ProgressBar pbar = new ProgressBar("Extracting " + sourceName);
-            pbar.SetPercent((float)0);
             mftype.forEach((mfKey, mf) -> {
-                //System.out.println(key + " " + mfKey + " " + mf.source + ":" + mf.inputName + ":" + mf.outputName);
                 try {
                     if (!Wads.containsKey(mf.source)) {
                         String wadPath = (String) Settings.getInstance().Get("PathSourceWads");
@@ -264,8 +299,20 @@ public class PK3Builder {
         });
     }
 
+    // Hexen 2 Stuff
+
+    private void BuildModelDefs() {
+
+    }
+
+    private void RenameSprites() {
+
+    }
+
+    // Hexen 2 Stuff
+
     // TODO: Move this mess into FileOrganizer.
-    private static void ExtractFilesFromGZDoomSupportPK3s() {
+    private void ExtractFilesFromGZDoomSupportPK3s() {
         final int[] WidescreenGraphicDimensions = {560, 200};
         final String[] menuGraphics = new String[]{"final1.lmp", "final2.lmp", "help1.lmp", "help2.lmp", "mape1.lmp", "mape2.lmp", "mape3.lmp", "title.lmp"};
         final String pathSourceFiles = (String) Settings.getInstance().Get("PathSourceWads");
@@ -353,13 +400,41 @@ public class PK3Builder {
         }
     }
 
+    private void FixPatches() {
+        String pathTemporary = (String) Settings.getInstance().Get("PathTemporary");
+
+        // Fix any busted Patches due to export bugs
+        String[] hexenSkyPatches = {"SKYFOG2", "SKYWALL", "SKYWALL2"};
+
+        ProgressBar pbar = new ProgressBar("Fixing Hexen sky patches");
+        Color colorTarget = new Color(2,2,2);
+        float count = 0;
+        for (String patch : hexenSkyPatches) {
+            String path = String.format("%s/patches/%s.png", pathTemporary, patch);
+            PostProcessImageData(path, colorTarget);
+            pbar.SetPercent(++count / (float)hexenSkyPatches.length);
+        }
+    }
+
     private void Bundle() {
         System.out.println("Packing HXDD.ipk3");
-        String path = (String) Settings.getInstance().Get("PathTemporary");
-        File fileTemporary = new File(path);
-        ZipUtil.pack(fileTemporary, new File("./HXDD.ipk3"), new NameMapper() {
+        String Settings_TempPath = (String) Settings.getInstance().Get("PathTemporary");
+        File fileTemporary = new File(Settings_TempPath);
+        File fileIpk3 = new File("./HXDD.ipk3");
+        ZipUtil.pack(fileTemporary, fileIpk3, new NameMapper() {
             public String map(String name) {
                 return name;
+            }
+        });
+        ZipUtil.iterate(fileIpk3, new ZipEntryCallback() {
+            public void process(InputStream in, ZipEntry zipEntry) throws IOException {
+                if (!zipEntry.isDirectory() && zipEntry.getName().contains("iwadinfo.hxdd")) {
+                    String owner = System.getProperty("user.name");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm a");
+                    LocalDateTime now = LocalDateTime.now();
+                    String creation_date = now.format(formatter);
+                    zipEntry.setComment(String.format("Creator: %s Creation Time: %s", owner, creation_date));
+                }
             }
         });
         CreateHexenPalettePK3();
@@ -398,5 +473,52 @@ public class PK3Builder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void PostProcessImageData(String imagePath, Color colorTarget) {
+        // fixes transparency
+        try {
+            File in = new File(imagePath);
+            BufferedImage source = ImageIO.read(in);
+
+            Image image = makeColorTransparent(source, colorTarget);
+            BufferedImage transparent = imageToBufferedImage(image);
+
+            File out = new File(imagePath);
+            ImageIO.write(transparent, "PNG", out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static BufferedImage imageToBufferedImage(Image image) {
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = bufferedImage.createGraphics();
+        g2.drawImage(image, 0, 0, null);
+        g2.dispose();
+
+        return bufferedImage;
+    }
+
+    public static Image makeColorTransparent(BufferedImage im, final Color color) {
+        ImageFilter filter = new RGBImageFilter() {
+
+            // the color we are looking for... Alpha bits are set to opaque
+            public int markerRGB = color.getRGB() | 0xFF000000;
+
+            public final int filterRGB(int x, int y, int rgb) {
+                if ((rgb | 0xFF000000) == markerRGB) {
+                    // Mark the alpha bits as zero - transparent
+                    return 0x00FFFFFF & rgb;
+                } else {
+                    // nothing to do
+                    return rgb;
+                }
+            }
+        };
+
+        ImageProducer ip = new FilteredImageSource(im.getSource(), filter);
+        return Toolkit.getDefaultToolkit().createImage(ip);
     }
 }

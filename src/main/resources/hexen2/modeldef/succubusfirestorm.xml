@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="SWeapFireStorm">
+        <Path folder="models" />
+        <Model file="w_l3_c5.md3" model="0" />
+        <Skin file="w_l3_c5_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="SWeapFireStorm">
+        <Path folder="models" />
+        <Model file="sucwp3.md3" model="0" />
+        <Skin file="sucwp3_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="FSIB" frames="25" model="0" comment="Idle: Jelly"/>
+        <Animation key="FSIA" frames="25" model="0" comment="Idle"/>
+
+        <Animation key="FSFN" frames="14" model="0" comment="Fire"/>
+        <Animation key="FSTP" frames="20" model="0" comment="To Powered"/>
+
+        <Animation key="FSID" frames="25" model="0" comment="Idle Power: Jelly"/>
+        <Animation key="FSIC" frames="25" model="0" comment="Idle Power"/>
+
+        <Animation key="FSFP" frames="14" model="0" comment="Fire: Power"/>
+        <Animation key="FSTN" frames="20" model="0" comment="To Normal"/>
+
+        <Animation key="FSSN" frames="11" model="0" comment="Select / Deselect"/>
+        <Animation key="FSSP" frames="11" model="0" comment="Select / Deselect: Power"/>
+    </Group>
+    <Group class="SWeapFireStorm_FlameBall">
+        <Path folder="models" />
+        <Model file="sucwp1p.md3" model="0" />
+        <Skin file="sucwp1p_skin0.png" model="0" />
+
+        <Scale value="-1 -1 -1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="FBAL" frames="4" model="0" comment="Loop"/>
+    </Group>
+</XMLModelDef>

@@ -54,11 +54,6 @@ class MultiClassBlaster : MultiSpawner {
         self.Fighter = "FWeaponPiece1";
         self.Cleric = "CWeaponPiece1";
         self.Mage = "MWeaponPiece1";
-        self.Paladin = "Mana3";
-        self.Crusader = "Mana3";
-        self.Necromancer = "Mana3";
-        self.Assassin = "Mana3";
-        self.Succubus = "Mana3";
     }
 }
 
@@ -100,8 +95,7 @@ class MultiClassMaceSpawner : MultiSpawner {
 }
 
 // Mace like spawner support
-class MultiClassSpecialSpawnerFighter : MaceSpawner
-{
+class MultiClassSpecialSpawnerFighter: MaceSpawner {
 	States
 	{
 	Spawn:
@@ -110,8 +104,7 @@ class MultiClassSpecialSpawnerFighter : MaceSpawner
 		Stop;
 	}
 }
-class MultiClassSpecialSpawnerCleric : MaceSpawner
-{
+class MultiClassSpecialSpawnerCleric: MaceSpawner {
 	States
 	{
 	Spawn:
@@ -120,8 +113,7 @@ class MultiClassSpecialSpawnerCleric : MaceSpawner
 		Stop;
 	}
 }
-class MultiClassSpecialSpawnerMage : MaceSpawner
-{
+class MultiClassSpecialSpawnerMage: MaceSpawner {
 	States
 	{
 	Spawn:

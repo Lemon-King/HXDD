@@ -33,4 +33,6 @@ out/
 ipk3/
 wads/
 target/
-temp/
+temp*/
+noesis/
+/hexen2/

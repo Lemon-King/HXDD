@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="SWeapAcidRune">
+        <Path folder="models" />
+        <Model file="w_l2_c5.md3" model="0" />
+        <Skin file="w_l2_c5_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="SWeapAcidRune">
+        <Path folder="models" />
+        <Model file="sucwp2.md3" model="0" />
+        <Skin file="sucwp2_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="ARIB" frames="25" model="0" comment="Idle: Jelly"/>
+        <Animation key="ARIA" frames="25" model="0" comment="Idle"/>
+
+        <Animation key="ARFN" frames="14" model="0" comment="Fire"/>
+        <Animation key="ARTP" frames="20" model="0" comment="To Powered"/>
+
+        <Animation key="ARID" frames="25" model="0" comment="Idle Power: Jelly"/>
+        <Animation key="ARIC" frames="25" model="0" comment="Idle Power"/>
+
+        <Animation key="ARFP" frames="14" model="0" comment="Fire: Power"/>
+        <Animation key="ARTN" frames="20" model="0" comment="To Normal"/>
+
+        <Animation key="ARSN" frames="11" model="0" comment="Select / Deselect"/>
+        <Animation key="ARSP" frames="11" model="0" comment="Select / Deselect: Power"/>
+    </Group>
+    <Group class="SWeapAcidRune_Missile">
+        <Path folder="models" />
+        <Model file="sucwp2p.md3" model="0" />
+        <Skin file="sucwp2p_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="AMIS" frames="1" model="0" comment="Loop"/>
+    </Group>
+    <Group class="SWeapAcidRune_AcidDrop">
+        <Path folder="models" />
+        <Model file="sucwp2p.md3" model="0" />
+        <Skin file="sucwp2p_skin0.png" model="0" />
+
+        <Scale value="1 -1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="AMIS" frames="1" model="0" comment="Loop"/>
+    </Group>
+</XMLModelDef>
