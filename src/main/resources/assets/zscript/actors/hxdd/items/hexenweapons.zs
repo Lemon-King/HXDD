@@ -8,6 +8,11 @@ class MultiClassFWeapAxe : MultiSpawner {
         self.Fighter = "FWeapAxe";
         self.Cleric = "FWeapAxe";
         self.Mage = "FWeapAxe";
+        self.Paladin = "PWeapVorpalSword";
+        self.Crusader = "CWeapIceMace";
+        self.Necromancer = "NWeapMagicMissile";
+        self.Assassin = "AWeapCrossbow";
+        self.Succubus = "SWeapAcidRune";
     }
 }
 
@@ -19,6 +24,11 @@ class MultiClassCWeapStaff : MultiSpawner {
         self.Fighter = "CWeapStaff";
         self.Cleric = "CWeapStaff";
         self.Mage = "CWeapStaff";
+        self.Paladin = "PWeapVorpalSword";
+        self.Crusader = "CWeapIceMace";
+        self.Necromancer = "NWeapMagicMissile";
+        self.Assassin = "AWeapCrossbow";
+        self.Succubus = "SWeapAcidRune";
     }
 }
 
@@ -30,6 +40,11 @@ class MultiClassMWeapFrost : MultiSpawner {
         self.Fighter = "MWeapFrost";
         self.Cleric = "MWeapFrost";
         self.Mage = "MWeapFrost";
+        self.Paladin = "PWeapVorpalSword";
+        self.Crusader = "CWeapIceMace";
+        self.Necromancer = "NWeapMagicMissile";
+        self.Assassin = "AWeapCrossbow";
+        self.Succubus = "SWeapAcidRune";
     }
 }
 
@@ -42,6 +57,11 @@ class MultiClassFWeapHammer : MultiSpawner {
         self.Fighter = "FWeapHammer";
         self.Cleric = "FWeapHammer";
         self.Mage = "FWeapHammer";
+        self.Paladin = "PWeapAxe";
+        self.Crusader = "CWeapMeteorStaff";
+        self.Necromancer = "NWeapBoneShards";
+        self.Assassin = "AWeapGrenades";
+        self.Succubus = "SWeapFireStorm";
     }
 }
 
@@ -53,6 +73,11 @@ class MultiClassCWeapFlame : MultiSpawner {
         self.Fighter = "CWeapFlame";
         self.Cleric = "CWeapFlame";
         self.Mage = "CWeapFlame";
+        self.Paladin = "PWeapAxe";
+        self.Crusader = "CWeapMeteorStaff";
+        self.Necromancer = "NWeapBoneShards";
+        self.Assassin = "AWeapGrenades";
+        self.Succubus = "SWeapFireStorm";
     }
 }
 
@@ -64,6 +89,11 @@ class MultiClassMWeapLightning : MultiSpawner {
         self.Fighter = "MWeapLightning";
         self.Cleric = "MWeapLightning";
         self.Mage = "MWeapLightning";
+        self.Paladin = "PWeapAxe";
+        self.Crusader = "CWeapMeteorStaff";
+        self.Necromancer = "NWeapBoneShards";
+        self.Assassin = "AWeapGrenades";
+        self.Succubus = "SWeapFireStorm";
     }
 }
 

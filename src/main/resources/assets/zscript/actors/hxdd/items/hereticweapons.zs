@@ -31,6 +31,22 @@ class MultiClassGauntlets : MultiSpawner {
     }
 }
 
+class MultiClassGoldWand : MultiSpawner {
+    override void Bind() {
+        self.SpawnSelect = "ClassSelect";
+        self.Fallback = "GoldWand";
+        self.Corvus = "GoldWand";
+        self.Fighter = "Mana1";
+        self.Cleric = "Mana1";
+        self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
+    }
+}
+
 class MultiClassCrossbow : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
@@ -43,6 +59,7 @@ class MultiClassCrossbow : MultiSpawner {
         self.Crusader = "CWeapIceMace";
         self.Necromancer = "NWeapMagicMissile";
         self.Assassin = "AWeapCrossbow";
+        self.Succubus = "SWeapAcidRune";
     }
 }
 
@@ -69,6 +86,7 @@ class MultiClassSkullRod : MultiSpawner {
         self.Crusader = "CWeapMeteorStaff";
         self.Necromancer = "NWeapBoneShards";
         self.Assassin = "AWeapGrenades";
+        self.Succubus = "SWeapFireStorm";
     }
 }
 

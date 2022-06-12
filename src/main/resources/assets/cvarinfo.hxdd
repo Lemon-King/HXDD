@@ -1,3 +1,53 @@
+// Progression
+server int hxdd_progression = 0;   // 0 = Default
+
+server int hxdd_progression_user_level_0 = 800;
+server int hxdd_progression_user_level_1 = 1600;
+server int hxdd_progression_user_level_2 = 3200;
+server int hxdd_progression_user_level_3 = 6400;
+server int hxdd_progression_user_level_4 = 12800;
+server int hxdd_progression_user_level_5 = 25600;
+server int hxdd_progression_user_level_6 = 51200;
+server int hxdd_progression_user_level_7 = 102400;
+server int hxdd_progression_user_level_8 = 204800;
+server int hxdd_progression_user_level_9 = 409600;
+server int hxdd_progression_user_level_10 = 819200;
+
+server int hxdd_progression_user_health_base_max = 100;
+server int hxdd_progression_user_health_base_min = 100;
+server int hxdd_progression_user_health_inc_min = 0;
+server int hxdd_progression_user_health_inc_max = 5;
+server int hxdd_progression_user_health_inc_cap = 5;
+
+server int hxdd_progression_user_mana_base_max = 100;
+server int hxdd_progression_user_mana_base_min = 100;
+server int hxdd_progression_user_mana_inc_min = 5;
+server int hxdd_progression_user_mana_inc_max = 10;
+server int hxdd_progression_user_mana_inc_cap = 5;
+
+server int hxdd_progression_user_strength_min = 10;
+server int hxdd_progression_user_strength_max = 10;
+
+server int hxdd_progression_user_intelligence_min = 10;
+server int hxdd_progression_user_intelligence_max = 10;
+
+server int hxdd_progression_user_wisdom_min = 10;
+server int hxdd_progression_user_wisdom_max = 10;
+
+server int hxdd_progression_user_dexterity_min = 10;
+server int hxdd_progression_user_dexterity_max = 10;
+
+server int hxdd_armor_user_0 = 20;
+server int hxdd_armor_user_1 = 20;
+server int hxdd_armor_user_2 = 20;
+server int hxdd_armor_user_3 = 20;
+server int hxdd_armor_user_4 = 10;
+
+// Armor Mode
+server int hxdd_armor_mode = 0;   // 0 = Default
+
+server int hxdd_player_scale = 0;  // Default
+
 // Hexen egg artwork (Gold)
 user bool hxdd_hexen_artiegg = false;
 
@@ -14,3 +64,15 @@ user int hxdd_lavastyle = 0;
 user int hxdd_waterstyle = 0;
 user int hxdd_sludgestyle = 0;
 user int hxdd_icestyle = 0;
+
+// Hexen II
+
+// Ammo
+server bool hxdd_allow_backpack_use = false;
+
+// Weapon Settings
+server bool hxdd_disable_vorpal_flashing_projectile = false;
+
+
+// client side
+user float hxdd_recoil_scale = 1.0;

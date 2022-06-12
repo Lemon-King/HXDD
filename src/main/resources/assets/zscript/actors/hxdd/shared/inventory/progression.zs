@@ -9,6 +9,8 @@ enum EPlaystyleArmorMode {
 	PSAM_DEFAULT = 0,
 	PSAM_ARMOR_SIMPLE = 1,
 	PSAM_ARMOR_AC = 2,
+	PSAM_ARMOR_RANDOM = 3,
+	PSAM_ARMOR_USER = 4
 };
 
 enum EPlaystyleProgression {
@@ -17,12 +19,6 @@ enum EPlaystyleProgression {
 	PSP_LEVELS = 2,
 	PSP_LEVELS_RANDOM = 3,
 	PSP_LEVELS_USER = 4,
-};
-
-enum EPlaystyleProgressionCustom {
-	PSPC_DISABLED = 0,
-	PSPC_RANDOM = 1,
-	PSPC_USER = 2,
 };
 
 class Progression: Inventory {
@@ -120,7 +116,7 @@ class Progression: Inventory {
 			if (optionProgression == PSP_DEFAULT) {
 				optionProgression = hxddplayer.DefaultProgression;
 			}
-		} else if (optionProgression == PSAM_DEFAULT) {
+		} else if (optionProgression == PSP_DEFAULT) {
 			optionProgression = PSP_NONE;
 		}
 		return optionProgression == PSP_LEVELS || optionProgression == PSP_LEVELS_RANDOM || optionProgression == PSP_LEVELS_USER;
@@ -180,6 +176,49 @@ class Progression: Inventory {
 					itemHexenArmor.SlotsIncrement[i] = 0;
 				}
 			}
+		} else if (optionArmorMode == PSAM_ARMOR_AC) {
+			// ensure the class has hexen armor values, if not fill with defaults
+			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+			if (itemHexenArmor) {
+				int totalArmor = itemHexenArmor.Slots[4];
+				for (int i = 0; i < 4; i++) {
+					totalArmor += itemHexenArmor.SlotsIncrement[i];
+				}
+				if (totalArmor == 0) {
+					// no armor, fill with basic armor values
+					itemHexenArmor.Slots[4] = 10;
+					for (int i = 0; i < 4; i++) {
+						itemHexenArmor.SlotsIncrement[i] = 20;
+					}
+				}
+			}
+		} else if (optionArmorMode == PSAM_ARMOR_RANDOM) {
+			// random armor values are applied
+			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+			if (itemHexenArmor) {
+				for (int i = 0; i < 5; i++) {
+					itemHexenArmor.Slots[i] = 0;
+				}
+				itemHexenArmor.Slots[4] = random(5, 20);
+				for (int i = 0; i < 4; i++) {
+					itemHexenArmor.SlotsIncrement[i] = random(5, 30);
+				}
+			}
+		} else if (optionArmorMode == PSAM_ARMOR_USER) {
+			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+			if (itemHexenArmor) {
+				// unset all
+				for (int i = 0; i < 5; i++) {
+					itemHexenArmor.Slots[i] = 0;
+				}
+				itemHexenArmor.Slots[4] = LemonUtil.CVAR_GetInt("hxdd_armor_user_4", 10);
+				for (int i = 0; i < 4; i++) {
+					String cvarExpTableLevelNum = String.format("hxdd_armor_user_%d", i);
+					itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, 20);
+				}
+
+
+			}
 		}
 		ArmorSelected = true;
 	}
@@ -224,7 +263,39 @@ class Progression: Inventory {
 	virtual void SetAdvancementStatTables() {
 		int cvarCustomProgressionType = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
 		if (cvarCustomProgressionType == PSP_LEVELS_USER) {
-			// User stats
+			// User Defined Stats
+			int lastExpDefault = 800;
+			experienceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_0", lastExpDefault);
+			for (let i = 1; i < 11; i++) {
+				lastExpDefault *= 2.0f;
+				String cvarExpTableLevelNum = String.format("hxdd_progression_user_level_%d", i);
+				experienceTable[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, lastExpDefault);
+			}
+
+			hitpointTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_max", 100);
+			hitpointTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_min", 100);
+			hitpointTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_min", 0);
+			hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
+			hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
+
+			manaTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
+			manaTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
+			manaTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
+			manaTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
+			manaTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
+
+			strengthTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_min", 10);
+			strengthTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_max", 10);
+
+			intelligenceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_min", 10);
+			intelligenceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_max", 10);
+
+			wisdomTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_min", 10);
+			wisdomTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_max", 10);
+
+			dexterityTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_min", 10);
+			dexterityTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_max", 10);
+
 		} else if (cvarCustomProgressionType == PSP_LEVELS_RANDOM) {
 			// Go wild
 			// TODO: Add ranges?

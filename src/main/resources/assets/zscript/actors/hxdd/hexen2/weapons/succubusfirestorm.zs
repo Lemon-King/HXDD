@@ -11,7 +11,6 @@ class SWeapFireStorm: SuccubusWeapon {
 		Weapon.SelectionOrder 1000;
 		Weapon.AmmoType1 "Mana2";
 		Weapon.AmmoUse1 4;
-		Weapon.AmmoType2 "Mana2";
 		Weapon.AmmoUse2 8;
 		Weapon.AmmoGive 150;
 		Weapon.KickBack 150;
