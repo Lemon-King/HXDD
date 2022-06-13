@@ -213,8 +213,8 @@ class Progression: Inventory {
 				}
 				itemHexenArmor.Slots[4] = LemonUtil.CVAR_GetInt("hxdd_armor_user_4", 10);
 				for (int i = 0; i < 4; i++) {
-					String cvarExpTableLevelNum = String.format("hxdd_armor_user_%d", i);
-					itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, 20);
+					String cvarHexenArmorSlot = String.format("hxdd_armor_user_%d", i);
+					itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarHexenArmorSlot, 20);
 				}
 
 
