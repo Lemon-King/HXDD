@@ -20,6 +20,9 @@ class SWeapFireStorm: SuccubusWeapon {
 	}
 
 	States {
+		Spawn:
+			PKUP A -1;
+			Stop;
 		Select:
 			TNT1 A 0 A_Select;
 			Loop;
@@ -439,6 +442,7 @@ class SWeapFireStorm_Burner: Actor {
 		self.tickDuration--;
 		if (self.tickDuration <= 0 || (self.burnTarget && self.burnTarget.health <= 0) || !self.burnTarget) {
 			self.Destroy();
+			return;
 		}
 
 		self.SetOrigin(self.burnTarget.pos, true);

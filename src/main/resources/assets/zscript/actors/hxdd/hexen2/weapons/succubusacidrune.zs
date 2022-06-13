@@ -20,6 +20,9 @@ class SWeapAcidRune: SuccubusWeapon {
 	}
 
 	States {
+		Spawn:
+			PKUP A -1;
+			Stop;
 		Select:
 			TNT1 A 0 A_Select;
 			Loop;
