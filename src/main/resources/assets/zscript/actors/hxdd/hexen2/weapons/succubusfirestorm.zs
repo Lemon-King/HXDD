@@ -352,9 +352,11 @@ class SWeapFireStorm_FlameStream: Hexen2Projectile {
 			tracer.DamageMobj(self, target, damage, 'Fire');
 
 			// Add burn damage
-			SWeapFireStorm_Burner burner = SWeapFireStorm_Burner(Spawn("SWeapFireStorm_Burner"));
-			burner.AttachToActor(tracer);
-			burner.SetOwner(self.target);
+			if (!tracer.bBoss) {
+				SWeapFireStorm_Burner burner = SWeapFireStorm_Burner(Spawn("SWeapFireStorm_Burner"));
+				burner.AttachToActor(tracer);
+				burner.SetOwner(self.target);
+			}
 		}
 		Actor sprfx = Spawn("FireBoom");
 		sprfx.SetOrigin(self.pos, false);

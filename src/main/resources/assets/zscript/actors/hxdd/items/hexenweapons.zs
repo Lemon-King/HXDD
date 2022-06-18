@@ -57,11 +57,6 @@ class MultiClassFWeapHammer : MultiSpawner {
         self.Fighter = "FWeapHammer";
         self.Cleric = "FWeapHammer";
         self.Mage = "FWeapHammer";
-        self.Paladin = "PWeapAxe";
-        self.Crusader = "CWeapMeteorStaff";
-        self.Necromancer = "NWeapBoneShards";
-        self.Assassin = "AWeapGrenades";
-        self.Succubus = "SWeapFireStorm";
     }
 }
 
@@ -73,11 +68,6 @@ class MultiClassCWeapFlame : MultiSpawner {
         self.Fighter = "CWeapFlame";
         self.Cleric = "CWeapFlame";
         self.Mage = "CWeapFlame";
-        self.Paladin = "PWeapAxe";
-        self.Crusader = "CWeapMeteorStaff";
-        self.Necromancer = "NWeapBoneShards";
-        self.Assassin = "AWeapGrenades";
-        self.Succubus = "SWeapFireStorm";
     }
 }
 
@@ -89,11 +79,6 @@ class MultiClassMWeapLightning : MultiSpawner {
         self.Fighter = "MWeapLightning";
         self.Cleric = "MWeapLightning";
         self.Mage = "MWeapLightning";
-        self.Paladin = "PWeapAxe";
-        self.Crusader = "CWeapMeteorStaff";
-        self.Necromancer = "NWeapBoneShards";
-        self.Assassin = "AWeapGrenades";
-        self.Succubus = "SWeapFireStorm";
     }
 }
 

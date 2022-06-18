@@ -1,5 +1,5 @@
-GameInfo
-{
+
+GameInfo {
 	titlepage = "TITLE"
 	creditpage = "CREDIT"
 	titlemusic = "MUS_TITL"

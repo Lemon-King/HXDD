@@ -71,3 +71,48 @@ Glow
         X_FIRE04
     }
 }
+
+object HXDDGoldWandAmmo
+{
+    frame AMG1 { light SWANDAMMO }
+}
+object HXDDGoldWandHefty
+{
+    frame AMG2 { light LWANDAMMO }
+}
+
+object HXDDCrossbowAmmo
+{
+    frame AMC1 { light ETHARROWS }
+}
+object HXDDCrossbowHefty
+{
+    frame AMC2 { light ETHQUIVER }
+}
+
+object HXDDBlasterAmmo
+{
+    frame AMB1 { light SCLAWAMMO }
+}
+object HXDDBlasterHefty
+{
+    frame AMB2 { light LCLAWAMMO }
+}
+
+object HXDDSkullRodAmmo
+{
+    frame AMS1 { light SSTAFFAMMO }
+}
+object HXDDSkullRodHefty
+{
+    frame AMS2 { light LSTAFFAMMO }
+}
+
+object HXDDPhoenixRodAmmo
+{
+    frame AMP1 { light SRODAMMO }
+}
+object HXDDPhoenixRodHefty
+{
+    frame AMP2 { light LRODAMMO }
+}

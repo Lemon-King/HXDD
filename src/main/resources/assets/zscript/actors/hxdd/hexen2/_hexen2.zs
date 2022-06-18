@@ -50,5 +50,4 @@
 #include "zscript/actors/hxdd/hexen2/inventory/pickups.zs"
 
 // Pickups
-//#include "zscript/actors/hxdd/hexen2/pickups/testpickups.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/powerupsphere.zs"

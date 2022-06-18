@@ -22,7 +22,7 @@
     28 = Chandelier
     29 = SmallPillar
     30 = ArtiEgg
-    31 = EnchantedShield
+    31 = MultiClassEnchantedShield
     32 = ArtiSuperHealth
     33 = ArtiTorch
     34 = ArtiTimeBomb
@@ -64,7 +64,7 @@
     82 = ArtiHealth
     83 = ArtiFly
     84 = ArtiInvulnerability
-    85 = SilverShield
+    85 = MultiClassSilverShield
     86 = ArtiTomeOfPower
     87 = Volcano
     90 = Clink

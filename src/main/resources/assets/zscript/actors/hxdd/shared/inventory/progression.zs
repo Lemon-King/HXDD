@@ -267,7 +267,7 @@ class Progression: Inventory {
 			int lastExpDefault = 800;
 			experienceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_0", lastExpDefault);
 			for (let i = 1; i < 11; i++) {
-				lastExpDefault *= 2.0f;
+				lastExpDefault *= 2;
 				String cvarExpTableLevelNum = String.format("hxdd_progression_user_level_%d", i);
 				experienceTable[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, lastExpDefault);
 			}
