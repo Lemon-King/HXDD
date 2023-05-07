@@ -285,7 +285,7 @@ class ZFPlayerClassSelection ui {
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
         CVar cvarHexII = CVar.FindCVar('hxdd_installed_hexen2');
-        //if (cvarHexII && cvarHexII.GetBool()) {
+        if (cvarHexII && cvarHexII.GetBool()) {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("PlayerClassButton");
@@ -299,12 +299,12 @@ class ZFPlayerClassSelection ui {
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
             CVar cvarHexII_EX = CVar.FindCVar('hxdd_installed_hexen2_expansion');
-            //if (cvarHexII_EX && cvarHexII_EX.GetBool()) {
+            if (cvarHexII_EX && cvarHexII_EX.GetBool()) {
                 // display Hexen II Expansion classes
                 btnClassSuccubus = new("PlayerClassButton");
                 btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", 8, "graphics/netp5.png");
-            //}
-        //}
+            }
+        }
     }
 
     void Update() {

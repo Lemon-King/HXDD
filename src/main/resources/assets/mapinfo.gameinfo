@@ -6,7 +6,7 @@ include mapinfo/hxdd.mapinfo
 GameInfo {
 	titlepage = "TITLE"
 	creditpage = "CREDIT"
-	titlemusic = "casa1"// "MUS_TITL" // needs alternate for HX2 files
+	titlemusic = "MUS_TITL"
 	titletime = 8
 	advisorytime = 6
 	pagetime = 5

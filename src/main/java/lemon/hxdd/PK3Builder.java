@@ -36,7 +36,8 @@ public class PK3Builder {
     // pak0.pak & pak1.pak can be found via Steam & GOG versions of Hexen II.
     // pak3.pak (Optional) is included in Portals of Praveus, sets flag enabling Demoness Class
 
-    static String[] pakNames = {"pak0.pak", "pak1.pak", "pak3.pak"};
+    static String[] hx2PakFiles = {"pak0", "pak1"};
+    static String[] hx2exPakFiles = {"pak3"};
 
     public Map<String, FileOrganizer> organizedFiles = new HashMap<>();
 
@@ -59,23 +60,29 @@ public class PK3Builder {
             actors.Create();
             actors.CreateEditorNums();
 
-            // If Noesis zip or folder with exe is found, try Hexen 2 paks
-            if (Noesis.CheckAndInstall()) {
-                ArrayList<String> paks = PAKData.Extract();
+            // If Hexen II paks are found then try to export data
+            if (HasOptionalFiles(hx2PakFiles, "pak")) {
+                // If Noesis zip or folder with exe is found, try Hexen 2 paks
+                if (Noesis.CheckAndInstall()) {
+                    ExportHXDDFileByName("configuration/cvarinfo.hx2", "cvarinfo.hx2");
+                    ExportHXDDFileByName("configuration/mapinfo.hx2title", "mapinfo.hx2title");
+                    if (HasOptionalFiles(hx2exPakFiles, "pak")) {
+                        // Set Portals flag as needed
+                        ExportHXDDFileByName("configuration/cvarinfo.hx2exp", "cvarinfo.hx2exp");
+                    }
 
-                PAKData.ExportAssets();
+                    ArrayList<String> paks = PAKData.Extract();
 
-                if (paks.contains("pak3")) {
-                    // Set Portals flag as needed
+                    PAKData.ExportAssets();
+
+                    XMLModelDef xmd = new XMLModelDef();
+                    xmd.Export();
+
+                    SoundInfo si = new SoundInfo();
+                    si.Export();
+
+                    HX2_CopyMusic();
                 }
-                // If Hexen II paks are found export data
-                XMLModelDef xmd = new XMLModelDef();
-                xmd.Export();
-                SoundInfo si = new SoundInfo();
-                si.Export();
-                // Copy packaged HXDD Hexen II data
-                // Copy Hexen II enabled files
-                // else go to Bundle
             }
 
             ExportHXDDFiles();
@@ -104,6 +111,23 @@ public class PK3Builder {
         if (missingFiles.size() > 0) {
             System.out.println("Cannot continue, missing the following files:");
             System.out.println(String.join(", ", missingFiles));
+            return false;
+        }
+        return true;
+    }
+
+    private boolean HasOptionalFiles(String[] fileList, String extension) {
+        ArrayList<String> missingFiles = new ArrayList<String>();
+        String pathSourceFiles = (String) Settings.getInstance().Get("PathSourceWads");
+        Arrays.asList(fileList).forEach((f) -> {
+            String fileName = pathSourceFiles + f + "." + extension;
+            File fileTemporary = new File(fileName);
+            if (!fileTemporary.exists()) {
+                missingFiles.add(f + "." + extension);
+            }
+        });
+        if (missingFiles.size() > 0) {
+            //System.out.println("Files not found, skipping: " + String.join(", ", missingFiles));
             return false;
         }
         return true;
@@ -300,15 +324,21 @@ public class PK3Builder {
     }
 
     // Hexen 2 Stuff
+    private void HX2_CopyMusic() {
+        try {
+            String path = Settings.getInstance().Get("PathTemporary") + "/music/";
+            FileUtils.copyDirectory(new File("./hexen2/data1/midi"), new File(path));
 
-    private void BuildModelDefs() {
+            String pathSourceMusic = Settings.getInstance().Get("PathSourceWads") + "/hexen2_music/";
+            File dirSourceMusic = new File(pathSourceMusic);
 
+            if (dirSourceMusic.exists() && dirSourceMusic.isDirectory()) {
+                FileUtils.copyDirectory(dirSourceMusic, new File(path));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
-    private void RenameSprites() {
-
-    }
-
     // Hexen 2 Stuff
 
     // TODO: Move this mess into FileOrganizer.
@@ -373,6 +403,33 @@ public class PK3Builder {
         }
     }
 
+    private void ExportHXDDFileByName(String source, String target) {
+        System.out.println("Adding HXDD assets");
+        String pathTemporary = (String) Settings.getInstance().Get("PathTemporary");
+        try {
+            String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();    // are we running from IDE?
+            if (protocol.equals("jar")) {
+                final String filePath = "resources/" + source;
+                File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                ZipUtil.unpack(jarHXDD, new File(pathTemporary), new NameMapper() {
+                    public String map(String name) {
+                        if (name.startsWith(filePath)) {
+                            return name.startsWith(filePath) ? name.substring(filePath.length()) : name;
+                        } else {
+                            return null;
+                        }
+                    }
+                });
+            } else if (protocol.equals("file")) {
+                FileUtils.copyFile(new File("./src/main/resources/" + source), new File(pathTemporary + "/" + target));
+            } else {
+                System.out.println("Failed to export HXDD Asset.");
+            }
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void ExportHXDDFiles() {
         System.out.println("Adding HXDD assets");
         String pathTemporary = (String) Settings.getInstance().Get("PathTemporary");
@@ -417,7 +474,7 @@ public class PK3Builder {
     }
 
     private void Bundle() {
-        System.out.println("Packing HXDD.ipk3");
+        System.out.println("Packaging HXDD.ipk3");
         String Settings_TempPath = (String) Settings.getInstance().Get("PathTemporary");
         File fileTemporary = new File(Settings_TempPath);
         File fileIpk3 = new File("./HXDD.ipk3");
