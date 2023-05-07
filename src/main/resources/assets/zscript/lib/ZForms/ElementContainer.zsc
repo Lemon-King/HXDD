@@ -1,0 +1,164 @@
+/// An overridable element for containing other elements.
+///
+/// This shouldn't ever exist on its own - the point of it is to be derived from. For a user-facing
+/// element that contains elements, see [`ZF_Frame`].
+///
+/// This handles drawing each element, calling their tickers, etc.
+class HXDD_ZF_ElementContainer : HXDD_ZF_Element {
+	/// The elements that belong to this element container.
+	///
+	/// Elements later in the array are drawn on top of earlier ones.
+	///
+	/// Note that some care must be taken when adding to this - you must set the pushed element's
+	/// [`master`](ZF_Element.master) pointer to be equal to the element container that contains
+	/// it.
+	protected Array<HXDD_ZF_Element> elements;
+
+	override bool handleBack() {
+		let ret = false;
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements[i] != NULL) {
+				ret = ret || elements[i].handleBack();
+			}
+		}
+		return ret;
+	}
+
+	override void ticker() {
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements[i] != NULL) {
+				elements[i].ticker();
+			}
+		}
+	}
+
+	private void drawFocusIndicator(HXDD_ZF_ElementTreeGlobal globalStore) {
+		if (globalStore.focusIndicator == NULL) return;
+
+		HXDD_ZF_AABB beforeClip;
+		getClipAABB(beforeClip);
+		Screen.clearClipRect();
+
+		globalStore.focusIndicator.master = globalStore.mainFrame;
+		globalStore.focusIndicator.globalStore = globalStore;
+		globalStore.focusIndicator.drawer();
+		globalStore.focusIndicator.master = NULL;
+		globalStore.focusIndicator.globalStore = NULL;
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	private void drawerInternal(bool top) {
+		if (hidden) { return; }
+
+		// stuff in the frame shouldn't draw outside the frame
+		HXDD_ZF_AABB beforeClip; getClipAABB(beforeClip);
+		if (master != NULL) {
+			HXDD_ZF_AABB clipCoords; boxToScreen(clipCoords);
+			HXDD_ZF_AABB screenClip;
+			screenClip.size = screenSize();
+			clipCoords.rectOfIntersection(clipCoords, screenClip);
+
+			Screen.setClipRect(int(clipCoords.pos.x), int(clipCoords.pos.y), int(clipCoords.size.x), int(clipCoords.size.y));
+		}
+		
+		let globalStore = getGlobalStore();
+
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements[i] != NULL && !elements[i].hidden) {
+				if (top) { elements[i].topDrawer(); }
+				else { drawSubElement(elements[i]); }
+			}
+		}
+
+		if (!top) {
+			if (master == NULL && globalStore.focusPriority == HXDD_ZF_FocusPriority_AboveAll) {
+				drawFocusIndicator(globalStore);
+			}
+		}
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	override bool handlePriorityMouseBlock(bool mouseBlock, Vector2 mousePos) {
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			let elem = elements[i];
+			if (elem != NULL && !elem.hidden) {
+				elem.mouseBlock = mouseBlock;
+				let res = elem.handlePriorityMouseBlock(mouseBlock, mousePos);
+				mouseBlock = mouseBlock || res;
+			}
+		}
+		return mouseBlock;
+	}
+
+	private bool mousePosAndBlock(bool mouseBlock, Vector2 mousePos) {
+		let res = handleMousePosition(mouseBlock, mousePos);
+		if (res) return true;
+		return blocksMouse(mousePos);
+	}
+
+	override bool handleMousePosition(bool mouseBlock, Vector2 mousePos) {
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			let elem = elements[i];
+			if (elem != NULL && !elem.hidden) {
+				elem.mouseBlock = mouseBlock;
+				let res = elem.mousePosAndBlock(mouseBlock, mousePos);
+				elem.doHover(mouseBlock, mousePos);
+				mouseBlock = mouseBlock || res;
+			}
+		}
+		return mouseBlock;
+	}
+
+	override void drawer() {
+		drawerInternal(false);
+	}
+	override void topDrawer() {
+		drawerInternal(true);
+	}
+	
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			let elem = elements[i];
+			if (elem != NULL && !elem.hidden) {
+				let res = elem.onNavEvent(type, fromController);
+				if (res) return true;
+			}
+		}
+		return false;
+	}
+
+	override bool onUIEventPriority(HXDD_ZF_UiEvent ev) {
+		let mousePos = getGlobalStore().mousePos;
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			let elem = elements[i];
+			if (elem != NULL && !elem.hidden) {
+				let res = elem.onUIEventPriority(ev);
+				if (res) return true;
+			}
+		}
+		return false;
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		let mousePos = getGlobalStore().mousePos;
+		for (int i = elements.size() - 1; i >= 0; i--) {
+			let elem = elements[i];
+			if (elem != NULL && !elem.hidden) {
+				let res = elem.onUIEvent(ev);
+				if (res) return true;
+			}
+		}
+		return false;
+	}
+
+	override void onDestroy() {
+		for (int i = 0; i < elements.size(); i++) {
+			let elem = elements[i];
+			if (elem == NULL) continue;
+			elem.master = NULL;
+			elem.globalStore = NULL;
+		}
+	}
+}

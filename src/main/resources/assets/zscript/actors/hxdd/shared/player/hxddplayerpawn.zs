@@ -1,66 +1,8 @@
-
 class HXDDPlayerPawn : PlayerPawn {
-	int DefaultArmorMode;
-	int DefaultProgression;
-
-	// Class Tables
-	double experienceTable[11];
-	double hitpointTable[5];
-	double manaTable[5];
-	double strengthTable[2];
-	double intelligenceTable[2];
-	double wisdomTable[2];
-	double dexterityTable[2];
-
-	// Alignment (Used for some pickups)
-	String Alignment;
-	property Alignment: Alignment;
-
-	// Character Stats
-	int level;
-	int experience;
-	double experienceModifier;
-
-	//int maxHealth; // Use Player.MaxHealth
-	int maxMana;
-	int strength;
-	int intelligence;
-	int wisdom;
-	int dexterity;
-
-	// Gameplay Modes
-	property DefaultArmorMode: DefaultArmorMode;
-	property DefaultProgression: DefaultProgression;
-
-	// Class Tables
-	property experienceTable: experienceTable;
-	property hitpointTable: hitpointTable;
-	property manaTable: manaTable;
-	property strengthTable: strengthTable;
-	property intelligenceTable: intelligenceTable;
-	property wisdomTable: wisdomTable;
-	property dexterityTable: dexterityTable;
-
-	// Character Stats
-	property Level: level;
-	property Experience: experience;
-	property ExperienceModifier: experienceModifier;
-
-	//property MaxHealth; // Use Player.MaxHealth
-	property MaxMana: maxMana;
-	property Strength: strength;
-	property Intelligence: intelligence;
-	property Wisdom: wisdom;
-	property Dexterity: dexterity;
-
 	override void BeginPlay() {
 		Super.BeginPlay();
-		if (experienceTable[0] == 0) {
-			SetAdvancementStatTables();
-		}
 	}
 
-	virtual void SetAdvancementStatTables() {}
 	virtual void OnExperienceBonus(double experience) {}
 	virtual void OnKill(Actor target, double experience) {}
 }
@@ -94,7 +36,9 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		HandlePlayerIdleState();
+		if (Player) {
+			HandlePlayerIdleState();
+		}
 	}
 
 	//----------------------------------------------------------------------------
@@ -104,6 +48,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	//----------------------------------------------------------------------------
 
 	override void PlayIdle() {
+		if (!Player) {return;}
 		// player.crouching;
 		if (!IsInIdleStateSequence() && !IsInFireStateSequence()) {
 			if (IsPlayerFlying()) {
@@ -115,6 +60,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	}
 
 	override void PlayRunning() {
+		if (!Player) {return;}
 		if (!IsInMovementStateSequence() && !IsInFireStateSequence()) {
 			if (IsPlayerFlying()) {
 				HandlePlayerFlyState();
@@ -125,6 +71,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	}
 	
 	override void PlayAttacking () {
+		if (!Player) {return;}
 		if (MissileState != null) {
 			if (IsPlayerFlying()) {
 				return;
@@ -135,6 +82,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	}
 
 	override void PlayAttacking2 () {
+		if (!Player) {return;}
 		if (MeleeState != null) {
 			if (IsPlayerFlying()) {
 				return;
@@ -156,7 +104,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 			Player.mo.FindState("Spawn3"),
 			Player.mo.FindState("Spawn4"),
 			Player.mo.FindState("Spawn"),
-			Player.mo.FindState("Jump")
+			Player.mo.FindState("Crouch")
 		};
 
 		for (int i = 0; i < 6; i++) {
@@ -169,7 +117,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	}
 	
 	bool IsInMovementStateSequence() {
-		State animationStates[11] = {
+		State animationStates[12] = {
 			Player.mo.FindState("See1"),
 			Player.mo.FindState("See2"),
 			Player.mo.FindState("See3"),
@@ -180,7 +128,8 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 			Player.mo.FindState("Fly3"),
 			Player.mo.FindState("Fly4"),
 			Player.mo.FindState("Fly"),
-			Player.mo.FindState("Jump")
+			Player.mo.FindState("Jump"),
+			Player.mo.FindState("Crouch")
 		};
 
 		for (int i = 0; i < 11; i++) {
@@ -238,8 +187,7 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 			Player.mo.FindState("See2"),
 			Player.mo.FindState("See3"),
 			Player.mo.FindState("See4"),
-			Player.mo.FindState("See"),
-			Player.mo.FindState("Crouch")
+			Player.mo.FindState("See")
 		};
 
 		int index = 4;

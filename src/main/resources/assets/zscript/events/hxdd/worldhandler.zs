@@ -33,34 +33,29 @@ class HXDDWorldEventHandler : EventHandler {
         }
         Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
     }
-
+    
     override void WorldLoaded(WorldEvent e) {
         int gameType = gameinfo.gametype;
-        String mapName = Level.MapName.MakeLower();
-        bool isHexen = mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1;
         if (gameType & GAME_Doom) {
         } else if (gameType & Game_Raven) {
-            if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
-                // Map follows E#M# format.
-                //HereticReplacements();
-            } else if (isHexen) {
-                //HexenReplacements();
-            }
+            //PlayerInfo p = players[0];
+            //String playerClass = p.mo.GetPrintableDisplayName(p.cls);
         }
         UserOptions_TextureSwap();
     }
-}
 
-class ProgressionWorldEventHandler: EventHandler {
     override void PlayerSpawned(PlayerEvent e) {
         PlayerPawn pp = PlayerPawn(players[e.PlayerNumber].mo);
         if (pp) {
-            Progression itemProgression = Progression(pp.FindInventory("Progression"));
-            if (itemProgression == null) {
+            Progression prog = Progression(pp.FindInventory("Progression"));
+            if (prog == null) {
                 pp.GiveInventory("Progression", 1);
-                //if (prog != NULL) {
-                //    console.printf("Progression activated for Player %d.", e.PlayerNumber);
-                //}
+                prog = Progression(pp.FindInventory("Progression"));
+                prog.CreatePlayerSheetItem();
+            }
+            GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+            if (gmcompat == null) {
+                pp.GiveInventory("GameModeCompat", 1);
             }
         }
     }
@@ -76,9 +71,9 @@ class ProgressionWorldEventHandler: EventHandler {
                         exp = prog.GiveExperienceByTargetHealth(e.thing);
                     }
                     
-                    if (e.thing.target.player.mo is "HXDDPlayerPawn") {
-                        HXDDPlayerPawn player = HXDDPlayerPawn(e.thing.target.player.mo);
-                        player.OnKill(e.thing, exp);
+                    if (prog.sheet) {
+                        //HXDDPlayerPawn player = HXDDPlayerPawn(e.thing.target.player.mo);
+                        prog.sheet.OnKill(pt, e.thing, exp);
                     }
                 }
             }

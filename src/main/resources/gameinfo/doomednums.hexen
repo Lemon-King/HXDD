@@ -120,10 +120,10 @@
   8002 = ArtiSpeedBoots
   8003 = ArtiBoostMana
   8004 = MultiClassMana3
-  8005 = MeshArmor
-  8006 = FalconShield
-  8007 = PlatinumHelm
-  8008 = AmuletOfWarding
+  8005 = MultiClassMeshArmor
+  8006 = MultiClassFalconShield
+  8007 = MultiClassPlatinumHelm
+  8008 = MultiClassAmuletOfWarding
   8009 = MultiClassCWeapFlame
   8010 = MultiClassFWeapAxe
   8020 = IceGuy

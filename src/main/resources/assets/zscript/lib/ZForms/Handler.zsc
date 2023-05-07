@@ -1,0 +1,49 @@
+/// A class that allows menus to receive events from elements in the element
+/// tree.
+///
+/// # Usage
+///
+/// All methods in a handler receive at least two things - the thing that is sending the event, and
+/// a `command` string that allows for more conveniently identifying what purpose the event was
+/// sent for. Some events give more information, but at least these will be present on every
+/// method.
+class HXDD_ZF_Handler ui {
+	/// Called when a [button](ZF_Button) is clicked on.
+	///
+	/// More specifically, called when a button is currently being clicked on, and the mouse is
+	/// released while it is under the cursor.
+	virtual void buttonClickCommand(HXDD_ZF_Button caller, Name command) {}
+	
+	/// Called periodically by a [button](ZF_Button) that uses the hold tic interval system.
+	///
+	/// If a button has `i := `[`ZF_Button.holdTicInterval`] set to be non-negative, this is called
+	/// periodically every `i + 1` ticks.
+	virtual void buttonHeldCommand(HXDD_ZF_Button caller, Name command) {}
+
+	/// Called whenever a [radio button](ZF_RadioButton) changes the state of the controller.
+	///
+	/// `variable` contains the new state of the set of radio buttons to avoid having to fetch it
+	/// from the caller.
+	virtual void radioButtonChanged(HXDD_ZF_RadioButton caller, Name command, HXDD_ZF_RadioController variable) {}
+
+	/// Called whenever a [toggle button](ZF_ToggleButton) changes its state.
+	virtual void toggleButtonChanged(HXDD_ZF_ToggleButton caller, Name command, bool on) {}
+
+	/// Called whenever a [text input](ZF_TextInput) is exited from via any means.
+	virtual void textInputExit(HXDD_ZF_TextInput caller, Name command) {}
+
+	/// Called whenever the text inside a [text input](ZF_TextInput) is changed by the user.
+	virtual void textInputChanged(HXDD_ZF_TextInput caller, Name command) {}
+
+	/// Called whenever a [slider](ZF_Slider) is moved by the user.
+	///
+	/// The value should be gotten via [`ZF_Slider.getValue`].
+	virtual void sliderChanged(HXDD_ZF_Slider caller, Name command) {}
+
+	/// Called when a [dropdown list](ZF_DropdownList)'s item is changed by the
+	/// user.
+	virtual void dropdownChanged(HXDD_ZF_DropdownList caller, Name command) {}
+
+	/// Called when any element is hovered or unhovered.
+	virtual void elementHoverChanged(HXDD_ZF_Element caller, Name command, bool unhovered) {}
+}

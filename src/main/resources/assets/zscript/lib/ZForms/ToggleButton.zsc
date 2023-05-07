@@ -1,0 +1,131 @@
+/// A button which toggles on and off when it is clicked.
+///
+/// This element uses the event [`ZF_Handler.toggleButtonChanged`].
+///
+/// Also see the documentation for [`ZF_ButtonBase`] as a lot of button things are documented
+/// there.
+class HXDD_ZF_ToggleButton : HXDD_ZF_ButtonBase {
+	private void config(
+		string text = "",
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures disabled = NULL,
+		Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		AlignType alignment = AlignType_Center, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		setFont(fnt);
+		setText(text);
+		setTextScale(textScale);
+		setTextures(inactive, hover, click, disabled);
+		setTextColor(textColor);
+		setAlignment(alignment);
+		setAlpha(1.0);
+
+		self.cmdHandler = cmdHandler;
+		self.command = command;
+	}
+
+	/// Returns a newly created toggle button element.
+	///
+	/// The position used is relative to whatever the element is packed into later.
+	/// 
+	/// The [`ZF_BoxTextures`] arguments correspond to the button's states described in
+	/// [`ButtonState`]. The text on the button will be aligned to `alignment`.
+	///
+	/// `textColor` takes on values from [`Font.EColorRange`], which cannot be named as a type due
+	/// to current ZScript limitations.
+	///
+	/// If `fnt` is `NULL`, then `smallfont` is used instead.
+	///
+	/// `cmdHandler` and `command` determine where the button's events are sent
+	/// to. [`ZF_Handler.toggleButtonChanged`] is sent whenever the user clicks
+	/// on the toggle button, changing its state.
+	static HXDD_ZF_ToggleButton create(
+		Vector2 pos, Vector2 size, string text = "",
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL, HXDD_ZF_BoxTextures click = NULL,
+		HXDD_ZF_BoxTextures disabled = NULL, Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		AlignType alignment = AlignType_Center, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		let ret = new('HXDD_ZF_ToggleButton');
+
+		ret.config(text, inactive, hover, click, disabled, fnt, textScale, textColor, alignment, cmdHandler, command);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	private bool on;
+	/// Returns `true` if the toggle button is on, `false` if off.
+	bool isOn() { return self.on; }
+	/// Sets the on/off state of the toggle button.
+	void setOn(bool on) { self.on = on; }
+
+	private bool hover;
+	private bool click;
+
+	override bool handleMousePosition(bool mouseBlock, Vector2 mousePos) {
+		if (isEnabled()) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!mouseBlock && screenBox.pointCollides(mousePos)) {
+				hover = true;
+			}
+			else {
+				hover = false;
+			}
+		}
+		return false;
+	}
+
+	override void drawer() {
+		if (!isEnabled()) { curButtonState = ButtonState_Disabled; }
+		else if ((!getHoverBlock() && hover) || click) { curButtonState = ButtonState_Hover; }
+		else if (on) { curButtonState = ButtonState_Click; }
+		else { curButtonState = ButtonState_Inactive; }
+		Super.drawer();
+	}
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (isEnabled() && isFocused() && type == HXDD_ZF_NavEventType_Confirm) {
+			on = !on;
+			if (cmdHandler != NULL) {
+				cmdHandler.toggleButtonChanged(self, command, on);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	override void activate() {
+		on = !on;
+		if (cmdHandler != NULL) {
+			cmdHandler.toggleButtonChanged(self, command, on);
+		}
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		// if the player's clicked, and their mouse is in the right place, set the state accordingly
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			let mousePos = getGlobalStore().mousePos;
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				click = true;
+				setHoverBlock(self);
+			}
+		}
+		// if the player's releasing, check if their mouse is still in the correct range and trigger method if it was
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			if (isEnabled()) {
+				let mousePos = getGlobalStore().mousePos;
+				HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+				if (screenBox.pointCollides(mousePos) && click) {
+					on = !on;
+					if (cmdHandler != NULL) {
+						cmdHandler.toggleButtonChanged(self, command, on);
+					}
+				}
+				click = false;
+				setHoverBlock(NULL);
+			}
+		}
+		return false;
+	}
+}

@@ -1,0 +1,76 @@
+/// An aesthetic-only element used for putting "box textures" in a menu.
+class HXDD_ZF_Image : HXDD_ZF_Element {
+	private void config(string image = "", AlignType alignment = AlignType_TopLeft, Vector2 imageScale = (1, 1), bool tiled = false) {
+		self.image = image;
+		self.alignment = alignment;
+		self.imageScale = imageScale;
+		self.tiled = tiled;
+		self.alpha = 1;
+	}
+
+	/// Returns a newly-created image element.
+	/// 
+	/// The position used is relative to whatever the element is packed into later. If `tiled` is
+	/// set, `alignment` is ignored.
+	static HXDD_ZF_Image create(Vector2 pos, Vector2 size, string image = "", AlignType alignment = AlignType_TopLeft, Vector2 imageScale = (1, 1), bool tiled = false) {
+		let ret = new('HXDD_ZF_Image');
+
+		ret.config(image, alignment, imageScale, tiled);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	private string image;
+	/// Returns the name of the texture that will be used for drawing.
+	string getImage() { return self.image; }
+	/// Sets the texture that will be used for drawing, taking it in as a texture name string.
+	void setImage(string image) { self.image = image; }
+
+	private AlignType alignment;
+	/// Returns the alignment that will be used for drawing the image.
+	AlignType getAlignment() { return self.alignment; }
+	/// Sets the alignment that will be used for drawing the image.
+	void setAlignment(AlignType alignment) { self.alignment = alignment; }
+
+	private Vector2 imageScale;
+	/// Returns the scale that will be applied to the image when drawing.
+	Vector2 getImageScale() { return self.imageScale; }
+	/// Sets the scale that will be applied to the image when drawing.
+	void setImageScale(Vector2 imageScale) { self.imageScale = imageScale; }
+
+	private bool tiled;
+	/// Returns whether the image will be tiled over the entire element's area when drawing.
+	bool getTiled() { return self.tiled; }
+	/// Sets whether the image will be tiled over the entire element's area when drawing.
+	///
+	/// Setting this to `true` causes the element's alignment to be ignored.
+	void setTiled(bool tiled) { self.tiled = tiled; }
+
+	override void drawer() {
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y));
+
+		TextureID tex = TexMan.checkForTexture(image, TexMan.Type_Any);
+
+		if (!tex) {
+			return;
+		}
+
+		Vector2 imageSize = TexMan.getScaledSize(tex);
+
+		imageSize.x *= imageScale.x;
+		imageSize.y *= imageScale.y;
+
+		if (tiled) {
+			drawTiledImage((0, 0), box.size, image, true, imageScale);
+		}
+		else {
+			Vector2 pos = getAlignedDrawPos(box.size, imageSize, alignment);
+			drawImage(pos, image, true, imageScale);
+		}
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+}

@@ -15,7 +15,7 @@ public class ActorFactory {
     private static final List<String> GameOrder = Arrays.asList("heretic", "hexen");
 
     public void Create() {
-        String path = Settings.getInstance().Get("PathTemporary") + "/zscript/actors/hxdd/";
+        String path = Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/";
         File dirFile = new File(path + "spawners");
         if (!dirFile.exists()) {
             dirFile.mkdirs();
@@ -74,7 +74,7 @@ public class ActorFactory {
                 String zscriptActorListFilename = type + "_compat.zs";
                 String mapInfoFileName = "mapinfo." + type;
 
-                PrintWriter file_hxdd_actors = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/zscript/actors/hxdd/" + zscriptActorListFilename);
+                PrintWriter file_hxdd_actors = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/" + zscriptActorListFilename);
                 PrintWriter file_mapinfo = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/" + mapInfoFileName);
 
                 AddGeneratedByTag(file_hxdd_actors);
@@ -91,7 +91,7 @@ public class ActorFactory {
                     if (result.length > 1) {
                         //System.out.println("ActorFactory: Found shared Actors " + "ID=" + key + " " + result[0] + " " + result[1]);
                         String actorFile = CreateActorFile(type, key, result[0], result[1]);
-                        file_hxdd_actors.print("#include \"zscript/actors/hxdd/spawners/" + actorFile + ".zs" + "\"\n");
+                        file_hxdd_actors.print("#include \"zscript_generated/actors/hxdd/spawners/" + actorFile + ".zs" + "\"\n");
                         file_mapinfo.print(key + " = " + actorFile + "\n");
                     } else {
                         file_mapinfo.print(key + " = " + value + "\n");
@@ -108,7 +108,7 @@ public class ActorFactory {
     }
 
     private String CreateActorFile(String type, String id, String actorHeretic, String actorHexen) {
-        String path = Settings.getInstance().Get("PathTemporary") + "/zscript/actors/hxdd/spawners/";
+        String path = Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/spawners/";
         try {
             String fileName = type + "_" + id + "_" + actorHeretic + "_" + actorHexen;
             PrintWriter out = new PrintWriter(path + fileName + ".zs");

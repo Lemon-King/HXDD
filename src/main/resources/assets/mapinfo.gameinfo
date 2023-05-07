@@ -1,8 +1,12 @@
+include mapinfo/heretic.mapinfo
+include mapinfo/hexen.mapinfo
+include mapinfo/hexdd.mapinfo
+include mapinfo/hxdd.mapinfo
 
 GameInfo {
 	titlepage = "TITLE"
 	creditpage = "CREDIT"
-	titlemusic = "MUS_TITL"
+	titlemusic = "casa1"// "MUS_TITL" // needs alternate for HX2 files
 	titletime = 8
 	advisorytime = 6
 	pagetime = 5
@@ -74,7 +78,7 @@ GameInfo {
 	messageboxclass = "MessageBoxMenu"
 	normforwardmove = 0x19, 0x32
 	normsidemove = 0x18, 0x28
-	AddEventHandlers = "HXDDWorldEventHandler", "ProgressionWorldEventHandler"
+	AddEventHandlers = "HXDDWorldEventHandler"
 }
 
 skill baby

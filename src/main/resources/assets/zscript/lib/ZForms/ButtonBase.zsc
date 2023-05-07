@@ -1,0 +1,133 @@
+/// The base class of a few elements in ZForms that do similar button-like
+/// things.
+///
+/// For specific button types see [`ZF_Button`], [`ZF_ToggleButton`] and [`ZF_RadioButton`].
+class HXDD_ZF_ButtonBase : HXDD_ZF_Element {
+	/// An enum containing the states buttons are able to be in.
+	enum ButtonState {
+		/// The button is isn't being clicked on, or hovered.
+		ButtonState_Inactive,
+		/// The mouse cursor is on top of the button but it isn't clicked.
+		ButtonState_Hover,
+		/// The button has been clicked on.
+		ButtonState_Click,
+		/// The button is disabled and won't do anything.
+		ButtonState_Disabled
+	}
+
+	private HXDD_ZF_BoxTextures textures[4];
+
+	/// Returns the box textures used for when the button is in the inactive state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	HXDD_ZF_BoxTextures getInactiveTexture() { return textures[ButtonState_Inactive]; }
+	/// Sets the box textures used for when the button is in the inactive state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	void setInactiveTexture(HXDD_ZF_BoxTextures tex) { textures[ButtonState_Inactive] = tex; }
+
+	/// Returns the box textures used for when the button is in the hover state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	HXDD_ZF_BoxTextures getHoverTexture() { return textures[ButtonState_Hover]; }
+	/// Sets the box textures used for when the button is in the hover state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	void setHoverTexture(HXDD_ZF_BoxTextures tex) { textures[ButtonState_Hover] = tex; }
+
+	/// Returns the box textures used for when the button is in the click state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	HXDD_ZF_BoxTextures getClickTexture() { return textures[ButtonState_Click]; }
+	/// Sets the box textures used for when the button is in the click state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	void setClickTexture(HXDD_ZF_BoxTextures tex) { textures[ButtonState_Click] = tex; }
+
+	/// Returns the box textures used for when the button is in the disabled state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	HXDD_ZF_BoxTextures getDisabledTexture() { return textures[ButtonState_Disabled]; }
+	/// Sets the box textures used for when the button is in the disabled state.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	void setDisabledTexture(HXDD_ZF_BoxTextures tex) { textures[ButtonState_Disabled] = tex; }
+
+	/// Sets all four of the textures a button uses in one function.
+	///
+	/// See [`ButtonState`] for state descriptions.
+	void setTextures(HXDD_ZF_BoxTextures inactive, HXDD_ZF_BoxTextures hover, HXDD_ZF_BoxTextures click, HXDD_ZF_BoxTextures disabled) {
+		self.textures[ButtonState_Inactive] = inactive;
+		self.textures[ButtonState_Hover] = hover;
+		self.textures[ButtonState_Click] = click;
+		self.textures[ButtonState_Disabled] = disabled;
+	}
+
+	private HXDD_ZF_BoxDrawer drawers[4];
+
+	private Font fnt;
+	/// Returns the font this button will use for drawing its text.
+	Font getFont() { return self.fnt; }
+	/// Sets the font this button will use for drawing its text.
+	///
+	/// If this is `NULL`, then `smallfont` is used instead.
+	void setFont(Font fnt) {
+		if (fnt == NULL) {
+			self.fnt = smallfont;
+		}
+		else {
+			self.fnt = fnt;
+		}
+	}
+
+	private string text;
+	/// Returns the text that will be drawn to the screen on top of the button background.
+	string getText() { return self.text; }
+	/// Sets the text that will be drawn to the screen on top of the button background.
+	void setText(string text) { self.text = text; }
+
+	private int textColor;
+	/// Returns the button's text's color.
+	///
+	/// This is really a [`Font.EColorRange`], but ZScript currently is a bit limited here.
+	int getTextColor() { return self.textColor; }
+	/// Sets the button's text's color.
+	///
+	/// This is really a [`Font.EColorRange`], but ZScript currently is a bit limited here.
+	void setTextColor(int textColor) { self.textColor = textColor; }
+
+	private double textScale;
+	/// Returns the scaling factor for the drawn text.
+	double getTextScale() { return self.textScale; }
+	/// Sets the scaling factor for the drawn text.
+	void setTextScale(double textScale) { self.textScale = textScale; }
+
+	private AlignType alignment;
+	/// Returns the alignment that will be used for drawing the button's text.
+	AlignType getAlignment() { return self.alignment; }
+	/// Sets the alignment that will be used for drawing the button's text.
+	void setAlignment(AlignType alignment) { self.alignment = alignment; }
+
+	/// ?doc: hidden
+	protected ButtonState curButtonState;
+	/// Returns the state that the button is currently in.
+	ButtonState getCurButtonState() { return self.curButtonState; }
+
+	override void drawer() {
+		if (hidden) { return; }
+
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y + 1));		// BugFix: setClipRect must be ((px,py), (sx,sy+1)) to prevent clipping lower artwork
+
+		HXDD_ZF_BoxTextures textures = textures[curButtonState];
+		if (textures != NULL) {
+			drawers[curButtonState].draw(self, (0, 0), box.size, textures, true);
+		}
+
+		Vector2 textPos = getAlignedDrawPos(box.size, (fnt.stringWidth(text), fnt.getHeight()) * textScale, alignment);
+		drawText(textPos, fnt, text, textColor, textScale);
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+}

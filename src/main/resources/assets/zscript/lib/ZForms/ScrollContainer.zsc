@@ -1,0 +1,125 @@
+/// An element which adds a scrollbar to any other element, defaulting to a
+/// [frame](ZF_Frame).
+class HXDD_ZF_ScrollContainer : HXDD_ZF_ElementContainer {
+	private void config(
+		double scrollWidth, double scrollAreaHeight, double scrollNotchJump,
+		HXDD_ZF_BoxTextures scrollBarNormal, HXDD_ZF_BoxTextures scrollBarHover = NULL,
+		HXDD_ZF_BoxTextures scrollBarClick = NULL, HXDD_ZF_BoxTextures scrollBg = NULL,
+		double contentBarGap = 0.0
+	) {
+		self.scrollAreaHeight = max(scrollAreaHeight, box.size.y);
+		self.scrollNotchJump = scrollNotchJump;
+		self.contentBarGap = contentBarGap;
+		self.scrollWidth = scrollWidth;
+
+		scrollArea.setBox((0, 0), (box.size.x - scrollWidth - contentBarGap, scrollAreaHeight));
+		bar.setBox((box.size.x - scrollWidth, 0.0), (scrollWidth, box.size.y));
+		bar.config(scrollBarNormal, scrollBarHover, scrollBarClick, scrollBg);
+
+		self.alpha = 1.0;
+	}
+
+	/// Returns a newly created scroll container element.
+	///
+	/// The position used is relative to whatever the element is packed into
+	/// later.
+	///
+	/// If `scrollArea` is `NULL`, then a frame will be wrapped around - this
+	/// is often what is wanted, therefore it's the default. Otherwise, the
+	/// passed in element will be used.
+	///
+	/// The returned element will have a vertical scrollbar with width
+	/// `scrollWidth`, with the wrapped element taking up the rest of the
+	/// space, with a gap of `contentBarGap` being added between the two. The
+	/// element itself is `scrollAreaHeight` pixels tall, but this is hidden by
+	/// the scrollable nature. When the user uses the scroll wheel, the element
+	/// will move by `scrollNotchJump` pixels.
+	///
+	/// The scrollbar will have background `scrollBg`. When unhovered and
+	/// unclicked, the handle will be drawn using `scrollBarNormal`. When
+	/// unclicked but hovered, the handle will be drawn using `scrollBarHover`.
+	/// When clicked, the handle will be drawn using `scrollBarClick`.
+	static HXDD_ZF_ScrollContainer create(
+		Vector2 pos, Vector2 size,
+		double scrollWidth, double scrollAreaHeight, double scrollNotchJump,
+		HXDD_ZF_BoxTextures scrollBarNormal, HXDD_ZF_BoxTextures scrollBarHover = NULL,
+		HXDD_ZF_BoxTextures scrollBarClick = NULL, HXDD_ZF_BoxTextures scrollBg = NULL,
+		HXDD_ZF_Element scrollArea = NULL, double contentBarGap = 0.0
+	) {
+		let ret = new('HXDD_ZF_ScrollContainer');
+
+		ret.setBox(pos, size);
+
+		if (scrollArea == NULL) {
+			ret.scrollArea = HXDD_ZF_Frame.create((0, 0), (0, 0));
+		}
+		else {
+			ret.scrollArea = scrollArea;
+		}
+		ret.bar = HXDD_ZF_Scrollbar.create((0, 0), (0, 0), NULL, NULL);
+
+		ret.config(scrollWidth, scrollAreaHeight, scrollNotchJump, scrollBarNormal, scrollBarHover, scrollBarClick, scrollBg, contentBarGap);
+		ret.elements.push(ret.bar);
+		ret.bar.master = ret;
+		ret.elements.push(ret.scrollArea);
+		ret.scrollArea.master = ret;
+
+		return ret;
+	}
+
+	private HXDD_ZF_Element scrollArea;
+	/// Returns the wrapped scroll area element so that it can be read from or
+	/// modified.
+	HXDD_ZF_Element getScrollArea() { return scrollArea; }
+	private HXDD_ZF_Scrollbar bar;
+
+	private double scrollWidth;
+	private double scrollAreaHeight;
+	private double scrollNotchJump;
+	private double contentBarGap;
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (isFocused() && isEnabled()) {
+			switch (type) {
+			case HXDD_ZF_NavEventType_Down: {
+				let oldPos = bar.position;
+				bar.position += scrollNotchJump / scrollAreaHeight;
+				bar.clampBarPos();
+				return bar.position != oldPos;
+			}
+			case HXDD_ZF_NavEventType_Up: {
+				let oldPos = bar.position;
+				bar.position -= scrollNotchJump / scrollAreaHeight;
+				bar.clampBarPos();
+				return bar.position != oldPos;
+			}
+			}
+		}
+		return Super.onNavEvent(type, fromController);
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		if (Super.onUIEvent(ev)) return true;
+		let mousePos = getGlobalStore().mousePos;
+		if (ev.type == UiEvent.Type_WheelDown || ev.type == UiEvent.Type_WheelUp) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (isEnabled() && screenBox.pointCollides(mousePos)) {
+				let dir = ev.type == UiEvent.Type_WheelDown ? 1.0 : -1.0;
+				let oldPos = bar.position;
+				bar.position += (dir * scrollNotchJump) / scrollAreaHeight;
+				bar.clampBarPos();
+				return oldPos != bar.position;
+			}
+		}
+		return false;
+	}
+
+	override void topDrawer() {
+		scrollArea.setBox((0, 0), (box.size.x - scrollWidth - contentBarGap, scrollAreaHeight));
+		bar.setBox((box.size.x - scrollWidth, 0.0), (scrollWidth, box.size.y));
+		bar.size = box.size.y / scrollAreaHeight;
+		bar.size = min(bar.size, 1.0);
+		scrollArea.box.pos.y = -bar.position * scrollAreaHeight;
+		Super.topDrawer();
+	}
+}

@@ -16,7 +16,7 @@ class AssassinPlayer : HXDDHexenIIPlayerPawn
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
-		Player.Viewheight 48;
+		Player.Viewheight 41;
 		Player.SpawnClass "Assassin";
 		Player.DisplayName "Assassin";
 		Player.SoundClass "hexen2female";
@@ -33,10 +33,6 @@ class AssassinPlayer : HXDDHexenIIPlayerPawn
 		Player.WeaponSlot 2, "AWeapCrossbow";
 		Player.WeaponSlot 3, "AWeapGrenades";
 		Player.WeaponSlot 4, "FWeapQuietus";
-
-		HXDDPlayerPawn.DefaultArmorMode PSAM_ARMOR_AC;
-		HXDDPlayerPawn.DefaultProgression PSP_LEVELS;
-		HXDDPlayerPawn.Alignment "Evil";
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
@@ -197,72 +193,36 @@ class AssassinPlayer : HXDDHexenIIPlayerPawn
 		Stop;
 	}
 
-	override void SetAdvancementStatTables() {
-		// Hexen 2: Assassin Stat Tables
-		experienceTable[0] =	675;
-		experienceTable[1] =	1600;
-		experienceTable[2] =	3750;
-		experienceTable[3] =	7250;
-		experienceTable[4] =	15000;
-		experienceTable[5] =	28500;
-		experienceTable[6] =	52000;
-		experienceTable[7] =	86000;
-		experienceTable[8] =	110000;
-		experienceTable[9] =	150000;
-		experienceTable[10] =	150000;
-
-		hitpointTable[0] = 65;
-		hitpointTable[1] = 75;
-		hitpointTable[2] = 5;
-		hitpointTable[3] = 10;
-		hitpointTable[4] = 3;
-
-		manaTable[0] = 92;
-		manaTable[1] = 102;
-		manaTable[2] = 9;
-		manaTable[3] = 11;
-		manaTable[4] = 3;
-
-		strengthTable[0] = 10;
-		strengthTable[1] = 13;
-
-		intelligenceTable[0] = 6;
-		intelligenceTable[1] = 10;
-
-		wisdomTable[0] = 12;
-		wisdomTable[1] = 15;
-
-		dexterityTable[0] = 15;
-		dexterityTable[1] = 18;
-	}
-
 	override void Tick() {
 		Super.Tick();
 
 		// NYI: Just testing tech
 
-		if (level >= 0) {
-			//GetActorLightLevel
-			// Check Player Light level, update stealth state
-			if (InStateSequence(CurState, Player.mo.FindState("Death")) || InStateSequence(CurState, Player.mo.FindState("XDeath"))) {
+		Progression prog = Progression(Player.mo.FindInventory("Progression"));
+		if (prog) {
+			if (Player && prog.level >= 0) {
+				//GetActorLightLevel
+				// Check Player Light level, update stealth state
+				if (InStateSequence(CurState, Player.mo.FindState("Death")) || InStateSequence(CurState, Player.mo.FindState("XDeath"))) {
 
-			} else {
-				int lightLevel = self.cursector.GetLightLevel();
-				double stealthChange = 0;
-				double lightHigh = 144;
-				if (lightLevel >= lightHigh) {
-					stealthChange = -lightLevel * 0.00075f;
 				} else {
-					stealthChange = (255.0f - lightLevel) * 0.00025f;
-				}
+					int lightLevel = self.cursector.GetLightLevel();
+					double stealthChange = 0;
+					double lightHigh = 144;
+					if (lightLevel >= lightHigh) {
+						stealthChange = -lightLevel * 0.00075f;
+					} else {
+						stealthChange = (255.0f - lightLevel) * 0.00025f;
+					}
 
-				stealthLevel = Clamp(stealthLevel + stealthChange, 0.0f, 1.0f);
+					stealthLevel = Clamp(stealthLevel + stealthChange, 0.0f, 1.0f);
 
-				if (stealthLevel == 1.0) {
-					A_SetRenderStyle(1, STYLE_Shadow);
-				} else {
-					self.Alpha = 1.0f;
-					A_SetRenderStyle(1, STYLE_Normal);
+					if (stealthLevel == 1.0) {
+						A_SetRenderStyle(1, STYLE_Shadow);
+					} else {
+						self.Alpha = 1.0f;
+						A_SetRenderStyle(1, STYLE_Normal);
+					}
 				}
 			}
 		}

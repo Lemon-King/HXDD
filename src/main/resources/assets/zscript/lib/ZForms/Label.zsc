@@ -1,0 +1,221 @@
+/// A mostly aesthetic-only element used for displaying text in the menu.
+///
+/// This has one-non aesthetic function, which is that when clicked on, it can activate other
+/// elements which support this, namely [`ZF_ToggleButton`], [`ZF_RadioButton`], and
+/// [`ZF_TextInput`].
+class HXDD_ZF_Label : HXDD_ZF_Element {
+	private void config(
+		string text = "", Font fnt = NULL, AlignType alignment = AlignType_TopLeft, bool wrap = true,
+		bool autoSize = false, double textScale = 1, int textColor = Font.CR_WHITE, double lineSpacing = 0,
+		HXDD_ZF_Element forElement = NULL
+	) {
+		calculate = false;
+		setFont(fnt);
+		setText(text);
+		setAlignment(alignment);
+		setWrap(wrap);
+		setAutoSize(autoSize);
+		setTextScale(textScale);
+		setTextColor(textColor);
+		setAlpha(1.0);
+		setLineSpacing(lineSpacing);
+		setForElement(forElement);
+		calculate = true;
+
+		recalculateLines();
+	}
+
+	/// Returns a newly created label element.
+	///
+	/// The position used is relative to whatever the element is packed into later. The element's
+	/// text is aligned to `alignment`, and if `autoSize` is set to `true`, the element changes its
+	/// own size to fit the text. The text is drawn with `lineSpacing` pixels of spacing between
+	/// lines.
+	///
+	/// `textColor` takes on values from [`Font.EColorRange`], which cannot be named as a type due
+	/// to current ZScript limitations.
+	///
+	/// If `fnt` is `NULL`, then `smallfont` is used instead.
+	///
+	/// If `forElement` is not `NULL`, clicking on the returned label will call
+	/// [`ZF_Element.activate`] on `forElement`.
+	static HXDD_ZF_Label create(
+		Vector2 pos, Vector2 size, string text = "", Font fnt = NULL, AlignType alignment = AlignType_TopLeft,
+		bool wrap = true, bool autoSize = false, double textScale = 1, int textColor = Font.CR_WHITE,
+		double lineSpacing = 0, HXDD_ZF_Element forElement = NULL
+	) {
+		let ret = new('HXDD_ZF_Label');
+
+		ret.setBox(pos, size);
+		ret.config(text, fnt, alignment, wrap, autoSize, textScale, textColor, lineSpacing, forElement);
+
+		return ret;
+	}
+
+	private Font fnt;
+	/// Returns the font this label will use for drawing.
+	Font getFont() { return fnt; }
+	/// Sets the font this label will use for drawing.
+	///
+	/// If this is `NULL`, then `smallfont` is used instead.
+	void setFont(Font fnt) {
+		if (fnt == NULL) {
+			self.fnt = smallfont;
+		}
+		else {
+			self.fnt = fnt;
+		}
+		recalculateLines();
+	}
+
+	private string text;
+	/// Returns the text that will be drawn to the screen.
+	string getText() { return self.text; }
+	/// Sets the text that will be drawn to the screen.
+	void setText(string text) { self.text = text; recalculateLines(); }
+
+	private double textScale;
+	/// Returns the scaling factor for the drawn text.
+	double getTextScale() { return self.textScale; }
+	/// Sets the scaling factor for the drawn text.
+	void setTextScale(double textScale) { self.textScale = textScale; recalculateLines(); }
+
+	private AlignType alignment;
+	/// Returns the alignment that will be used for drawing the text.
+	AlignType getAlignment() { return self.alignment; }
+	/// Sets the alignment that will be used for drawing the text.
+	void setAlignment(AlignType alignment) { self.alignment = alignment; }
+
+	private int textColor;
+	/// Returns the text color.
+	///
+	/// This is really a [`Font.EColorRange`], but ZScript currently is a bit limited here.
+	int getTextColor() { return self.textColor; }
+	/// Sets the text color.
+	///
+	/// This is really a [`Font.EColorRange`], but ZScript currently is a bit limited here.
+	void setTextColor(int textColor) { self.textColor = textColor; }
+
+	private bool wrap;
+	/// Returns `true` if the text wraps, `false` if it overflows.
+	bool getWrap() { return self.wrap; }
+	/// Sets whether the text wraps or overflows.
+	void setWrap(bool wrap) { self.wrap = wrap; recalculateLines(); }
+
+	private bool autoSize;
+	/// Returns `true` if the label changes its size to match the text, `false` if it doesn't.
+	bool getAutoSize() { return self.autoSize; }
+	/// Sets whether the label changes its size to match the text.
+	void setAutoSize(bool autoSize) { self.autoSize = autoSize; }
+
+	private double lineSpacing;
+	/// Returns the amount of pixels between lines in the label.
+	double getLineSpacing() { return self.lineSpacing; }
+	/// Sets the amount of pixels between lines in the label.
+	void setLineSpacing(double lineSpacing) { self.lineSpacing = lineSpacing; }
+
+	private HXDD_ZF_Element forElement;
+	/// Returns the element that will be sent `activate` function calls if this element is clicked.
+	///
+	/// A `NULL` return means no element will receive these calls from this label.
+	HXDD_ZF_Element getForElement() { return self.forElement; }
+	/// Sets the element that will be sent `activate` function calls if this element is clicked.
+	///
+	/// A `NULL` argument means that no element will receive these calls from this label.
+	void setForElement(HXDD_ZF_Element forElement) { self.forElement = forElement; }
+
+	private bool clicking;
+
+	private BrokenLines lines;
+	private bool calculate;
+	private void recalculateLines() {
+		if (calculate && wrap) {
+			lines = fnt.breakLines(text, int(box.size.x / textScale));
+		}
+	}
+
+	override void onBoxChanged() {
+		recalculateLines();
+	}
+
+	override void ticker() {
+		if (autoSize) {
+			if (wrap) {
+				int fntHeight = fnt.getHeight();
+				box.size.y = fntHeight * textScale * lines.count();
+			}
+			else {
+				Array<string> split;
+				text.split(split, "\n");
+				int fntHeight = fnt.getHeight();
+				box.size.y = fntHeight * split.size() * textScale;
+				box.size.x = fnt.stringWidth(text) * textScale;
+			}
+		}
+	}
+
+	override void drawer() {
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y));
+
+		if (!wrap) {
+			Array<string> split;
+			text.split(split, "\n");
+			Vector2 pos = getAlignedDrawPos(box.size, (fnt.stringWidth(text), split.size() * fnt.getHeight()) * textScale, alignment);
+			drawText(pos, fnt, text, textColor, textScale);
+		}
+		else {
+			int fntHeight = fnt.getHeight();
+			float lineHeight = fntHeight + lineSpacing;
+
+			Vector2 pos = getAlignedDrawPos(
+				box.size,
+				(0, (lineHeight * lines.count() - lineSpacing) * textScale),
+				alignment
+			);
+
+			for (int i = 0; i < lines.count(); i++) {
+				string line = lines.stringAt(i);
+				Vector2 linePos = getAlignedDrawPos(box.size, (fnt.stringWidth(line) * textScale, 0), alignment);
+				drawText((linePos.x, pos.y + (lineHeight * i * textScale)), fnt, line, textColor, textScale);
+			}
+		}
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (forElement == NULL) return false;
+
+		if (isFocused() && type == HXDD_ZF_NavEventType_Confirm) {
+			if (forElement.isEnabled()) {
+				forElement.activate();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		if (forElement == NULL) return false;
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			let mousePos = getGlobalStore().mousePos;
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				clicking = true;
+				setHoverBlock(self);
+			}
+		}
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			let mousePos = getGlobalStore().mousePos;
+			if (isEnabled() && screenBox.pointCollides(mousePos) && clicking) {
+				if (forElement.isEnabled()) forElement.activate();
+				clicking = false;
+				setHoverBlock(NULL);
+			}
+		}
+		return false;
+	}
+}

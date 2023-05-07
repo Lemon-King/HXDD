@@ -1,0 +1,160 @@
+/// The main button element, which triggers an event whenever it is clicked.
+///
+/// This element also has a secondary mode that allows it to be held down to
+/// trigger periodic "held" events.
+///
+/// This element uses the events [`ZF_Handler.buttonClickCommand`] when in
+/// "normal" mode and [`ZF_Handler.buttonHeldCommand`] when in "held" mode.
+///
+/// Also see the documentation for [`ZF_ButtonBase`] as a lot of button things are documented
+/// there.
+class HXDD_ZF_Button : HXDD_ZF_ButtonBase {
+	private void config(
+		string text = "", HXDD_ZF_Handler cmdHandler = NULL, Name command = '',
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures disabled = NULL,
+		Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		int holdInterval = -1, AlignType alignment = AlignType_Center
+	) {
+		setFont(fnt);
+		setHoldTicInterval(holdInterval);
+		setText(text);
+		setTextScale(textScale);
+		setTextures(inactive, hover, click, disabled);
+		setTextColor(textColor);
+		setAlignment(alignment);
+		setAlpha(1.0);
+
+		self.cmdHandler = cmdHandler;
+		self.command = command;
+	}
+
+	/// Returns a newly created button element.
+	///
+	/// The position used is relative to whatever the element is packed into
+	/// later.
+	/// 
+	/// The [`ZF_BoxTextures`] arguments correspond to the button's states described in
+	/// [`ButtonState`]. The text on the button will be aligned to `alignment`.
+	///
+	/// `textColor` takes on values from [`Font.EColorRange`], which cannot be
+	/// named as a type due to current ZScript limitations.
+	///
+	/// If `fnt` is `NULL`, then `smallfont` is used instead.
+	///
+	/// `cmdHandler` and `command` determine where the button's events are sent to. If
+	/// `holdInterval` is `-1`, then [`ZF_Handler.buttonClickCommand`] is sent
+	/// on button clicks. Otherwise, if `holdInterval` is `>= 0`, then a
+	/// [`ZF_Handler.buttonHeldCommand`] is sent every `holdInterval + 1`
+	/// ticks.
+	static HXDD_ZF_Button create(
+		Vector2 pos, Vector2 size, string text = "", HXDD_ZF_Handler cmdHandler = NULL, Name command = '',
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL, HXDD_ZF_BoxTextures click = NULL,
+		HXDD_ZF_BoxTextures disabled = NULL, Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		int holdInterval = -1, AlignType alignment = AlignType_Center
+	) {
+		let ret = new('HXDD_ZF_Button');
+
+		ret.config(text, cmdHandler, command, inactive, hover, click, disabled, fnt, textScale, textColor, holdInterval, alignment);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	private int holdTicInterval;
+	/// Returns the amount of tics waited between held commands.
+	///
+	/// A value of `-1` means this isn't used and the button acts normally.
+	int getHoldTicInterval() { return self.holdTicInterval; }
+	/// Sets the amount of tics waited between held commands.
+	///
+	/// A value of `-1` means this isn't used and the button acts normally.
+	void setHoldTicInterval(int holdTicInterval) { self.holdTicInterval = holdTicInterval; }
+
+	private int currentHoldTicsRemaining;
+
+	override void ticker() {
+		if (!isEnabled()) {
+			curButtonState = ButtonState_Disabled;
+			currentHoldTicsRemaining = 0;
+			return;
+		}
+		if (holdTicInterval == -1) {
+			currentHoldTicsRemaining = 0;
+			return;
+		}
+
+		if (curButtonState == ButtonState_Click && currentHoldTicsRemaining <= 0) {
+			if (cmdHandler) {
+				cmdHandler.buttonHeldCommand(self, command);
+			}
+			currentHoldTicsRemaining = holdTicInterval;
+		}
+		else if (curButtonState == ButtonState_Click && currentHoldTicsRemaining > 0) {
+			currentHoldTicsRemaining--;
+		}
+		else if (curButtonState != ButtonState_Click && currentHoldTicsRemaining != 0) {
+			currentHoldTicsRemaining = 0;
+		}
+	}
+
+	override bool handleMousePosition(bool mouseBlock, Vector2 mousePos) {
+		HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+		if (!isEnabled()) {
+			curButtonState = ButtonState_Disabled;
+		}
+		else if (curButtonState != ButtonState_Click) {
+			if (!mouseBlock && !getHoverBlock() && screenBox.pointCollides(mousePos)) {
+				curButtonState = ButtonState_Hover;
+			}
+			else {
+				curButtonState = ButtonState_Inactive;
+			}
+		}
+		return false;
+	}
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (isEnabled() && isFocused() && type == HXDD_ZF_NavEventType_Confirm && holdTicInterval == -1) {
+			if (cmdHandler != NULL) cmdHandler.buttonClickCommand(self, command);
+			return true;
+		}
+		return false;
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		// if the player's clicked, and their mouse is in the right place, set the state accordingly
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			let mousePos = getGlobalStore().mousePos;
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				if (cmdHandler && holdTicInterval >= 0) {
+					cmdHandler.buttonClickCommand(self, command);
+					currentHoldTicsRemaining = holdTicInterval;
+				}
+				curButtonState = ButtonState_Click;
+				setHoverBlock(self);
+			}
+		}
+		// if the player's releasing, check if their mouse is still in the correct range and trigger method if it was
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			let mousePos = getGlobalStore().mousePos;
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!isEnabled()) {
+				curButtonState = ButtonState_Disabled;
+			}
+			else if (screenBox.pointCollides(mousePos) && curButtonState == ButtonState_Click) {
+				if (cmdHandler && holdTicInterval == -1) {
+					cmdHandler.buttonClickCommand(self, command);
+				}
+
+				curButtonState = ButtonState_Hover;
+			}
+			else {
+				curButtonState = ButtonState_Inactive;
+			}
+			setHoverBlock(NULL);
+		}
+		return false;
+	}
+}

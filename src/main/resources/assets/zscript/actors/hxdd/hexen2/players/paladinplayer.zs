@@ -12,7 +12,7 @@ class PaladinPlayer : HXDDHexenIIPlayerPawn {
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
-		Player.Viewheight 48;
+		Player.Viewheight 41;
 		Player.SpawnClass "Paladin";
 		Player.DisplayName "Paladin";
 		Player.SoundClass "hexen2male";
@@ -22,18 +22,11 @@ class PaladinPlayer : HXDDHexenIIPlayerPawn {
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "PWeapGauntlet";
-		Player.ForwardMove 1.08, 1.2;
-		Player.SideMove 1.125, 1.475;
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "PWeapGauntlet";
 		Player.WeaponSlot 2, "PWeapVorpalSword";
 		Player.WeaponSlot 3, "PWeapAxe";
 		Player.WeaponSlot 4, "PWeapPurifier";
-
-		HXDDPlayerPawn.ExperienceModifier 1.4;
-		HXDDPlayerPawn.DefaultArmorMode PSAM_ARMOR_AC;
-		HXDDPlayerPawn.DefaultProgression PSP_LEVELS;
-		HXDDPlayerPawn.Alignment "Good";
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
@@ -189,44 +182,5 @@ class PaladinPlayer : HXDDHexenIIPlayerPawn {
 			Wait;
 			ACLO E 8;
 			Stop;
-	}
-
-	override void SetAdvancementStatTables() {
-		// Hexen 2: Paladin Stat Tables
-		experienceTable[0] =	945;
-		experienceTable[1] =	2240;
-		experienceTable[2] =	5250;
-		experienceTable[3] =	10150;
-		experienceTable[4] =	21000;
-		experienceTable[5] =	39900;
-		experienceTable[6] =	72800;
-		experienceTable[7] =	120400;
-		experienceTable[8] =	154000;
-		experienceTable[9] =	210000;
-		experienceTable[10] =	210000;
-
-		hitpointTable[0] = 70;
-		hitpointTable[1] = 85;
-		hitpointTable[2] = 8;
-		hitpointTable[3] = 13;
-		hitpointTable[4] = 4;
-
-		manaTable[0] = 84;
-		manaTable[1] = 94;
-		manaTable[2] = 6;
-		manaTable[3] = 9;
-		manaTable[4] = 1;
-
-		strengthTable[0] = 15;
-		strengthTable[1] = 18;
-
-		intelligenceTable[0] = 6;
-		intelligenceTable[1] = 10;
-
-		wisdomTable[0] = 6;
-		wisdomTable[1] = 10;
-
-		dexterityTable[0] = 10;
-		dexterityTable[1] = 13;
 	}
 }

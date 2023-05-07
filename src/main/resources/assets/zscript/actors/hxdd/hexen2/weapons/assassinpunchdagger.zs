@@ -95,7 +95,8 @@ class AWeapPunchDagger : AssassinWeapon
 				if (t.linetarget)
 				{
 					// check t.linetarget facing for backstab bonus
-					int PlayerLevel = HXDDPlayerPawn(self).level;
+        			Progression prog = Progression(Player.mo.FindInventory("Progression"));
+					int PlayerLevel = prog.level;
 					if (PlayerLevel > 5)
 					{
 						if (PlayerLevel > 10) {

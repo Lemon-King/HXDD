@@ -1,0 +1,21 @@
+
+// Nothing really, just for testmap stuff
+
+map heretest "Heretic Test"
+{
+	next = "E1M1"
+	secretnext = "E1M9"
+	sky1 = "SKY1"
+	music = "MUS_E2M1"
+	NoIntermission
+}
+
+map hextest "Hexen Test"
+{
+	next = "MAP01"
+	secretnext = "MAP13"
+	sky1 = "SKYWALL2", 0
+	sky2 = "SKY4X", 0.1953125
+	cdtrack = 22
+	NoIntermission
+}

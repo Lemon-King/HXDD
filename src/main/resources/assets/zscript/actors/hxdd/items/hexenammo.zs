@@ -1,10 +1,26 @@
 
+class MultiSpawnerArtiBoostMana: MultiSpawner {
+    override void Bind() {
+        self.SpawnSelect = "ClassSelect";
+        self.Fallback = "BagOfHolding";
+        self.Corvus = "BagOfHolding";
+        self.Fighter = "ArtiBoostMana";
+        self.Cleric = "ArtiBoostMana";
+        self.Mage = "ArtiBoostMana";
+        self.Paladin = "ArtiBoostMana";
+        self.Crusader = "ArtiBoostMana";
+        self.Necromancer = "ArtiBoostMana";
+        self.Assassin = "ArtiBoostMana";
+        self.Succubus = "ArtiBoostMana";
+    }
+}
+
 // Random Hexen Ammo for now
 class MultiClassMana1: MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "Mana1";
-        self.Corvus = "HXDDRandomMana1";
+        self.Corvus = "RandomMana1";
         self.Fighter = "Mana1";
         self.Cleric = "Mana1";
         self.Mage = "Mana1";
@@ -20,7 +36,7 @@ class MultiClassMana2: MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "Mana2";
-        self.Corvus = "HXDDRandomMana2";
+        self.Corvus = "RandomMana2";
         self.Fighter = "Mana2";
         self.Cleric = "Mana2";
         self.Mage = "Mana2";
@@ -36,7 +52,7 @@ class MultiClassMana3: MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
         self.Fallback = "Mana3";
-        self.Corvus = "HXDDRandomMana3";
+        self.Corvus = "RandomMana3";
         self.Fighter = "Mana3";
         self.Cleric = "Mana3";
         self.Mage = "Mana3";
@@ -48,7 +64,7 @@ class MultiClassMana3: MultiSpawner {
     }
 }
 
-class HXDDRandomMana1: RandomSpawner {
+class RandomMana1: RandomSpawner {
     Default {
         DropItem "GoldWandAmmo";
         DropItem "GoldWandHefty";
@@ -57,7 +73,7 @@ class HXDDRandomMana1: RandomSpawner {
     }
 }
 
-class HXDDRandomMana2: RandomSpawner {
+class RandomMana2: RandomSpawner {
     Default {
         DropItem "BlasterAmmo";
         DropItem "BlasterHefty";
@@ -66,7 +82,7 @@ class HXDDRandomMana2: RandomSpawner {
     }
 }
 
-class HXDDRandomMana3: RandomSpawner {
+class RandomMana3: RandomSpawner {
     Default {
         DropItem "PhoenixRodAmmo";
         DropItem "PhoenixRodHefty";

@@ -1,0 +1,795 @@
+/// The shared state between all elements in an element tree.
+class HXDD_ZF_ElementTreeGlobal {
+	/// The virtual ZForms screen size.
+	Vector2 baseScreenSize;
+
+	/// Whether menu events should currently be asked for.
+	///
+	/// This is mainly used by elements like [`ZF_TextInput`] which need `UiEvent`s instead of
+	/// `MenuEvent`s for some things when active.
+	bool blockMenuEvent;
+
+	/// The main frame of the entire tree, i.e. the root element.
+	HXDD_ZF_Frame mainFrame;
+	/// The element which is currently hover blocking.
+	HXDD_ZF_Element hoverBlock;
+
+	/// The element which is currently being focused on.
+	HXDD_ZF_Element focus;
+	/// The element used for drawing the focus indicator.
+	HXDD_ZF_Element focusIndicator;
+	/// The priority of the focus indicator, i.e. where it draws.
+	HXDD_ZF_FocusPriority focusPriority;
+
+	/// The current mouse position.
+	Vector2 mousePos;
+
+	/// Whether the element tree should have mouse events called again next opportunity.
+	bool needsMouseUpdate;
+}
+
+/// Navigation events, caused by buttons on the keyboard and gamepads.
+enum HXDD_ZF_NavEventType {
+	/// Typically caused by the left arrow key, left d-pad, left stick, etc.
+	HXDD_ZF_NavEventType_Left,
+	/// Typically caused by the right arrow key, right d-pad, right stick, etc.
+	HXDD_ZF_NavEventType_Right,
+	/// Typically caused by the up arrow key, up d-pad, up stick, etc.
+	HXDD_ZF_NavEventType_Up,
+	/// Typically caused by the down arrow key, down d-pad, down stick, etc.
+	HXDD_ZF_NavEventType_Down,
+
+	/// Typically caused by the tab key.
+	HXDD_ZF_NavEventType_Tab,
+
+	// not used for focus changing beyond this point
+
+	/// How many of the navigation events are used for changing the focus of elements.
+	HXDD_ZF_NavEventType_FocusChangeCount,
+
+	/// Typically caused by the Page Up key.
+	HXDD_ZF_NavEventType_PageUp = HXDD_ZF_NavEventType_FocusChangeCount,
+	/// Typically caused by the Page Down key.
+	HXDD_ZF_NavEventType_PageDown,
+
+	/// Typically caused by the Enter key, A button, etc.
+	HXDD_ZF_NavEventType_Confirm,
+	/// Typically caused by the Escape key, B button, etc.
+	HXDD_ZF_NavEventType_Deny
+}
+
+/// The base element class, of which all others are derived from.
+///
+/// This isn't useful on its own unless you intend to create a custom element.
+class HXDD_ZF_Element ui {
+	/// Various ways element parts can be aligned.
+	enum AlignType {
+		/// Aligns to the left side of the element.
+		AlignType_Left    = 1,
+		/// Aligns to the horizontal center of the element.
+		AlignType_HCenter = 2,
+		/// Aligns to the right side of the element.
+		AlignType_Right   = 3,
+
+		/// Aligns to the top side of the element.
+		AlignType_Top     = 1 << 4,
+		/// Aligns to the vertical center of the element.
+		AlignType_VCenter = 2 << 4,
+		/// Aligns to the bottom side of the element.
+		AlignType_Bottom  = 3 << 4,
+
+		/// Aligns to the top left corner of the element.
+		AlignType_TopLeft   = AlignType_Top | AlignType_Left,
+		/// Aligns to the top side and horizontal center of the element.
+		AlignType_TopCenter = AlignType_Top | AlignType_HCenter,
+		/// Aligns to the top right corner of the element.
+		AlignType_TopRight  = AlignType_Top | AlignType_Right,
+
+		/// Aligns to the vertical center and left side of the element.
+		AlignType_CenterLeft  = AlignType_VCenter | AlignType_Left,
+		/// Aligns to the center on both axes of the element.
+		AlignType_Center      = AlignType_VCenter | AlignType_HCenter,
+		/// Aligns to the vertical center and right side of the element.
+		AlignType_CenterRight = AlignType_VCenter | AlignType_Right,
+
+		/// Aligns to the bottom left corner of the element.
+		AlignType_BottomLeft   = AlignType_Bottom | AlignType_Left,
+		/// Aligns to the bottom side and horizontal center of the element.
+		AlignType_BottomCenter = AlignType_Bottom | AlignType_HCenter,
+		/// Aligns to the bottom right corner of the element.
+		AlignType_BottomRight  = AlignType_Bottom | AlignType_Right,
+	}
+
+	/// This element's master, i.e. the element above it in the tree.
+	///
+	/// This should only be set with very good reason, notably when inheriting from
+	/// [`ZF_ElementContainer`]. A lot of custom elements won't need to touch it directly.
+	protected HXDD_ZF_Element master;
+
+	/// ?doc: hidden
+	protected HXDD_ZF_ElementTreeGlobal globalStore;
+	/// ?doc: hidden
+	void setGlobalStore(HXDD_ZF_ElementTreeGlobal globalStore) {
+		if (master == NULL) {
+			self.globalStore = globalStore;
+		}
+	}
+
+	/// Makes a mouse state update happen as soon as the next opportunity for it.
+	///
+	/// This exists because in ZForms, elements are only informed of mouse events when the mouse
+	/// moves, or when something happens that would cause elements to need to re-check their
+	/// collision with the mouse. An example of this is when an element gets shown or hidden, as
+	/// elements can block other elements mouse-wise.
+	///
+	/// This should be used pretty sparingly as most of the use cases are in ZForms itself but if
+	/// an element has particularly weird collision properties it can be justified to call.
+	protected void requestMouseUpdate() {
+		let s = getGlobalStore();
+		if (s != NULL) {
+			s.needsMouseUpdate = true;
+		}
+	}
+
+	/// The command handler that this element will send events to.
+	protected HXDD_ZF_Handler cmdHandler;
+	/// Returns the command handler that this element will send events to.
+	HXDD_ZF_Handler getCmdHandler() { return self.cmdHandler; }
+	/// Sets the command handler that this element will send events to.
+	///
+	/// A `NULL` handler effectively means that events won't be sent.
+	void setCmdHandler(HXDD_ZF_Handler cmdHandler) { self.cmdHandler = cmdHandler; }
+	/// The command name that this element will send with events to the
+	/// handler.
+	protected Name command;
+	/// Returns the command name that this element will send with events to the
+	/// handler.
+	Name getCommand() { return self.command; }
+	/// Sets the command name that this element will send with events to the
+	/// handler.
+	void setCommand(Name command) { self.command = command; }
+
+	/// The bounding box of this element.
+	protected HXDD_ZF_AABB box;
+	/// Returns the [position](ZF_AABB.pos) of the element's bounding box.
+	Vector2 getPos() { return self.box.pos; }
+	/// Returns the x coordinate of the [position](ZF_AABB.pos) of the element's bounding box.
+	double getPosX() { return self.box.pos.x; }
+	/// Returns the y coordinate of the [position](ZF_AABB.pos) of the element's bounding box.
+	double getPosY() { return self.box.pos.y; }
+	/// Sets the [position](ZF_AABB.pos) of the element's bounding box.
+	void setPos(Vector2 pos) { boxChange(pos, self.box.size); }
+	/// Sets the x coordinate of the [position](ZF_AABB.pos) of the element's bounding box.
+	void setPosX(double x) { boxChange((x, self.box.pos.y), self.box.size); }
+	/// Sets the y coordinate of the [position](ZF_AABB.pos) of the element's bounding box.
+	void setPosY(double y) { boxChange((self.box.pos.x, y), self.box.size); }
+	/// Returns the [size](ZF_AABB.size) of the element's bounding box.
+	Vector2 getSize() { return self.box.size; }
+	/// Returns the width component of the [size](ZF_AABB.size) of the element's bounding box.
+	double getWidth() { return self.box.size.x; }
+	/// Returns the height component of the [size](ZF_AABB.size) of the element's bounding box.
+	double getHeight() { return self.box.size.y; }
+	/// Sets the [size](ZF_AABB.size) of the element's bounding box.
+	void setSize(Vector2 size) { boxChange(self.box.pos, size); }
+	/// Sets the width component of the [size](ZF_AABB.size) of the element's bounding box.
+	void setWidth(double width) { boxChange(self.box.pos, (width, self.box.size.y)); }
+	/// Sets the height component of the [size](ZF_AABB.size) of the element's bounding box.
+	void setHeight(double height) { boxChange(self.box.pos, (self.box.size.x, height)); }
+
+	/// Sets the element's bounding box.
+	void setBox(Vector2 pos, Vector2 size) {
+		boxChange(pos, size);
+	}
+	
+	private void boxChange(Vector2 newPos, Vector2 newSize) {
+		if (newPos == box.pos && newSize == box.size) return;
+		box.pos = newPos;
+		box.size = newSize;
+		requestMouseUpdate();
+		onBoxChanged();
+	}
+	/// Called when the element's box changes.
+	///
+	/// You can use this to do anything in a custom element which is computationally expensive and
+	/// is partially dependent on the element's bounding box. For example, [`ZF_Label`] uses it to
+	/// recalculate the lines of text if it is set to wrap text.
+	protected virtual void onBoxChanged() {}
+
+	/// The "focus neighbors" of this element, i.e. the elements that will have focus switched to
+	/// if a navigation button is pressed and focus is currently on this element.
+	protected HXDD_ZF_Element focusNeighbors[HXDD_ZF_NavEventType_FocusChangeCount];
+	/// Returns the neighbor in the direction `dir` used for changing focus with the keyboard/game
+	/// controller.
+	HXDD_ZF_Element getFocusNeighbor(HXDD_ZF_NavEventType dir) {
+		return self.focusNeighbors[dir];
+	}
+	/// Sets the neighbor in the direction `dir` used for changing focus with the keyboard/game
+	/// controller.
+	///
+	/// A `NULL` neighbor effectively unsets it.
+	///
+	/// For a more convenient interface for grid-like menus, see
+	/// [`ZF_FocusLinkHelper`].
+	void setFocusNeighbor(HXDD_ZF_NavEventType dir, HXDD_ZF_Element neighbor) {
+		self.focusNeighbors[dir] = neighbor;
+	}
+
+	/// Returns `true` if the element is currently being focused by the keyboard/controller.
+	bool isFocused() {
+		return getGlobalStore().focus == self;
+	}
+
+	/// The alpha that this element will be drawn with.
+	protected double alpha;
+	/// Returns the alpha that this element will be drawn with.
+	double getAlpha() { return self.alpha; }
+	/// Sets the alpha that this element will be drawn with.
+	void setAlpha(double alpha) { self.alpha = clamp(alpha, 0.0, 1.0); }
+
+	/// Whether the element is disabled, meaning that its functionality has been turned off.
+	protected bool disabled;
+	/// Returns if the element is "disabled", meaning that its functionality has been turned off.
+	///
+	/// Note that this does not check recursively. An enabled element with a disabled master will
+	/// return `false` here. Check [`isEnabled`] for the more-often intended behaviour.
+	bool isDisabledRaw() { return self.disabled; }
+	/// Sets the element to be either disabled (`true`) or enabled (`false`), turning its
+	/// functionality off or on (respectively).
+	void setDisabled(bool disabled) { self.disabled = disabled; requestMouseUpdate(); }
+	/// Enables the element, turning its functionality on.
+	void enable() { disabled = false; requestMouseUpdate(); }
+	/// Disables the element, turning its functionality off.
+	void disable() { disabled = true; requestMouseUpdate(); }
+	/// Checks whether the element should be considered enabled.
+	///
+	/// This checks recursively up the tree, so enabled elements with any disabled master will be
+	/// considered disabled.
+	bool isEnabled() {
+		HXDD_ZF_Element elem = self;
+		while (elem) {
+			if (elem.disabled) {
+				return false;
+			}
+
+			elem = elem.master;
+		}
+
+		return true;
+	}
+
+
+	/// Whether the element is hidden, meaning it won't be drawn to the screen.
+	protected bool hidden;
+	/// Returns if the element is hidden, meaning it won't be drawn to the screen.
+	bool isHidden() { return hidden; }
+	/// Sets the element to be either hidden (`true`) or shown (`false`), making it invisible or
+	/// visible (respectively).
+	void setHidden(bool hidden) { self.hidden = hidden; requestMouseUpdate(); }
+	/// Shows the element, making it visible.
+	void show() { hidden = false; requestMouseUpdate(); }
+	/// Hides the element, making it invisible.
+	void hide() { hidden = true; requestMouseUpdate(); }
+
+	private bool elemHovered;
+	/// Returns if the element is hovered, meaning that the mouse is on top of it.
+	bool isHovered() { return self.elemHovered; }
+
+	/// Returns `true` if the mouse is currently contained in this element.
+	/// 
+	/// Note that this is substantially different to [`isHovered`] as that takes into account
+	/// things like elements being blocked by other elements.
+	bool containsMouse() {
+		HXDD_ZF_AABB screenBox;
+		boxToScreen(screenBox);
+		return screenBox.pointCollides(getGlobalStore().mousePos);
+	}
+
+	/// Whether this element is currently being mouse blocked.
+	protected bool mouseBlock;
+
+	private bool dontBlockMouse;
+	/// Returns the element's "don't block mouse" state.
+	///
+	/// An element with this set to `true` will not get in the way of other elements in terms of
+	/// hover checking.
+	bool getDontBlockMouse() { return self.dontBlockMouse; }
+	/// Sets the element's "don't block mouse" state.
+	///
+	/// An element with this set to `true` will not get in the way of other elements in terms of
+	/// hover checking.
+	void setDontBlockMouse(bool dontBlockMouse) { self.dontBlockMouse = dontBlockMouse; requestMouseUpdate(); }
+
+	/// Sets the element which is currently hover-blocking to be `val`.
+	///
+	/// This is used to implement a common UI effect where when holding click on an element, other
+	/// elements will not become hovered even if there is nothing normally stopping them from
+	/// being.
+	///
+	/// Passing in `NULL` removes the hover block.
+	protected void setHoverBlock(HXDD_ZF_Element val) {
+		let s = getGlobalStore();
+		if (s != NULL) {
+			s.hoverBlock = val;
+		}
+	}
+
+	/// Returns if an element is currently hover blocking.
+	///
+	/// This returns `true` if a hover blocking element exists, and it is not `self`.
+	protected bool getHoverBlock() {
+		let s = getGlobalStore();
+		if (s != NULL) {
+			return s.hoverBlock != NULL && s.hoverBlock != self;
+		}
+		return false;
+	}
+
+	/// ?doc: hidden
+	void getClipAABB(HXDD_ZF_AABB curClip) {
+		[curClip.pos.x, curClip.pos.y, curClip.size.x, curClip.size.y] = screen.GetClipRect();
+		if (curClip.size.x == -1) {
+			curClip.pos = (0, 0);
+			curClip.size = screenSize();
+		}
+	}
+
+	/// ?doc: hidden
+	protected Vector2 getAspectRatioOffset() {
+		Vector2 screenSize = screenSize();
+		Vector2 virtualSize = getBaseVirtualSize();
+		Vector2 baseScreenSize = baseScreenSize();
+		if (screenSize.x / baseScreenSize.x == screenSize.y / baseScreenSize.y) {
+			return (0, 0);
+		}
+		else if (screenSize.x / baseScreenSize.x < screenSize.y / baseScreenSize.y) {
+			return (0, (screenSize.y - (screenSize.x * (baseScreenSize.y / baseScreenSize.x)))) / 2;
+		}
+		else {
+			return ((screenSize.x - (screenSize.y * (baseScreenSize.x / baseScreenSize.y))), 0) / 2;
+		}
+	}
+
+	/// Transforms the position from element relative positioning into main frame relative
+	/// positioning.
+	Vector2 relToMainFrame(Vector2 relPos) {
+		if (master == NULL) return relPos;
+		return master.relToMainFrame(box.pos + relPos);
+	}
+
+	/// Transforms the position from element relative positioning into screen relative positioning.
+	virtual Vector2 relToScreen(Vector2 relPos) {
+		return master.relToScreen(box.pos + relPos);
+	}
+
+	/// Transforms the position from screen relative positioning into element relative positioning.
+	Vector2 screenToRel(Vector2 screenPos) {
+		return screenScaledToRel(screenPos / getScale()) - getAspectRatioOffset() / getScale();
+	}
+
+	/// Transforms the position from scaled screen relative positioning into element relative
+	/// positioning.
+	///
+	/// "Scaled screen relative positioning" is effectively the coordinate space obtained by
+	/// fitting a rectangle with aspect ratio equal to the real screen's aspect ratio around the
+	/// ZForms virtual screen, with the virtual screen perfectly centered.
+	protected virtual Vector2 screenScaledToRel(Vector2 screenPos) {
+		return master.screenToRel(screenPos - box.pos);
+	}
+
+	/// Returns the element-tree shared storage that elements use to store and read data about the
+	/// entire tree.
+	protected HXDD_ZF_ElementTreeGlobal getGlobalStore() {
+		if (globalStore != NULL) return globalStore;
+		if (master != NULL) {
+			globalStore = master.getGlobalStore();
+			return globalStore;
+		}
+		return NULL;
+	}
+
+	/// Sets the ZForms virtual screen resolution.
+	void setBaseResolution(Vector2 res) {
+		let s = getGlobalStore();
+		if (s != NULL) {
+			s.baseScreenSize = res;
+			s.needsMouseUpdate = true;
+		}
+	}
+
+	private Vector2 baseScreenSize() {
+		let s = getGlobalStore();
+		if (s != NULL) {
+			return s.baseScreenSize;
+		}
+		return screenSize();
+	}
+
+	/// Transforms `bounds` from element relative positioning into screen relative positioning,
+	/// placing the result in `ret`.
+	///
+	/// `intersect` controls whether the AABB is recursively clipped against the AABBs of elements
+	/// higher in the element tree to avoid this AABB being considered where it's not actually
+	/// visible.
+	void aabbToScreen(HXDD_ZF_AABB ret, HXDD_ZF_AABB bounds, bool intersect = true) {
+		ret.pos = relToScreen(bounds.pos) * getScale();
+		ret.size = bounds.size * getScale();
+
+		if (intersect && master != NULL) {
+			HXDD_ZF_AABB screenBox; master.boxToScreen(screenBox, true);
+			ret.rectOfIntersection(ret, screenBox);
+		}
+	}
+
+	/// Transforms the element's bounding box from element relative positioning into screen
+	/// relative positioning, placing the result in `ret`.
+	///
+	/// `intersect` controls whether the box is recursively clipped against the AABBs of elements
+	/// higher in the element tree to avoid this AABB being considered where it's not actually
+	/// visible.
+	void boxToScreen(HXDD_ZF_AABB ret, bool intersect = true) {
+		ret.pos = relToScreen((0, 0)) * getScale();
+		ret.size = box.size * getScale();
+
+		if (intersect && master != NULL) {
+			HXDD_ZF_AABB screenBox; master.boxToScreen(screenBox, true);
+			ret.rectOfIntersection(ret, screenBox);
+		}
+	}
+
+	/// ?doc: hidden
+	Vector2 screenSize() {
+		return (Screen.getWidth(), Screen.getHeight());
+	}
+
+	/// Returns the scale factor required to convert from ZForms virtual screen coordinates to real
+	/// screen coordinates.
+	double getScale() {
+		Vector2 screenSize = screenSize();
+		let baseScreenSize = baseScreenSize();
+		return min(screenSize.x / baseScreenSize.x, screenSize.y / baseScreenSize.y);
+	}
+
+	private Vector2 getBaseVirtualSize() {
+		return screenSize() / getScale();
+	}
+
+	private Vector2 scaleToVirtualSize(Vector2 scale) {
+		Vector2 screenSize = getBaseVirtualSize();
+		return (screenSize.x / scale.x, screenSize.y / scale.y);
+	}
+
+	/// ?doc: hidden
+	Vector2 texSize(string texture) {
+		return TexMan.getScaledSize(TexMan.checkForTexture(texture, TexMan.Type_Any));
+	}
+
+	/// Returns the position something should be drawn at to be aligned properly.
+	///
+	/// `boxSize` is the size of the box being drawn within, and `contentSize` is the size of the
+	/// thing being drawn.
+	protected Vector2 getAlignedDrawPos(Vector2 boxSize, Vector2 contentSize, AlignType align) {
+		Vector2 pos = (0, 0);
+		int horzAlign = align &  15;
+		int vertAlign = align & (15 << 4);
+
+		if (horzAlign == AlignType_HCenter) {
+			pos.x = (boxSize.x - contentSize.x) / 2.0;
+		}
+		else if (horzAlign == AlignType_Right) {
+			pos.x = boxSize.x - contentSize.x;
+		}
+
+		if (vertAlign == AlignType_VCenter) {
+			pos.y = (boxSize.y - contentSize.y) / 2.0;
+		}
+		else if (vertAlign == AlignType_Bottom) {
+			pos.y = boxSize.y - contentSize.y;
+		}
+
+		return pos;
+	}
+
+	/// Calculates the alpha that this element will actually be drawn with.
+	///
+	/// This is the multiplication of all alphas of elements in the tree that reach this one.
+	double getDrawAlpha() {
+		double calcAlpha = 1;
+
+		HXDD_ZF_Element elem = self;
+		while (elem) {
+			calcAlpha *= elem.alpha;
+			elem = elem.master;
+		}
+
+		return calcAlpha;
+	}
+
+	/// Returns the clipping rectangle that things in this element should be drawn using.
+	///
+	/// This uses the previous clipping rectangle so that this acts recursively, and places the
+	/// result in `clipRect`.
+	///
+	/// If `aabb` is not `NULL`, then the passed in box is used. Otherwise, the element's bounding
+	/// box is used.
+	void screenClip(HXDD_ZF_AABB beforeClip, HXDD_ZF_AABB clipRect, HXDD_ZF_AABB aabb = NULL) {
+		getClipAABB(beforeClip);
+		if (aabb == NULL) boxToScreen(clipRect);
+		else aabbToScreen(clipRect, aabb);
+		clipRect.rectOfIntersection(clipRect, beforeClip);
+		HXDD_ZF_AABB screenClip;
+		screenClip.size = screenSize();
+		clipRect.rectOfIntersection(clipRect, screenClip);
+	}
+
+	/// Draws text to the screen using element relative positioning.
+	void drawText(Vector2 relPos, Font fnt, string text, int color = Font.CR_WHITE, double scale = 1, double alpha = 1) {
+		if (scale == 0) return;
+
+		Vector2 drawPos = relToScreen(relPos) / scale;
+		Vector2 virtualSize = scaleToVirtualSize((scale, scale));
+		Screen.drawText(fnt, color, drawPos.x, drawPos.y, text, DTA_VirtualWidthF, virtualSize.x, DTA_VirtualHeightF, virtualSize.y, DTA_KeepRatio, true, DTA_Alpha, alpha * getDrawAlpha());
+	}
+
+	/// Draws a line to the screen using element relative positioning.
+	void drawLine(Vector2 start, Vector2 end, double thickness, Color color) {
+		Vector2 drawPosStart = relToScreen(start) * getScale();
+		Vector2 drawPosEnd = relToScreen(end) * getScale();
+		thickness *= getScale();
+
+		HXDD_ZF_AABB aabb; getClipAABB(aabb);
+		bool draw;
+		Vector2 clippedStart, clippedEnd;
+		[draw, clippedStart, clippedEnd] = aabb.cohenSutherlandClip(drawPosStart, drawPosEnd);
+
+		if (draw) {
+			Screen.drawThickLine(
+				int(clippedStart.x), int(clippedStart.y),
+				int(clippedEnd.x), int(clippedEnd.y),
+				thickness, color
+			);
+		}
+	}
+
+	/// Draws an image to the screen using element relative positioning.
+	///
+	/// If `clipRect` is not `NULL`, then the passed in rectangle is used for clipping. Otherwise,
+	/// the current screen clipping rectangle is used.
+	void drawImage(Vector2 relPos, string imageName, bool animate, Vector2 scale = (1, 1), double alpha = 1, HXDD_ZF_AABB clipRect = NULL) {
+		if (scale.x == 0 || scale.y == 0) return;
+
+		HXDD_ZF_AABB c;
+		if (clipRect == NULL) {
+			getClipAABB(c);
+		}
+		else {
+			c.pos = clipRect.pos;
+			c.size = clipRect.size;
+		}
+		TextureID tex = TexMan.checkForTexture(imageName, TexMan.Type_Any);
+		Vector2 drawPos = relToScreen(relPos);
+		drawPos = (drawPos.x / scale.x, drawPos.y / scale.y);
+		Vector2 virtualSize = scaleToVirtualSize(scale);
+		Screen.DrawTexture(
+			tex, animate, drawPos.x, drawPos.y, DTA_VirtualWidthF, virtualSize.x, DTA_VirtualHeightF, virtualSize.y,
+			DTA_KeepRatio, true, DTA_Alpha, alpha * getDrawAlpha(),
+			DTA_ClipLeft, int(c.pos.x), DTA_ClipTop, int(c.pos.y), DTA_ClipRight, int(c.pos.x + c.size.x), DTA_ClipBottom, int(c.pos.y + c.size.y),
+			DTA_TopOffset, 0, DTA_LeftOffset, 0
+		);
+	}
+
+	private Vector2 scaleVec(Vector2 vec, Vector2 scale) {
+		return (vec.x * scale.x, vec.y * scale.y);
+	}
+
+	private void shape2DAddQuad(Shape2D shape, Vector2 pos, Vector2 size, Vector2 uvPos, Vector2 uvSize, out int vertCount) {
+		shape.pushVertex((pos.x         , pos.y         ));
+		shape.pushVertex((pos.x + size.x, pos.y         ));
+		shape.pushVertex((pos.x         , pos.y + size.y));
+		shape.pushVertex((pos.x + size.x, pos.y + size.y));
+
+		shape.pushTriangle(vertCount + 0, vertCount + 3, vertCount + 1);
+		shape.pushTriangle(vertCount + 0, vertCount + 2, vertCount + 3);
+
+		shape.pushCoord((uvPos.x           , uvPos.y           ));
+		shape.pushCoord((uvPos.x + uvSize.x, uvPos.y           ));
+		shape.pushCoord((uvPos.x           , uvPos.y + uvSize.y));
+		shape.pushCoord((uvPos.x + uvSize.x, uvPos.y + uvSize.y));
+
+		vertCount += 4;
+	}
+
+	/// Draws a tiled image, using element relative coordinates for the position and size.
+	void drawTiledImage(Vector2 relPos, Vector2 size, string imageName, bool animate, Vector2 scale = (1, 1), double alpha = 1.0) {
+		if (scale.x == 0 || scale.y == 0) {
+			return;
+		}
+
+		Vector2 imageSize = texSize(imageName) * getScale();
+
+		// Abort if the image has an invalid resolution.
+		if (imageSize.x < 0 || imageSize.x ~== 0 || imageSize.y < 0 || imageSize.y ~== 0) {
+			return;
+		}
+
+		Vector2 imageScale = scaleVec(imageSize, scale);
+		let absPos = relToScreen(relPos) * getScale();
+		let scaledSize = size * getScale();
+		if (scaledSize ~== (0, 0)) {
+			return;
+		}
+
+		let shape = new("Shape2D");
+		shape.clear();
+
+		double xSize = scaledSize.x / imageScale.x;
+		double ySize = scaledSize.y / imageScale.y;
+		int vertCount = 0;
+		shape2DAddQuad(shape, absPos, scaledSize, (0, 0), (xSize, ySize), vertCount);
+
+		let texID = TexMan.checkForTexture(imageName, TexMan.Type_Any);
+		HXDD_ZF_AABB clipRect; getClipAABB(clipRect);
+		Screen.drawShape(texID, animate, shape, DTA_Alpha, alpha * getDrawAlpha(), DTA_ClipLeft, int(floor(clipRect.pos.x)), DTA_ClipTop, int(floor(clipRect.pos.y)), DTA_ClipRight, int(ceil(clipRect.pos.x + clipRect.size.x)), DTA_ClipBottom, int (ceil(clipRect.pos.y + clipRect.size.y)));
+
+		shape.clear();
+		shape.destroy();
+	}
+
+	/// Draws a filled region, using element relative positioning for the position and size.
+	void fill(Vector2 relStartPos, Vector2 size, Color col, double amount) {
+		HXDD_ZF_AABB aabb;
+		Vector2 startPos = relToScreen(relStartPos) * getScale();
+		aabb.pos = startPos;
+		aabb.size = size * getScale();
+		HXDD_ZF_AABB clip;
+		getClipAABB(clip);
+		aabb.rectOfIntersection(aabb, clip);
+		
+		if (aabb.size.x > 0.0 && aabb.size.y > 0.0) {
+			Screen.dim(col, amount * getDrawAlpha(), int(aabb.pos.x), int(aabb.pos.y), int(aabb.size.x), int(aabb.size.y));
+		}
+	}
+
+	/// Packs an element into a given frame. This adds it to the element tree, causing it to be
+	/// drawn and have input checks done to it in future ticks/frames.
+	void pack(HXDD_ZF_Frame master) {
+		master.internalPack(self);
+		requestMouseUpdate();
+	}
+
+	/// Unpacks an element from the element tree, provided it isn't packed into a non-[`ZF_Frame`].
+	void unpack() {
+		if (master == NULL) {
+			return;
+		}
+		if (!(master is "HXDD_ZF_Frame")) {
+			throwAbortException("Tried to unpack a non-frame-bound element");
+		}
+
+		requestMouseUpdate();
+
+		let masterFrame = HXDD_ZF_Frame(master);
+		masterFrame.internalUnpack(self);
+	}
+
+	/// Draws an element as a sub-element of this one.
+	///
+	/// This mostly just calls its drawer, but it also handles drawing the focus indicator if the
+	/// element is focused.
+	protected void drawSubElement(HXDD_ZF_Element elem) {
+		let globalStore = getGlobalStore();
+		if (globalStore.focusPriority == HXDD_ZF_FocusPriority_JustBelowFocused && elem == globalStore.focus) {
+			drawFocusIndicator(globalStore);
+		}
+		elem.drawer();
+		if (globalStore.focusPriority == HXDD_ZF_FocusPriority_JustAboveFocused && elem == globalStore.focus) {
+			drawFocusIndicator(globalStore);
+		}
+	}
+
+	/// Gets called once per tick.
+	virtual void ticker() {}
+	/// Gets called when ZForms would like the element to check if it wants mouse interaction.
+	///
+	/// Returning `true` will cause the mouse to be blocked in future mouse-element interactions
+	/// this tick.
+	virtual bool handleMousePosition(bool mouseBlock, Vector2 mousePos) { return false; }
+
+	/// ?doc: hidden
+	protected bool mousePosAndBlock(bool mouseBlock, Vector2 mousePos) {
+		let res = handleMousePosition(mouseBlock, mousePos);
+		if (res) return true;
+		return blocksMouse(mousePos);
+	}
+
+
+	/// ?doc: hidden
+	virtual bool handlePriorityMouseBlock(bool mouseBlock, Vector2 mousePos) { return mouseBlock || blocksMousePriority(mousePos); }
+
+	/// ?doc: hidden
+	protected void drawFocusIndicator(HXDD_ZF_ElementTreeGlobal globalStore) {
+		if (globalStore.focusIndicator == NULL) return;
+
+		HXDD_ZF_AABB beforeClip;
+		getClipAABB(beforeClip);
+		Screen.clearClipRect();
+
+		globalStore.focusIndicator.master = globalStore.mainFrame;
+		globalStore.focusIndicator.globalStore = globalStore;
+		globalStore.focusIndicator.drawer();
+		globalStore.focusIndicator.master = NULL;
+		globalStore.focusIndicator.globalStore = NULL;
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+
+	/// Gets called once per frame. Used for doing anything that requires checking that often,
+	/// mostly drawing.
+	virtual void drawer() {}
+	/// Gets called once per tick, but after [`drawer`] ever is. Used for drawing things that
+	/// should be on top of other elements, hence the name.
+	virtual void topDrawer() {}
+	/// Gets called when a navigation event occurs.
+	///
+	/// Returning `true` blocks other elements in the tree after this one from receiving this.
+	virtual bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) { return false; }
+	/// Gets called when a UI event occurs.
+	///
+	/// Returning `true` blocks other elements in the tree after this one from receiving this.
+	virtual bool onUIEvent(HXDD_ZF_UiEvent ev) { return false; }
+	/// Gets called when a UI event occurs, before [`onUIEvent`] ever is.
+	///
+	/// Returning `true` blocks other elements in the tree after this one from receiving this.
+	virtual bool onUIEventPriority(HXDD_ZF_UiEvent ev) { return false; }
+
+	/// Checks if the element is blocking the mouse for the next elements.
+	///
+	/// The default implementation just checks if the mouse is colliding with the element's
+	/// bounding box, which is fine for most elements.
+	virtual bool blocksMouse(Vector2 mousePos) {
+		if (dontBlockMouse) return false;
+		HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+		return screenBox.pointCollides(mousePos);
+	}
+	/// Checks if the element is blocking the mouse for the next elements, with priority over
+	/// [`blocksMouse`].
+	virtual bool blocksMousePriority(Vector2 mousePos) { return false; }
+
+	/// Gets called when the back button is pressed.
+	///
+	/// Returning `true` stops anything later in ZForms from doing anything with this. For example,
+	/// [`ZF_TextInput`] uses this to allow Escape to stop typing rather than instantly quitting
+	/// the menu.
+	virtual bool handleBack() { return false; }
+
+	/// Gets the AABB of the part of this element that is currently focused.
+	///
+	/// The default implementation represents the most common case, which is when the entire
+	/// element is the only focusable part.
+	virtual void getFocusAABB(HXDD_ZF_AABB box) { box.pos = relToMainFrame((0, 0)); box.size = self.box.size; }
+	/// Gets called when the element has been put in focus by a navigation event.
+	virtual void beenFocused(HXDD_ZF_NavEventType type) {}
+
+	/// Handles behaviour common to all elements related to hovering, namely calling the event
+	/// handler.
+	protected void doHover (bool mouseBlock, Vector2 mousePos) {
+		HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+		bool hover = (getHoverBlock() || mouseBlock) ? false : screenBox.pointCollides(mousePos);
+
+		if (hover && !elemHovered) {
+			if (cmdHandler) {
+				cmdHandler.elementHoverChanged(self, command, false);
+			}
+			elemHovered = true;
+		}
+		else if (!hover && elemHovered) {
+			if (cmdHandler) {
+				cmdHandler.elementHoverChanged(self, command, true);
+			}
+			elemHovered = false;
+		}
+	}
+
+	/// Called when the element is "activated" by another element such as a text label.
+	virtual void activate() {}
+}

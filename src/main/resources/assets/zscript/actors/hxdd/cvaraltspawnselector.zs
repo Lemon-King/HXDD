@@ -11,26 +11,45 @@ class CVarAltSpawnSelector : RandomSpawner
     // 1 = Use Alt Spawn
     // 2 = Randomize
     String CvarOption;
-    String PrimarySpawn;
-    String AltSpawn;
+    String HereticSpawn;
+    String HexenSpawn;
 
     virtual void Bind() {
         self.CvarOption = "Unknown";
-        self.PrimarySpawn = "Unknown";
-        self.AltSpawn = "Unknown";
+        self.HereticSpawn = "Unknown";
+        self.HexenSpawn = "Unknown";
     }
 
     Name SpawnSelector() {
-        int option = CVar.FindCVar(self.CvarOption).GetInt();
+        int option = LemonUtil.CVAR_GetInt(self.CvarOption, 0);
         if (option == 0) {
-            return self.PrimarySpawn;
-        } else if (option == 1) {
-            return self.AltSpawn;
-        } else {
-            String selector[2] = {self.PrimarySpawn, self.AltSpawn};
+            // game mode default
+            int ogm = LemonUtil.GetOptionGameMode();
+            if (ogm == GAME_Heretic) {
+                option = 1;
+            } else if (ogm == GAME_Hexen) {
+                option = 2;
+            }
+        }
+        if (option == 1) {
+            return self.HereticSpawn;
+        } else if (option == 2) {
+            return self.HexenSpawn;
+        } else if (option == 3) {
+            String selector[2] = {self.HereticSpawn, self.HexenSpawn};
             return selector[Random[AltSpawner](0, 1)];
         }
         return "Unknown";
+    }
+
+    override void PostSpawn(Actor spawned) {
+        // adjust health due to game mode
+        int ogm = LemonUtil.GetOptionGameMode();
+        if (ogm == GAME_Heretic) {
+
+        } else if (ogm == GAME_Hexen) {
+            
+        }
     }
 
 	// Override this to decide what to spawn in some other way.

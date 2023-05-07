@@ -10,8 +10,6 @@
         <Flag name="USEACTORROLL" />
 
         <!-- Skip Ref Pose -->
-        <Frame skip="1" />
-
         <Animation key="PRH" frames="12" model="0" comment="Run: Blood Fire"/>
         <Animation key="PRR" frames="12" model="0" comment="Run: Acid Rune / Firestorm"/>
         <Animation key="PRS" frames="12" model="0" comment="Run: Tempest Staff"/>
@@ -40,6 +38,5 @@
         <Animation key="PDE" frames="20" model="0" comment="Death"/>
         <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
         -->
-        <Frame skip="48" />
     </Group>
 </XMLModelDef>

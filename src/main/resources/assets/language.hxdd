@@ -1,5 +1,5 @@
 
-[enu default]
+[en default]
 
 /*
  *  HXDD
@@ -11,6 +11,14 @@ HXDD_INFO3 = "Date: %s";
 /*
  *  MENU
  */
+
+
+// Episodes
+MNU_FATEPTH = "Fate's Path";
+MNU_HEXEN = "Hexen - Beyond Heretic";
+MNU_HEXDD = "Deathkings of the Dark Citadel";
+
+ MNU_HXDDOPTIONS = "HXDD Options";
 
 // Paladin
 //MNU_APPRENTICE = "APPRENTICE";    // already localized
@@ -27,7 +35,6 @@ MNU_LEGEND = "LEGEND";
 MNU_MYTH = "MYTH";
 
 // Necromancer
-MNU_ACOLYTE = "ACOLYTE";        // use for lowest?
 MNU_SORCERER = "SORCERER";
 MNU_DARKSERVANT = "DARK SERVANT";
 MNU_WARLOCK = "WARLOCK";

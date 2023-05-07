@@ -3,12 +3,18 @@
 // ref: https://forum.zdoom.org/viewtopic.php?f=122&t=70725
 // ref: https://github.com/coelckers/gzdoom/blob/master/wadsrc/static/zscript/actors/shared/randomspawner.zs
 
-// Random spawner ----------------------------------------------------------
+// Multi Spawner ----------------------------------------------------------
+
+enum EMultiSpawnerState {
+	MSS_NOTREADY = 0,
+	MSS_PENDING = 1,
+	MSS_READY = 2,
+};
 
 class MultiSpawner: RandomSpawner {
+    bool CvarSelect;
     String SpawnSelect;
 
-    String GameSelect;
     String Doom;
     String Heretic;
     String Hexen;
@@ -25,7 +31,8 @@ class MultiSpawner: RandomSpawner {
     String Necromancer;
     String Succubus;
 
-    property GameSelect: GameSelect;
+    property CvarSelect: CvarSelect;
+    property SpawnSelect: SpawnSelect;
     property Doom: Doom;
     property Heretic: Heretic;
     property Hexen: Hexen;
@@ -41,9 +48,10 @@ class MultiSpawner: RandomSpawner {
     property Necromancer: Necromancer;
     property Succubus: Succubus;
 
-    int readyState;
+    EMultiSpawnerState readyState;
 
     virtual void Bind() {
+        self.CvarSelect = false;
         self.SpawnSelect = "GameSelect";
         self.Doom = "Unknown";
         self.Heretic = "Unknown";
@@ -61,8 +69,17 @@ class MultiSpawner: RandomSpawner {
         self.Necromancer = "Unknown";
         self.Succubus = "Unknown";
     }
+    virtual String CvarSelector() {
+        return "Unknown";
+    }
 
     Name SpawnSelector() {
+        if (self.CvarSelect) {
+            String spawn = CvarSelector();
+            if (spawn != "Unknown") {
+                return spawn;
+            }
+        }
         if (self.SpawnSelect == "GameSelect") {
             int gameType = gameinfo.gametype;
             if (gameType & GAME_Doom) {
@@ -77,31 +94,30 @@ class MultiSpawner: RandomSpawner {
             }
             return "Unknown";
         } else if (self.SpawnSelect == "ClassSelect") {
-            // Get player class name, placeholder until multi items are in
             PlayerInfo p = players[0];
-            String playerClass = p.mo.GetPrintableDisplayName(p.cls);
+            PlayerPawn player = PlayerPawn(p.mo);
 
             String spawn = "Unknown";
-            if (playerClass ~== "marine") {
+            if (player is "DoomPlayer") {
                 spawn = self.DoomMarine;
-            } else if (playerClass ~== "corvus") {
+            } else if (player is "HereticPlayer") {
                 spawn = self.Corvus;
-            } else if (playerClass ~== "fighter") {
+            } else if (player is "FighterPlayer") {
                 spawn = self.Fighter;
-            } else if (playerClass ~== "cleric") {
+            } else if (player is "ClericPlayer") {
                 spawn = self.Cleric;
-            } else if (playerClass ~== "mage") {
+            } else if (player is "MagePlayer") {
                 spawn = self.Mage;
-            } else if (playerClass ~== "paladin") {
+            } else if (player is "PaladinPlayer") {
                 spawn = self.Paladin;
-            } else if (playerClass ~== "crusader") {
+            } else if (player is "CrusaderPlayer") {
                 spawn = self.Crusader;
-            } else if (playerClass ~== "assassin") {
+            } else if (player is "AssassinPlayer") {
                 spawn = self.Assassin;
-            } else if (playerClass ~== "necromancer") {
+            } else if (player is "NecromancerPlayer") {
                 spawn = self.Necromancer;
-            } else if (playerClass ~== "demoness") {
-                spawn = self.succubus;
+            } else if (player is "SuccubusPlayer") {
+                spawn = self.Succubus;
             }
             if (spawn == "Unknown") {
                 // Spawn Fallback Item, should make things less weird with mods like Walpurgis
@@ -113,13 +129,9 @@ class MultiSpawner: RandomSpawner {
     }
 
     int GetGameType() {
-        String mapName = Level.MapName.MakeLower();
-        int mapPrefix = mapName.IndexOf("map");
-        if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
-            // Map follows E#M# format.
+        if (LemonUtil.IsMapHeretic()) {
             return GAME_Heretic;
-        } else if (mapPrefix != -1) {
-            // Map follow MAP## or **_MAP## format.
+        } else if (LemonUtil.IsMapHexen()) {
             return GAME_Hexen;
         } else {
             return GAME_Heretic;
@@ -137,22 +149,22 @@ class MultiSpawner: RandomSpawner {
         PlayerInfo p = players[0];
         if (p.cls != null) {
             Super.BeginPlay();
-            readyState = 1;
+            readyState = MSS_PENDING;
         } else {
-            readyState = 2;
+            readyState = MSS_READY;
         }
 	}
 
     override void PostBeginPlay() {
         PlayerInfo p = players[0];
-        if (p.cls != null && readyState == 1) {
+        if (p.cls != null && readyState == MSS_PENDING) {
             Super.PostBeginPlay();
         }
     }
 
     override void Tick() {
         Super.Tick();
-        if (readyState == 2) {
+        if (readyState == MSS_READY) {
             BeginPlay();
             PostBeginPlay();
         }

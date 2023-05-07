@@ -58,7 +58,8 @@ public class AssetExtractor {
         } else if (mf.decodeType == "sounds") {
             SoundExport();
         } else if (mf.decodeType == "music") {
-            MusicExport();
+            boolean lowerVolume = mf.source.contains("heretic");
+            MusicExport(lowerVolume);
         } else {
             // lump
             LumpExport(data);
@@ -209,15 +210,29 @@ public class AssetExtractor {
         }
     }
 
-    private void MusicExport() {
+    private void MusicExport(boolean lowerVolume) {
         String path = Settings.getInstance().Get("PathTemporary") + "/music/";
         String filePath = path + mf.outputName;
         this.CreateFolder(path);
         try {
+            String target = filePath + ".mus";
             // MUS is picky, so we're pulling from Wad.
             MUS music = wad.getDataAs(this.mf.inputName, MUS.class);
-            music.writeBytes(new FileOutputStream(filePath + ".mus", false));
-
+            if (lowerVolume) {
+                for (int i = 0; i < music.getEventCount(); i++) {
+                    MUS.Event e = music.getEvent(i);
+                    // note play type
+                    if (e.getType() == 1) {
+                        MUS.NotePlayEvent c = (MUS.NotePlayEvent)e;
+                        int Volume = c.getVolume();
+                        if (Volume != -1) {
+                            int newVolume = (int)(Volume * 0.5);
+                            c.setVolume(newVolume);
+                        }
+                    }
+                }
+            }
+            music.writeBytes(new FileOutputStream(target, false));
             //System.out.println("Exported " + filePath + ".mus");
         } catch (IOException e) {
             System.out.println("Failed to export " + filePath + ".mus" + " from " + mf.source);

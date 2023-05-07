@@ -1,0 +1,272 @@
+/// A slider element, allowing the user to choose a numerical value between two
+/// endpoint values.
+///
+/// This element uses the event [`ZF_Handler.sliderChanged`].
+class HXDD_ZF_Slider : HXDD_ZF_Element {
+	private void config(
+		double low, double high, double value, double step, double handleWidth,
+		HXDD_ZF_BoxTextures handle, HXDD_ZF_BoxTextures handleHover, HXDD_ZF_BoxTextures handleClick = NULL,
+		HXDD_ZF_BoxTextures background = NULL, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		setLow(low);
+		setHigh(high);
+		setStep(step);
+		setValue(value);
+		setHandleWidth(handleWidth);
+		setBackgroundTexture(background);
+		setHandleTexture(handle);
+		setHandleHoverTexture(handleHover);
+		setHandleClickTexture(handleClick);
+		setAlpha(1.0);
+		self.cmdHandler = cmdHandler;
+		self.command = command;
+	}
+
+	/// Returns a newly created slider element.
+	/// 
+	/// The position used is relative to whatever the element is packed into
+	/// later.
+	///
+	/// The upper and lower bounds of the slider are determined by `low` and
+	/// `high` - if `high < low`, then they will be swapped. The initial value
+	/// is used from `value`, and the step size (i.e. the minimum amount of
+	/// movement the slider will allow) of the slider is controlled by `step`.
+	/// If `step` is `0.0`, then smooth movement is used instead of stepping
+	/// discretely.
+	///
+	/// The width of the handle is determined by `handleWidth`, which is
+	/// measured in pixels. If this is `<= 0.0`, then a handle width is
+	/// automatically determined - if `step` is `0.0`, this gives a square
+	/// handle (i.e. handle width = slider height), otherwise a handle width is
+	/// used such that the edges of slider handles at different values touch.
+	///
+	/// The [`ZF_BoxTextures`] parameters correspond to the slider states as
+	/// described in [`SliderState`].
+	///
+	/// `cmdHandler` and `command` determine where the button's events are sent
+	/// to. [`ZF_Handler.sliderChanged`] is sent whenever the user changes the
+	/// value of the slider.
+	static HXDD_ZF_Slider create(
+		Vector2 pos, Vector2 size,
+		double low, double high, double value, double step, double handleWidth,
+		HXDD_ZF_BoxTextures handle, HXDD_ZF_BoxTextures handleHover, HXDD_ZF_BoxTextures handleClick = NULL,
+		HXDD_ZF_BoxTextures background = NULL, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		let ret = new("HXDD_ZF_Slider");
+
+		ret.setBox(pos, size);
+		ret.config(low, high, value, step, handleWidth, handle, handleHover, handleClick, background, cmdHandler, command);
+
+		return ret;
+	}
+
+	private double low, high, step;
+	/// Returns the lower bound on this slider's value.
+	double getLow() { return self.low; }
+	/// Sets the lower bound on this slider's value.
+	///
+	/// If this is higher than the value of [`getHigh`]`()`, they will be
+	/// swapped around.
+	void setLow(double low) { self.low = low; swapIfNecessary(); }
+	/// Returns the upper bound on this slider's value.
+	double getHigh() { return self.high; }
+	/// Sets the upper bound on this slider's value.
+	///
+	/// If this is lower than the value of [`getLow`]`()`, they will be swapped
+	/// around.
+	void setHigh(double high) { self.high = high; swapIfNecessary(); }
+	/// Gets the step size of this slider, i.e. the minimum value it can jump
+	/// by. `0.0` means a continuous slider.
+	double getStep() { return self.step; }
+	/// Sets the step size of this slider, i.e. the minimum value it can jump
+	/// by. `0.0` means a continuous slider.
+	///
+	/// This is set to `0.0` if a negative value is put in.
+	void setStep(double step) { self.step = max(step, 0.0); }
+
+	private void swapIfNecessary() {
+		if (low > high) {
+			let tmp = low;
+			low = high;
+			high = tmp;
+		}
+	}
+
+	private double value;
+	/// Returns the value that this slider is currently set to.
+	double getValue() { return self.value; }
+	/// Sets the value that this slider is currently set to.
+	void setValue(double value) { self.value = value; }
+
+	private HXDD_ZF_BoxTextures background;
+	/// Returns the box textures used for drawing the background of the slider.
+	HXDD_ZF_BoxTextures getBackgroundTexture() { return self.background; }
+	/// Sets the box textures used for drawing the background of the slider.
+	void setBackgroundTexture(HXDD_ZF_BoxTextures background) { self.background = background; }
+	private HXDD_ZF_BoxDrawer backgroundDrawer;
+
+	/// An enum representing the visual states a slider's handle can be in.
+	enum HandleState {
+		/// The slider is not being hovered or clicked.
+		Handle_Normal,
+		/// The slider has got the mouse cursor on top of it.
+		Handle_Hover,
+		/// The slider is being clicked on.
+		Handle_Click
+	}
+	private HXDD_ZF_BoxTextures handle[3];
+
+	/// Returns the box textures used when the slider is in the
+	/// [normal](HandleState.Handle_Normal) state.
+	HXDD_ZF_BoxTextures getHandleTexture() { return handle[Handle_Normal]; }
+	/// Sets the box textures used when the slider is in the
+	/// [normal](HandleState.Handle_Normal) state.
+	void setHandleTexture(HXDD_ZF_BoxTextures tex) { handle[Handle_Normal] = tex; }
+
+	/// Returns the box textures used when the slider is in the
+	/// [hover](HandleState.Handle_Hover) state.
+	HXDD_ZF_BoxTextures getHandleHoverTexture() { return handle[Handle_Hover]; }
+	/// Sets the box textures used when the slider is in the
+	/// [hover](HandleState.Handle_Hover) state.
+	void setHandleHoverTexture(HXDD_ZF_BoxTextures tex) { handle[Handle_Hover] = (tex != NULL) ? tex : handle[Handle_Normal]; }
+	
+	/// Returns the box textures used when the slider is in the
+	/// [click](HandleState.Handle_Click) state.
+	HXDD_ZF_BoxTextures getHandleClickTexture() { return handle[Handle_Click]; }
+	/// Sets the box textures used when the slider is in the
+	/// [click](HandleState.Handle_Click) state.
+	void setHandleClickTexture(HXDD_ZF_BoxTextures tex) { handle[Handle_Click] = (tex != NULL) ? tex : handle[Handle_Normal]; }
+
+	private HXDD_ZF_BoxDrawer handleDrawer[3];
+
+	private double handleWidth;
+	/// Returns the desired width of the handle.
+	///
+	/// If this is `<= 0.0`, special behaviour is used. See [`create`].
+	double getHandleWidth() { return self.handleWidth; }
+	/// Sets the desired width of the handle.
+	///
+	/// If this is `<= 0.0`, special behaviour is used. See [`create`].
+	void setHandleWidth(double handleWidth) { self.handleWidth = handleWidth; }
+
+	private bool clicking;
+	private bool hover;
+
+	private double getDrawHandleWidth() {
+		if (handleWidth <= 0.0) {
+			if (step == 0.0) {
+				return self.box.size.y;
+			}
+			else {
+				let ratio = (high - low) / step + 1;
+				return 1.0 / ratio * self.box.size.x;
+			}
+		}
+		else {
+			return handleWidth;
+		}
+	}
+
+	private int round(double roundee) {
+		if (roundee < 0) {
+			return int(roundee - 0.5);
+		}
+		else {
+			return int(roundee + 0.5);
+		}
+	}
+
+	override void drawer() {
+		HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+		let mousePos = getGlobalStore().mousePos;
+		if (!mouseBlock && !getHoverBlock() && isEnabled() && screenBox.pointCollides(mousePos)) {
+			hover = true;
+		}
+		else {
+			hover = false;
+		}
+
+		double oldVal = value;
+		if (clicking) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			let diff = mousePos - screenBox.pos;
+			diff /= getScale();
+			diff.x -= getDrawHandleWidth() / 2;
+			let t = diff.x / (box.size.x - getDrawHandleWidth());
+			t = clamp(t, 0.0, 1.0);
+			let newVal = (high - low) * t;
+			if (step != 0.0) {
+				newVal /= step;
+				newVal = round(newVal);
+				newVal *= step;
+			}
+			value = low + newVal;
+		}
+		value = clamp(value, low, high);
+		if (cmdHandler != NULL && oldVal != value) {
+			cmdHandler.sliderChanged(self, command);
+		}
+
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y));
+		
+		if (background) {
+			backgroundDrawer.draw(self, (0, 0), box.size, background, true);
+		}
+		let t = (high == low) ? 0.0 : ((value - low) / (high - low));
+		let i = clicking ? Handle_Click : hover ? Handle_Hover : Handle_Normal;
+		handleDrawer[i].draw(
+			self,
+			(t * (box.size.x - getDrawHandleWidth()), 0), (getDrawHandleWidth(), box.size.y),
+			handle[i], true
+		);
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (isEnabled() && isFocused()) {
+			let newStep = step;
+			if (step == 0.0) {
+				newStep = (high - low) / 25.0;
+			}
+			let oldVal = value;
+			switch (type) {
+			case HXDD_ZF_NavEventType_Left: {
+				value -= newStep;
+				value = clamp(value, low, high);
+				if (cmdHandler != NULL && oldVal != value) {
+					cmdHandler.sliderChanged(self, command);
+				}
+				return true;
+			}
+			case HXDD_ZF_NavEventType_Right: {
+				value += newStep;
+				value = clamp(value, low, high);
+				if (cmdHandler != NULL && oldVal != value) {
+					cmdHandler.sliderChanged(self, command);
+				}
+				return true;
+			}
+			}
+		}
+		return false;
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			let mousePos = getGlobalStore().mousePos;
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				clicking = true;
+				setHoverBlock(self);
+			}
+		}
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			clicking = false;
+			setHoverBlock(NULL);
+		}
+		return false;
+	}
+}

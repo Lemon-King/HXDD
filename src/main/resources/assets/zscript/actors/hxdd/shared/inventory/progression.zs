@@ -75,6 +75,8 @@ class Progression: Inventory {
 	property Wisdom: wisdom;
 	property Dexterity: dexterity;
 
+	PlayerSheet sheet;
+
     Default {
 		+INVENTORY.KEEPDEPLETED
         +INVENTORY.HUBPOWER
@@ -111,10 +113,9 @@ class Progression: Inventory {
 
 	bool ProgressionAllowed() {
 		int optionProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
-		if (owner.player.mo is "HXDDPlayerPawn") {
-			HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(owner.player.mo);
+		if (self.sheet) {
 			if (optionProgression == PSP_DEFAULT) {
-				optionProgression = hxddplayer.DefaultProgression;
+				optionProgression = self.sheet.DefaultProgression;
 			}
 		} else if (optionProgression == PSP_DEFAULT) {
 			optionProgression = PSP_NONE;
@@ -130,6 +131,7 @@ class Progression: Inventory {
 
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
+
 		if (!ProgressionSelected) {
 			if (ProgressionAllowed() ) {
         		SetAdvancementStatTables();
@@ -144,7 +146,7 @@ class Progression: Inventory {
 			ProgressionSelected = true;
 		}
 		ArmorModeSelection();
-		CompatabilityScale();
+		//CompatabilityScale();
 	}
 
 	void ArmorModeSelection() {
@@ -156,13 +158,17 @@ class Progression: Inventory {
 			return;
 		}
 		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
-		if (owner.player.mo is "HXDDPlayerPawn") {
+		if (self.sheet) {
 			HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(owner.player.mo);
 			if (optionArmorMode == PSAM_DEFAULT) {
-				optionArmorMode = hxddplayer.DefaultArmorMode;
+				optionArmorMode = self.sheet.DefaultArmorMode;
 			}
 		} else if (optionArmorMode == PSAM_DEFAULT) {
-			optionArmorMode = PSAM_ARMOR_SIMPLE;
+			if (owner.player.mo is "FighterPlayer" || owner.player.mo is "ClericPlayer" || owner.player.mo is "MagePlayer") {
+				optionArmorMode = PSAM_ARMOR_AC;
+			} else {
+				optionArmorMode = PSAM_ARMOR_SIMPLE;
+			}
 		}
 		if (optionArmorMode == PSAM_ARMOR_SIMPLE) {
 			// Remove Hexen AC armor Values to force simple armor mechanics
@@ -221,42 +227,6 @@ class Progression: Inventory {
 			}
 		}
 		ArmorSelected = true;
-	}
-
-	void CompatabilityScale() {
-		// Disabled until I can get it working
-		/*
-		if (CompatabilityScaleSelected) {
-			return;
-		}
-		let player = PlayerPawn(owner.player.mo);
-		if (player == NULL) {
-			return;
-		}
-		int optionCompatScale = CVar.FindCVar("hxdd_player_scale").GetInt();
-
-		if (player.Height == 56 && optionCompatScale == 2) {
-			// Hexen Style
-			player.Height = 64;
-			player.Viewheight = 48;
-			double s = 64.0 / 56.0;
-			player.Scale.X = s;
-			player.Scale.Y = s;
-		} else if (player.Height == 64 && optionCompatScale == 1) {
-			// Doom & Heretic Style
-			player.Height = 56;
-			player.Viewheight = 41;
-			double s = 56.0 / 64.0;
-			player.Scale.X = s;
-			player.Scale.Y = s;
-		}
-
-		console.printf("Player Compat Scale %d", player.Height);
-		console.printf("Player Height: %d", player.Viewheight);
-		console.printf("Player Viewheight: %d", player.Scale.X);
-		console.printf("Player Scale: %0.2f, 0.2f", player.Scale.Y);
-		CompatabilityScaleSelected = true;
-		*/
 	}
 
 	// This is dumb, but: https://discord.com/channels/268086704961748992/268877450652549131/385134419893288960
@@ -325,55 +295,96 @@ class Progression: Inventory {
 				wisdomTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
 				dexterityTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
 			}
-		} else if (owner.player.mo is "HXDDPlayerPawn") {
-			// capture stats from hxddplayerpawn.
-			HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(owner.player.mo);
-
-			experienceModifier =		hxddplayer.experienceModifier;
-			for (let i = 0; i < 11; i++) {
-				experienceTable[i] =	hxddplayer.experienceTable[i];
-			}
-			for (let i = 0; i < 5; i++) {
-				hitpointTable[i] =		hxddplayer.hitpointTable[i];
-				manaTable[i] =			hxddplayer.manaTable[i];
-			}
-			for (let i = 0; i < 2; i++) {
-				strengthTable[i] =		hxddplayer.strengthTable[i];
-				intelligenceTable[i] =	hxddplayer.intelligenceTable[i];
-				wisdomTable[i] =		hxddplayer.wisdomTable[i];
-				dexterityTable[i] =		hxddplayer.dexterityTable[i];
-			}
 		} else {
-			// Placeholder Values
-			experienceTable[0] = 800;
-			for (let i = 1; i < 11; i++) {
-				experienceTable[i] = experienceTable[i-1] * 2.0f;
+			// find advancement item
+			bool foundStatItem = false;
+			uint end = AllActorClasses.Size();
+			for (uint i = 0; i < end; ++i) {
+				let item = (class<PlayerSheet>)(AllActorClasses[i]);
+				if (item) {
+					String itemName = item.GetClassName();
+					if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {
+						PlayerSheet plItem = PlayerSheet(Owner.player.mo.FindInventory(item));
+
+						experienceModifier =		plItem.experienceModifier;
+						for (let i = 0; i < 11; i++) {
+							experienceTable[i] =	plItem.experienceTable[i];
+						}
+						for (let i = 0; i < 5; i++) {
+							hitpointTable[i] =		plItem.hitpointTable[i];
+							manaTable[i] =			plItem.manaTable[i];
+						}
+						for (let i = 0; i < 2; i++) {
+							strengthTable[i] =		plItem.strengthTable[i];
+							intelligenceTable[i] =	plItem.intelligenceTable[i];
+							wisdomTable[i] =		plItem.wisdomTable[i];
+							dexterityTable[i] =		plItem.dexterityTable[i];
+						}
+
+						foundStatItem = true;
+						break;
+					}
+				}
 			}
 
-			hitpointTable[0] = 100;
-			hitpointTable[1] = 100;
-			hitpointTable[2] = 0;
-			hitpointTable[3] = 5;
-			hitpointTable[4] = 5;
+			// If no player leveling items are found, use stock stats
+			if (!foundStatItem) {
+				experienceTable[0] = 800;
+				for (let i = 1; i < 11; i++) {
+					experienceTable[i] = experienceTable[i-1] * 2.0f;
+				}
 
-			manaTable[0] = 100;
-			manaTable[1] = 100;
-			manaTable[2] = 5;
-			manaTable[3] = 10;
-			manaTable[4] = 5;
+				hitpointTable[0] = 50;
+				hitpointTable[1] = 60;
+				hitpointTable[2] = 0;
+				hitpointTable[3] = 5;
+				hitpointTable[4] = 5;
 
-			strengthTable[0] = 10;
-			strengthTable[1] = 10;
+				manaTable[0] = 40;
+				manaTable[1] = 50;
+				manaTable[2] = 5;
+				manaTable[3] = 10;
+				manaTable[4] = 5;
 
-			intelligenceTable[0] = 10;
-			intelligenceTable[1] = 10;
+				strengthTable[0] = 8;
+				strengthTable[1] = 12;
 
-			wisdomTable[0] = 10;
-			wisdomTable[1] = 10;
+				intelligenceTable[0] = 8;
+				intelligenceTable[1] = 12;
 
-			dexterityTable[0] = 10;
-			dexterityTable[1] = 10;
+				wisdomTable[0] = 8;
+				wisdomTable[1] = 12;
+
+				dexterityTable[0] = 8;
+				dexterityTable[1] = 12;
+			}
 		}
+	}
+
+	void CreatePlayerSheetItem() {
+		uint end = AllActorClasses.Size();
+		for (uint i = 0; i < end; ++i) {
+			let item = (class<PlayerSheet>)(AllActorClasses[i]);
+			if (item) {
+				String itemName = item.GetClassName();
+				if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {	
+					PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
+					if (sheet == null) {
+						owner.player.mo.GiveInventory(itemName, 1);
+
+						self.sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
+						if (self.sheet) {
+							console.printf("Gave PlayerSheet: %s %s", Owner.player.mo.GetClassName(), itemName);
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	PlayerSheet GetPlayerSheet() {
+		return self.sheet;
 	}
 
 	void InitLevel_PostBeginPlay() {
@@ -381,7 +392,7 @@ class Progression: Inventory {
 			return;
 		}
 		
-		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
+		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", true);
 
 		let player = owner.player.mo;
 
@@ -409,17 +420,17 @@ class Progression: Inventory {
 					// The player did not have the ammoitem. Add it.
 					ammoItem = Ammo(Spawn(ammotype));
 				}
+				//console.printf("ammoItem: %s", ammoItem.GetClassName());
 				if (!(ammoType is "mana1") || !(ammoType is "mana2")) {
-					double scaler = ammoItem.Default.MaxAmount / 200.0f;
-					double scalerBackpack = scaler;
-					if (ammoItem.Default.BackpackMaxAmount > ammoItem.Default.MaxAmount && ammoItem.Default.MaxAmount > 0) {
-						scalerBackpack *= ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount;
-					}
+					double scaler = ammoItem.Default.MaxAmount / 200.0;
 					ammoItem.MaxAmount = maxMana * scaler;
+					if (ammoItem.Amount > ammoItem.MaxAmount) {
+						ammoitem.Amount = ammoItem.MaxAmount;
+					}
 					if (cvarAllowBackpackUse) {
-							ammoItem.BackpackMaxAmount = ammoItem.Default.BackpackMaxAmount * scalerBackpack;
-						} else {
-							ammoItem.BackpackMaxAmount = ammoItem.Default.BackpackMaxAmount * scaler;
+						ammoItem.BackpackMaxAmount = ammoItem.MaxAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
+					} else {
+						ammoItem.BackpackMaxAmount = ammoItem.MaxAmount;
 					}
 					ammoItem.AttachToOwner(Owner.player.mo);
 				} else {
@@ -448,7 +459,7 @@ class Progression: Inventory {
 	void AdvanceLevel(int advanceLevel) {
 		// https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/portals/stats.hc#L233
 
-		bool cvarAllowBackpackUse = CVar.FindCVar("hxdd_allow_backpack_use").GetBool();
+		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", true);
 		PlayerPawn player = PlayerPawn(owner.player.mo);
 
 		S_StartSound("hexen2/misc/comm", CHAN_VOICE);
@@ -493,16 +504,15 @@ class Progression: Inventory {
 				if (invItem != NULL && invItem is "Ammo") {
 					Ammo ammoItem = Ammo(invItem);
 					if (ammoItem) {
-						double scaler = ammoItem.Default.MaxAmount / 200.0f;
-						double scalerBackpack = scaler;
-						if (ammoItem.Default.BackpackMaxAmount > ammoItem.Default.MaxAmount && ammoItem.Default.MaxAmount > 0) {
-							scalerBackpack *= ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount;
-						}
+						double scaler = ammoItem.Default.MaxAmount / 200.0;
 						ammoItem.MaxAmount = MaxMana * scaler;
+						if (ammoItem.Amount > ammoItem.MaxAmount) {
+							ammoitem.Amount = ammoItem.MaxAmount;
+						}
 						if (cvarAllowBackpackUse) {
-							ammoItem.BackpackMaxAmount = ammoItem.Default.BackpackMaxAmount * scalerBackpack;
+							ammoItem.BackpackMaxAmount = ammoItem.MaxAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
 						} else {
-							ammoItem.BackpackMaxAmount = ammoItem.Default.BackpackMaxAmount * scaler;
+							ammoItem.BackpackMaxAmount = ammoItem.MaxAmount;
 						}
 					}
 				}
@@ -582,7 +592,12 @@ class Progression: Inventory {
 			return experience;
 		}
 		if (target.health <= 0) {
-			double calcExp = target.Default.health * frandom[ExpRange](0.6, 0.7);
+			double calcExp = target.Default.health;
+			if (LemonUtil.GetOptionGameMode() == GAME_Hexen) {
+				// Hexen receives an xp penalty due to larger health pools vs Heretic and Hexen II
+				calcExp *= 0.5;
+			}
+			calcExp *= frandom[ExpRange](0.6, 0.7);
 			if (target.bBoss) {
 				calcExp *= 1.75;
 			}

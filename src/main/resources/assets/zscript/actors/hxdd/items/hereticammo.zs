@@ -22,11 +22,11 @@ class MultiClassBagOfHolding : MultiSpawner {
 //  Gold Wand Ammo
 //
 // Only Corvus should receive ammo drops with the starter weapon
-class MultiClassGoldWandAmmo : MultiPickup {
+class MultiClassGoldWandAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDGoldWandAmmo";
-        self.Corvus = "HXDDGoldWandAmmo";
+        self.Fallback = "GoldWandAmmo";
+        self.Corvus = "GoldWandAmmo";
         self.Fighter = "none";
         self.Cleric = "none";
         self.Mage = "none";
@@ -39,193 +39,193 @@ class MultiClassGoldWandAmmo : MultiPickup {
 }
 
 // Rarer, should show up as Mana 1
-class MultiClassGoldWandHefty : MultiPickup {
+class MultiClassGoldWandHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDGoldWandHefty";
-        self.Corvus = "HXDDGoldWandHefty";
-        self.Fighter = "HXDDMana1";
-        self.Cleric = "HXDDMana1";
-        self.Mage = "HXDDMana1";
-        self.Paladin = "HXDDMana1";
-        self.Crusader = "HXDDMana1";
-        self.Necromancer = "HXDDMana1";
-        self.Assassin = "HXDDMana1";
-        self.Succubus = "HXDDMana1";
+        self.Fallback = "GoldWandHefty";
+        self.Corvus = "GoldWandHefty";
+        self.Fighter = "Mana1";
+        self.Cleric = "Mana1";
+        self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
 //
 //  Crossbow Ammo
 //
-class MultiClassCrossbowAmmo : MultiPickup {
+class MultiClassCrossbowAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDCrossbowAmmo";
-        self.Corvus = "HXDDCrossbowAmmo";
-        self.Fighter = "HXDDMana1";
-        self.Cleric = "HXDDMana1";
-        self.Mage = "HXDDMana1";
-        self.Paladin = "HXDDMana1";
-        self.Crusader = "HXDDMana1";
-        self.Necromancer = "HXDDMana1";
-        self.Assassin = "HXDDMana1";
-        self.Succubus = "HXDDMana1";
+        self.Fallback = "CrossbowAmmo";
+        self.Corvus = "CrossbowAmmo";
+        self.Fighter = "Mana1";
+        self.Cleric = "Mana1";
+        self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
-class MultiClassCrossbowHefty : MultiPickup {
+class MultiClassCrossbowHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDCrossbowHefty";
-        self.Corvus = "HXDDCrossbowHefty";
-        self.Fighter = "HXDDMana2";
-        self.Cleric = "HXDDMana2";
-        self.Mage = "HXDDMana2";
-        self.Paladin = "HXDDMana2";
-        self.Crusader = "HXDDMana2";
-        self.Necromancer = "HXDDMana2";
-        self.Assassin = "HXDDMana2";
-        self.Succubus = "HXDDMana2";
+        self.Fallback = "CrossbowHefty";
+        self.Corvus = "CrossbowHefty";
+        self.Fighter = "Mana2";
+        self.Cleric = "Mana2";
+        self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
 //
 //  Blaster Ammo
 //
-class MultiClassBlasterAmmo : MultiPickup {
+class MultiClassBlasterAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDBlasterAmmo";
-        self.Corvus = "HXDDBlasterAmmo";
-        self.Fighter = "HXDDMana1";
-        self.Cleric = "HXDDMana1";
-        self.Mage = "HXDDMana1";
-        self.Paladin = "HXDDMana1";
-        self.Crusader = "HXDDMana1";
-        self.Necromancer = "HXDDMana1";
-        self.Assassin = "HXDDMana1";
-        self.Succubus = "HXDDMana1";
+        self.Fallback = "BlasterAmmo";
+        self.Corvus = "BlasterAmmo";
+        self.Fighter = "Mana1";
+        self.Cleric = "Mana1";
+        self.Mage = "Mana1";
+        self.Paladin = "Mana1";
+        self.Crusader = "Mana1";
+        self.Necromancer = "Mana1";
+        self.Assassin = "Mana1";
+        self.Succubus = "Mana1";
     }
 }
 
-class MultiClassBlasterHefty : MultiPickup {
+class MultiClassBlasterHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDBlasterHefty";
-        self.Corvus = "HXDDBlasterHefty";
-        self.Fighter = "HXDDMana2";
-        self.Cleric = "HXDDMana2";
-        self.Mage = "HXDDMana2";
-        self.Paladin = "HXDDMana2";
-        self.Crusader = "HXDDMana2";
-        self.Necromancer = "HXDDMana2";
-        self.Assassin = "HXDDMana2";
-        self.Succubus = "HXDDMana2";
+        self.Fallback = "BlasterHefty";
+        self.Corvus = "BlasterHefty";
+        self.Fighter = "Mana2";
+        self.Cleric = "Mana2";
+        self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
 //
 //  SkullRod Ammo
 //
-class MultiClassSkullRodAmmo : MultiPickup {
+class MultiClassSkullRodAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDSkullRodAmmo";
-        self.Corvus = "HXDDSkullRodAmmo";
-        self.Fighter = "HXDDMana2";
-        self.Cleric = "HXDDMana2";
-        self.Mage = "HXDDMana2";
-        self.Paladin = "HXDDMana2";
-        self.Crusader = "HXDDMana2";
-        self.Necromancer = "HXDDMana2";
-        self.Assassin = "HXDDMana2";
-        self.Succubus = "HXDDMana2";
+        self.Fallback = "SkullRodAmmo";
+        self.Corvus = "SkullRodAmmo";
+        self.Fighter = "Mana2";
+        self.Cleric = "Mana2";
+        self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
-class MultiClassSkullRodHefty : MultiPickup {
+class MultiClassSkullRodHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDSkullRodHefty";
-        self.Corvus = "HXDDSkullRodHefty";
-        self.Fighter = "HXDDMana3";
-        self.Cleric = "HXDDMana3";
-        self.Mage = "HXDDMana3";
-        self.Paladin = "HXDDMana3";
-        self.Crusader = "HXDDMana3";
-        self.Necromancer = "HXDDMana3";
-        self.Assassin = "HXDDMana3";
-        self.Succubus = "HXDDMana3";
+        self.Fallback = "SkullRodHefty";
+        self.Corvus = "SkullRodHefty";
+        self.Fighter = "Mana3";
+        self.Cleric = "Mana3";
+        self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
 //
 //  PhoenixRod Ammo
 //
-class MultiClassPhoenixRodAmmo : MultiPickup {
+class MultiClassPhoenixRodAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDPhoenixRodAmmo";
-        self.Corvus = "HXDDPhoenixRodAmmo";
-        self.Fighter = "HXDDMana2";
-        self.Cleric = "HXDDMana2";
-        self.Mage = "HXDDMana2";
-        self.Paladin = "HXDDMana2";
-        self.Crusader = "HXDDMana2";
-        self.Necromancer = "HXDDMana2";
-        self.Assassin = "HXDDMana2";
-        self.Succubus = "HXDDMana2";
+        self.Fallback = "PhoenixRodAmmo";
+        self.Corvus = "PhoenixRodAmmo";
+        self.Fighter = "Mana2";
+        self.Cleric = "Mana2";
+        self.Mage = "Mana2";
+        self.Paladin = "Mana2";
+        self.Crusader = "Mana2";
+        self.Necromancer = "Mana2";
+        self.Assassin = "Mana2";
+        self.Succubus = "Mana2";
     }
 }
 
-class MultiClassPhoenixRodHefty : MultiPickup {
+class MultiClassPhoenixRodHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDPhoenixRodHefty";
-        self.Corvus = "HXDDPhoenixRodHefty";
-        self.Fighter = "HXDDMana3";
-        self.Cleric = "HXDDMana3";
-        self.Mage = "HXDDMana3";
-        self.Paladin = "HXDDMana3";
-        self.Crusader = "HXDDMana3";
-        self.Necromancer = "HXDDMana3";
-        self.Assassin = "HXDDMana3";
-        self.Succubus = "HXDDMana3";
+        self.Fallback = "PhoenixRodHefty";
+        self.Corvus = "PhoenixRodHefty";
+        self.Fighter = "Mana3";
+        self.Cleric = "Mana3";
+        self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
 //
 //  Mace Ammo
 //
-class MultiClassMaceAmmo : MultiPickup {
+class MultiClassMaceAmmo : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDMaceAmmo";
-        self.Corvus = "HXDDMaceAmmo";
-        self.Fighter = "HXDDMana3";
-        self.Cleric = "HXDDMana3";
-        self.Mage = "HXDDMana3";
-        self.Paladin = "HXDDMana3";
-        self.Crusader = "HXDDMana3";
-        self.Necromancer = "HXDDMana3";
-        self.Assassin = "HXDDMana3";
-        self.Succubus = "HXDDMana3";
+        self.Fallback = "MaceAmmo";
+        self.Corvus = "MaceAmmo";
+        self.Fighter = "Mana3";
+        self.Cleric = "Mana3";
+        self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }
 
-class MultiClassMaceHefty : MultiPickup {
+class MultiClassMaceHefty : MultiSpawner {
     override void Bind() {
         self.SpawnSelect = "ClassSelect";
-        self.Fallback = "HXDDMaceHefty";
-        self.Corvus = "HXDDMaceHefty";
-        self.Fighter = "HXDDMana3";
-        self.Cleric = "HXDDMana3";
-        self.Mage = "HXDDMana3";
-        self.Paladin = "HXDDMana3";
-        self.Crusader = "HXDDMana3";
-        self.Necromancer = "HXDDMana3";
-        self.Assassin = "HXDDMana3";
-        self.Succubus = "HXDDMana3";
+        self.Fallback = "MaceHefty";
+        self.Corvus = "MaceHefty";
+        self.Fighter = "Mana3";
+        self.Cleric = "Mana3";
+        self.Mage = "Mana3";
+        self.Paladin = "Mana3";
+        self.Crusader = "Mana3";
+        self.Necromancer = "Mana3";
+        self.Assassin = "Mana3";
+        self.Succubus = "Mana3";
     }
 }

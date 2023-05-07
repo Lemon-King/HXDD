@@ -1,0 +1,185 @@
+/// A data-only class which effectively "controls" the state of a group of
+/// [radio buttons](ZF_RadioButton).
+///
+/// This exposes one member, [`curVal`], which represents which radio button is
+/// currently active. In a lot of cases, an integer is probably not what the
+/// menu was supposed to be asking people to select from (although if it is, no
+/// extra work is needed - you can just read from `curVal` directly).
+/// 
+/// In these cases, it is sensible to create an array of length `N` (let's call
+/// this `arrayOfChoices`) representing the choices, and to ensure that all
+/// `value`s of your radio buttons are in the range from `0` to `N - 1`. Then
+/// the user's choice can be gotten via `arrayOfChoices[controller.curVal]`.
+class HXDD_ZF_RadioController {
+	/// An integer representing which radio button is on.
+	/// 
+	/// If and only if this value is equal to a radio button's `value` (see
+	/// [`ZF_RadioButton.create`]), then that radio button is considered to be
+	/// on.
+	int curVal;
+}
+
+/// A button which allows the user to click on one out of a group of other
+/// radio buttons, allowing them to make a single choice out of many.
+///
+/// This element uses the event [`ZF_Handler.radioButtonChanged`].
+///
+/// Also see the documentation for [`ZF_ButtonBase`] as a lot of button things are documented
+/// there.
+class HXDD_ZF_RadioButton : HXDD_ZF_ButtonBase {
+	/// ?doc: hidden
+	void config(
+		HXDD_ZF_RadioController variable, int value,
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures disabled = NULL,
+		string text = "", Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		AlignType alignment = AlignType_Center, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		setFont(fnt);
+		setText(text);
+		setTextScale(textScale);
+		setTextures(inactive, hover, click, disabled);
+		setTextColor(textColor);
+		setAlignment(alignment);
+		setVariable(variable);
+		setValue(value);
+		setAlpha(1.0);
+
+		self.cmdHandler = cmdHandler;
+		self.command = command;
+	}
+
+	/// Returns a newly-created radio button element.
+	///
+	/// The position used is relative to whatever the element is packed into
+	/// later.
+	///
+	/// The returned button's behaviour is determined by the `variable` and
+	/// `value` arguments. Different toggle buttons which use the same
+	/// [`ZF_RadioController`] are considered as one group. If and only if
+	/// `variable.`[`curVal`](ZF_RadioController.curVal) is equal to `value`,
+	/// then the radio button will be considered to be on. When a radio button
+	/// is clicked on, it will set `variable.curVal` to be equal to `value`.
+	/// Please see the documentation for [`ZF_RadioController`] for important
+	/// details about how to use this.
+	///
+	/// The [`ZF_BoxTextures`] arguments correspond to the button's states
+	/// described in [`ButtonState`]. The text on the button will be aligned to
+	/// `alignment`.
+	///
+	/// `textColor` takes on values from [`Font.EColorRange`], which cannot be
+	/// named as a type due to current ZScript limitations.
+	///
+	/// If `fnt` is `NULL`, then `smallfont` is used instead.
+	///
+	/// `cmdHandler` and `command` determine where the button's events are sent
+	/// to. [`ZF_Handler.radioButtonChanged`] is sent whenever this radio
+	/// button is used to change the state of the radio controller, i.e. when
+	/// it is clicked into the `on` state.
+	static HXDD_ZF_RadioButton create(
+		Vector2 pos, Vector2 size,
+		HXDD_ZF_RadioController variable, int value,
+		HXDD_ZF_BoxTextures inactive = NULL, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures disabled = NULL,
+		string text = "", Font fnt = NULL, double textScale = 1, int textColor = Font.CR_WHITE,
+		AlignType alignment = AlignType_Center, HXDD_ZF_Handler cmdHandler = NULL, Name command = ''
+	) {
+		let ret = new('HXDD_ZF_RadioButton');
+
+		ret.config(variable, value, inactive, hover, click, disabled, text, fnt, textScale, textColor, alignment, cmdHandler, command);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	private HXDD_ZF_RadioController variable;
+	/// Returns the shared variable that this radio button reads/writes from to
+	/// determine whether it is on or off.
+	HXDD_ZF_RadioController getVariable() { return self.variable; }
+	/// Sets the shared variable that this radio button reads/writes from to
+	/// determine whether it is on or off.
+	void setVariable(HXDD_ZF_RadioController variable) { self.variable = variable; }
+
+	private int value;
+	/// Returns the value that will cause this radio button to be considered.
+	///
+	/// If and only if this equals the value of the radio controller's
+	/// [curVal](ZF_RadioController.curVal), the button is considered on.
+	int getValue() { return self.value; }
+	/// Sets the value that will cause this radio button to be considered.
+	///
+	/// If and only if this equals the value of the radio controller's
+	/// [curVal](ZF_RadioController.curVal), the button is considered on.
+	void setValue(int value) { self.value = value; }
+
+	private bool click;
+	private bool hover;
+
+	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {
+		if (isEnabled() && isFocused() && type == HXDD_ZF_NavEventType_Confirm) {
+			variable.curVal = value;
+			if (cmdHandler != NULL) {
+				cmdHandler.radioButtonChanged(self, command, variable);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	override void activate() {
+		variable.curVal = value;
+		if (cmdHandler != NULL) {
+			cmdHandler.radioButtonChanged(self, command, variable);
+		}
+	}
+
+	override bool handleMousePosition(bool mouseBlock, Vector2 mousePos) {
+		if (isEnabled()) {
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!mouseBlock && screenBox.pointCollides(mousePos)) {
+				hover = true;
+			}
+			else {
+				hover = false;
+			}
+		}
+		return false;
+	}
+
+	override void drawer() {
+		if (!isEnabled()) { curButtonState = ButtonState_Disabled; }
+		else if (variable.curVal == value) { curButtonState = ButtonState_Click; }
+		else if ((!getHoverBlock() && hover) || click) { curButtonState = ButtonState_Hover; }
+		else { curButtonState = ButtonState_Inactive; }
+		Super.drawer();
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		// if the player's clicked, and their mouse is in the right place, set the state accordingly
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			let mousePos = getGlobalStore().mousePos;
+			HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				click = true;
+				setHoverBlock(self);
+			}
+		}
+		// if the player's releasing, check if their mouse is still in the correct range and trigger method if it was
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			if (isEnabled()) {
+				let mousePos = getGlobalStore().mousePos;
+				HXDD_ZF_AABB screenBox; boxToScreen(screenBox);
+				if (screenBox.pointCollides(mousePos) && click) {
+					variable.curVal = value;
+					if (cmdHandler != NULL) {
+						cmdHandler.radioButtonChanged(self, command, variable);
+					}
+				}
+				click = false;
+				setHoverBlock(NULL);
+			}
+		}
+		// if the player's mouse has moved, update the tracked position and do a quick hover check
+		return false;
+	}
+}

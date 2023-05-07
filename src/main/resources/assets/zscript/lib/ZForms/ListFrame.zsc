@@ -1,0 +1,43 @@
+/// A frame element which automatically positions the element so that they line up as a vertical
+/// list.
+class HXDD_ZF_ListFrame : HXDD_ZF_Frame {
+	/// Returns a newly-created list frame element.
+	///
+	/// The position used is relative to whatever the element is packed into later. Elements will
+	/// have space between them equal to `padding` pixels.
+	static HXDD_ZF_ListFrame create(
+		Vector2 pos, Vector2 size, double padding
+	) {
+		let ret = new('HXDD_ZF_ListFrame');
+
+		ret.setBox(pos, size);
+		ret.padding = padding;
+		ret.alpha = 1.0;
+
+		return ret;
+	}
+
+	private double padding;
+	/// Returns the vertical spacing between elements in the list frame.
+	double getPadding() { return self.padding; }
+	/// Sets the vertical spacing between elements in the list frame.
+	void setPadding(double padding) { self.padding = padding; setElementBoxes(); }
+
+	private void setElementBoxes() {
+		let pos = 0.0;
+		for (int i = 0; i < elements.size(); i++) {
+			elements[i].box.pos = (0.0, pos);
+			elements[i].box.size.x = box.size.x;
+			pos += elements[i].box.size.y + padding;
+		}
+	}
+
+	override void drawer() {
+		setElementBoxes();
+		Super.drawer();
+	}
+
+	override void onPack(HXDD_ZF_Element elem) {
+		setElementBoxes();
+	}
+}

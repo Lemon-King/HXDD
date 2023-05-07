@@ -101,22 +101,34 @@ class CWeapWarhammer : CrusaderWeapon
         }
 
         // Until targets can only be hit once (bug), damage needs to be dividied by 2.
-        // Although I will admit, the effect is way cooler this way.
+        // But the effect is way cooler this way.
 		double damage = frandom[WarhammerAtk](15, 25) * 0.5;
 		damage += GetPowerUpHolyStrengthMultiplier() * damage;
+
+        Progression prog = Progression(Player.mo.FindInventory("Progression"));
+		double strength = 10;
+		if (prog.sheet) {
+			strength = prog.sheet.strength;
+		}
+
+		//Array<Actor> hit;
+
 		for (int i = 0; i < 16; i++) {
 			for (int j = 1; j >= -1; j -= 2) {
 				double ang = angle + j*i*(45. / 16);
 				double slope = AimLineAttack(ang, MELEE_RANGE, t, 0., ALF_CHECK3D);
-				if (t.linetarget) {
-					double Strength = HXDDPlayerPawn(self).strength;
-                    double force = Strength / 40.0f + 0.5f;
 
-                    double targetMass = Actor(t.linetarget).mass;
+				if (t.linetarget) { //&& hit.Find(t.linetarget) != hit.Size()) {
+					
+                    double force = strength / 40.0f + 0.5f;
+
+					Actor target = Actor(t.linetarget);
+                    double targetMass = target.mass;
 
 					LineAttack(ang + x, MELEE_RANGE, slope + z, damage, 'Melee', "SickleSparks_Hit", true, t);
 					if (t.linetarget != null) {
 						AdjustPlayerAngle(t);
+						//hit.push(t.linetarget);
 						return;
 					}
 				}

@@ -1,0 +1,112 @@
+/// A class representing "box textures", i.e. a set of textures representing
+/// the 9 parts of a rectangle - corners, sides and middle.
+///
+/// This uses a single actual texture which has been
+/// "[9-sliced](https://en.wikipedia.org/wiki/9-slice_scaling)". See the
+/// various `create` methods for more details.
+///
+/// Note that this class is immutable. Once set, it can never be changed, so simply checking the
+/// pointer equality is enough to check if one has changed, for caching purposes.
+class HXDD_ZF_BoxTextures ui {
+	/// Creates a box textures from a single texture.
+	///
+	/// Returns a box textures from a single texture named `tex`, without using the 9-slicing at
+	/// all.
+	///
+	/// `scaleTex` being `true` makes the texture scale to grow larger or smaller, otherwise it
+	/// will repeat to fill the space
+	static HXDD_ZF_BoxTextures createSingleTexture(string tex, bool scaleTex) {
+		let ret = new('HXDD_ZF_BoxTextures');
+
+		ret.setSingleTexture(tex);
+		ret.scaleMiddle = scaleTex;
+
+		return ret;
+	}
+
+	/// Creates a box textures using pixel coordinates.
+	///
+	/// Returns a box textures from a texture named `tex`, with top-left middle corner at pixel
+	/// coordinates `topLeft`, and bottom-right middle corner at pixel coordinates `bottomRight`.
+	///
+	/// `scaleSides` and `scaleMiddle` being true make the side and middle textures (respectively)
+	/// scale to grow larger or smaller, otherwise they will repeat to fit the space.
+	static HXDD_ZF_BoxTextures createTexturePixels(
+		string boxTex, Vector2 topLeft, Vector2 bottomRight, bool scaleSides,
+		bool scaleMiddle
+	) {
+		let ret = new('HXDD_ZF_BoxTextures');
+
+		ret.setTexturePixels(boxTex, topLeft, bottomRight);
+		ret.scaleSides = scaleSides;
+		ret.scaleMiddle = scaleMiddle;
+
+		return ret;
+	}
+
+	/// Creates a box textures using normalized coordinates.
+	/// 
+	/// Returns a box textures, with top-left middle corner at normalized coordinates `topLeft`,
+	/// and bottom-right middle corner at normalized coordinates `bottomRight`.
+	///
+	/// "Normalized coordinates" means that the coordinates are specified as proportions of the
+	/// texture's size. For example, `(0, 0)` is the top-left corner, `(1, 0)` is the top-right
+	/// corner, `(0, 1)` is the bottom-left corner, and `(1, 1)` is the bottom-right corner.
+	///
+	/// `scaleSides` and `scaleMiddle` being true make the side and middle textures (respectively)
+	/// scale to grow larger or smaller, otherwise they will repeat to fit the space.
+	static HXDD_ZF_BoxTextures createTextureNormalized(
+		string boxTex, Vector2 topLeft, Vector2 bottomRight, bool scaleSides,
+		bool scaleMiddle
+	) {
+		let ret = new('HXDD_ZF_BoxTextures');
+
+		ret.setTextureNormalized(boxTex, topLeft, bottomRight);
+		ret.scaleSides = scaleSides;
+		ret.scaleMiddle = scaleMiddle;
+
+		return ret;
+	}
+
+	private string boxTexture;
+	/// Returns the name of the internal texture.
+	string getBoxTexture() { return boxTexture; }
+
+	private bool scaleSides;
+	/// Returns `true` if the box textures scales the sides instead of repeating.
+	bool getScaleSides() { return scaleSides; }
+	
+	private bool scaleMiddle;
+	/// Returns `true` if the box textures scales the middle instead of repeating.
+	bool getScaleMiddle() { return scaleMiddle; }
+
+	private Vector2 midSliceTopLeft;
+	/// Returns the position of the top-left corner of the middle slice.
+	Vector2 getMidSliceTopLeft() { return midSliceTopLeft; }
+
+	private Vector2 midSliceBottomRight;
+	/// Returns the position of the bottom-right corner of the middle slice.
+	Vector2 getMidSliceBottomRight() { return midSliceBottomRight; }
+
+	private void setSingleTexture(string tex) {
+		boxTexture = tex;
+
+		midSliceTopLeft = (0, 0);
+		midSliceBottomRight = (1, 1);
+	}
+
+	private void setTexturePixels(string boxTex, Vector2 topLeft, Vector2 bottomRight) {
+		boxTexture = boxTex;
+
+		Vector2 texSize = TexMan.getScaledSize(TexMan.checkForTexture(boxTexture, TexMan.Type_Any));
+		midSliceTopLeft = (topLeft.x / texSize.x, topLeft.y / texSize.y);
+		midSliceBottomRight = (bottomRight.x / texSize.x, bottomRight.y / texSize.y);
+	}
+
+	private void setTextureNormalized(string boxTex, Vector2 topLeft, Vector2 bottomRight) {
+		boxTexture = boxTex;
+
+		midSliceTopLeft = topLeft;
+		midSliceBottomRight = bottomRight;
+	}
+}

@@ -1,18 +1,19 @@
 
-// Hexen Ammo
-class HXDDMana1: Mana1 replaces Mana1 {
+// This isn't a good solution,
+// TODO: Add a PR with an improvement:
+// https://github.com/coelckers/gzdoom/issues/1644
+
+// BUG: Pickups using Lights from gldefs do not hide lights with VisibleToPlayerClass.
+
+// Bag & Arti Boost
+class HXDDBagOfHolding: BagOfHolding replaces BagOfHolding {
     Default {
-        VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
-        Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+        VisibleToPlayerClass "HereticPlayer";
+        Inventory.RestrictedTo "HereticPlayer";
     }
 }
-class HXDDMana2: Mana2 replaces Mana2 {
-    Default {
-        VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
-        Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
-    }
-}
-class HXDDMana3: Mana3 replaces Mana3 {
+
+class HXDDArtiBoostMana: ArtiBoostMana replaces ArtiBoostMana {
     Default {
         VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
         Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
@@ -95,5 +96,25 @@ class HXDDMaceHefty: MaceHefty replaces MaceHefty {
     Default {
         VisibleToPlayerClass "HereticPlayer";
         Inventory.RestrictedTo "HereticPlayer";
+    }
+}
+
+// Hexen Ammo
+class HXDDMana1: Mana1 replaces Mana1 {
+    Default {
+        VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+        Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+    }
+}
+class HXDDMana2: Mana2 replaces Mana2 {
+    Default {
+        VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+        Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+    }
+}
+class HXDDMana3: Mana3 replaces Mana3 {
+    Default {
+        VisibleToPlayerClass "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
+        Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
     }
 }

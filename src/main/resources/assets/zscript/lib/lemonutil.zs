@@ -1,6 +1,31 @@
 // https://zdoom.org/wiki/ZScript_actor_functions
 
 class LemonUtil {
+    // Determine Map Type
+    static bool IsMapHeretic() {
+        String mapName = Level.MapName.MakeLower();
+        return (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m");
+    }
+    static bool IsMapHexen() {
+        String mapName = Level.MapName.MakeLower();
+        return (mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1 || mapName.IndexOf("ddmap") != -1);
+    }
+
+    static int GetOptionGameMode() {
+            int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
+            int mode = GAME_Heretic;
+            if (cvarGameMode == 1) {
+                mode = GAME_Heretic;
+            } else if (cvarGameMode == 2) {
+                mode = GAME_Hexen;
+            } else if (LemonUtil.IsMapHeretic()) {
+                mode = GAME_Heretic;
+            } else if (LemonUtil.IsMapHexen()) {
+                mode = GAME_Hexen;
+            }
+            return mode;
+    }
+
     // CVAR user / server null safe get/find
     static cvar GetCVAR(string name, PlayerInfo player = null) {
         return player ? CVar.GetCvar(name, player) : CVar.FindCVar(name);
@@ -79,5 +104,29 @@ class LemonUtil {
         double x = b.x - a.x;
         double y = b.y - a.y;
         return atan2(y, x) * (180.0 / M_PI);
+    }
+
+
+    // Easings
+    static double Easing_Quadradic_In(double val) {
+        return val*val;
+    }
+    static double Easing_Quadradic_Out(double val) {
+        return val * ( 2.0 - val);
+    }
+
+    static double Easing_Bounce_Out(double val) {		
+        if (val < (1.0/2.75)) {
+            return 7.5625*val*val;				
+        }
+        else if (val < (2.0/2.75)) {
+            return 7.5625*(val -= (1.5/2.75f))*val + 0.75;
+        }
+        else if (val < (2.5/2.75)) {
+            return 7.5625 *(val -= (2.25/2.75))*val + 0.9375;
+        }
+        else {
+            return 7.5625*(val -= (2.625/2.75))*val + 0.984375;
+        }
     }
 }

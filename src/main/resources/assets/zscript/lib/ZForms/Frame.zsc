@@ -1,0 +1,99 @@
+/// The main element used for containing other elements, allowing a nested tree of elements in a
+/// menu.
+///
+/// One frame exists in every menu - namely [`ZF_GenericMenu.mainFrame`] (or similarly
+/// [`ZF_EventHandlerMenu.mainFrame`].
+///
+/// Frames are a first-class element in ZForms and have a bit of special handling - namely, to add
+/// an element to a Frame you use [`ZF_Element.pack`] which takes a frame argument.
+class HXDD_ZF_Frame : HXDD_ZF_ElementContainer {
+	/// Returns a newly-created frame element.
+	///
+	/// The position used is relative to whatever the element is packed into later.
+	static HXDD_ZF_Frame create(Vector2 pos, Vector2 size) {
+		let ret = new('HXDD_ZF_Frame');
+
+		ret.setBox(pos, size);
+		ret.alpha = 1;
+
+		return ret;
+	}
+
+	/// Returns the amount of elements in the frame.
+	///
+	/// Note that this does not count nested sub-elements. Only the elements directly under this
+	/// one are counted.
+	uint elementCount() { return elements.size(); }
+	/// Finds the index of an element within this frame.
+	///
+	/// Elements with higher indices are drawn on top of elements with lower indices.
+	///
+	///If the element isn't inside this frame, an index equal to [`elementCount`]`()` is returned.
+	int indexOfElement(HXDD_ZF_Element elem) { return elements.find(elem); }
+	/// Swaps the elements at the given indices in the frame.
+	///
+	/// To get the indices needed, see [`indexOfElement`].
+	void swapElements(uint index0, uint index1) {
+		let tmp = elements[index0];
+		elements[index0] = elements[index1];
+		elements[index1] = tmp;
+	}
+	/// Moves an element to another index within the frame by shuffling other elements.
+	///
+	/// This is used so that elements can be made to be drawn at specific depths in the frame at
+	/// runtime without reconstructing the entire frame.
+	///
+	/// For example, moving an element to [`elementCount`]`() - 1` makes it draw on top of
+	/// everything else in the frame.
+	///
+	/// To get the indices needed, see [`indexOfElement`].
+	void moveElement(uint beforeIndex, uint afterIndex) {
+		if (beforeIndex == afterIndex) return;
+		if (afterIndex > beforeIndex) afterIndex -= 1;
+		let tmp = elements[beforeIndex];
+		elements.delete(beforeIndex);
+		elements.insert(afterIndex, tmp);
+	}
+
+	/// ?doc: hidden
+	void internalPack(HXDD_ZF_Element elem) {
+		if (elem.master != NULL) {
+			elem.unpack();
+		}
+		elem.master = self;
+		self.elements.push(elem);
+		self.onPack(elem);
+	}
+	/// ?doc: hidden
+	void internalUnpack(HXDD_ZF_Element elem) {
+		if (elem.master != self) {
+			throwAbortException("This shouldn't happen unless the user called internalUnpack themselves");
+		}
+		int index = self.elements.find (elem);
+		if (index != self.elements.Size ()) {
+			self.elements.delete(index, 1);
+		}
+		elem.master = NULL;
+		elem.globalStore = NULL;
+	}
+
+	/// Called whenever an element is packed into this one.
+	///
+	/// This is for frame-deriving elements such as [`ZF_ListFrame`], which uses this to
+	/// recalculate the positions of the elements.
+	virtual void onPack(HXDD_ZF_Element elem) {}
+
+	override Vector2 relToScreen(Vector2 relPos) {
+		if (master == NULL) {
+			return box.pos + relPos + getAspectRatioOffset() / getScale();
+		}
+		return master.relToScreen(box.pos + relPos);
+	}
+
+	override Vector2 screenScaledToRel(Vector2 screenPos) {
+		if (master == NULL) {
+			return screenPos - box.pos;
+		}
+		return master.screenScaledToRel(screenPos - box.pos);
+	}
+}

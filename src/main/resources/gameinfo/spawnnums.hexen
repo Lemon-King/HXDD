@@ -46,10 +46,10 @@
 	65 = IceShard
 	66 = FlameSmall2
 	67 = FlameLarge2
-	68 = MeshArmor
-	69 = FalconShield
-	70 = PlatinumHelm
-	71 = AmuletOfWarding
+	68 = MultiClassMeshArmor
+	69 = MultiClassFalconShield
+	70 = MultiClassPlatinumHelm
+	71 = MultiClassAmuletOfWarding
 	72 = ArtiPoisonBag
 	73 = ArtiTorch
 	74 = ArtiBlastRadius

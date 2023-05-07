@@ -1,0 +1,152 @@
+/// A scrollbar element, intended for use in any other element that wants to
+/// draw a scrollbar.
+class HXDD_ZF_Scrollbar : HXDD_ZF_Element {
+	/// Reconfigures the scrollbar. See [`create`] for argument details.
+	void config(
+		HXDD_ZF_BoxTextures normal, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures background = NULL
+	) {
+		self.background = background;
+		self.textures[BarState_Normal] = normal;
+		self.textures[BarState_Hover] = (hover != NULL) ? hover : normal;
+		self.textures[BarState_Click] = (click != NULL) ? click : normal;
+		self.alpha = 1.0;
+	}
+
+	/// Returns a newly-created scrollbar element.
+	///
+	/// The position used is relative to whatever the element is packed into
+	/// later.
+	///
+	/// The scrollbar will have background `background`. When unhovered and
+	/// unclicked, the handle will be drawn using `normal`. When unclicked but
+	/// hovered, the handle will be drawn using `hover`. When clicked, the
+	/// handle will be drawn using `click`.
+	static HXDD_ZF_Scrollbar create(
+		Vector2 pos, Vector2 size,
+		HXDD_ZF_BoxTextures normal, HXDD_ZF_BoxTextures hover = NULL,
+		HXDD_ZF_BoxTextures click = NULL, HXDD_ZF_BoxTextures background = NULL
+	) {
+		let ret = new('HXDD_ZF_Scrollbar');
+
+		ret.config(normal, hover, click, background);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	// these are intentionally not protected
+	// since the only intended purpose of this element
+	// is to be used in another element, which should deal with
+	// encapsulation itself
+	
+	/// The background used.
+	HXDD_ZF_BoxTextures background;
+	private HXDD_ZF_BoxDrawer bgDrawer;
+	/// Textures drawn for each state in [`BarState`].
+	HXDD_ZF_BoxTextures textures[3];
+	private HXDD_ZF_BoxDrawer barDrawers[3];
+
+	/// The various states the bar's handle can be drawn in.
+	enum BarState {
+		/// The handle is unhovered, and unclicked.
+		BarState_Normal,
+		/// The handle is hovered but not clicked.
+		BarState_Hover,
+		/// The handle is clicked.
+		BarState_Click
+	}
+
+	/// The normalized position (i.e. between `0.0` and `1.0` inclusive)
+	/// representing where the scrollbar's top currently is.
+	///
+	/// If the scrollbar is at the top, it will be `0.0`. If the scrollbar is
+	/// at the bottom, it will be `1.0 - `[`size`].
+	double position;
+	/// The normalized size (i.e. between `0.0` and `1.0` inclusive) of the
+	/// scrollbar's handle. `1.0` means it takes up the entire scrollbar - i.e.
+	/// no scrolling.
+	double size;
+
+	private BarState curBarState;
+
+	private double originalPos;
+	private Vector2 originalMousePos;
+	private bool clicking;
+
+	private void barBox(HXDD_ZF_AABB ret) {
+		ret.pos = (0, box.size.y * position);
+		ret.size = (box.size.x, box.size.y * size);
+	}
+
+	override bool handleMousePosition(bool mouseBlock, Vector2 mousePos) {
+		if (curBarState == BarState_Click) {
+			if (size < 1.0) {
+				let delta = mousePos - relToScreen((0, 0)) - originalMousePos;
+				delta /= getScale();
+				position = originalPos + delta.y / box.size.y;
+				clampBarPos();
+			}
+		}
+		else {
+			HXDD_ZF_AABB box; barBox(box);
+			HXDD_ZF_AABB screenBox; aabbToScreen(screenBox, box);
+			if (!mouseBlock && isEnabled() && !getHoverBlock() && screenBox.pointCollides(mousePos)) {
+				curBarState = BarState_Hover;
+			}
+			else {
+				curBarState = BarState_Normal;
+			}
+		}
+
+		return false;
+	}
+
+	override void drawer() {
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y));
+
+		if (background) {
+			bgDrawer.draw(self, (0, 0), box.size, background, true);
+		}
+
+		if (size < 1.0) {
+			HXDD_ZF_AABB box; barBox(box);
+			barDrawers[curBarState].draw(self, box.pos, box.size, textures[curBarState], true);
+		}
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	/// Clamps [`position`] to be in reasonable bounds for the scrollbar.
+	void clampBarPos() {
+		position = clamp(position, 0.0, 1.0 - size);
+	}
+
+	override bool onUIEvent(HXDD_ZF_UiEvent ev) {
+		let mousePos = getGlobalStore().mousePos;
+		if (ev.type == UIEvent.Type_LButtonDown) {
+			HXDD_ZF_AABB box; barBox(box);
+			HXDD_ZF_AABB screenBox; aabbToScreen(screenBox, box);
+			if (!mouseBlock && isEnabled() && screenBox.pointCollides(mousePos)) {
+				curBarState = BarState_Click;
+				originalPos = position;
+				originalMousePos = mousePos - relToScreen((0, 0));
+				setHoverBlock(self);
+			}
+		}
+		else if (ev.type == UIEvent.Type_LButtonUp) {
+			HXDD_ZF_AABB box; barBox(box);
+			HXDD_ZF_AABB screenBox; aabbToScreen(screenBox, box);
+			if (!mouseBlock && screenBox.pointCollides(mousePos) && curBarState == BarState_Click) {
+				curBarState = BarState_Hover;
+			}
+			else {
+				curBarState = BarState_Normal;
+			}
+			setHoverBlock(NULL);
+		}
+		return false;
+	}
+}

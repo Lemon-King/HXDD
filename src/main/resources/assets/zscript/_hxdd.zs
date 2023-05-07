@@ -5,3 +5,5 @@
 #include "zscript/global/_global.zs"
 #include "zscript/events/_events.zs"
 #include "zscript/actors/_actors.zs"
+
+#include "zscript/menu/newgame.zs"

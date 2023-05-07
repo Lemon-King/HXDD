@@ -1,0 +1,59 @@
+/// An aesthetic-only element used for putting "[box textures](ZF_BoxTextures)"
+/// in a menu.
+///
+/// This element scales the box textures to the element's size, using the box textures'
+/// configuration, so understanding of [`ZF_BoxTextures`] is needed to use this.
+class HXDD_ZF_BoxImage : HXDD_ZF_Element {
+	private void config(HXDD_ZF_BoxTextures textures = NULL, Vector2 scale = (1, 1)) {
+		setBoxTex(textures);
+		setBoxScale(scale);
+		setAlpha(1.0);
+	}
+
+	/// Returns a newly-created box image element.
+	///
+	/// The position used is relative to whatever the element is packed into later. The scale is
+	/// interpreted as a scale factor for pixels in the box - the element will still draw exactly
+	/// as big as its bounding box, just with "chunkier" or "skinnier" pixels.
+	///
+	/// `textures` should not be `NULL`. Elements needing a box image child should instead avoid
+	/// creating the element in the first place if needed.
+	static HXDD_ZF_BoxImage create(Vector2 pos, Vector2 size, HXDD_ZF_BoxTextures textures, Vector2 scale = (1, 1)) {
+		let ret = new('HXDD_ZF_BoxImage');
+
+		ret.config(textures, scale);
+		ret.setBox(pos, size);
+
+		return ret;
+	}
+
+	private HXDD_ZF_BoxTextures boxTex;
+	/// Returns the box textures this image will draw using.
+	HXDD_ZF_BoxTextures getBoxTex() { return self.boxTex; }
+	/// Sets the box textures this image will draw using. Must not be `NULL`.
+	void setBoxTex(HXDD_ZF_BoxTextures boxTex) {
+		if (boxTex == NULL) { throwAbortException("boxTex was NULL"); }
+		self.boxTex = boxTex;
+	}
+	private HXDD_ZF_BoxDrawer boxDrawer;
+
+	private Vector2 boxScale;
+	/// Returns the box drawing scale this image will use.
+	Vector2 getBoxScale() { return self.boxScale; }
+	/// Sets the box drawing scale this image will use.
+	///
+	/// Bigger scales effectively make the pixels "chunkier".
+	void setBoxScale(Vector2 boxScale) { self.boxScale = boxScale; }
+
+	override void drawer() {
+		if (hidden) { return; }
+
+		HXDD_ZF_AABB beforeClip, clipRect;
+		screenClip(beforeClip, clipRect);
+		Screen.setClipRect(int(clipRect.pos.x), int(clipRect.pos.y), int(clipRect.size.x), int(clipRect.size.y));
+
+		boxDrawer.draw(self, (0, 0), box.size, boxTex, true, boxScale);
+
+		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+}

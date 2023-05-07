@@ -25,17 +25,13 @@ class SuccubusPlayer : HXDDHexenIIPlayerPawn
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "SWeapBloodRain";
-		Player.ForwardMove 1.08, 1.2;
-		Player.SideMove 1.125, 1.475;
+		Player.ForwardMove 0.88, 0.92;
+		Player.SideMove 0.875, 0.925;
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "SWeapBloodRain";
 		Player.WeaponSlot 2, "SWeapAcidRune";
 		Player.WeaponSlot 3, "SWeapFireStorm";
 		Player.WeaponSlot 4, "FWeapQuietus";
-
-		HXDDPlayerPawn.DefaultArmorMode PSAM_ARMOR_AC;
-		HXDDPlayerPawn.DefaultProgression PSP_LEVELS;
-		HXDDPlayerPawn.Alignment "Evil";
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
@@ -192,44 +188,5 @@ class SuccubusPlayer : HXDDHexenIIPlayerPawn
 		Wait;
 		ACLO E 8;
 		Stop;
-	}
-
-	override void SetAdvancementStatTables() {
-		// Hexen 2: Succubus Stat Tables
-		experienceTable[0] =	871;
-		experienceTable[1] =	2060;
-		experienceTable[2] =	4822;
-		experienceTable[3] =	9319;
-		experienceTable[4] =	19278;
-		experienceTable[5] =	36626;
-		experienceTable[6] =	66804;
-		experienceTable[7] =	110494;
-		experienceTable[8] =	141334;
-		experienceTable[9] =	192700;
-		experienceTable[10] =	192700;
-
-		hitpointTable[0] = 65;
-		hitpointTable[1] = 75;
-		hitpointTable[2] = 5;
-		hitpointTable[3] = 10;
-		hitpointTable[4] = 3;
-
-		manaTable[0] = 90;
-		manaTable[1] = 100;
-		manaTable[2] = 8;
-		manaTable[3] = 11;
-		manaTable[4] = 3;
-
-		strengthTable[0] = 11;
-		strengthTable[1] = 14;
-
-		intelligenceTable[0] = 9;
-		intelligenceTable[1] = 13;
-
-		wisdomTable[0] = 11;
-		wisdomTable[1] = 14;
-
-		dexterityTable[0] = 9;
-		dexterityTable[1] = 13;
 	}
 }
