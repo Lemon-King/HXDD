@@ -210,7 +210,7 @@ map MAP66 "ICE HOLD"
 
 map MAP67 "DARK CITADEL"
 {
-	next = "MAP68"
+	next = "EndChess"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
