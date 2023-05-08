@@ -79,4 +79,17 @@ class HXDDWorldEventHandler : EventHandler {
             }
         }
     }
-}
+
+    override void WorldLinePreActivated(WorldEvent e) {
+        // map transfer
+        if (e.ActivatedLine.special == 74) {
+            int mapNumber = LemonUtil.GetMapNumber();
+            if (mapNumber != -1 && mapNumber > 40) {
+                if (e.ActivatedLine.args[0] != 0) {
+                    // HXDD offsets for Deathkings Map numbers by 7 during packaging
+                    e.ActivatedLine.args[0] += 7;
+                }
+            }
+        }
+    }
+    }

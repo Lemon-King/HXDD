@@ -8,22 +8,30 @@ class LemonUtil {
     }
     static bool IsMapHexen() {
         String mapName = Level.MapName.MakeLower();
-        return (mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1 || mapName.IndexOf("ddmap") != -1);
+        return (mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1);
+    }
+    static int GetMapNumber() {
+        String mapName = Level.MapName.MakeLower();
+        if (mapName.IndexOf("map") != -1) {
+            String number = mapName.Mid(3, 2);
+            return number.ToInt();
+        }
+        return -1;
     }
 
     static int GetOptionGameMode() {
-            int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
-            int mode = GAME_Heretic;
-            if (cvarGameMode == 1) {
-                mode = GAME_Heretic;
-            } else if (cvarGameMode == 2) {
-                mode = GAME_Hexen;
-            } else if (LemonUtil.IsMapHeretic()) {
-                mode = GAME_Heretic;
-            } else if (LemonUtil.IsMapHexen()) {
-                mode = GAME_Hexen;
-            }
-            return mode;
+        int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
+        int mode = GAME_Heretic;
+        if (cvarGameMode == 1) {
+            mode = GAME_Heretic;
+        } else if (cvarGameMode == 2) {
+            mode = GAME_Hexen;
+        } else if (LemonUtil.IsMapHeretic()) {
+            mode = GAME_Heretic;
+        } else if (LemonUtil.IsMapHexen()) {
+            mode = GAME_Hexen;
+        }
+        return mode;
     }
 
     // CVAR user / server null safe get/find

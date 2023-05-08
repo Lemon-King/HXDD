@@ -51,7 +51,7 @@ public class Settings {
         // Per Wad Settings
         p_config.put("MapNameHeader_heretic", "");
         p_config.put("MapNameHeader_hexen", "");
-        p_config.put("MapNameHeader_hexdd", "DD_");
+        p_config.put("MapNameHeader_hexdd", "");
 
         // Hexen II stuff
         p_config.put("ModelDefCoalesceData", false);

@@ -1,8 +1,8 @@
 // --- Cluster 1 ---
 
-map DD_MAP41 "RUINED VILLAGE"
+map MAP48 "RUINED VILLAGE"
 {
-	next = "DD_MAP42"
+	next = "MAP49"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -11,9 +11,9 @@ map DD_MAP41 "RUINED VILLAGE"
 	NoIntermission
 }
 
-map DD_MAP42 "BLIGHT"
+map MAP49 "BLIGHT"
 {
-	next = "DD_MAP43"
+	next = "MAP50"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -22,9 +22,9 @@ map DD_MAP42 "BLIGHT"
 	NoIntermission
 }
 
-map DD_MAP43 "SUMP"
+map MAP50 "SUMP"
 {
-	next = "DD_MAP44"
+	next = "MAP51"
 	cluster = 11
 	Sky1 = "SKYFOG2", 0.078125
 	Sky2 = "SKYFOG", 0.234375
@@ -34,9 +34,9 @@ map DD_MAP43 "SUMP"
 	NoIntermission
 }
 
-map DD_MAP44 "CATACOMB"
+map MAP51 "CATACOMB"
 {
-	next = "DD_MAP45"
+	next = "MAP52"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -45,9 +45,9 @@ map DD_MAP44 "CATACOMB"
 	NoIntermission
 }
 
-map DD_MAP45 "BADLANDS"
+map MAP52 "BADLANDS"
 {
-	next = "DD_MAP46"
+	next = "MAP53"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -56,9 +56,9 @@ map DD_MAP45 "BADLANDS"
 	NoIntermission
 }
 
-map DD_MAP46 "BRACKENWOOD"
+map MAP53 "BRACKENWOOD"
 {
-	next = "DD_MAP47"
+	next = "MAP54"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -67,9 +67,9 @@ map DD_MAP46 "BRACKENWOOD"
 	NoIntermission
 }
 
-map DD_MAP47 "PYRE"
+map MAP54 "PYRE"
 {
-	next = "DD_MAP48"
+	next = "MAP55"
 	cluster = 11
 	Sky1 = "SKYWALL", 0
 	Sky2 = "SKY1X", 0.15625
@@ -80,9 +80,9 @@ map DD_MAP47 "PYRE"
 
 // --- Cluster 2 ---
 
-map DD_MAP48 "CONSTABLE'S GATE"
+map MAP55 "CONSTABLE'S GATE"
 {
-	next = "DD_MAP49"
+	next = "MAP56"
 	cluster = 12
 	Sky1 = "SKYWALL2", 0
 	Sky2 = "SKY2X", 0.234375
@@ -91,9 +91,9 @@ map DD_MAP48 "CONSTABLE'S GATE"
 	NoIntermission
 }
 
-map DD_MAP49 "TREASURY"
+map MAP56 "TREASURY"
 {
-	next = "DD_MAP50"
+	next = "MAP57"
 	cluster = 12
 	Sky1 = "SKYWALL2", 0
 	Sky2 = "SKY2X", 0.234375
@@ -102,9 +102,9 @@ map DD_MAP49 "TREASURY"
 	NoIntermission
 }
 
-map DD_MAP50 "MARKET PLACE"
+map MAP57 "MARKET PLACE"
 {
-	next = "DD_MAP51"
+	next = "MAP58"
 	cluster = 12
 	Sky1 = "SKYWALL2", 0
 	Sky2 = "SKY2X", 0.234375
@@ -113,9 +113,9 @@ map DD_MAP50 "MARKET PLACE"
 	NoIntermission
 }
 
-map DD_MAP51 "LOCUS REQUIESCAT"
+map MAP58 "LOCUS REQUIESCAT"
 {
-	next = "DD_MAP52"
+	next = "MAP59"
 	cluster = 12
 	Sky1 = "SKY2X", 0
 	Sky2 = "SKY3X", 0
@@ -124,9 +124,9 @@ map DD_MAP51 "LOCUS REQUIESCAT"
 	NoIntermission
 }
 
-map DD_MAP52 "ORDEAL"
+map MAP59 "ORDEAL"
 {
-	next = "DD_MAP53"
+	next = "MAP60"
 	cluster = 12
 	Sky1 = "SKYWALL2", 0
 	Sky2 = "SKY2X", 0.234375
@@ -135,9 +135,9 @@ map DD_MAP52 "ORDEAL"
 	NoIntermission
 }
 
-map DD_MAP53 "ARMORY"
+map MAP60 "ARMORY"
 {
-	next = "DD_MAP54"
+	next = "MAP61"
 	cluster = 12
 	Sky1 = "SKYWALL2", 0
 	Sky2 = "SKY2X", 0.234375
@@ -148,9 +148,9 @@ map DD_MAP53 "ARMORY"
 
 // --- Cluster 3 ---
 
-map DD_MAP54 "NAVE"
+map MAP61 "NAVE"
 {
-	next = "DD_MAP55"
+	next = "MAP62"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -158,9 +158,9 @@ map DD_MAP54 "NAVE"
 	NoIntermission
 }
 
-map DD_MAP55 "CHANTRY"
+map MAP62 "CHANTRY"
 {
-	next = "DD_MAP56"
+	next = "MAP63"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -168,9 +168,9 @@ map DD_MAP55 "CHANTRY"
 	NoIntermission
 }
 
-map DD_MAP56 "ABATTOIR"
+map MAP63 "ABATTOIR"
 {
-	next = "DD_MAP57"
+	next = "MAP64"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -178,9 +178,9 @@ map DD_MAP56 "ABATTOIR"
 	NoIntermission
 }
 
-map DD_MAP57 "DARK WATCH"
+map MAP64 "DARK WATCH"
 {
-	next = "DD_MAP58"
+	next = "MAP65"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -188,9 +188,9 @@ map DD_MAP57 "DARK WATCH"
 	NoIntermission
 }
 
-map DD_MAP58 "CLOACA"
+map MAP65 "CLOACA"
 {
-	next = "DD_MAP59"
+	next = "MAP66"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -198,9 +198,9 @@ map DD_MAP58 "CLOACA"
 	NoIntermission
 }
 
-map DD_MAP59 "ICE HOLD"
+map MAP66 "ICE HOLD"
 {
-	next = "DD_MAP60"
+	next = "MAP67"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -208,9 +208,9 @@ map DD_MAP59 "ICE HOLD"
 	NoIntermission
 }
 
-map DD_MAP60 "DARK CITADEL"
+map MAP67 "DARK CITADEL"
 {
-	next = "DD_MAP61"
+	next = "MAP68"
 	cluster = 13
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -220,9 +220,9 @@ map DD_MAP60 "DARK CITADEL"
 
 // --- Cluster 4 ---
 
-map DD_MAP33 "TRANSIT"
+map MAP33 "TRANSIT"
 {
-	next = "DD_MAP34"
+	next = "MAP34"
 	cluster = 14
 	Sky1 = "SKY1X", 0
 	Sky2 = "SKY4X", 0
@@ -230,9 +230,9 @@ map DD_MAP33 "TRANSIT"
 	NoIntermission
 }
 
-map DD_MAP34 "OVER N UNDER"
+map MAP41 "OVER N UNDER"
 {
-	next = "DD_MAP35"
+	next = "MAP42"
 	cluster = 14
 	Sky1 = "SKY1X", 0
 	Sky2 = "SKY4X", 0
@@ -240,9 +240,9 @@ map DD_MAP34 "OVER N UNDER"
 	NoIntermission
 }
 
-map DD_MAP35 "DEATHFOG"
+map MAP42 "DEATHFOG"
 {
-	next = "DD_MAP36"
+	next = "MAP43"
 	cluster = 14
 	Sky1 = "SKYFOG2", 0.078125
 	Sky2 = "SKYFOG", 0.234375
@@ -252,9 +252,9 @@ map DD_MAP35 "DEATHFOG"
 	NoIntermission
 }
 
-map DD_MAP36 "CASTLE OF PAIN"
+map MAP43 "CASTLE OF PAIN"
 {
-	next = "DD_MAP37"
+	next = "MAP44"
 	cluster = 14
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -262,9 +262,9 @@ map DD_MAP36 "CASTLE OF PAIN"
 	NoIntermission
 }
 
-map DD_MAP37 "SEWER PIT"
+map MAP44 "SEWER PIT"
 {
-	next = "DD_MAP38"
+	next = "MAP45"
 	cluster = 14
 	Sky1 = "SKY4X", 0
 	Sky2 = "SKY4X", 0
@@ -272,9 +272,9 @@ map DD_MAP37 "SEWER PIT"
 	NoIntermission
 }
 
-map DD_MAP38 "THE ROSE"
+map MAP45 "THE ROSE"
 {
-	next = "DD_MAP36"
+	next = "MAP46"
 	cluster = 14
 	Sky1 = "SKY1X", 0
 	Sky2 = "SKY4X", 0
@@ -282,9 +282,9 @@ map DD_MAP38 "THE ROSE"
 	NoIntermission
 }
 
-map DD_MAP83 "TEST"
+map MAP90 "TEST"
 {
-	next = "DD_MAP37"
+	next = "MAP44"
 	cluster = 14
 	Sky1 = "SKY1X", 0
 	Sky2 = "SKY4X", 0
