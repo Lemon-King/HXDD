@@ -308,16 +308,16 @@ public class PK3Builder {
                 for (int headerIndex : MapUtils.getAllMapIndices(wad)) {
                     String mapName = wad.getEntry(headerIndex).getName();
                     String mapPathName = mapName;
-                    // HEXDD Expansion Hack, offset map number by 28
-                    // This offset is chosen as the last used map index starting at 61 until 90.
+                    // HEXDD Expansion Hack, offset map number by 7
+                    // This offset is chosen as the last used map index starting at 42
                     if (wadName.toLowerCase().equals("hexdd")) {
-                        int mapOffset = 28;
+                        int mapOffset = 7;
                         mapPathName = "MAP" + (Integer.valueOf(mapName.substring(3,5)) + mapOffset);
                     }
                     String mapPath = path + mapSetHeader + mapPathName + ".wad";
                     try {
                         WadBuffer.extract(wad, MapUtils.getMapEntries(wad, mapName)).writeToFile(new File(mapPath));
-                        System.out.println("Exported map " + mapName);
+                        //System.out.println("Exported map " + mapName);
                     } catch (IOException e) {
                         System.out.println("Failed to export map " + mapName);
                     }

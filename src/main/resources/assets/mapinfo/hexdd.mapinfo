@@ -220,7 +220,7 @@ map MAP67 "DARK CITADEL"
 
 // --- Cluster 4 ---
 
-map MAP33 "TRANSIT"
+map MAP42 "TRANSIT"
 {
 	next = "MAP34"
 	cluster = 14
@@ -230,7 +230,7 @@ map MAP33 "TRANSIT"
 	NoIntermission
 }
 
-map MAP41 "OVER N UNDER"
+map MAP43 "OVER N UNDER"
 {
 	next = "MAP42"
 	cluster = 14
@@ -240,7 +240,7 @@ map MAP41 "OVER N UNDER"
 	NoIntermission
 }
 
-map MAP42 "DEATHFOG"
+map MAP44 "DEATHFOG"
 {
 	next = "MAP43"
 	cluster = 14
@@ -252,7 +252,7 @@ map MAP42 "DEATHFOG"
 	NoIntermission
 }
 
-map MAP43 "CASTLE OF PAIN"
+map MAP45 "CASTLE OF PAIN"
 {
 	next = "MAP44"
 	cluster = 14
@@ -262,7 +262,7 @@ map MAP43 "CASTLE OF PAIN"
 	NoIntermission
 }
 
-map MAP44 "SEWER PIT"
+map MAP46 "SEWER PIT"
 {
 	next = "MAP45"
 	cluster = 14
@@ -272,7 +272,7 @@ map MAP44 "SEWER PIT"
 	NoIntermission
 }
 
-map MAP45 "THE ROSE"
+map MAP47 "THE ROSE"
 {
 	next = "MAP46"
 	cluster = 14
