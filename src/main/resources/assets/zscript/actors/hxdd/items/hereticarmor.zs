@@ -22,14 +22,14 @@ class MultiClassSilverShield : MultiSpawner {
 		if (prog && prog.sheet) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
-		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+            }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "SilverShield";
-		} else {
+		} else if (cvarArmorMode == PSAM_ARMOR_AC) {
             return "SimpleHexenArmorSelectorTier1";
+        } else {
+            return "Unknown";
         }
     }
     override void Bind() {
@@ -57,14 +57,14 @@ class MultiClassEnchantedShield : MultiSpawner {
 			//HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(p.mo);
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
-		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+            }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "EnchantedShield";
-		} else {
+		} else if (cvarArmorMode == PSAM_ARMOR_AC) {
             return "SimpleHexenArmorSelectorTier2";
+        } else {
+            return "Unknown";
         }
     }
     override void Bind() {

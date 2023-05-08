@@ -11,6 +11,10 @@
 
 // Progression
 #include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet.zs"
+#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_hereticplayer.zs"
+#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_fighterplayer.zs"
+#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_clericplayer.zs"
+#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_mageplayer.zs"
 #include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_assassinplayer.zs"
 #include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_crusaderplayer.zs"
 #include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_necromancerplayer.zs"

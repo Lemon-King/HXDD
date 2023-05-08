@@ -13,7 +13,7 @@ class LemonUtil {
     static int GetMapNumber() {
         String mapName = Level.MapName.MakeLower();
         if (mapName.IndexOf("map") != -1) {
-            String number = mapName.Mid(3, 2);
+            String number = mapName.Mid(3, mapName.Length() - 3);
             return number.ToInt();
         }
         return -1;

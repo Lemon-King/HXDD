@@ -1,5 +1,3 @@
-
-
 class MultiClassMeshArmor : MultiSpawner {
     override String CvarSelector() {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", 0);
@@ -8,9 +6,7 @@ class MultiClassMeshArmor : MultiSpawner {
 		if (prog && prog.sheet) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
-		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+            }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "EnchantedShield";
@@ -42,9 +38,7 @@ class MultiClassPlatinumHelm : MultiSpawner {
 		if (prog && prog.sheet) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
-		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+            }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "SilverShield";
@@ -76,9 +70,12 @@ class MultiClassAmuletOfWarding : MultiSpawner {
 		if (prog && prog.sheet) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
+			} else {
+                return "Unknown";
+                //cvarArmorMode = PSAM_ARMOR_AC;
+            }
 		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+			cvarArmorMode = PSAM_ARMOR_AC;
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "SilverShield";
@@ -110,9 +107,7 @@ class MultiClassFalconShield : MultiSpawner {
 		if (prog && prog.sheet) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
 				cvarArmorMode = prog.sheet.DefaultArmorMode;
-			}
-		} else if (cvarArmorMode == PSAM_DEFAULT) {
-			cvarArmorMode = PSAM_ARMOR_SIMPLE;
+            }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "EnchantedShield";

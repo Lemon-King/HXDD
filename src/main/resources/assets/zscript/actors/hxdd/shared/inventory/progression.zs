@@ -26,10 +26,9 @@ class Progression: Inventory {
 	bool ProgressionSelected;
 	bool CompatabilityScaleSelected;
 
-	String DefaultArmorMode;
-	String DefaultProgression;
-
 	// Gameplay Modes
+	int DefaultArmorMode;
+	int DefaultProgression;
 	property DefaultArmorMode: DefaultArmorMode;
 	property DefaultProgression: DefaultProgression;
 
@@ -146,7 +145,33 @@ class Progression: Inventory {
 			ProgressionSelected = true;
 		}
 		ArmorModeSelection();
-		//CompatabilityScale();
+	}
+
+	void CreatePlayerSheetItem() {
+		String playerClassName = owner.player.mo.GetClassName();
+		playerClassName = playerClassName.MakeLower();
+
+		uint end = AllActorClasses.Size();
+		for (uint i = 0; i < end; ++i) {
+			let item = (class<PlayerSheet>)(AllActorClasses[i]);
+			if (item) {
+				String strSearch = "PlayerSheet_";
+				String itemName = item.GetClassName();
+				itemName = itemName.MakeLower().Mid(strSearch.Length() - 1);
+				if (playerClassName.IndexOf(itemName.MakeLower()) != -1) {	
+					PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
+					if (sheet == null) {
+						owner.player.mo.GiveInventory(itemName, 1);
+						self.sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	PlayerSheet GetPlayerSheet() {
+		return self.sheet;
 	}
 
 	void ArmorModeSelection() {
@@ -159,15 +184,12 @@ class Progression: Inventory {
 		}
 		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
 		if (self.sheet) {
-			HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(owner.player.mo);
 			if (optionArmorMode == PSAM_DEFAULT) {
 				optionArmorMode = self.sheet.DefaultArmorMode;
 			}
 		} else if (optionArmorMode == PSAM_DEFAULT) {
 			if (owner.player.mo is "FighterPlayer" || owner.player.mo is "ClericPlayer" || owner.player.mo is "MagePlayer") {
 				optionArmorMode = PSAM_ARMOR_AC;
-			} else {
-				optionArmorMode = PSAM_ARMOR_SIMPLE;
 			}
 		}
 		if (optionArmorMode == PSAM_ARMOR_SIMPLE) {
@@ -297,38 +319,39 @@ class Progression: Inventory {
 			}
 		} else {
 			// find advancement item
-			bool foundStatItem = false;
-			uint end = AllActorClasses.Size();
-			for (uint i = 0; i < end; ++i) {
-				let item = (class<PlayerSheet>)(AllActorClasses[i]);
-				if (item) {
-					String itemName = item.GetClassName();
-					if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {
-						PlayerSheet plItem = PlayerSheet(Owner.player.mo.FindInventory(item));
-
-						experienceModifier =		plItem.experienceModifier;
-						for (let i = 0; i < 11; i++) {
-							experienceTable[i] =	plItem.experienceTable[i];
-						}
-						for (let i = 0; i < 5; i++) {
-							hitpointTable[i] =		plItem.hitpointTable[i];
-							manaTable[i] =			plItem.manaTable[i];
-						}
-						for (let i = 0; i < 2; i++) {
-							strengthTable[i] =		plItem.strengthTable[i];
-							intelligenceTable[i] =	plItem.intelligenceTable[i];
-							wisdomTable[i] =		plItem.wisdomTable[i];
-							dexterityTable[i] =		plItem.dexterityTable[i];
-						}
-
-						foundStatItem = true;
-						break;
+			//bool foundStatItem = false;
+			//uint end = AllActorClasses.Size();
+			//for (uint i = 0; i < end; ++i) {
+			//	let item = (class<PlayerSheet>)(AllActorClasses[i]);
+			//	if (item) {
+			//		String itemName = item.GetClassName();
+			//		if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {
+			//			PlayerSheet plItem = PlayerSheet(Owner.player.mo.FindInventory(item));
+			if (self.sheet) {
+					experienceModifier =		self.sheet.experienceModifier;
+					for (let i = 0; i < 11; i++) {
+						experienceTable[i] =	self.sheet.experienceTable[i];
 					}
-				}
+					for (let i = 0; i < 5; i++) {
+						hitpointTable[i] =		self.sheet.hitpointTable[i];
+						manaTable[i] =			self.sheet.manaTable[i];
+					}
+					for (let i = 0; i < 2; i++) {
+						strengthTable[i] =		self.sheet.strengthTable[i];
+						intelligenceTable[i] =	self.sheet.intelligenceTable[i];
+						wisdomTable[i] =		self.sheet.wisdomTable[i];
+						dexterityTable[i] =		self.sheet.dexterityTable[i];
+					}
 			}
 
+			//			foundStatItem = true;
+			//			break;
+			//		}
+			//	}
+			//}
+
 			// If no player leveling items are found, use stock stats
-			if (!foundStatItem) {
+			if (!self.sheet) {
 				experienceTable[0] = 800;
 				for (let i = 1; i < 11; i++) {
 					experienceTable[i] = experienceTable[i-1] * 2.0f;
@@ -361,32 +384,6 @@ class Progression: Inventory {
 		}
 	}
 
-	void CreatePlayerSheetItem() {
-		uint end = AllActorClasses.Size();
-		for (uint i = 0; i < end; ++i) {
-			let item = (class<PlayerSheet>)(AllActorClasses[i]);
-			if (item) {
-				String itemName = item.GetClassName();
-				if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {	
-					PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
-					if (sheet == null) {
-						owner.player.mo.GiveInventory(itemName, 1);
-
-						self.sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
-						if (self.sheet) {
-							console.printf("Gave PlayerSheet: %s %s", Owner.player.mo.GetClassName(), itemName);
-						}
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	PlayerSheet GetPlayerSheet() {
-		return self.sheet;
-	}
-
 	void InitLevel_PostBeginPlay() {
 		if (level != 0) {
 			return;
@@ -396,11 +393,11 @@ class Progression: Inventory {
 
 		let player = owner.player.mo;
 
-		if (player is "HXDDPlayerPawn") {
-			player = HXDDPlayerPawn(owner.player.mo);
-		} else {
+		//if (player is "HXDDPlayerPawn") {
+		//	player = HXDDPlayerPawn(owner.player.mo);
+		//} else {
 			player = PlayerPawn(owner.player.mo);
-		}
+		//}
 		
         MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
 		player.MaxHealth = MaxHealth;
@@ -613,6 +610,6 @@ class Progression: Inventory {
 	}
 
 	// Event Stubs
-	virtual void OnExperienceBonus(double amount) {}
-	virtual void OnKill(Actor target) {}
+	virtual void OnExperienceBonus(double experience) {}
+	virtual void OnKill(PlayerPawn player, Actor target, double experience) {}
 }
