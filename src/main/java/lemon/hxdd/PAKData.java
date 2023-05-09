@@ -50,7 +50,13 @@ public class PAKData {
 
     static int[] SparkOffsets = {41, 25};       // Sparks do not align correctly
 
-    static String[] PAKFiles = {"pak0", "pak1", "pak3"};
+    static String[] PAKFiles = {
+            "pak0",     // Base Game Files (Demo)
+            "pak1",     // Base Game Files (Registered)
+            //"Pak2",   // Unknown
+            "pak3",     // Expansion Files
+            "pak4"      // Hexen World Files
+    };
 
     static public ArrayList<String> Extract() {
         String pathWADs = (String) Settings.getInstance().Get("PathSourceWads");
@@ -58,7 +64,7 @@ public class PAKData {
         Shared.CreateDirectory(pathHexen2);
 
         ArrayList<String> extractedPaks = new ArrayList<String>();
-        ProgressBar p = new ProgressBar("PAK extration");
+        ProgressBar p = new ProgressBar("PAK extraction");
         float count = 0;
         for (String file : PAKFiles) {
             File pakFile = new File(pathWADs + "/" + file + ".pak");

@@ -284,8 +284,8 @@ class ZFPlayerClassSelection ui {
 
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
-        CVar cvarHexII = CVar.FindCVar('hxdd_installed_hexen2');
-        if (cvarHexII && cvarHexII.GetBool()) {
+        bool cvarHexII = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2', false);
+        if (cvarHexII) {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("PlayerClassButton");
@@ -298,8 +298,8 @@ class ZFPlayerClassSelection ui {
             btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", 7, "graphics/netp4.png");
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
-            CVar cvarHexII_EX = CVar.FindCVar('hxdd_installed_hexen2_expansion');
-            if (cvarHexII_EX && cvarHexII_EX.GetBool()) {
+            bool cvarHexII_EX = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2_expansion', false);
+            if (cvarHexII_EX) {
                 // display Hexen II Expansion classes
                 btnClassSuccubus = new("PlayerClassButton");
                 btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", 8, "graphics/netp5.png");
@@ -609,11 +609,11 @@ class ZFGameOptions ui {
         labelArmor.pack(optionArea);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
-        listArmorMode.items.push("Default");
+        listArmorMode.items.push("Class Default");
         listArmorMode.items.push("Heretic (Simple)");
         listArmorMode.items.push("Hexen & Hexen II (Class Defined)");
         listArmorMode.items.push("Random");
-        //listArmorMode.items.push("User Defined");
+        //listArmorMode.items.push("Custom");
         let ddlArmorMode = HXDD_ZF_DropdownList.create(
             ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 225),    
             (550, 50),
@@ -638,11 +638,11 @@ class ZFGameOptions ui {
         labelProgression.pack(optionArea);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
-        listProgression.items.push("Default");
-        listProgression.items.push("None (Heretic & Hexen)");
+        listProgression.items.push("Class Default");
+        listProgression.items.push("None");
         listProgression.items.push("Levels (Hexen II)");
         listProgression.items.push("Random");
-        //listProgression.items.push("User Defined");
+        //listProgression.items.push("Custom");
         let ddlProgression = HXDD_ZF_DropdownList.create(
             ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 300),    
             (550, 50),
@@ -673,6 +673,10 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
     int selectedClass;
     int selectedEpisode;
     int selectedSkill;
+
+    int selectedGameMode;
+    int selectedArmorMode;
+    int selectedProgressionMode;
 
     HXDD_ZF_Frame frame;
     HXDD_ZF_Frame frameClass;

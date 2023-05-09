@@ -34,10 +34,13 @@ public class PK3Builder {
 
     // Support for Hexen II + Expansion paks
     // pak0.pak & pak1.pak can be found via Steam & GOG versions of Hexen II.
-    // pak3.pak (Optional) is included in Portals of Praveus, sets flag enabling Demoness Class
+    // pak3.pak(Optional) is included in Portals of Praveus, sets flag enabling Demoness Class
+    // pak4.pak (Optional w PoP), Basically patch 1.12a, which sets a flag for a new Magic Missiles FX Model but also contains an updated Succubus Model and decap head
+    // Hexen World update pak files can be found here:  https://sourceforge.net/projects/uhexen2/files/Hexen2%20GameData/hexenworld-pakfiles/
 
     static String[] hx2PakFiles = {"pak0", "pak1"};
     static String[] hx2exPakFiles = {"pak3"};
+    static String[] hx2OptPakFiles = {"pak4"};
 
     public Map<String, FileOrganizer> organizedFiles = new HashMap<>();
 
@@ -66,6 +69,10 @@ public class PK3Builder {
                 if (Noesis.CheckAndInstall()) {
                     ExportHXDDFileByName("configuration/cvarinfo.hx2", "cvarinfo.hx2");
                     ExportHXDDFileByName("configuration/mapinfo.hx2title", "mapinfo.hx2title");
+                    if (HasOptionalFiles(hx2OptPakFiles, "pak")) {
+                        // Set World flag as needed
+                        ExportHXDDFileByName("configuration/cvarinfo.hx2wld", "cvarinfo.hx2wld");
+                    }
                     if (HasOptionalFiles(hx2exPakFiles, "pak")) {
                         // Set Portals flag as needed
                         ExportHXDDFileByName("configuration/cvarinfo.hx2exp", "cvarinfo.hx2exp");

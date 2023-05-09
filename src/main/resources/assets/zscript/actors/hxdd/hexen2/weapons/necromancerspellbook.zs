@@ -252,11 +252,19 @@ class NWeapSpellbook : NecromancerWeapon
 		// All 3 projectiles use veer
 		// Make this work: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/hcode/projbhvr.hc#L51
 		if (hasTome) {
-			SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0);
-			SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0);
-			SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0);
+			NWeapSpellbook_MagicMissile mmisA = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
+			NWeapSpellbook_MagicMissile mmisB = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
+			NWeapSpellbook_MagicMissile mmisC = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
+			if (LemonUtil.CVAR_GetBool("hxdd_installed_hexen2_world", false, Player)) {
+				mmisA.useNewModel = true;
+				mmisB.useNewModel = true;
+				mmisC.useNewModel = true;
+			}
 		} else {
-			SpawnFirstPerson("NWeapSpellbook_MagicMissile", 40, 10, -3, false, 0, 0);
+			NWeapSpellbook_MagicMissile mmis = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissile", 40, 10, -3, false, 0, 0));
+			if (LemonUtil.CVAR_GetBool("hxdd_installed_hexen2_world", false, Player)) {
+				mmis.useNewModel = true;
+			}
 		}
 	}
 
@@ -438,7 +446,7 @@ class NWeapSpellbook_MagicMissilePower : NWeapSpellbook_MagicMissile {
 }
 
 class NWeapSpellbook_MagicMissile : Hexen2Projectile {
-
+	bool useNewModel;
 	double tickDuration;
 	property tickDuration: tickDuration;
 
@@ -460,33 +468,49 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
         SeeSound "hexen2/necro/mmfire";
 		DeathSound "hexen2/weapons/explode";
 		Obituary "$OB_MPMWEAPFROST";
-        Scale 1.0f;
+        Scale 0.5f;
 
         NWeapSpellbook_MagicMissile.tickDuration 3.0f;
 	}
 
-	States
-	{
-	Spawn:
-		BODY A 1 Bright;
-		Loop;
-	Death:
-		MMEX A 2 Bright A_GetDamage;
-		MMEX BCDEFGHIJKLMNO 2 Bright;
-		Stop;
+	States {
+		Spawn:
+			BODY A 1 Bright;
+			Loop;
+		SpawnHXWorld:
+			MMIS ABCDEFGHIJ 2 Bright;
+			Loop;
+		Death:
+			MMEX A 2 Bright A_GetDamage;
+			MMEX BCDEFGHIJKLMNO 2 Bright;
+			Stop;
 	}
 
     override void BeginPlay() {
         Super.BeginPlay();
         Speed = 1000.0f / 32.0f;
+    }
+	
+	override void PostBeginPlay() {
+        Super.PostBeginPlay();
 
-		attachedActors[0] = Spawn("NWeapSpellbook_MissileFlare", pos);
-		attachedActors[1] = Spawn("NWeapSpellbook_MissileStarA", pos);
-		attachedActors[2] = Spawn("NWeapSpellbook_MissileStarB", pos);
+		if (self.useNewModel) {
+			// set state to SpawnHXWorld
+			State stateSpawnHXWorld = self.FindState("SpawnHXWorld");
+			if (stateSpawnHXWorld) {
+				Alpha = 0.8f;
+				self.SetState(stateSpawnHXWorld);
+			}
+		} else {
+			// Fallback to old emulated effect
+			attachedActors[0] = Spawn("NWeapSpellbook_MissileFlare", pos);
+			attachedActors[1] = Spawn("NWeapSpellbook_MissileStarA", pos);
+			attachedActors[2] = Spawn("NWeapSpellbook_MissileStarB", pos);
 
-		NWeapSpellbook_MissileFlare(attachedActors[0]).parent = self;
-		NWeapSpellbook_MissileStar(attachedActors[1]).parent = self;
-		NWeapSpellbook_MissileStar(attachedActors[2]).parent = self;
+			NWeapSpellbook_MissileFlare(attachedActors[0]).parent = self;
+			NWeapSpellbook_MissileStar(attachedActors[1]).parent = self;
+			NWeapSpellbook_MissileStar(attachedActors[2]).parent = self;
+		}
 
         pg = ParticleGenerator(Spawn("ParticleGenerator"));
         pg.Attach(self);
@@ -508,23 +532,29 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
 			return;
 		}
 		if (tickDuration <= 0) {
-			attachedActors[0].Destroy();
-			attachedActors[1].Destroy();
-			attachedActors[2].Destroy();
+			for (let i = 0; i < attachedActors.Size(); i++) {
+				if (attachedActors[i]) {
+					attachedActors[i].Destroy();
+				}
+			}
 			Destroy();
 		}
 
 		tickDuration -= 35.0f / 1000.0f;
 
 		Vector3 avelocity = (0, 0, frandom(300.0f,600.0f) / 32.0f);
-		angle += avelocity.x;
-		pitch += avelocity.y;
-		roll += avelocity.z;
+		if (!self.useNewModel) {
+			self.angle += avelocity.x;
+			self.pitch += avelocity.y;
+		}
+		self.roll += avelocity.z;
 
-		for (let i = 0; i < 3; i++) {
-			Actor attached = attachedActors[i];
-			if (attached) {
-				attached.SetOrigin(self.pos, true);
+		for (let i = 0; i < attachedActors.Size(); i++) {
+			if (attachedActors[i]) {
+				Actor attached = attachedActors[i];
+				if (attached) {
+					attached.SetOrigin(self.pos, true);
+				}
 			}
 		}
 	}
@@ -539,9 +569,11 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
 	}
 
 	void A_GetDamage() {
-		attachedActors[0].Destroy();
-		attachedActors[1].Destroy();
-		attachedActors[2].Destroy();
+		for (let i = 0; i < attachedActors.Size(); i++) {
+			if (attachedActors[i]) {
+				attachedActors[i].Destroy();
+			}
+		}
 		pg.Remove();
 
 		angle = 0;

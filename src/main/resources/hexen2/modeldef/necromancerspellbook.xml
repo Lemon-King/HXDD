@@ -88,7 +88,31 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="HDFX" frames="1" model="0" comment="Pickup Item"/>
+        <Animation key="HDFX" frames="1" model="0" comment="FX Flash"/>
+    </Group>
+    <Group class="NWeapSpellbook_MagicMissile">
+        <Path folder="models" />
+        <Model file="newmmis.md3" model="0" />
+        <Skin file="newmmis_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="MMIS" frames="10" model="0" comment="New Model: Hexen World"/>
+    </Group>
+    <Group class="NWeapSpellbook_MagicMissilePower">
+        <Path folder="models" />
+        <Model file="newmmis.md3" model="0" />
+        <Skin file="newmmis_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="MMIS" frames="10" model="0" comment="New Model: Hexen World"/>
     </Group>
     <Group class="NWeapSpellbook_MissileFlare">
         <Path folder="models" />
@@ -100,7 +124,7 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+        <Animation key="BODY" frames="1" model="0" comment="FX Flare"/>
     </Group>
     <Group class="NWeapSpellbook_MissileStarA">
         <Path folder="models" />
@@ -112,7 +136,7 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+        <Animation key="BODY" frames="1" model="0" comment="FX Star A"/>
     </Group>
     <Group class="NWeapSpellbook_MissileStarB">
         <Path folder="models" />
@@ -124,7 +148,7 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="BODY" frames="1" model="0" comment="Pickup Item"/>
+        <Animation key="BODY" frames="1" model="0" comment="FX Star B"/>
     </Group>
     <Group class="NWeapSpellbook_BoneShot">
         <Path folder="models" />
