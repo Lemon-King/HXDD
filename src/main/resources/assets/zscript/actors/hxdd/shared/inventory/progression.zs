@@ -235,12 +235,7 @@ class Progression: Inventory {
 					itemHexenArmor.Slots[i] = 0;
 				}
 
-				Array<int> rngArmor;
-				rngArmor.Push(5);
-				rngArmor.Push(10);
-				rngArmor.Push(15);
-				rngArmor.Push(20);
-				rngArmor.Push(25);
+				Array<int> rngArmor = {5, 10, 15, 20, 25};
 
 				itemHexenArmor.Slots[4] = random(1, 3) * 5;
 				for (int i = 0; i < 4; i++) {
