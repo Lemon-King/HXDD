@@ -147,7 +147,7 @@ class MultiSpawner: RandomSpawner {
         Bind();
 
         PlayerInfo p = players[0];
-        if (p.cls != null) {
+        if (self.SpawnSelect == "GameSelect" || p.cls != null) {
             Super.BeginPlay();
             readyState = MSS_PENDING;
         } else {
@@ -157,7 +157,7 @@ class MultiSpawner: RandomSpawner {
 
     override void PostBeginPlay() {
         PlayerInfo p = players[0];
-        if (p.cls != null && readyState == MSS_PENDING) {
+        if ((self.SpawnSelect == "GameSelect" || p.cls != null) && readyState == MSS_PENDING) {
             Super.PostBeginPlay();
         }
     }

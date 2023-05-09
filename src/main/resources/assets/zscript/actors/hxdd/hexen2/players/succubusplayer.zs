@@ -20,8 +20,7 @@ class SuccubusPlayer : HXDDHexenIIPlayerPawn
 		Player.SoundClass "hexen2female";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
-		//Player.HexenArmor 0, 25, 15, 5, 10;	// Default by Raven
-		Player.HexenArmor 0, 5, 15, 10, 25;		// Copy of Necro Armor values (Maybe as a toggle?)
+		Player.HexenArmor 0, 5, 15, 10, 25;
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "SWeapBloodRain";

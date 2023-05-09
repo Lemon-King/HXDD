@@ -20,7 +20,7 @@ class CrusaderPlayer : HXDDHexenIIPlayerPawn
 		Player.SoundClass "hexen2male";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
-		Player.HexenArmor 0, 10, 5, 25, 15;
+		Player.HexenArmor 10, 20, 15, 25, 5;
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "CWeapWarhammer";

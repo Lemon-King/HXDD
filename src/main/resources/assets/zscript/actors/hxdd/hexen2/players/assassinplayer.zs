@@ -22,7 +22,7 @@ class AssassinPlayer : HXDDHexenIIPlayerPawn
 		Player.SoundClass "hexen2female";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
-		Player.HexenArmor 0, 25, 15, 5, 10;
+		Player.HexenArmor 10, 15, 25, 5, 20;
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "AWeapPunchDagger";

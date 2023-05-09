@@ -163,10 +163,17 @@ class Progression: Inventory {
 					if (sheet == null) {
 						owner.player.mo.GiveInventory(itemName, 1);
 						self.sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
-						break;
+						return;
 					}
 				}
 			}
+		}
+
+		PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
+		if (sheet == null) {
+			owner.player.mo.GiveInventory("PlayerSheet", 1);
+			self.sheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
+			return;
 		}
 	}
 
@@ -216,7 +223,7 @@ class Progression: Inventory {
 					// no armor, fill with basic armor values
 					itemHexenArmor.Slots[4] = 10;
 					for (int i = 0; i < 4; i++) {
-						itemHexenArmor.SlotsIncrement[i] = 20;
+						itemHexenArmor.SlotsIncrement[i] = i * 5;
 					}
 				}
 			}
@@ -227,9 +234,20 @@ class Progression: Inventory {
 				for (int i = 0; i < 5; i++) {
 					itemHexenArmor.Slots[i] = 0;
 				}
-				itemHexenArmor.Slots[4] = random(5, 20);
+
+				Array<int> rngArmor;
+				rngArmor.Push(5);
+				rngArmor.Push(10);
+				rngArmor.Push(15);
+				rngArmor.Push(20);
+				rngArmor.Push(25);
+
+				itemHexenArmor.Slots[4] = random(1, 3) * 5;
 				for (int i = 0; i < 4; i++) {
-					itemHexenArmor.SlotsIncrement[i] = random(5, 30);
+					int index = random(0, rngArmor.Size() - 1);
+					int value = rngArmor[index];
+					rngArmor.Delete(index, 1);
+					itemHexenArmor.SlotsIncrement[i] = value;
 				}
 			}
 		} else if (optionArmorMode == PSAM_ARMOR_USER) {

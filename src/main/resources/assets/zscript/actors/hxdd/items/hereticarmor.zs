@@ -26,10 +26,8 @@ class MultiClassSilverShield : MultiSpawner {
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "SilverShield";
-		} else if (cvarArmorMode == PSAM_ARMOR_AC) {
+		} else {
             return "SimpleHexenArmorSelectorTier1";
-        } else {
-            return "Unknown";
         }
     }
     override void Bind() {
@@ -61,10 +59,8 @@ class MultiClassEnchantedShield : MultiSpawner {
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
             return "EnchantedShield";
-		} else if (cvarArmorMode == PSAM_ARMOR_AC) {
+		} else {
             return "SimpleHexenArmorSelectorTier2";
-        } else {
-            return "Unknown";
         }
     }
     override void Bind() {

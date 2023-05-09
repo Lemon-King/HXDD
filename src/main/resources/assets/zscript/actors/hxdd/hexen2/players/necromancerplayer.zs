@@ -24,7 +24,7 @@ class NecromancerPlayer : HXDDHexenIIPlayerPawn
 		Player.ScoreIcon "MAGEFACE";
 		Player.InvulnerabilityMode "Reflective";
 		Player.HealRadiusType "Mana";
-		Player.HexenArmor 0, 5, 15, 10, 25;
+		Player.HexenArmor 5, 5, 15, 10, 25;
 		Player.StartItem "Mana1";
 		Player.StartItem "Mana2";
 		Player.StartItem "NWeapSickle";
