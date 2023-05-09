@@ -28,6 +28,9 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
             } else if (menu.frame.getPosX() == -1920) {
                 // start game with selected settings
                 Menu.MenuSound("menu/choose");
+                LemonUtil.CVAR_SetInt("hxdd_gamemode", menu.selectedGameMode);
+                LemonUtil.CVAR_SetInt("hxdd_armor_mode", menu.selectedArmorMode);
+                LemonUtil.CVAR_SetInt("hxdd_progression", menu.selectedProgressionMode);
                 Menu.SetMenu("EpisodeMenu", menu.selectedClass);    // Class Selection Response
                 Menu.SetMenu("SkillMenu", menu.selectedEpisode);    // Episode Selection Response
                 Menu.SetMenu("StartGame", menu.selectedSkill);      // Skill Selection Response (Starts Game), Use StartgameConfirm for Nightmare skills
@@ -63,11 +66,12 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
         } else if (command == "skill") {
             String choice = command;
             menu.selectedSkill = caller.getSelection();
-        } else {
-            let cvarGameMode = Cvar.FindCVar(command);
-            if (cvarGameMode) {
-                cvarGameMode.SetInt(caller.getSelection());
-            }
+        } else if (command == "hxdd_gamemode") {
+            menu.selectedGameMode = caller.getSelection();
+        } else if (command == "hxdd_armor_mode") {
+            menu.selectedArmorMode = caller.getSelection();
+        } else if (command == "hxdd_progression") {
+            menu.selectedProgressionMode = caller.getSelection();
         }
     }
 }

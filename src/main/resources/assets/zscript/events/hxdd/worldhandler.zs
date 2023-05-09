@@ -72,7 +72,6 @@ class HXDDWorldEventHandler : EventHandler {
                     }
                     
                     if (prog.sheet) {
-                        //HXDDPlayerPawn player = HXDDPlayerPawn(e.thing.target.player.mo);
                         prog.sheet.OnKill(pt, e.thing, exp);
                     }
                 }
@@ -84,13 +83,13 @@ class HXDDWorldEventHandler : EventHandler {
         // map transfer
         if (e.ActivatedLine.special == 74) {
             int mapNumber = LemonUtil.GetMapNumber();
-            // Reserved Map Numbers > 41 for HEXDD
+            // Reserved Map Numbers > 41 for HexDD
             if (mapNumber != -1 && mapNumber > 41) {
                 if (e.ActivatedLine.args[0] != 0) {
-                    // HXDD offsets for Deathkings Map numbers by 7 during packaging
+                    // HXDD offsets Deathkings Map numbers by 7 during packaging
                     e.ActivatedLine.args[0] += 7;
                 }
             }
         }
     }
-    }
+}

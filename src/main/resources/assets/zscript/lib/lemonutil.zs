@@ -57,7 +57,33 @@ class LemonUtil {
     static string CVAR_GetColor(string name, string default_value, PlayerInfo player = null) {
         return CVAR_GetString(name, default_value, player);
     }
-
+    static void CVAR_SetInt(string name, int value, PlayerInfo player = null) {
+        cvar cv = GetCVAR(name, player);
+        if (cv) {
+            cv.SetInt(value);
+        }
+    }
+    static void CVAR_SetFloat(string name, float value, PlayerInfo player = null) {
+        cvar cv = GetCVAR(name, player);
+        if (cv) {
+            cv.SetFloat(value);
+        }
+    }
+    static void CVAR_SetBool(string name, bool value, PlayerInfo player = null) {
+        cvar cv = GetCVAR(name, player);
+        if (cv) {
+            cv.SetBool(value);
+        }
+    }
+    static void CVAR_SetString(string name, string value, PlayerInfo player = null) {
+        cvar cv = GetCVAR(name, player);
+        if (cv) {
+            cv.SetString(value);
+        }
+    }
+    static void CVAR_SetColor(string name, string value, PlayerInfo player = null) {
+        CVAR_SetString(name, value, player);
+    }
     // General Math
     static vector3 RandomVector3(double x, double y, double z) {
         return (frandom(0.0-x,x), frandom(0.0-y,y), frandom(0.0-z,z));

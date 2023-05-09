@@ -26,18 +26,16 @@ class GameModeCompat: Inventory {
 		Super.PostBeginPlay();
 
 		int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
-        
-        String mapName = Level.MapName.MakeLower();
         if (cvarGameMode == 1) {
             SetMode_Heretic();
             SetPlayerSize_Heretic();
         } else if (cvarGameMode == 2) {
             SetMode_Hexen();
             SetPlayerSize_Hexen();
-        } else if (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m") {
+        } else if (LemonUtil.IsMapHeretic()) {
             SetMode_Heretic();
             SetPlayerSize_Heretic();
-        } else if (mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1) {
+        } else if (LemonUtil.IsMapHexen()) {
             SetMode_Hexen();
             SetPlayerSize_Hexen();
         }
