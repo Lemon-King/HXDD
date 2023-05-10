@@ -156,7 +156,7 @@ class Progression: Inventory {
 			if (item) {
 				String strSearch = "PlayerSheet_";
 				String itemName = item.GetClassName();
-				if (playerClassName.IndexOf(itemName.MakeLower().Mid(strSearch.Length() - 1)) != -1) {	
+				if (itemName != "PlayerSheet" && playerClassName.IndexOf(itemName.MakeLower().Mid(strSearch.Length())) != -1 ) {	
 					let invsheet = owner.player.mo.FindInventory(item);
 					if (invsheet == null) {
 						owner.player.mo.GiveInventory(item, 1);
@@ -192,6 +192,7 @@ class Progression: Inventory {
 		if (self.sheet) {
 			if (optionArmorMode == PSAM_DEFAULT) {
 				optionArmorMode = self.sheet.DefaultArmorMode;
+				console.printf("Default? %d %d", optionArmorMode, self.sheet.DefaultArmorMode);
 			}
 		} else if (optionArmorMode == PSAM_DEFAULT) {
 			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
@@ -211,9 +212,18 @@ class Progression: Inventory {
 		ArmorSelected = true;
 	}
 
+	HexenArmor FindOrGivePlayerHexenArmor(PlayerPawn player) {
+		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		if (itemHexenArmor == null) {
+			owner.player.mo.GiveInventory("HexenArmor", 1);
+			itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		}
+		return itemHexenArmor;
+	}
+
 	void ArmorModeSelection_Simple(PlayerPawn player) {
 		// Remove Hexen AC armor Values to force simple armor mechanics
-		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
 			// unset all
 			for (int i = 0; i < 5; i++) {
@@ -226,7 +236,7 @@ class Progression: Inventory {
 	}
 	void ArmorModeSelection_AC(PlayerPawn player) {
 		// ensure the class has hexen armor values, if not fill with defaults
-		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
 			int totalArmor = itemHexenArmor.Slots[4];
 			for (int i = 0; i < 4; i++) {
@@ -240,7 +250,7 @@ class Progression: Inventory {
 	}
 	void ArmorModeSelection_Random(PlayerPawn player) {
 		// ensure the class has hexen armor values, if not fill with defaults
-		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
 			int totalArmor = itemHexenArmor.Slots[4];
 			for (int i = 0; i < 4; i++) {
@@ -256,7 +266,7 @@ class Progression: Inventory {
 		}
 	}
 	void ArmorModeSelection_User(PlayerPawn player) {
-		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
 			// unset all
 			for (int i = 0; i < 5; i++) {
