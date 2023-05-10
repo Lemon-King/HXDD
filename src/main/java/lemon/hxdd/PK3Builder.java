@@ -208,8 +208,8 @@ public class PK3Builder {
         // Player sprite conflict fixes
         this.organizedFiles.get("hexen").BatchRename("sprites", "PLAY", "FIGH", "startsWith");      // Fighter Sprites
         this.organizedFiles.get("hexen").BatchRename("sprites", "FDTH", "FDHX", "startsWith");      // Fire Death Sprites
-        this.organizedFiles.get("hexen").BatchRename("sprites", "CLER[0", "CLRFA0", "equals");       // cleric fix?
-        this.organizedFiles.get("hexen").BatchRename("sprites", "CLER\\0", "CLRFB0", "equals");       // cleric fix?
+        this.organizedFiles.get("hexen").BatchRename("sprites", "CLER[0", "CLRFA0", "equals");      // cleric fix?
+        this.organizedFiles.get("hexen").BatchRename("sprites", "CLER\\0", "CLRFB0", "equals");     // cleric fix?
 
         // Optional Hexen Egg Art (Gold), Set by CVar
         this.organizedFiles.get("hexen").BatchRename("sprites", "ARTIEGGC", "ARTIEGGX", "equals");
@@ -236,6 +236,7 @@ public class PK3Builder {
         this.organizedFiles.get("hexen").BatchRemove("graphics", "M_SKL", "startsWith");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SELECTB0", "equals");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SPFLY", "startsWith");
+        this.organizedFiles.get("hexen").BatchRemove("lump", "SNDINFO", "equals");                 // patched version in resources
     }
 
     private FileOrganizer MergeAssets() {

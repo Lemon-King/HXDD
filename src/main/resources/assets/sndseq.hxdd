@@ -1,0 +1,90 @@
+
+// GZDOOM defines these in code for Hexen's old ACS script after Hexen.wad is detected.
+// Hexen.wad is detected with AssignHexenTranslations(). HXDD does not trigger it must be explicit within this SNDSEQ.
+
+// Defined Here: https://github.com/ZDoom/gzdoom/blob/39cea95dba2ddf7f367b7425b3acea5cec3c85b2/src/sound/s_sndseq.cpp#L271
+
+:Platform
+	platform 0
+	platform 1
+	platform 3
+	playuntildone   PlatformStart
+	playrepeat      StoneMove
+	stopsound	PlatformStop
+end
+
+:PlatformMetal
+	platform 2
+	playtime	PlatformStartMetal 35
+	playrepeat      MetalMove
+	stopsound	PlatformStop
+end
+
+:PlatformMetal2
+	platform 9
+	playuntildone	PlatformStartMetal
+	stopsound	PlatformStop
+end
+
+:DoorNormal
+	door 0
+	playtime        DoorOpen        13
+	playrepeat      StoneMove
+	stopsound	DoorCloseLight
+end
+
+:DoorHeavy
+	door 1
+	playtime        DoorOpen        13
+	playrepeat      StoneMove
+	stopsound	DoorCloseHeavy
+end
+
+:DoorMetal
+	door 2
+	playtime  	DoorOpenMetal 35
+	playrepeat      MetalMove
+	stopsound	DoorCloseMetal
+end
+
+:DoorMetal2
+	door 9
+	playuntildone  	DoorOpenMetal
+	stopsound	DoorCloseMetal
+end
+
+:DoorCreak
+	door 3
+	playuntildone   DoorCreak
+	stopsound	DoorCloseLight
+end
+
+:Silence
+	door 4
+	platform 4
+end
+
+:Lava
+	door 5
+	platform 5
+	playrepeat	LavaMove
+end
+
+:Water
+	door 6
+	platform 6
+	playrepeat	WaterMove
+end
+
+:Ice
+	door 7
+	platform 7
+	playuntildone	IceStartMove
+end
+
+:Earth
+	door 8
+	platform 8
+	playuntildone	EarthStartMove
+end
+
