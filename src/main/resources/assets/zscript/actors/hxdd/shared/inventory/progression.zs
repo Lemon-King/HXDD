@@ -124,15 +124,14 @@ class Progression: Inventory {
 
 	override void BeginPlay() {
 		Super.BeginPlay();
-
-		// Don't do anything here, the Progression Inventory item is not fully initialized until PostBeginPlay.
 	}
 
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
+		CreatePlayerSheetItem();
 		if (!ProgressionSelected) {
-			if (ProgressionAllowed() ) {
+			if (ProgressionAllowed()) {
         		SetAdvancementStatTables();
 				InitLevel_PostBeginPlay();
 			} else {
@@ -157,20 +156,20 @@ class Progression: Inventory {
 			if (item) {
 				String strSearch = "PlayerSheet_";
 				String itemName = item.GetClassName();
-				itemName = itemName.MakeLower().Mid(strSearch.Length() - 1);
-				if (playerClassName.IndexOf(itemName.MakeLower()) != -1) {	
-					PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
-					if (sheet == null) {
-						owner.player.mo.GiveInventory(itemName, 1);
-						self.sheet = PlayerSheet(owner.player.mo.FindInventory(itemName));
+				if (playerClassName.IndexOf(itemName.MakeLower().Mid(strSearch.Length() - 1)) != -1) {	
+					let invsheet = owner.player.mo.FindInventory(item);
+					if (invsheet == null) {
+						owner.player.mo.GiveInventory(item, 1);
+						self.sheet = PlayerSheet(owner.player.mo.FindInventory(item));
+						self.sheet.DefineAdvancementStatTables();
 						return;
 					}
 				}
 			}
 		}
 
-		PlayerSheet sheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
-		if (sheet == null) {
+		PlayerSheet invsheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
+		if (invsheet == null) {
 			owner.player.mo.GiveInventory("PlayerSheet", 1);
 			self.sheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
 			return;
@@ -195,73 +194,80 @@ class Progression: Inventory {
 				optionArmorMode = self.sheet.DefaultArmorMode;
 			}
 		} else if (optionArmorMode == PSAM_DEFAULT) {
-			if (owner.player.mo is "FighterPlayer" || owner.player.mo is "ClericPlayer" || owner.player.mo is "MagePlayer") {
+			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+			if (itemHexenArmor) {
 				optionArmorMode = PSAM_ARMOR_AC;
 			}
 		}
 		if (optionArmorMode == PSAM_ARMOR_SIMPLE) {
-			// Remove Hexen AC armor Values to force simple armor mechanics
-			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
-			if (itemHexenArmor) {
-				// unset all
-				for (int i = 0; i < 5; i++) {
-					itemHexenArmor.Slots[i] = 0;
-				}
-				for (int i = 0; i < 4; i++) {
-					itemHexenArmor.SlotsIncrement[i] = 0;
-				}
-			}
+			ArmorModeSelection_Simple(player);
 		} else if (optionArmorMode == PSAM_ARMOR_AC) {
-			// ensure the class has hexen armor values, if not fill with defaults
-			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
-			if (itemHexenArmor) {
-				int totalArmor = itemHexenArmor.Slots[4];
-				for (int i = 0; i < 4; i++) {
-					totalArmor += itemHexenArmor.SlotsIncrement[i];
-				}
-				if (totalArmor == 0) {
-					// no armor, fill with basic armor values
-					itemHexenArmor.Slots[4] = 10;
-					for (int i = 0; i < 4; i++) {
-						itemHexenArmor.SlotsIncrement[i] = i * 5;
-					}
-				}
-			}
+			ArmorModeSelection_AC(player);
 		} else if (optionArmorMode == PSAM_ARMOR_RANDOM) {
-			// random armor values are applied
-			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
-			if (itemHexenArmor) {
-				for (int i = 0; i < 5; i++) {
-					itemHexenArmor.Slots[i] = 0;
-				}
-
-				Array<int> rngArmor = {5, 10, 15, 20, 25};
-
-				itemHexenArmor.Slots[4] = random(1, 3) * 5;
-				for (int i = 0; i < 4; i++) {
-					int index = random(0, rngArmor.Size() - 1);
-					int value = rngArmor[index];
-					rngArmor.Delete(index, 1);
-					itemHexenArmor.SlotsIncrement[i] = value;
-				}
-			}
+			ArmorModeSelection_Random(player);
 		} else if (optionArmorMode == PSAM_ARMOR_USER) {
-			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
-			if (itemHexenArmor) {
-				// unset all
-				for (int i = 0; i < 5; i++) {
-					itemHexenArmor.Slots[i] = 0;
-				}
-				itemHexenArmor.Slots[4] = LemonUtil.CVAR_GetInt("hxdd_armor_user_4", 10);
-				for (int i = 0; i < 4; i++) {
-					String cvarHexenArmorSlot = String.format("hxdd_armor_user_%d", i);
-					itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarHexenArmorSlot, 20);
-				}
-
-
-			}
+			ArmorModeSelection_User(player);
 		}
 		ArmorSelected = true;
+	}
+
+	void ArmorModeSelection_Simple(PlayerPawn player) {
+		// Remove Hexen AC armor Values to force simple armor mechanics
+		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		if (itemHexenArmor) {
+			// unset all
+			for (int i = 0; i < 5; i++) {
+				itemHexenArmor.Slots[i] = 0;
+			}
+			for (int i = 0; i < 4; i++) {
+				itemHexenArmor.SlotsIncrement[i] = 0;
+			}
+		}
+	}
+	void ArmorModeSelection_AC(PlayerPawn player) {
+		// ensure the class has hexen armor values, if not fill with defaults
+		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		if (itemHexenArmor) {
+			int totalArmor = itemHexenArmor.Slots[4];
+			for (int i = 0; i < 4; i++) {
+				totalArmor += itemHexenArmor.SlotsIncrement[i];
+			}
+			if (totalArmor == 0) {
+				// no armor, use random instead
+				ArmorModeSelection_Random(player);
+			}
+		}
+	}
+	void ArmorModeSelection_Random(PlayerPawn player) {
+		// ensure the class has hexen armor values, if not fill with defaults
+		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		if (itemHexenArmor) {
+			int totalArmor = itemHexenArmor.Slots[4];
+			for (int i = 0; i < 4; i++) {
+				totalArmor += itemHexenArmor.SlotsIncrement[i];
+			}
+			if (totalArmor == 0) {
+				// no armor, fill with basic armor values
+				itemHexenArmor.Slots[4] = 10;
+				for (int i = 0; i < 4; i++) {
+					itemHexenArmor.SlotsIncrement[i] = i * 5;
+				}
+			}
+		}
+	}
+	void ArmorModeSelection_User(PlayerPawn player) {
+		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+		if (itemHexenArmor) {
+			// unset all
+			for (int i = 0; i < 5; i++) {
+				itemHexenArmor.Slots[i] = 0;
+			}
+			itemHexenArmor.Slots[4] = LemonUtil.CVAR_GetInt("hxdd_armor_user_4", 10);
+			for (int i = 0; i < 4; i++) {
+				String cvarHexenArmorSlot = String.format("hxdd_armor_user_%d", i);
+				itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarHexenArmorSlot, 20);
+			}
+		}
 	}
 
 	// This is dumb, but: https://discord.com/channels/268086704961748992/268877450652549131/385134419893288960
@@ -332,39 +338,22 @@ class Progression: Inventory {
 			}
 		} else {
 			// find advancement item
-			//bool foundStatItem = false;
-			//uint end = AllActorClasses.Size();
-			//for (uint i = 0; i < end; ++i) {
-			//	let item = (class<PlayerSheet>)(AllActorClasses[i]);
-			//	if (item) {
-			//		String itemName = item.GetClassName();
-			//		if (itemName.IndexOf(owner.player.mo.GetClassName()) != -1) {
-			//			PlayerSheet plItem = PlayerSheet(Owner.player.mo.FindInventory(item));
 			if (self.sheet) {
-					experienceModifier =		self.sheet.experienceModifier;
-					for (let i = 0; i < 11; i++) {
-						experienceTable[i] =	self.sheet.experienceTable[i];
-					}
-					for (let i = 0; i < 5; i++) {
-						hitpointTable[i] =		self.sheet.hitpointTable[i];
-						manaTable[i] =			self.sheet.manaTable[i];
-					}
-					for (let i = 0; i < 2; i++) {
-						strengthTable[i] =		self.sheet.strengthTable[i];
-						intelligenceTable[i] =	self.sheet.intelligenceTable[i];
-						wisdomTable[i] =		self.sheet.wisdomTable[i];
-						dexterityTable[i] =		self.sheet.dexterityTable[i];
-					}
-			}
-
-			//			foundStatItem = true;
-			//			break;
-			//		}
-			//	}
-			//}
-
-			// If no player leveling items are found, use stock stats
-			if (!self.sheet) {
+				experienceModifier =		self.sheet.experienceModifier;
+				for (let i = 0; i < 11; i++) {
+					experienceTable[i] =	self.sheet.experienceTable[i];
+				}
+				for (let i = 0; i < 5; i++) {
+					hitpointTable[i] =		self.sheet.hitpointTable[i];
+					manaTable[i] =			self.sheet.manaTable[i];
+				}
+				for (let i = 0; i < 2; i++) {
+					strengthTable[i] =		self.sheet.strengthTable[i];
+					intelligenceTable[i] =	self.sheet.intelligenceTable[i];
+					wisdomTable[i] =		self.sheet.wisdomTable[i];
+					dexterityTable[i] =		self.sheet.dexterityTable[i];
+				}
+			} else {
 				experienceTable[0] = 800;
 				for (let i = 1; i < 11; i++) {
 					experienceTable[i] = experienceTable[i-1] * 2.0f;
@@ -404,13 +393,7 @@ class Progression: Inventory {
 		
 		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", true);
 
-		let player = owner.player.mo;
-
-		//if (player is "HXDDPlayerPawn") {
-		//	player = HXDDPlayerPawn(owner.player.mo);
-		//} else {
-			player = PlayerPawn(owner.player.mo);
-		//}
+		let player = PlayerPawn(owner.player.mo);
 		
         MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
 		player.MaxHealth = MaxHealth;
@@ -480,11 +463,11 @@ class Progression: Inventory {
 			double healthInc = 0;
 			double manaInc = 0;
 			if (lastLevel < 11) {
-				healthInc = stats_compute(hitpointTable[2],hitpointTable[3]);
-				manaInc = stats_compute(manaTable[2],manaTable[3]);
+				healthInc = stats_compute(self.sheet.hitpointTable[2],self.sheet.hitpointTable[3]);
+				manaInc = stats_compute(self.sheet.manaTable[2],self.sheet.manaTable[3]);
 			} else {
-				healthInc = hitpointTable[4];
-				manaInc = manaTable[4];
+				healthInc = self.sheet.hitpointTable[4];
+				manaInc = self.sheet.manaTable[4];
 			}
 			MaxHealth += HealthInc;
 			MaxMana += ManaInc;

@@ -51,6 +51,8 @@ class PlayerSheet: Inventory {
 	property Wisdom: wisdom;
 	property Dexterity: dexterity;
 
+	Progression parent;
+
     Default {
 		+INVENTORY.KEEPDEPLETED
         +INVENTORY.HUBPOWER
@@ -78,11 +80,6 @@ class PlayerSheet: Inventory {
 		PlayerSheet.Wisdom 0;
 		PlayerSheet.Dexterity 0;
     }
-
-	override void BeginPlay() {
-		Super.BeginPlay();
-		DefineAdvancementStatTables();
-	}
 
     virtual void DefineAdvancementStatTables() {
 		// Generic Table

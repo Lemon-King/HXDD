@@ -51,7 +51,6 @@ class HXDDWorldEventHandler : EventHandler {
             if (prog == null) {
                 pp.GiveInventory("Progression", 1);
                 prog = Progression(pp.FindInventory("Progression"));
-                prog.CreatePlayerSheetItem();
             }
             GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
             if (gmcompat == null) {
