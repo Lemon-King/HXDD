@@ -6,4 +6,4 @@
 #include "zscript/events/_events.zs"
 #include "zscript/actors/_actors.zs"
 
-#include "zscript/menu/newgame.zs"
+#include "zscript/menu/_menu.zs"

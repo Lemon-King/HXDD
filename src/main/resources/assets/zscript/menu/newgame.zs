@@ -325,7 +325,7 @@ class ZFGameOptionsScrollContainerHandler : HXDD_ZF_Handler {
 class ZFGameOptions ui {
     ZFPreGameSetup parent;
     HXDD_ZF_Frame frame;
-    HXDD_ZF_DropdownList ddlDifficulty;
+    DropDownCombo ddl_Difficulty;
 
     Array<HXDD_ZF_DropdownItems> listClassDifficulty;
 
@@ -490,44 +490,9 @@ class ZFGameOptions ui {
         );
         scrollContainer.pack(frame);
 
-
-        let btNormal = HXDD_ZF_BoxTextures.createTexturePixels(
-            "assets/ui/zforms/CommonBackgroundNormal.png",
-            (7, 7),
-            (14, 14),
-            true,
-            true
-        );
-
-
-        let btHover = HXDD_ZF_BoxTextures.createTexturePixels(
-            "assets/ui/zforms/CommonBackgroundHover.png",
-            (7, 7),
-            (14, 14),
-            true,
-            true
-        );
-
-
-        let btClick = HXDD_ZF_BoxTextures.createTexturePixels(
-            "assets/ui/zforms/CommonBackgroundClick.png",
-            (7, 7),
-            (14, 14),
-            true,
-            true
-        );
-
-        let labelEpisode = HXDD_ZF_Label.create(
-            (  25,   25),
-            (350, 50),
-            text: "Episode",
-            alignment: 2 << 4,
-            textScale: 4.0
-        );
-        labelEpisode.pack(optionArea);
-
         let cmdHandler = new("ZFGameOptionsHandler");
         cmdHandler.menu = parent;
+
         HXDD_ZF_DropdownItems listEpisodes = new("HXDD_ZF_DropdownItems");
         listEpisodes.items.push("$MNU_COTD");
         listEpisodes.items.push("$MNU_HELLSMAW");
@@ -539,78 +504,18 @@ class ZFGameOptions ui {
         listEpisodes.items.push("$MNU_HEXDD");
         listEpisodes.items.push("DEV: HERETIC TEST");
         listEpisodes.items.push("DEV: HEXEN TEST");
-        let ddlEpisodes = HXDD_ZF_DropdownList.create(
-            ((1920 * 0.55 - 4) - (550 + 32 + 25),25),    
-            (550, 50),
-            listEpisodes,
-            textScale: 2.5,
-            boxBg: btNormal,
-            listBg: btNormal,
-            highlightBg: btHover,
-            defaultSelection: parent.selectedEpisode,
-            cmdHandler: cmdHandler,
-            command: "episode"
-        );
-        ddlEpisodes.pack(optionArea);
+        DropDownCombo ddl_Episodes = new ("DropDownCombo");
+        ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), "Episode", listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
-        let labelDifficulty = HXDD_ZF_Label.create(
-            (  25,   25 + 75),
-            (350, 50),
-            text: "Difficulty",
-            alignment: 2 << 4,
-            textScale: 4.0
-        );
-        labelDifficulty.pack(optionArea);
-
-        ddlDifficulty = HXDD_ZF_DropdownList.create(
-            ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 75),    
-            (550, 50),
-            listClassDifficulty[0],
-            textScale: 2.5,
-            boxBg: btNormal,
-            listBg: btNormal,
-            highlightBg: btHover,
-            defaultSelection: parent.selectedSkill,
-            cmdHandler: cmdHandler,
-            command: "skill"
-        );
-        ddlDifficulty.pack(optionArea);
-
-        let labelGameMode = HXDD_ZF_Label.create(
-            (  25,   25 + 150),
-            (350, 50),
-            text: "Game Mode",
-            alignment: 2 << 4,
-            textScale: 4.0
-        );
-        labelGameMode.pack(optionArea);
+        self.ddl_Difficulty = new ("DropDownCombo");
+        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), "Difficulty", listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
 
         HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
         listMapSet.items.push("Auto-Detect");
         listMapSet.items.push("Heretic");
         listMapSet.items.push("Hexen");
-        let ddlGameMode = HXDD_ZF_DropdownList.create(
-            ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 150),    
-            (550, 50),
-            listMapSet,
-            textScale: 2.5,
-            boxBg: btNormal,
-            listBg: btNormal,
-            highlightBg: btHover,
-            defaultSelection: 0,
-            cmdHandler: cmdHandler,
-            command: "hxdd_gamemode"
-        );
-        ddlGameMode.pack(optionArea);
-
-        let labelArmor = HXDD_ZF_Label.create(
-            (  25,   25 + 225),
-            (350, 50),
-            text: "Armor Mode",
-            alignment: 2 << 4,
-            textScale: 4.0
-        );
-        labelArmor.pack(optionArea);
+        DropDownCombo ddl_GameMode = new ("DropDownCombo");
+        ddl_GameMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "Game Mode", listMapSet, 0, "hxdd_gamemode", cmdHandler);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("Class Default");
@@ -618,28 +523,8 @@ class ZFGameOptions ui {
         listArmorMode.items.push("Hexen & Hexen II (Class Defined)");
         listArmorMode.items.push("Random");
         //listArmorMode.items.push("Custom");
-        let ddlArmorMode = HXDD_ZF_DropdownList.create(
-            ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 225),    
-            (550, 50),
-            listArmorMode,
-            textScale: 2.5,
-            boxBg: btNormal,
-            listBg: btNormal,
-            highlightBg: btHover,
-            defaultSelection: 0,
-            cmdHandler: cmdHandler,
-            command: "hxdd_armor_mode"
-        );
-        ddlArmorMode.pack(optionArea);
-
-        let labelProgression = HXDD_ZF_Label.create(
-            (  25,   25 + 300),
-            (350, 50),
-            text: "Progression",
-            alignment: 2 << 4,
-            textScale: 4.0
-        );
-        labelProgression.pack(optionArea);
+        DropDownCombo ddl_ArmorMode = new ("DropDownCombo");
+        ddl_ArmorMode.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "Armor Mode", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
         listProgression.items.push("Class Default");
@@ -647,19 +532,8 @@ class ZFGameOptions ui {
         listProgression.items.push("Levels (Hexen II)");
         listProgression.items.push("Random");
         //listProgression.items.push("Custom");
-        let ddlProgression = HXDD_ZF_DropdownList.create(
-            ((1920 * 0.55 - 4) - (550 + 32 + 25),25 + 300),    
-            (550, 50),
-            listProgression,
-            textScale: 2.5,
-            boxBg: btNormal,
-            listBg: btNormal,
-            highlightBg: btHover,
-            defaultSelection: 0,
-            cmdHandler: cmdHandler,
-            command: "hxdd_progression"
-        );
-        ddlProgression.pack(optionArea);
+        DropDownCombo ddl_Progression = new ("DropDownCombo");
+        ddl_Progression.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Progression", listProgression, 0, "hxdd_progression", cmdHandler);
     }
 
     void Refresh() {
@@ -667,7 +541,7 @@ class ZFGameOptions ui {
         if (selected > listClassDifficulty.Size() - 1) {
             selected = 0;
         }
-        ddlDifficulty.setItems(listClassDifficulty[selected]);
+        self.ddl_Difficulty.GetDropDownElement().setItems(listClassDifficulty[selected]);
     }
 }
 
