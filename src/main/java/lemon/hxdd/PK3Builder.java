@@ -236,7 +236,7 @@ public class PK3Builder {
         this.organizedFiles.get("hexen").BatchRemove("graphics", "M_SKL", "startsWith");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SELECTB0", "equals");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SPFLY", "startsWith");
-        this.organizedFiles.get("hexen").BatchRemove("lump", "SNDINFO", "equals");                 // patched version in resources
+        this.organizedFiles.get("hexen").BatchRemove("lumps", "SNDINFO", "equals");                 // patched version in resources
     }
 
     private FileOrganizer MergeAssets() {
