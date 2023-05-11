@@ -345,53 +345,50 @@ class Progression: Inventory {
 				wisdomTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
 				dexterityTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
 			}
-		} else {
-			// find advancement item
-			if (self.sheet) {
-				experienceModifier =		self.sheet.experienceModifier;
-				for (let i = 0; i < 11; i++) {
-					experienceTable[i] =	self.sheet.experienceTable[i];
-				}
-				for (let i = 0; i < 5; i++) {
-					hitpointTable[i] =		self.sheet.hitpointTable[i];
-					manaTable[i] =			self.sheet.manaTable[i];
-				}
-				for (let i = 0; i < 2; i++) {
-					strengthTable[i] =		self.sheet.strengthTable[i];
-					intelligenceTable[i] =	self.sheet.intelligenceTable[i];
-					wisdomTable[i] =		self.sheet.wisdomTable[i];
-					dexterityTable[i] =		self.sheet.dexterityTable[i];
-				}
-			} else {
-				experienceTable[0] = 800;
-				for (let i = 1; i < 11; i++) {
-					experienceTable[i] = experienceTable[i-1] * 2.0f;
-				}
-
-				hitpointTable[0] = 60;
-				hitpointTable[1] = 70;
-				hitpointTable[2] = 2;
-				hitpointTable[3] = 6;
-				hitpointTable[4] = 5;
-
-				manaTable[0] = 70;
-				manaTable[1] = 80;
-				manaTable[2] = 5;
-				manaTable[3] = 10;
-				manaTable[4] = 5;
-
-				strengthTable[0] = 8;
-				strengthTable[1] = 12;
-
-				intelligenceTable[0] = 8;
-				intelligenceTable[1] = 12;
-
-				wisdomTable[0] = 8;
-				wisdomTable[1] = 12;
-
-				dexterityTable[0] = 8;
-				dexterityTable[1] = 12;
+		} else if (self.sheet) {
+			experienceModifier =		self.sheet.experienceModifier;
+			for (let i = 0; i < 11; i++) {
+				experienceTable[i] =	self.sheet.experienceTable[i];
 			}
+			for (let i = 0; i < 5; i++) {
+				hitpointTable[i] =		self.sheet.hitpointTable[i];
+				manaTable[i] =			self.sheet.manaTable[i];
+			}
+			for (let i = 0; i < 2; i++) {
+				strengthTable[i] =		self.sheet.strengthTable[i];
+				intelligenceTable[i] =	self.sheet.intelligenceTable[i];
+				wisdomTable[i] =		self.sheet.wisdomTable[i];
+				dexterityTable[i] =		self.sheet.dexterityTable[i];
+			}
+		} else {
+			experienceTable[0] = 800;
+			for (let i = 1; i < 11; i++) {
+				experienceTable[i] = experienceTable[i-1] * 2.0f;
+			}
+
+			hitpointTable[0] = 60;
+			hitpointTable[1] = 70;
+			hitpointTable[2] = 2;
+			hitpointTable[3] = 6;
+			hitpointTable[4] = 5;
+
+			manaTable[0] = 70;
+			manaTable[1] = 80;
+			manaTable[2] = 5;
+			manaTable[3] = 10;
+			manaTable[4] = 5;
+
+			strengthTable[0] = 8;
+			strengthTable[1] = 12;
+
+			intelligenceTable[0] = 8;
+			intelligenceTable[1] = 12;
+
+			wisdomTable[0] = 8;
+			wisdomTable[1] = 12;
+
+			dexterityTable[0] = 8;
+			dexterityTable[1] = 12;
 		}
 	}
 
@@ -423,7 +420,7 @@ class Progression: Inventory {
 					ammoItem = Ammo(Spawn(ammotype));
 				}
 				if (ammoItem) {
-					if (!(ammoItem is "mana1") || !(ammoItem is "mana2")) {
+					if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
 						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
 					} else {
 						ammoItem.MaxAmount = MaxMana;
@@ -504,7 +501,7 @@ class Progression: Inventory {
 				if (invItem != NULL && invItem is "Ammo") {
 					Ammo ammoItem = Ammo(invItem);
 					if (ammoItem) {
-						if (!(ammoItem is "mana1") || !(ammoItem is "mana2")) {
+						if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
 							ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
 						} else {
 							ammoItem.MaxAmount = MaxMana;
