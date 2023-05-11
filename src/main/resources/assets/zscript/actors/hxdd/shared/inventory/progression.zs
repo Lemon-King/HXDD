@@ -129,10 +129,10 @@ class Progression: Inventory {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		CreatePlayerSheetItem();
 		if (!ProgressionSelected) {
+			CreatePlayerSheetItem();
 			if (ProgressionAllowed()) {
-        		SetAdvancementStatTables();
+        		CopyAdvancementFromSheet();
 				InitLevel_PostBeginPlay();
 			} else {
 				// Set stats to 10 to prevent any penalties
@@ -192,7 +192,6 @@ class Progression: Inventory {
 		if (self.sheet) {
 			if (optionArmorMode == PSAM_DEFAULT) {
 				optionArmorMode = self.sheet.DefaultArmorMode;
-				console.printf("Default? %d %d", optionArmorMode, self.sheet.DefaultArmorMode);
 			}
 		} else if (optionArmorMode == PSAM_DEFAULT) {
 			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
@@ -281,7 +280,7 @@ class Progression: Inventory {
 	}
 
 	// This is dumb, but: https://discord.com/channels/268086704961748992/268877450652549131/385134419893288960
-	virtual void SetAdvancementStatTables() {
+	virtual void CopyAdvancementFromSheet() {
 		int cvarCustomProgressionType = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
 		if (cvarCustomProgressionType == PSP_LEVELS_USER) {
 			// User Defined Stats
@@ -401,7 +400,7 @@ class Progression: Inventory {
 			return;
 		}
 		
-		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", true);
+		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
 
 		let player = PlayerPawn(owner.player.mo);
 		
@@ -423,22 +422,20 @@ class Progression: Inventory {
 					// The player did not have the ammoitem. Add it.
 					ammoItem = Ammo(Spawn(ammotype));
 				}
-				//console.printf("ammoItem: %s", ammoItem.GetClassName());
-				if (!(ammoType is "mana1") || !(ammoType is "mana2")) {
-					double scaler = ammoItem.Default.MaxAmount / 200.0;
-					ammoItem.MaxAmount = maxMana * scaler;
-					if (ammoItem.Amount > ammoItem.MaxAmount) {
-						ammoitem.Amount = ammoItem.MaxAmount;
+				if (ammoItem) {
+					if (!(ammoItem is "mana1") || !(ammoItem is "mana2")) {
+						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
+					} else {
+						ammoItem.MaxAmount = MaxMana;
 					}
+					ammoItem.Amount = clamp(ammoItem.Amount, 0.0, ammoItem.MaxAmount);
 					if (cvarAllowBackpackUse) {
 						ammoItem.BackpackMaxAmount = ammoItem.MaxAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
 					} else {
 						ammoItem.BackpackMaxAmount = ammoItem.MaxAmount;
 					}
-					ammoItem.AttachToOwner(Owner.player.mo);
-				} else {
-					ammoItem.Destroy();
 				}
+				ammoItem.AttachToOwner(Owner.player.mo);
 			}
 		}
 
@@ -462,7 +459,7 @@ class Progression: Inventory {
 	void AdvanceLevel(int advanceLevel) {
 		// https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/portals/stats.hc#L233
 
-		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", true);
+		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
 		PlayerPawn player = PlayerPawn(owner.player.mo);
 
 		S_StartSound("hexen2/misc/comm", CHAN_VOICE);
@@ -507,11 +504,12 @@ class Progression: Inventory {
 				if (invItem != NULL && invItem is "Ammo") {
 					Ammo ammoItem = Ammo(invItem);
 					if (ammoItem) {
-						double scaler = ammoItem.Default.MaxAmount / 200.0;
-						ammoItem.MaxAmount = MaxMana * scaler;
-						if (ammoItem.Amount > ammoItem.MaxAmount) {
-							ammoitem.Amount = ammoItem.MaxAmount;
+						if (!(ammoItem is "mana1") || !(ammoItem is "mana2")) {
+							ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
+						} else {
+							ammoItem.MaxAmount = MaxMana;
 						}
+						ammoItem.Amount = clamp(ammoItem.Amount, 0.0, ammoItem.MaxAmount);
 						if (cvarAllowBackpackUse) {
 							ammoItem.BackpackMaxAmount = ammoItem.MaxAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
 						} else {

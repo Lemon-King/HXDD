@@ -25,14 +25,8 @@ class GameModeCompat: Inventory {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
-        if (cvarGameMode == 1) {
-            SetMode_Heretic();
-            SetPlayerSize_Heretic();
-        } else if (cvarGameMode == 2) {
-            SetMode_Hexen();
-            SetPlayerSize_Hexen();
-        } else if (LemonUtil.IsMapHeretic()) {
+		int cvarGameMode = LemonUtil.GetOptionGameMode();
+        if (LemonUtil.IsMapHeretic()) {
             SetMode_Heretic();
             SetPlayerSize_Heretic();
         } else if (LemonUtil.IsMapHexen()) {

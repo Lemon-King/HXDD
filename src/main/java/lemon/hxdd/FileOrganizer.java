@@ -22,6 +22,7 @@ class FileOrganizer {
     static String[] EngineLumps = {
             "STARTUP", "PLAYPAL", "EXTENDED",
             "COLORMAP",  "FOGMAP", "TINTTAB",
+            "SNDCURVE"
     };
 
     static String[] GameLumps = {

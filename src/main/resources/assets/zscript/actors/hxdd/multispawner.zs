@@ -85,7 +85,7 @@ class MultiSpawner: RandomSpawner {
             if (gameType & GAME_Doom) {
                 return self.Doom;
             } else if (gameType & GAME_Raven) {
-                int gameType = GetGameType();
+                int gameType = LemonUtil.GetOptionGameMode();
                 if (gameType == GAME_Heretic) {
                     return self.Heretic;
                 } else if (gameType == GAME_Hexen) {
@@ -144,29 +144,34 @@ class MultiSpawner: RandomSpawner {
 	}
 
 	override void BeginPlay() {
-        Bind();
-
-        PlayerInfo p = players[0];
-        if (self.SpawnSelect == "GameSelect" || p.cls != null) {
+        if (self.SpawnSelect == "GameSelect" || readyState == MSS_READY) {
+            Bind();
             Super.BeginPlay();
-            readyState = MSS_PENDING;
-        } else {
-            readyState = MSS_READY;
         }
 	}
 
     override void PostBeginPlay() {
         PlayerInfo p = players[0];
-        if ((self.SpawnSelect == "GameSelect" || p.cls != null) && readyState == MSS_PENDING) {
+        if (self.SpawnSelect == "GameSelect") {
+            Super.PostBeginPlay();
+        } else if (!self.CvarSelect || readyState == MSS_NOTREADY) {
+            readyState = MSS_READY;
+            BeginPlay();
             Super.PostBeginPlay();
         }
     }
 
     override void Tick() {
         Super.Tick();
-        if (readyState == MSS_READY) {
-            BeginPlay();
-            PostBeginPlay();
+
+        PlayerInfo p = players[0];
+        if (self.CvarSelect && readyState == MSS_NOTREADY) {
+            if (p) {
+                Progression prog = Progression(p.mo.FindInventory("Progression"));
+                if (prog && prog.sheet) {
+                    PostBeginPlay();
+                }
+            }
         }
     }
 }

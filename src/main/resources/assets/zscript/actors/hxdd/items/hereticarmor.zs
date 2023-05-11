@@ -16,7 +16,7 @@ class SimpleHexenArmorSelectorTier2: RandomSpawner {
 
 class MultiClassSilverShield : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", 0);
+		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog && prog.sheet) {
@@ -48,7 +48,7 @@ class MultiClassSilverShield : MultiSpawner {
 
 class MultiClassEnchantedShield : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", 0);
+		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog && prog.sheet) {
