@@ -25,8 +25,8 @@ class PlayerSheet_HereticPlayer: PlayerSheet {
 		hitpointTable[3] = 10;
 		hitpointTable[4] = 3;
 
-		manaTable[0] = 92;
-		manaTable[1] = 102;
+		manaTable[0] = 80;
+		manaTable[1] = 90;
 		manaTable[2] = 9;
 		manaTable[3] = 11;
 		manaTable[4] = 3;

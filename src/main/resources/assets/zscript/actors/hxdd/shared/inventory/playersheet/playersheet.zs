@@ -88,14 +88,14 @@ class PlayerSheet: Inventory {
 			experienceTable[i] = experienceTable[i-1] * 2.0f;
 		}
 
-		hitpointTable[0] = 50;
-		hitpointTable[1] = 60;
-		hitpointTable[2] = 0;
-		hitpointTable[3] = 5;
+		hitpointTable[0] = 60;
+		hitpointTable[1] = 70;
+		hitpointTable[2] = 2;
+		hitpointTable[3] = 6;
 		hitpointTable[4] = 5;
 
-		manaTable[0] = 40;
-		manaTable[1] = 50;
+		manaTable[0] = 70;
+		manaTable[1] = 80;
 		manaTable[2] = 5;
 		manaTable[3] = 10;
 		manaTable[4] = 5;
