@@ -26,6 +26,10 @@ class Progression: Inventory {
 	bool ProgressionSelected;
 	bool CompatabilityScaleSelected;
 
+	// Alignment (Used for some pickups)
+	String Alignment;
+	property Alignment: Alignment;
+
 	// Gameplay Modes
 	int DefaultArmorMode;
 	int DefaultProgression;
@@ -43,6 +47,7 @@ class Progression: Inventory {
 
 	// Character Stats
 	int level;
+	int maxlevel;
 	int experience;
 	double experienceModifier;
 
@@ -64,6 +69,7 @@ class Progression: Inventory {
 
 	// Character Stats
 	property Level: level;
+	property MaxLevel: maxlevel;
 	property Experience: experience;
 	property ExperienceModifier: experienceModifier;
 
@@ -74,7 +80,7 @@ class Progression: Inventory {
 	property Wisdom: wisdom;
 	property Dexterity: dexterity;
 
-	PlayerSheet sheet;
+	ProgressionEventHandler handler;
 
     Default {
 		+INVENTORY.KEEPDEPLETED
@@ -112,12 +118,8 @@ class Progression: Inventory {
 
 	bool ProgressionAllowed() {
 		int optionProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
-		if (self.sheet) {
-			if (optionProgression == PSP_DEFAULT) {
-				optionProgression = self.sheet.DefaultProgression;
-			}
-		} else if (optionProgression == PSP_DEFAULT) {
-			optionProgression = PSP_NONE;
+		if (optionProgression == PSP_DEFAULT) {
+			optionProgression = self.DefaultProgression;
 		}
 		return optionProgression == PSP_LEVELS || optionProgression == PSP_LEVELS_RANDOM || optionProgression == PSP_LEVELS_USER;
 	}
@@ -129,10 +131,9 @@ class Progression: Inventory {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
+		LoadPlayerSheet();
 		if (!ProgressionSelected) {
-			CreatePlayerSheetItem();
 			if (ProgressionAllowed()) {
-        		CopyAdvancementFromSheet();
 				InitLevel_PostBeginPlay();
 			} else {
 				// Set stats to 10 to prevent any penalties
@@ -146,38 +147,198 @@ class Progression: Inventory {
 		ArmorModeSelection();
 	}
 
-	void CreatePlayerSheetItem() {
+	void LoadPlayerSheet() {
+		int cvarProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
+
 		String playerClassName = owner.player.mo.GetClassName();
+		if (playerClassName.IndexOf("HXDD") != -1) {
+			playerClassName = owner.player.mo.GetParentClass().GetClassName();
+		}
 		playerClassName = playerClassName.MakeLower();
 
-		uint end = AllActorClasses.Size();
-		for (uint i = 0; i < end; ++i) {
-			let item = (class<PlayerSheet>)(AllActorClasses[i]);
-			if (item) {
-				String strSearch = "PlayerSheet_";
-				String itemName = item.GetClassName();
-				if (itemName != "PlayerSheet" && playerClassName.IndexOf(itemName.MakeLower().Mid(strSearch.Length())) != -1 ) {	
-					let invsheet = owner.player.mo.FindInventory(item);
-					if (invsheet == null) {
-						owner.player.mo.GiveInventory(item, 1);
-						self.sheet = PlayerSheet(owner.player.mo.FindInventory(item));
-						self.sheet.DefineAdvancementStatTables();
-						return;
+		self.DefaultArmorMode = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_armor", playerClassName), PSAM_ARMOR_SIMPLE);
+		self.DefaultProgression = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_progression", playerClassName), PSP_NONE);
+		self.Alignment = LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_alignment", playerClassName), "Neutral");
+
+		if (self.DefaultArmorMode == PSAM_DEFAULT) {
+			self.DefaultArmorMode = PSAM_ARMOR_SIMPLE;
+			console.printf("Incorrect Class Armor Mode, PSAM_DEFAULT or 0 should not be used! Using PSAM_SIMPLE as Default.");
+		}
+		if (self.DefaultProgression == PSP_DEFAULT) {
+			self.DefaultProgression = PSP_NONE;
+			console.printf("Incorrect Class Progression Mode, PSP_DEFAULT or 0 should not be used! Using PSP_NONE as Default.");
+		}
+
+		if (cvarProgression == PSP_DEFAULT) {
+			cvarProgression = self.DefaultProgression;
+		}
+
+		if (cvarProgression != PSP_NONE) {
+			bool hasEvents = LemonUtil.CVAR_GetBool(String.format("hxdd_playersheet_%s_eventhandler", playerClassName), false);
+			if (hasEvents) {
+				String eventClass = String.format("peh_%s", playerClassName);
+				Class<Actor> handler = eventClass;
+				if (handler) {
+					ProgressionEventHandler invEventHandler = ProgressionEventHandler(owner.player.mo.FindInventory(eventClass));
+					if (invEventHandler == null) {
+						owner.player.mo.GiveInventory(eventClass, 1);
+						self.handler = ProgressionEventHandler(owner.player.mo.FindInventory(eventClass));
 					}
 				}
 			}
 		}
 
-		PlayerSheet invsheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
-		if (invsheet == null) {
-			owner.player.mo.GiveInventory("PlayerSheet", 1);
-			self.sheet = PlayerSheet(owner.player.mo.FindInventory("PlayerSheet"));
-			self.sheet.DefineAdvancementStatTables();
-		}
-	}
+		if (cvarProgression == PSP_LEVELS) {
+			double cvarPS_ExpModifer = LemonUtil.CVAR_GetFloat(String.format("hxdd_playersheet_%s_expmod", playerClassName), 1.0);
 
-	PlayerSheet GetPlayerSheet() {
-		return self.sheet;
+			int last = 800;
+			String expDefaultGen = "800";
+			for (let i = 1; i < 11; i++) {
+				last = last * 2.0;
+				expDefaultGen = String.format("%s,%d", expDefaultGen, last);
+			}
+
+			Array<String> tblExp;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_experience", playerClassName), expDefaultGen).Split(tblExp, ",");
+
+			Array<String> tblHP;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_hitpoints", playerClassName), "60,70,2,6,5").Split(tblHP, ",");
+
+			Array<String> tblMana;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_mana", playerClassName), "95,105,5,10,5").Split(tblMana, ",");
+
+			Array<String> tblStr;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_strength", playerClassName), "6,16").Split(tblStr, ",");
+
+			Array<String> tblInt;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_intelligence", playerClassName), "6,16").Split(tblInt, ",");
+
+			Array<String> tblWis;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_wisdom", playerClassName), "6,16").Split(tblWis, ",");
+
+			Array<String> tblDex;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_dexterity", playerClassName), "6,16").Split(tblDex, ",");
+
+			int cvarPS_MaxLevel = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_maxlevel", playerClassName), 20);
+
+			// validation
+			bool valid = true;
+			if (tblExp.Size() != 11) {
+				valid = false;
+				console.printf("Incorrect size for Experience Table! Size is %d, should be 11.", tblExp.Size());
+			}
+			if (tblHP.Size() != 5) {
+				valid = false;
+				console.printf("Incorrect size for Hitpoints Table! Size is %d, should be 5.", tblHP.Size());
+			}
+			if (tblMana.Size() != 5) {
+				valid = false;
+				console.printf("Incorrect size for Mana Table! Size is %d, should be 5.", tblMana.Size());
+			}
+			if (tblStr.Size() != 2) {
+				valid = false;
+				console.printf("Incorrect size for Strength Table! Size is %d, should be 2.", tblStr.Size());
+			}
+			if (tblInt.Size() != 2) {
+				valid = false;
+				console.printf("Incorrect size for Intelligence Table ! Size is %d, should be 2.", tblInt.Size());
+			}
+			if (tblWis.Size() != 2) {
+				valid = false;
+				console.printf("Incorrect size for Wisdom Table! Size is %d, should be 2.", tblWis.Size());
+			}
+			if (tblDex.Size() != 2) {
+				valid = false;
+				console.printf("Incorrect size for Dexterity Table! Size is %d, should be 2.", tblDex.Size());
+			}
+			if (cvarPS_MaxLevel <= 0) {
+				valid = false;
+				console.printf("MaxLevel should be greater than 0!");
+			}
+
+			if (valid) {
+				self.maxlevel 				= cvarPS_MaxLevel;
+				self.experienceModifier	=		cvarPS_ExpModifer;
+				for (let i = 0; i < 11; i++) {
+					self.experienceTable[i] =	tblExp[i].ToInt();
+				}
+				for (let i = 0; i < 5; i++) {
+					self.hitpointTable[i] =		tblHP[i].ToInt();
+					self.manaTable[i] =			tblMana[i].ToInt();
+				}
+				for (let i = 0; i < 2; i++) {
+					self.strengthTable[i] =		tblStr[i].ToInt();
+					self.intelligenceTable[i] =	tblInt[i].ToInt();
+					self.wisdomTable[i] =		tblWis[i].ToInt();
+					self.dexterityTable[i] =		tblDex[i].ToInt();
+				}
+			}
+		} else if (cvarProgression == PSP_LEVELS_USER) {
+			// User Defined Stats
+			int lastExpDefault = 800;
+			self.experienceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_0", lastExpDefault);
+			for (let i = 1; i < 11; i++) {
+				lastExpDefault *= 2;
+				String cvarExpTableLevelNum = String.format("hxdd_progression_user_level_%d", i);
+				self.experienceTable[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, lastExpDefault);
+			}
+
+			self.hitpointTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_max", 100);
+			self.hitpointTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_min", 100);
+			self.hitpointTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_min", 0);
+			self.hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
+			self.hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
+
+			self.manaTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
+			self.manaTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
+			self.manaTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
+			self.manaTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
+			self.manaTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
+
+			self.strengthTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_min", 10);
+			self.strengthTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_max", 10);
+
+			self.intelligenceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_min", 10);
+			self.intelligenceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_max", 10);
+
+			self.wisdomTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_min", 10);
+			self.wisdomTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_max", 10);
+
+			self.dexterityTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_min", 10);
+			self.dexterityTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_max", 10);
+
+			self.maxlevel = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_max", 20);
+
+		} else if (cvarProgression == PSP_LEVELS_RANDOM) {
+			// TODO: Add ranges?
+			self.experienceModifier = 1.0f + frandom[exprnd](0.0f, 0.5f);
+
+			self.experienceTable[0] = (0.2f + frandom[exprnd](0.8f, 1.0f)) * 800;
+			for (let i = 1; i < 11; i++) {
+				self.experienceTable[i] = 	experienceTable[i-1] * (1.8 + (frandom[exprnd](0.0, 1.0) * 4.0f));
+			}
+
+			self.hitpointTable[0] = 65.0f;
+			self.hitpointTable[1] = hitpointTable[0] + (frandom[exprnd](0.15f, 0.25f) * 100.0f);;
+			self.hitpointTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
+			self.hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
+			self.hitpointTable[4] = hitpointTable[2];
+
+			self.manaTable[0] = 40.0f;
+			self.manaTable[1] = 50.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
+			self.manaTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
+			self.manaTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
+			self.manaTable[4] = manaTable[2];
+
+			for (let i = 0; i < 2; i++) {
+				double mult = ((i+1) * 10.0f);
+				self.strengthTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
+				self.intelligenceTable[i] =	frandom[exprnd](0.5f, 1.0f) * mult;
+				self.wisdomTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
+				self.dexterityTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
+			}
+			self.maxlevel = 20;
+		}
 	}
 
 	void ArmorModeSelection() {
@@ -189,11 +350,9 @@ class Progression: Inventory {
 			return;
 		}
 		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
-		if (self.sheet) {
-			if (optionArmorMode == PSAM_DEFAULT) {
-				optionArmorMode = self.sheet.DefaultArmorMode;
-			}
-		} else if (optionArmorMode == PSAM_DEFAULT) {
+		if (optionArmorMode == PSAM_DEFAULT) {
+			optionArmorMode = self.DefaultArmorMode;
+		} else {
 			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
 			if (itemHexenArmor) {
 				optionArmorMode = PSAM_ARMOR_AC;
@@ -280,116 +439,7 @@ class Progression: Inventory {
 	}
 
 	// This is dumb, but: https://discord.com/channels/268086704961748992/268877450652549131/385134419893288960
-	virtual void CopyAdvancementFromSheet() {
-		int cvarCustomProgressionType = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
-		if (cvarCustomProgressionType == PSP_LEVELS_USER) {
-			// User Defined Stats
-			int lastExpDefault = 800;
-			experienceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_0", lastExpDefault);
-			for (let i = 1; i < 11; i++) {
-				lastExpDefault *= 2;
-				String cvarExpTableLevelNum = String.format("hxdd_progression_user_level_%d", i);
-				experienceTable[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, lastExpDefault);
-			}
-
-			hitpointTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_max", 100);
-			hitpointTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_min", 100);
-			hitpointTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_min", 0);
-			hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
-			hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
-
-			manaTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
-			manaTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
-			manaTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
-			manaTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
-			manaTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
-
-			strengthTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_min", 10);
-			strengthTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_max", 10);
-
-			intelligenceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_min", 10);
-			intelligenceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_max", 10);
-
-			wisdomTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_min", 10);
-			wisdomTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_max", 10);
-
-			dexterityTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_min", 10);
-			dexterityTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_max", 10);
-
-		} else if (cvarCustomProgressionType == PSP_LEVELS_RANDOM) {
-			// Go wild
-			// TODO: Add ranges?
-			experienceModifier = 1.0f + frandom[exprnd](0.0f, 0.5f);
-
-			experienceTable[0] = (0.2f + frandom[exprnd](0.8f, 1.0f)) * 800;
-			for (let i = 1; i < 11; i++) {
-				experienceTable[i] = 	experienceTable[i-1] * (1.8 + (frandom[exprnd](0.0, 1.0) * 4.0f));
-			}
-
-			hitpointTable[0] = 65.0f;
-			hitpointTable[1] = hitpointTable[0] + (frandom[exprnd](0.15f, 0.25f) * 100.0f);;
-			hitpointTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
-			hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
-			hitpointTable[4] = hitpointTable[2];
-
-			manaTable[0] = 40.0f;
-			manaTable[1] = 50.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
-			manaTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
-			manaTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
-			manaTable[4] = manaTable[2];
-
-			for (let i = 0; i < 2; i++) {
-				double mult = ((i+1) * 10.0f);
-				strengthTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
-				intelligenceTable[i] =	frandom[exprnd](0.5f, 1.0f) * mult;
-				wisdomTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
-				dexterityTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
-			}
-		} else if (self.sheet) {
-			experienceModifier =		self.sheet.experienceModifier;
-			for (let i = 0; i < 11; i++) {
-				experienceTable[i] =	self.sheet.experienceTable[i];
-			}
-			for (let i = 0; i < 5; i++) {
-				hitpointTable[i] =		self.sheet.hitpointTable[i];
-				manaTable[i] =			self.sheet.manaTable[i];
-			}
-			for (let i = 0; i < 2; i++) {
-				strengthTable[i] =		self.sheet.strengthTable[i];
-				intelligenceTable[i] =	self.sheet.intelligenceTable[i];
-				wisdomTable[i] =		self.sheet.wisdomTable[i];
-				dexterityTable[i] =		self.sheet.dexterityTable[i];
-			}
-		} else {
-			experienceTable[0] = 800;
-			for (let i = 1; i < 11; i++) {
-				experienceTable[i] = experienceTable[i-1] * 2.0f;
-			}
-
-			hitpointTable[0] = 60;
-			hitpointTable[1] = 70;
-			hitpointTable[2] = 2;
-			hitpointTable[3] = 6;
-			hitpointTable[4] = 5;
-
-			manaTable[0] = 70;
-			manaTable[1] = 80;
-			manaTable[2] = 5;
-			manaTable[3] = 10;
-			manaTable[4] = 5;
-
-			strengthTable[0] = 8;
-			strengthTable[1] = 12;
-
-			intelligenceTable[0] = 8;
-			intelligenceTable[1] = 12;
-
-			wisdomTable[0] = 8;
-			wisdomTable[1] = 12;
-
-			dexterityTable[0] = 8;
-			dexterityTable[1] = 12;
-		}
+	void UserAndRandomStats() {
 	}
 
 	void InitLevel_PostBeginPlay() {
@@ -461,37 +511,37 @@ class Progression: Inventory {
 
 		S_StartSound("hexen2/misc/comm", CHAN_VOICE);
 
-		while (level < advanceLevel && level < 20) {
-			int lastLevel = level++;
+		while (self.level < advanceLevel && self.level < self.maxlevel) {
+			int lastLevel = self.level++;
 
 			double healthInc = 0;
 			double manaInc = 0;
 			if (lastLevel < 11) {
-				healthInc = stats_compute(self.sheet.hitpointTable[2],self.sheet.hitpointTable[3]);
-				manaInc = stats_compute(self.sheet.manaTable[2],self.sheet.manaTable[3]);
+				healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
+				manaInc = stats_compute(self.manaTable[2],self.manaTable[3]);
 			} else {
-				healthInc = self.sheet.hitpointTable[4];
-				manaInc = self.sheet.manaTable[4];
+				healthInc = self.hitpointTable[4];
+				manaInc = self.manaTable[4];
 			}
 			MaxHealth += HealthInc;
-			MaxMana += ManaInc;
+			self.MaxMana += ManaInc;
 
 			// TODO: Allow max values to be set by cvars
-			if (Health > 150) {
-				Health = 150;
+			if (self.Health > 150) {
+				self.Health = 150;
 			}
-			if (MaxHealth > 150) {
-				MaxHealth = 150;
+			if (self.MaxHealth > 150) {
+				self.MaxHealth = 150;
 			}
-			if (MaxMana > 300) {
-				MaxMana = 300;
+			if (self.MaxMana > 300) {
+				self.MaxMana = 300;
 			}
 
 			// Hacky solution to increase player health when leveling
 			// TODO: Add an options toggle
-			player.MaxHealth = MaxHealth;
-			int levelHealth = Clamp(Health + HealthInc, Health, MaxHealth);
-			HealThing(levelHealth, MaxHealth);
+			player.MaxHealth = self.MaxHealth;
+			int levelHealth = Clamp(self.Health + HealthInc, self.Health, self.MaxHealth);
+			HealThing(levelHealth, self.MaxHealth);
 
 			Inventory next;
 			for (Inventory item = player.Inv; item != NULL; item = next) {
@@ -536,19 +586,19 @@ class Progression: Inventory {
 		int wisdom_modifier = wisdom - 11;
 		amount += amount * wisdom_modifier / 20;
 
-		experience += amount;
+		self.experience += amount;
 		console.printf("Gained %d Experience!", amount);
 
 		OnExperienceBonus(amount);
 
-		if (level == 20) {
+		if (self.level == self.maxlevel) {
 			// Max Level
 			return 0.0f;
 		}
 
 		double afterLevel = FindLevel();
 
-		console.printf("Total Experience: %d", experience);
+		console.printf("Total Experience: %d", self.experience);
 
 		if (level != afterLevel) {
 			AdvanceLevel(afterLevel);
@@ -558,14 +608,14 @@ class Progression: Inventory {
 	}
 
 	double FindLevel() {
-		int MAX_LEVELS = 10;
+		int MAX_LEVELS = experienceTable.Size() - 1;
 
 		double Amount;
 
 		int pLevel = 0;
 		int Position = 0;
 		while(Position < MAX_LEVELS && pLevel == 0) {
-			if (experience < experienceTable[Position]) {
+			if (self.experience < self.experienceTable[Position]) {
 				pLevel = Position + 1;
 			}
 
@@ -573,21 +623,21 @@ class Progression: Inventory {
 		}
 
 		if (pLevel == 0) {
-			Amount = experience - experienceTable[MAX_LEVELS - 1];
-			pLevel = ceil(Amount / experienceTable[MAX_LEVELS]) + 10;
+			Amount = self.experience - self.experienceTable[MAX_LEVELS - 1];
+			pLevel = ceil(Amount / self.experienceTable[MAX_LEVELS]) + 10;
 		}
 
 		return pLevel;
 	}
 
-	// Exists to allow progression from Doom Engine mobs
+	// Allows progression from Doom Engine mobs
 	double GiveExperienceByTargetHealth(Actor target) {
 		// Setup cvars?
 		double expDifficulty[5] = {1.0, 1.0, 1.0, 1.0, 1.0};
-		double experience = 0;
-		if (experienceTable[0] == 0 || !target) {
+		double exp = 0;
+		if (self.experienceTable[0] == 0 || !target) {
 			// Experience Table is not setup or no target
-			return experience;
+			return exp;
 		}
 		if (target.health <= 0) {
 			double calcExp = target.Default.health;
@@ -607,7 +657,7 @@ class Progression: Inventory {
 			calcExp *= expDifficulty[skSpawnFilter];
 			return GiveExperience(calcExp);
 		}
-		return experience;
+		return exp;
 	}
 
 	// Event Stubs

@@ -304,12 +304,9 @@ class HXDDPowerupSphere: Inventory {
                 if (mo is "PlayerPawn") {
                     Progression prog = Progression(mo.FindInventory("Progression"));
                     if (prog) {
-                        PlayerSheet sheet = prog.sheet;
-                        if (sheet) {
-                            if (sheet.Alignment == self.alignmentType) {
-                                self.target = mo;
-                                break;
-                            }
+                        if (prog.Alignment == self.alignmentType) {
+                            self.target = mo;
+                            break;
                         }
                     }
                 }
@@ -340,10 +337,9 @@ class HXDDPowerupSphere: Inventory {
     override bool TryPickup(in out Actor toucher) {
         Progression prog = Progression(toucher.FindInventory("Progression"));
         if (prog) {
-            PlayerSheet sheet = prog.sheet;
-            if (sheet.Alignment == "Good") {
+            if (prog.Alignment == "Good") {
                 OnGoodPickup(toucher);
-            } else if (sheet.Alignment == "Evil") {
+            } else if (prog.Alignment == "Evil") {
                 OnEvilPickup(toucher);
             } else {
                 OnNeutralPickup(toucher);

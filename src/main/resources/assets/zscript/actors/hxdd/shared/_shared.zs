@@ -9,14 +9,7 @@
 #include "zscript/actors/hxdd/shared/inventory/recoilcontroller.zs"
 #include "zscript/actors/hxdd/shared/player/hxddplayerpawn.zs"
 
-// Progression
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_hereticplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_fighterplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_clericplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_mageplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_assassinplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_crusaderplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_necromancerplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_paladinplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/playersheet/playersheet_succubusplayer.zs"
+// Progression Event Handler
+#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/progressioneventhandler.zs"
+#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/peh_crusaderplayer.zs"
+#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/peh_necromancerplayer.zs"

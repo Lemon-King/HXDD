@@ -107,7 +107,7 @@ class CWeapWarhammer : CrusaderWeapon
 
         Progression prog = Progression(Player.mo.FindInventory("Progression"));
 		double strength = 10;
-		if (prog.sheet) {
+		if (prog) {
 			strength = prog.strength;
 		}
 

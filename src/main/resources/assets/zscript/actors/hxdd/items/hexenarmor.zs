@@ -3,9 +3,9 @@ class MultiClassMeshArmor : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
             }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
@@ -35,9 +35,9 @@ class MultiClassPlatinumHelm : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
             }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
@@ -67,9 +67,9 @@ class MultiClassAmuletOfWarding : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
 			} else {
                 return "Unknown";
                 //cvarArmorMode = PSAM_ARMOR_AC;
@@ -104,9 +104,9 @@ class MultiClassFalconShield : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
             }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {

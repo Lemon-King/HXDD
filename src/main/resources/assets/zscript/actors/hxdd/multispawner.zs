@@ -168,7 +168,7 @@ class MultiSpawner: RandomSpawner {
         if (self.CvarSelect && readyState == MSS_NOTREADY) {
             if (p) {
                 Progression prog = Progression(p.mo.FindInventory("Progression"));
-                if (prog && prog.sheet) {
+                if (prog) {
                     PostBeginPlay();
                 }
             }

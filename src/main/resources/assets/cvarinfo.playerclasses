@@ -1,0 +1,135 @@
+
+// 	PSAM_ARMOR_SIMPLE = 1
+// 	PSAM_ARMOR_AC = 2
+// 	PSAM_ARMOR_RANDOM = 3
+// 	PSAM_ARMOR_USER = 4
+
+// 	PSP_NONE = 1
+// 	PSP_LEVELS = 2
+// 	PSP_LEVELS_RANDOM = 3
+// 	PSP_LEVELS_USER = 4
+
+// id format: hxdd_playersheet_<playerclassname>_<field>
+// default armor type: see PSAM values
+// default progression type: see PSP values
+// alignment: Used in other actors to determine reactions
+// experience: <level 2>, <level 3>, <level 4>, <level 5>, <level 6>, <level 7>, <level 8>, <level 9>, <level 10>, <level 11+>
+// hit/mana points: <min starting amount>, <max starting amount>, <min gain level 1 - 10>, <max gain level 1 - 10>, <gain 11+>
+// stats: <min starting amount>, <max starting amount>
+// eventhandler: <boolean>
+
+//
+// HERETIC
+//
+
+server noarchive cheat int hxdd_playersheet_hereticplayer_armor                = 1;
+server noarchive cheat int hxdd_playersheet_hereticplayer_progression          = 1;
+server noarchive cheat string hxdd_playersheet_hereticplayer_alignment         = "Good";
+server noarchive cheat string hxdd_playersheet_hereticplayer_experience        = "675,1600,3750,7250,15000,28500,52000,86000,110000,150000,150000";
+server noarchive cheat string hxdd_playersheet_hereticplayer_hitpoints         = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_hereticplayer_mana              = "80,90,5,10,3";
+server noarchive cheat string hxdd_playersheet_hereticplayer_strength          = "6,10";
+server noarchive cheat string hxdd_playersheet_hereticplayer_intelligence      = "10,13";
+server noarchive cheat string hxdd_playersheet_hereticplayer_wisdom            = "12,15";
+server noarchive cheat string hxdd_playersheet_hereticplayer_dexterity         = "15,18";
+server noarchive cheat int hxdd_playersheet_hereticplayer_maxlevel             = 20;
+
+//
+// HEXEN
+//
+
+// Player Sheet Fighter
+server noarchive cheat int hxdd_playersheet_fighterplayer_armor                = 2;
+server noarchive cheat int hxdd_playersheet_fighterplayer_progression          = 1;
+server noarchive cheat string hxdd_playersheet_fighterplayer_alignment         = "Good";
+server noarchive cheat string hxdd_playersheet_fighterplayer_experience        = "945,2240,5250,10150,21000,39900,72800,120400,154000,210000,210000";
+server noarchive cheat string hxdd_playersheet_fighterplayer_hitpoints         = "70,80,8,13,4";
+server noarchive cheat string hxdd_playersheet_fighterplayer_mana              = "84,94,6,9,1";
+server noarchive cheat string hxdd_playersheet_fighterplayer_strength          = "15,18";
+server noarchive cheat string hxdd_playersheet_fighterplayer_intelligence      = "6,10";
+server noarchive cheat string hxdd_playersheet_fighterplayer_wisdom            = "6,10";
+server noarchive cheat string hxdd_playersheet_fighterplayer_dexterity         = "10,13";
+server noarchive cheat int hxdd_playersheet_fighterplayer_maxlevel             = 20;
+
+// Player Sheet Cleric
+server noarchive cheat int hxdd_playersheet_clericplayer_armor                = 2;
+server noarchive cheat int hxdd_playersheet_clericplayer_progression          = 1;
+server noarchive cheat string hxdd_playersheet_clericplayer_alignment         = "Good";
+server noarchive cheat string hxdd_playersheet_clericplayer_experience        = "911,2160,5062,9787,20250,38475,70200,116100,148500,202500,202500";
+server noarchive cheat string hxdd_playersheet_clericplayer_hitpoints         = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_clericplayer_mana              = "88,98,7,10,2";
+server noarchive cheat string hxdd_playersheet_clericplayer_strength          = "12,15";
+server noarchive cheat string hxdd_playersheet_clericplayer_intelligence      = "10,13";
+server noarchive cheat string hxdd_playersheet_clericplayer_wisdom            = "15,18";
+server noarchive cheat string hxdd_playersheet_clericplayer_dexterity         = "6,10";
+server noarchive cheat int hxdd_playersheet_clericplayer_maxlevel             = 20;
+
+server noarchive cheat int hxdd_playersheet_mageplayer_armor                  = 2;
+server noarchive cheat int hxdd_playersheet_mageplayer_progression            = 1;
+server noarchive cheat string hxdd_playersheet_mageplayer_alignment           = "Good";
+server noarchive cheat string hxdd_playersheet_mageplayer_experience          = "823,1952,4575,8845,18300,34770,63440,104920,134200,183000,183000";
+server noarchive cheat string hxdd_playersheet_mageplayer_hitpoints           = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_mageplayer_mana                = "96,106,10,12,4";
+server noarchive cheat string hxdd_playersheet_mageplayer_strength            = "6,10";
+server noarchive cheat string hxdd_playersheet_mageplayer_intelligence        = "15,18";
+server noarchive cheat string hxdd_playersheet_mageplayer_wisdom              = "10,13";
+server noarchive cheat string hxdd_playersheet_mageplayer_dexterity           = "8,12";
+server noarchive cheat int hxdd_playersheet_mageplayer_maxlevel               = 20;
+
+//
+// HEXEN II
+//
+
+// Player Sheet Assassin
+server noarchive cheat int hxdd_playersheet_assassinplayer_armor              = 2;
+server noarchive cheat int hxdd_playersheet_assassinplayer_progression        = 2;
+server noarchive cheat string hxdd_playersheet_assassinplayer_alignment       = "Evil";
+server noarchive cheat string hxdd_playersheet_assassinplayer_experience      = "675,1600,3750,7250,15000,28500,52000,86000,110000,150000,150000";
+server noarchive cheat string hxdd_playersheet_assassinplayer_hitpoints       = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_assassinplayer_mana            = "92,102,9,11,3";
+server noarchive cheat string hxdd_playersheet_assassinplayer_strength        = "10,13";
+server noarchive cheat string hxdd_playersheet_assassinplayer_intelligence    = "6,10";
+server noarchive cheat string hxdd_playersheet_assassinplayer_wisdom          = "12,15";
+server noarchive cheat string hxdd_playersheet_assassinplayer_dexterity       = "15,18";
+server noarchive cheat int hxdd_playersheet_assassinplayer_maxlevel           = 20;
+
+// Player Sheet Crusader
+server noarchive cheat int hxdd_playersheet_crusaderplayer_armor              = 2;
+server noarchive cheat int hxdd_playersheet_crusaderplayer_progression        = 2;
+server noarchive cheat string hxdd_playersheet_crusaderplayer_alignment       = "Good";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_experience      = "911,2160,5062,9787,20250,38475,70200,116100,148500,202500,202500";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_hitpoints       = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_mana            = "88,98,7,10,2";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_strength        = "12,15";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_intelligence    = "10,13";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_wisdom          = "15,18";
+server noarchive cheat string hxdd_playersheet_crusaderplayer_dexterity       = "6,10";
+server noarchive cheat int hxdd_playersheet_crusaderplayer_maxlevel           = 20;
+server noarchive cheat bool hxdd_playersheet_crusaderplayer_eventhandler      = true;
+
+// Player Sheet Necromancer
+server noarchive cheat int hxdd_playersheet_necromancerplayer_armor           = 2;
+server noarchive cheat int hxdd_playersheet_necromancerplayer_progression     = 2;
+server noarchive cheat string hxdd_playersheet_necromancerplayer_alignment    = "Evil";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_experience   = "823,1952,4575,8845,18300,34770,63440,104920,134200,183000,183000";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_hitpoints    = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_mana         = "96,106,10,12,4";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_strength     = "6,10";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_intelligence = "15,18";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_wisdom       = "10,13";
+server noarchive cheat string hxdd_playersheet_necromancerplayer_dexterity    = "8,12";
+server noarchive cheat int hxdd_playersheet_necromancerplayer_maxlevel        = 20;
+server noarchive cheat bool hxdd_playersheet_necromancerplayer_eventhandler   = true;
+
+// Player Sheet Succubus
+server noarchive cheat int hxdd_playersheet_succubusplayer_armor              = 2;
+server noarchive cheat int hxdd_playersheet_succubusplayer_progression        = 2;
+server noarchive cheat string hxdd_playersheet_succubusplayer_alignment       = "Evil";
+server noarchive cheat string hxdd_playersheet_succubusplayer_experience      = "871,2060,4822,9319,19278,36626,66804,110494,141334,192700,192700";
+server noarchive cheat string hxdd_playersheet_succubusplayer_hitpoints       = "65,75,5,10,3";
+server noarchive cheat string hxdd_playersheet_succubusplayer_mana            = "90,100,8,11,3";
+server noarchive cheat string hxdd_playersheet_succubusplayer_strength        = "11,14";
+server noarchive cheat string hxdd_playersheet_succubusplayer_intelligence    = "9,13";
+server noarchive cheat string hxdd_playersheet_succubusplayer_wisdom          = "11,14";
+server noarchive cheat string hxdd_playersheet_succubusplayer_dexterity       = "9,13";
+server noarchive cheat int hxdd_playersheet_succubusplayer_maxlevel           = 20;

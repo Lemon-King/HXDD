@@ -316,10 +316,10 @@ public class PK3Builder {
                 for (int headerIndex : MapUtils.getAllMapIndices(wad)) {
                     String mapName = wad.getEntry(headerIndex).getName();
                     String mapPathName = mapName;
-                    // HEXDD Expansion Hack, offset map number by 7
+                    // HEXDD Expansion Hack, offset map number by 9
                     // This offset is chosen as the last used map index starting at 42
                     if (wadName.toLowerCase().equals("hexdd")) {
-                        int mapOffset = 7;
+                        int mapOffset = 9;
                         mapPathName = "MAP" + (Integer.valueOf(mapName.substring(3,5)) + mapOffset);
                     }
                     String mapPath = path + mapSetHeader + mapPathName + ".wad";

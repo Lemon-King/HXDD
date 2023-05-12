@@ -70,8 +70,8 @@ class HXDDWorldEventHandler : EventHandler {
                         exp = prog.GiveExperienceByTargetHealth(e.thing);
                     }
                     
-                    if (prog.sheet) {
-                        prog.sheet.OnKill(pt, e.thing, exp);
+                    if (prog.handler) {
+                        prog.handler.OnKill(pt, e.thing, exp);
                     }
                 }
             }
@@ -85,8 +85,8 @@ class HXDDWorldEventHandler : EventHandler {
             // Reserved Map Numbers > 41 for HexDD
             if (mapNumber != -1 && mapNumber > 41) {
                 if (e.ActivatedLine.args[0] != 0) {
-                    // HXDD offsets Deathkings Map numbers by 7 during packaging
-                    e.ActivatedLine.args[0] += 7;
+                    // HXDD offsets Deathkings Map numbers by 9 during packaging
+                    e.ActivatedLine.args[0] += 9;
                 }
             }
         }

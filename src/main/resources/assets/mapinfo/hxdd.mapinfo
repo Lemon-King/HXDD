@@ -17,5 +17,7 @@ map hextest "Hexen Test"
 	sky1 = "SKYWALL2", 0
 	sky2 = "SKY4X", 0.1953125
 	cdtrack = 22
+	SoundInfo = "sndinfo.hexengz"
+	SndSeq = "sndseq.hexen"
 	NoIntermission
 }

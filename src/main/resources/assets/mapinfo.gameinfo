@@ -217,7 +217,7 @@ episode MAP01
 	optional
 }
 
-episode MAP48
+episode MAP50
 {
 	name = "$MNU_HEXDD"
 	key = "k"

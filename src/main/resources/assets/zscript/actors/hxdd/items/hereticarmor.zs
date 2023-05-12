@@ -19,9 +19,9 @@ class MultiClassSilverShield : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
             }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
@@ -51,10 +51,10 @@ class MultiClassEnchantedShield : MultiSpawner {
 		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
-		if (prog && prog.sheet) {
+		if (prog) {
 			//HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(p.mo);
 			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.sheet.DefaultArmorMode;
+				cvarArmorMode = prog.DefaultArmorMode;
             }
 		}
         if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
