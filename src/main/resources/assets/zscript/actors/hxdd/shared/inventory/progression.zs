@@ -36,6 +36,10 @@ class Progression: Inventory {
 	property DefaultArmorMode: DefaultArmorMode;
 	property DefaultProgression: DefaultProgression;
 
+	bool UseMaxHealthScaler;
+	property UseMaxHealthScaler: UseMaxHealthScaler;
+	int SpawnHealth;
+
 	// Class Tables
 	double experienceTable[11];	// TODO: Convert to Dynamic Array
 	double hitpointTable[5];
@@ -156,9 +160,17 @@ class Progression: Inventory {
 		}
 		playerClassName = playerClassName.MakeLower();
 
-		self.DefaultArmorMode = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_armor", playerClassName), PSAM_ARMOR_SIMPLE);
+		int cvarDefaultArmorMode = PSAM_ARMOR_SIMPLE;
+		let itemHexenArmor = HexenArmor(owner.player.mo.FindInventory("HexenArmor"));
+		if (itemHexenArmor) {
+			cvarDefaultArmorMode = PSAM_ARMOR_AC;
+		}
+
+		self.DefaultArmorMode = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_armor", playerClassName), cvarDefaultArmorMode);
 		self.DefaultProgression = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_progression", playerClassName), PSP_NONE);
 		self.Alignment = LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_alignment", playerClassName), "Neutral");
+
+		self.UseMaxHealthScaler = LemonUtil.CVAR_GetBool(String.format("hxdd_playersheet_%s_use_maxhealth_scaler", playerClassName), true);
 
 		if (self.DefaultArmorMode == PSAM_DEFAULT) {
 			self.DefaultArmorMode = PSAM_ARMOR_SIMPLE;
@@ -352,11 +364,6 @@ class Progression: Inventory {
 		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
 		if (optionArmorMode == PSAM_DEFAULT) {
 			optionArmorMode = self.DefaultArmorMode;
-		} else {
-			let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
-			if (itemHexenArmor) {
-				optionArmorMode = PSAM_ARMOR_AC;
-			}
 		}
 		if (optionArmorMode == PSAM_ARMOR_SIMPLE) {
 			ArmorModeSelection_Simple(player);
@@ -383,7 +390,6 @@ class Progression: Inventory {
 		// Remove Hexen AC armor Values to force simple armor mechanics
 		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
-			// unset all
 			for (int i = 0; i < 5; i++) {
 				itemHexenArmor.Slots[i] = 0;
 			}
@@ -438,10 +444,6 @@ class Progression: Inventory {
 		}
 	}
 
-	// This is dumb, but: https://discord.com/channels/268086704961748992/268877450652549131/385134419893288960
-	void UserAndRandomStats() {
-	}
-
 	void InitLevel_PostBeginPlay() {
 		if (level != 0) {
 			return;
@@ -449,9 +451,15 @@ class Progression: Inventory {
 		
 		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
 
-		let player = PlayerPawn(owner.player.mo);
-		
-        MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
+		let player = owner.player.mo;
+		self.SpawnHealth = player.Health;
+		console.printf("H %d", self.SpawnHealth);
+
+		if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
+        	MaxHealth = self.SpawnHealth * (stats_compute(hitpointTable[0], hitpointTable[1]) / 100.0);
+		} else {
+			MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
+		}
 		player.MaxHealth = MaxHealth;
         player.A_SetHealth(MaxHealth, AAPTR_DEFAULT);
 
@@ -494,6 +502,7 @@ class Progression: Inventory {
 		level = 1;
 		experience = 0;
 
+		console.printf("");
 		console.printf("----- Stats -----");
 		console.printf("Health: %0.2f", MaxHealth);
 		console.printf("Mana: %0.2f", maxMana);
@@ -516,22 +525,32 @@ class Progression: Inventory {
 
 			double healthInc = 0;
 			double manaInc = 0;
-			if (lastLevel < 11) {
-				healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
+			if (lastLevel < self.MaxLevel) {
+				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
+					healthInc = self.SpawnHealth * (stats_compute(self.hitpointTable[2],self.hitpointTable[3]) / 100.0);
+				} else {
+					healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
+				}
 				manaInc = stats_compute(self.manaTable[2],self.manaTable[3]);
 			} else {
-				healthInc = self.hitpointTable[4];
+				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
+					healthInc = (double)(self.SpawnHealth) * (self.hitpointTable[4] / 100.0);
+				} else {
+					healthInc = self.hitpointTable[4];
+				}
 				manaInc = self.manaTable[4];
 			}
 			MaxHealth += HealthInc;
 			self.MaxMana += ManaInc;
 
 			// TODO: Allow max values to be set by cvars
-			if (self.Health > 150) {
-				self.Health = 150;
+			int scaledMaxHealth = self.SpawnHealth * 1.5;
+			// 150
+			if (self.Health > scaledMaxHealth) {
+				self.Health = scaledMaxHealth;
 			}
-			if (self.MaxHealth > 150) {
-				self.MaxHealth = 150;
+			if (self.MaxHealth > scaledMaxHealth) {
+				self.MaxHealth = scaledMaxHealth;
 			}
 			if (self.MaxMana > 300) {
 				self.MaxMana = 300;
@@ -566,7 +585,7 @@ class Progression: Inventory {
 				}
 			}
 
-			console.printf("You are now level %d!", level);
+			console.printf("");
 			console.printf("-----Stats-----");
 			console.printf("Health: %0.2f", MaxHealth);
 			console.printf("Mana: %0.2f", MaxMana);
@@ -574,6 +593,9 @@ class Progression: Inventory {
 			console.printf("Intelligence: %0.2f", intelligence);
 			console.printf("Wisdom: %0.2f", wisdom);
 			console.printf("Dexterity: %0.2f", dexterity);
+			console.printf("");
+			console.printf("You are now level %d!", level);
+			console.printf("");
 		}
 	}
 
