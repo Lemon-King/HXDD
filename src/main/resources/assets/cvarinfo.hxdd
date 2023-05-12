@@ -1,10 +1,11 @@
-// Multipickup (Temp until GL Lights are fixed)
-server noarchive cheat latch bool hxdd_multipickup_singlemode = true;
 
-server noarchive cheat latch int hxdd_gamemode = 0;
+// Multipickup (Temp until GL Lights are fixed)
+server noarchive latch bool hxdd_multipickup_singlemode = true;
+
+server noarchive latch int hxdd_gamemode = 0;
 
 // Progression
-server noarchive cheat latch int hxdd_progression = 0;   // 0 = Default
+server noarchive latch int hxdd_progression = 0;   // 0 = Default
 
 server int hxdd_progression_user_level_0 = 800;
 server int hxdd_progression_user_level_1 = 1600;
@@ -49,7 +50,7 @@ server int hxdd_armor_user_3 = 20;
 server int hxdd_armor_user_4 = 10;
 
 // Armor Mode
-server noarchive cheat latch int hxdd_armor_mode = 0;   // 0 = Default
+server noarchive latch int hxdd_armor_mode = 0;   // 0 = Default
 
 // Hexen egg artwork (Gold)
 user bool hxdd_hexen_artiegg = false;
@@ -63,15 +64,15 @@ user int hxdd_random_artiegg = 0;
 user int hxdd_random_artipork = 0;
 
 // Environment hazard unification
-server noarchive cheat latch int hxdd_lavastyle = 0;
-server noarchive cheat latch int hxdd_waterstyle = 0;
-server noarchive cheat latch int hxdd_sludgestyle = 0;
-server noarchive cheat latch int hxdd_icestyle = 0;
+server noarchive latch int hxdd_lavastyle = 0;
+server noarchive latch int hxdd_waterstyle = 0;
+server noarchive latch int hxdd_sludgestyle = 0;
+server noarchive latch int hxdd_icestyle = 0;
 
 // Hexen II
 
 // Ammo
-server noarchive cheat latch bool hxdd_allow_backpack_use = true;
+server noarchive latch bool hxdd_allow_backpack_use = true;
 
 // Weapon Settings
 server bool hxdd_disable_vorpal_flashing_projectile = false;

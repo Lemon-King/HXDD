@@ -510,21 +510,14 @@ class ZFGameOptions ui {
         self.ddl_Difficulty = new ("DropDownCombo");
         self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), "Difficulty", listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
 
-        HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
-        listMapSet.items.push("Auto-Detect");
-        listMapSet.items.push("Heretic");
-        listMapSet.items.push("Hexen");
-        DropDownCombo ddl_GameMode = new ("DropDownCombo");
-        ddl_GameMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "Game Mode", listMapSet, 0, "hxdd_gamemode", cmdHandler);
-
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("Class Default");
-        listArmorMode.items.push("Heretic (Simple)");
-        listArmorMode.items.push("Hexen & Hexen II (Class Defined)");
+        listArmorMode.items.push("Basic (Heretic)");
+        listArmorMode.items.push("Class Based (Hexen & Hexen II)");
         listArmorMode.items.push("Random");
         //listArmorMode.items.push("Custom");
         DropDownCombo ddl_ArmorMode = new ("DropDownCombo");
-        ddl_ArmorMode.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "Armor Mode", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
+        ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "Armor Mode", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
         listProgression.items.push("Class Default");
@@ -533,7 +526,14 @@ class ZFGameOptions ui {
         listProgression.items.push("Random");
         //listProgression.items.push("Custom");
         DropDownCombo ddl_Progression = new ("DropDownCombo");
-        ddl_Progression.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Progression", listProgression, 0, "hxdd_progression", cmdHandler);
+        ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "Progression", listProgression, 0, "hxdd_progression", cmdHandler);
+
+        HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
+        listMapSet.items.push("Auto-Detect");
+        listMapSet.items.push("Heretic");
+        listMapSet.items.push("Hexen");
+        DropDownCombo ddl_GameMode = new ("DropDownCombo");
+        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Game Mode", listMapSet, 0, "hxdd_gamemode", cmdHandler);
     }
 
     void Refresh() {
