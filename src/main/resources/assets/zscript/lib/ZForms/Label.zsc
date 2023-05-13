@@ -126,11 +126,19 @@ class HXDD_ZF_Label : HXDD_ZF_Element {
 
 	private bool clicking;
 
-	private BrokenLines lines;
+	private Array<BrokenLines> lines;
 	private bool calculate;
 	private void recalculateLines() {
-		if (calculate && wrap) {
-			lines = fnt.breakLines(text, int(box.size.x / textScale));
+		Array<string> split;
+		text.split(split, "\n");
+
+		lines.Clear();
+		for (let i = 0; i < split.Size(); i++) {
+			let l = split[i];
+			//if (calculate && wrap) {
+			if (calculate && wrap) {
+				lines.Push(fnt.breakLines(l, int(box.size.x / textScale)));
+			}
 		}
 	}
 
@@ -142,7 +150,7 @@ class HXDD_ZF_Label : HXDD_ZF_Element {
 		if (autoSize) {
 			if (wrap) {
 				int fntHeight = fnt.getHeight();
-				box.size.y = fntHeight * textScale * lines.count();
+				box.size.y = fntHeight * textScale * GetLines();
 			}
 			else {
 				Array<string> split;
@@ -171,18 +179,31 @@ class HXDD_ZF_Label : HXDD_ZF_Element {
 
 			Vector2 pos = getAlignedDrawPos(
 				box.size,
-				(0, (lineHeight * lines.count() - lineSpacing) * textScale),
+				(0, (lineHeight * GetLines() - lineSpacing) * textScale),
 				alignment
 			);
 
-			for (int i = 0; i < lines.count(); i++) {
-				string line = lines.stringAt(i);
-				Vector2 linePos = getAlignedDrawPos(box.size, (fnt.stringWidth(line) * textScale, 0), alignment);
-				drawText((linePos.x, pos.y + (lineHeight * i * textScale)), fnt, line, textColor, textScale);
+			int o = 0;
+			for (int l = 0; l < lines.Size(); l++) {
+				let b = lines[l];
+				for (int i = 0; i < b.count(); i++) {
+					string line = b.stringAt(i);
+					Vector2 linePos = getAlignedDrawPos(box.size, (fnt.stringWidth(line) * textScale, 0), alignment);
+					drawText((linePos.x, pos.y + (lineHeight * o * textScale)), fnt, line, textColor, textScale);
+					o++;
+				}
 			}
 		}
 
 		Screen.setClipRect(int(beforeClip.pos.x), int(beforeClip.pos.y), int(beforeClip.size.x), int(beforeClip.size.y));
+	}
+
+	int GetLines() {
+		int l = 0;	
+		for (let i = 0; i < lines.Size(); i++) {
+			l += lines[i].count();
+		}
+		return l;
 	}
 
 	override bool onNavEvent(HXDD_ZF_NavEventType type, bool fromController) {

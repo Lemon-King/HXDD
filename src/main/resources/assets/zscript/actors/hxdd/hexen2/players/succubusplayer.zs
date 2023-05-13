@@ -15,14 +15,14 @@ class SuccubusPlayer : HXDDHexenIIPlayerPawn
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
 		Player.Viewheight 48;
-		Player.SpawnClass "Demoness";
+		Player.SpawnClass "Succubus";
 		Player.DisplayName "Demoness";
 		Player.SoundClass "hexen2female";
 		Player.ScoreIcon "FITEFACE";
-		Player.HealRadiusType "Armor";
+		Player.HealRadiusType "Health";
 		Player.HexenArmor 0, 5, 15, 10, 25;
-		Player.StartItem "Mana1";
-		Player.StartItem "Mana2";
+		//Player.StartItem "Mana1";
+		//Player.StartItem "Mana2";
 		Player.StartItem "SWeapBloodRain";
 		Player.ForwardMove 0.88, 0.92;
 		Player.SideMove 0.875, 0.925;

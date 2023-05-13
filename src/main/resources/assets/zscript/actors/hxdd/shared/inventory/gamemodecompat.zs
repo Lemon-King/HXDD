@@ -26,11 +26,11 @@ class GameModeCompat: Inventory {
 		Super.PostBeginPlay();
 
 		int cvarGameMode = LemonUtil.GetOptionGameMode();
-        if (LemonUtil.IsMapHeretic()) {
-            SetMode_Heretic();
+        if (cvarGameMode == GAME_Heretic) {
+            SetDamageScale_Heretic();
             SetPlayerSize_Heretic();
-        } else if (LemonUtil.IsMapHexen()) {
-            SetMode_Hexen();
+        } else if (cvarGameMode == GAME_Hexen) {
+            SetDamageScale_Hexen();
             SetPlayerSize_Hexen();
         }
     }
@@ -41,14 +41,14 @@ class GameModeCompat: Inventory {
         }
     }
 
-    void SetMode_Heretic() {
+    void SetDamageScale_Heretic() {
         if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
             DamageMult = 1.0;
         } else {
             DamageMult = 0.5;
         }
     }
-    void SetMode_Hexen() {
+    void SetDamageScale_Hexen() {
         if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
             DamageMult = 2.0;
         } else {
@@ -61,7 +61,7 @@ class GameModeCompat: Inventory {
             return;
         }
         // Doom & Heretic Bounds
-        p.A_SetSize(16, 56);
+        p.A_SetSize(p.Radius, 56);
         //p.Viewheight = 41;
         //owner.player.ViewHeight = p.Viewheight;
         double nextScale = 56.0 / 64.0;
@@ -77,7 +77,7 @@ class GameModeCompat: Inventory {
 		// Hexen Bounds
         //p.Viewheight = 48
         //owner.player.ViewHeight = p.Viewheight;
-        p.A_SetSize(16, 64);
+        p.A_SetSize(p.Radius, 64);
         double nextScale = 64.0 / 56.0;
         p.Viewheight = p.Viewheight * nextScale;
         owner.player.ViewHeight = p.Viewheight;

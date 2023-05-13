@@ -44,6 +44,8 @@ class DropDownCombo ui {
             text: text,
             alignment: 2 << 4,
             textScale: 3.5
+            //cmdHandler: handler,
+            //command: String.format("%s_hover", command)
         );
         self.label.pack(self.frame);
 

@@ -49,6 +49,8 @@ class Progression: Inventory {
 	double wisdomTable[2];
 	double dexterityTable[2];
 
+	Array<double> skillmodifier;
+
 	// Character Stats
 	int level;
 	int maxlevel;
@@ -151,14 +153,18 @@ class Progression: Inventory {
 		ArmorModeSelection();
 	}
 
-	void LoadPlayerSheet() {
-		int cvarProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
-
+	String GetPlayerClassName() {
 		String playerClassName = owner.player.mo.GetClassName();
 		if (playerClassName.IndexOf("HXDD") != -1) {
 			playerClassName = owner.player.mo.GetParentClass().GetClassName();
 		}
-		playerClassName = playerClassName.MakeLower();
+		return playerClassName.MakeLower();
+	}
+
+	void LoadPlayerSheet() {
+		int cvarProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
+
+		String playerClassName = GetPlayerClassName();
 
 		int cvarDefaultArmorMode = PSAM_ARMOR_SIMPLE;
 		let itemHexenArmor = HexenArmor(owner.player.mo.FindInventory("HexenArmor"));
@@ -200,6 +206,8 @@ class Progression: Inventory {
 			}
 		}
 
+		Array<double> defaultSkillMod = {1.5,1.25,1.1,1.0,0.9};
+		self.skillmodifier.Copy(defaultSkillMod);
 		if (cvarProgression == PSP_LEVELS) {
 			double cvarPS_ExpModifer = LemonUtil.CVAR_GetFloat(String.format("hxdd_playersheet_%s_expmod", playerClassName), 1.0);
 
@@ -230,6 +238,9 @@ class Progression: Inventory {
 
 			Array<String> tblDex;
 			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_dexterity", playerClassName), "6,16").Split(tblDex, ",");
+
+			Array<String> tblxpskill;
+			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_xpskill", playerClassName), "1.5,1.25,1.1,1.0,0.9").Split(tblxpskill, ",");
 
 			int cvarPS_MaxLevel = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_maxlevel", playerClassName), 20);
 
@@ -268,23 +279,34 @@ class Progression: Inventory {
 				console.printf("MaxLevel should be greater than 0!");
 			}
 
-			if (valid) {
-				self.maxlevel 				= cvarPS_MaxLevel;
-				self.experienceModifier	=		cvarPS_ExpModifer;
-				for (let i = 0; i < 11; i++) {
-					self.experienceTable[i] =	tblExp[i].ToInt();
-				}
-				for (let i = 0; i < 5; i++) {
-					self.hitpointTable[i] =		tblHP[i].ToInt();
-					self.manaTable[i] =			tblMana[i].ToInt();
-				}
-				for (let i = 0; i < 2; i++) {
-					self.strengthTable[i] =		tblStr[i].ToInt();
-					self.intelligenceTable[i] =	tblInt[i].ToInt();
-					self.wisdomTable[i] =		tblWis[i].ToInt();
-					self.dexterityTable[i] =		tblDex[i].ToInt();
-				}
+			if (G_SkillPropertyInt(SKILLP_SpawnFilter) - 1 > tblxpskill.Size()) {
+				console.printf("Skill %d is not defined in cvar %s!", G_SkillPropertyInt(SKILLP_SpawnFilter) - 1, String.format("hxdd_playersheet_%s_xpskill", playerClassName));
+			};
+
+			if (!valid) {
+				S_StartSound("Ambient13", CHAN_AUTO, CHANF_UI, 1.0, ATTN_NONE);
+				return;
 			}
+
+			self.maxlevel 					= cvarPS_MaxLevel;
+			self.experienceModifier			= cvarPS_ExpModifer;
+			self.skillmodifier.Resize(tblxpskill.Size());
+			for (let i = 0; i < tblxpskill.Size(); i++) {
+				self.skillmodifier[i]		= tblxpskill[i].ToDouble();
+			}
+			for (let i = 0; i < 11; i++) {
+				self.experienceTable[i] 	= tblExp[i].ToInt();
+			}
+			for (let i = 0; i < 5; i++) {
+				self.hitpointTable[i] 		= tblHP[i].ToInt();
+				self.manaTable[i] 			= tblMana[i].ToInt();
+			}
+			for (let i = 0; i < 2; i++) {
+				self.strengthTable[i] 		= tblStr[i].ToInt();
+				self.intelligenceTable[i] 	= tblInt[i].ToInt();
+				self.wisdomTable[i] 		= tblWis[i].ToInt();
+				self.dexterityTable[i] 		= tblDex[i].ToInt();
+				}
 		} else if (cvarProgression == PSP_LEVELS_USER) {
 			// User Defined Stats
 			int lastExpDefault = 800;
@@ -327,20 +349,20 @@ class Progression: Inventory {
 
 			self.experienceTable[0] = (0.2f + frandom[exprnd](0.8f, 1.0f)) * 800;
 			for (let i = 1; i < 11; i++) {
-				self.experienceTable[i] = 	experienceTable[i-1] * (1.8 + (frandom[exprnd](0.0, 1.0) * 4.0f));
+				self.experienceTable[i] = 	self.experienceTable[i-1] * (1.8 + (frandom[exprnd](0.0, 1.0) * 4.0f));
 			}
 
 			self.hitpointTable[0] = 65.0f;
-			self.hitpointTable[1] = hitpointTable[0] + (frandom[exprnd](0.15f, 0.25f) * 100.0f);;
+			self.hitpointTable[1] = self.hitpointTable[0] + (frandom[exprnd](0.15f, 0.25f) * 100.0f);;
 			self.hitpointTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
 			self.hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
-			self.hitpointTable[4] = hitpointTable[2];
+			self.hitpointTable[4] = self.hitpointTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
-			self.manaTable[0] = 40.0f;
-			self.manaTable[1] = 50.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
+			self.manaTable[0] = 70.0f;
+			self.manaTable[1] = 80.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
 			self.manaTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
 			self.manaTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
-			self.manaTable[4] = manaTable[2];
+			self.manaTable[4] = self.manaTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
 			for (let i = 0; i < 2; i++) {
 				double mult = ((i+1) * 10.0f);
@@ -453,7 +475,6 @@ class Progression: Inventory {
 
 		let player = owner.player.mo;
 		self.SpawnHealth = player.Health;
-		console.printf("H %d", self.SpawnHealth);
 
 		if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
         	MaxHealth = self.SpawnHealth * (stats_compute(hitpointTable[0], hitpointTable[1]) / 100.0);
@@ -514,11 +535,13 @@ class Progression: Inventory {
 
 	void AdvanceLevel(int advanceLevel) {
 		// https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/portals/stats.hc#L233
+		String playerClassName = GetPlayerClassName();
 
 		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
 		PlayerPawn player = PlayerPawn(owner.player.mo);
 
-		S_StartSound("hexen2/misc/comm", CHAN_VOICE);
+		String cvarLevelUpAudio = LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_level_audio", playerClassName), "misc/chat");
+		S_StartSound(cvarLevelUpAudio, CHAN_AUTO);
 
 		while (self.level < advanceLevel && self.level < self.maxlevel) {
 			int lastLevel = self.level++;
@@ -609,18 +632,16 @@ class Progression: Inventory {
 		amount += amount * wisdom_modifier / 20;
 
 		self.experience += amount;
-		console.printf("Gained %d Experience!", amount);
 
-		OnExperienceBonus(amount);
+		//OnExperienceBonus(amount);
 
 		if (self.level == self.maxlevel) {
 			// Max Level
 			return 0.0f;
 		}
+		console.printf("Gained %d Experience! Total Experience: %d", amount, self.experience);
 
 		double afterLevel = FindLevel();
-
-		console.printf("Total Experience: %d", self.experience);
 
 		if (level != afterLevel) {
 			AdvanceLevel(afterLevel);
@@ -653,9 +674,8 @@ class Progression: Inventory {
 	}
 
 	// Allows progression from Doom Engine mobs
+	bool xpModWarning;
 	double GiveExperienceByTargetHealth(Actor target) {
-		// Setup cvars?
-		double expDifficulty[5] = {1.0, 1.0, 1.0, 1.0, 1.0};
 		double exp = 0;
 		if (self.experienceTable[0] == 0 || !target) {
 			// Experience Table is not setup or no target
@@ -667,22 +687,18 @@ class Progression: Inventory {
 				// Hexen receives an xp penalty due to larger health pools vs Heretic and Hexen II
 				calcExp *= 0.5;
 			}
-			calcExp *= frandom[ExpRange](0.6, 0.7);
+			calcExp *= frandom[ExpRange](0.8, 0.9);
 			if (target.bBoss) {
 				calcExp *= 1.75;
 			}
 			calcExp = (calcExp * 0.9) + frandom[ExpBonus](calcExp * 0.05, calcExp * 0.15);
 			int skSpawnFilter = G_SkillPropertyInt(SKILLP_SpawnFilter) - 1;
-			if (skSpawnFilter > 4) {
-				skSpawnFilter = 4;
+			skSpawnFilter = clamp(skSpawnFilter, 0, 4);
+			if (self.skillmodifier[skSpawnFilter]) {
+				calcExp *= self.skillmodifier[skSpawnFilter];
 			}
-			calcExp *= expDifficulty[skSpawnFilter];
 			return GiveExperience(calcExp);
 		}
 		return exp;
 	}
-
-	// Event Stubs
-	virtual void OnExperienceBonus(double experience) {}
-	virtual void OnKill(PlayerPawn player, Actor target, double experience) {}
 }

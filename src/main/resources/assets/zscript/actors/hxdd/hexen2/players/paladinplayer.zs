@@ -19,8 +19,8 @@ class PaladinPlayer : HXDDHexenIIPlayerPawn {
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
 		Player.HexenArmor 15, 25, 10, 20, 5;
-		Player.StartItem "Mana1";
-		Player.StartItem "Mana2";
+		//Player.StartItem "Mana1";
+		//Player.StartItem "Mana2";
 		Player.StartItem "PWeapGauntlet";
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "PWeapGauntlet";

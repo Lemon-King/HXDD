@@ -12,6 +12,8 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
             if (menu.frame.getPosX() == 0) {
                 Menu.MenuSound("menu/choose");
                 Menu.SetMenu("MainMenu");
+
+                menu.btnStart.SetPosY(1080 + 500);
             } else if (menu.frame.getPosX() == -1920) {
                 Menu.MenuSound("menu/choose");
                 menu.time = 0;
@@ -51,18 +53,21 @@ class ZFClassSelectHandler : HXDD_ZF_Handler {
             menu.lastPosX = menu.frame.getPosX();
             menu.desiredPosX = -1920;
 
-            menu.btnNext.SetText("Start");
+            menu.btnStart.SetPosY(1080 - 100);
 
             menu.frameGameOptions.Refresh();
         }
     }
 }
+
 class ZFGameOptionsHandler : HXDD_ZF_Handler {
     ZFPreGameSetup menu;
+    ZFGameOptions optMenu;
     override void dropdownChanged(HXDD_ZF_DropdownList caller, Name command) {
         if (command == "episode") {
             String choice = command;
             menu.selectedEpisode = caller.getSelection();
+            elementHoverChanged(caller, command, false);
         } else if (command == "skill") {
             String choice = command;
             menu.selectedSkill = caller.getSelection();
@@ -74,146 +79,34 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
             menu.selectedProgressionMode = caller.getSelection();
         }
     }
-}
 
-class PlayerClassButton ui {
-    int tick;
-    int walkframe;
-
-    HXDD_ZF_Image imgWalk;
-
-    String pathTexWalk1;
-    String pathTexWalk2;
-    String pathTexWalk3;
-    String pathTexWalk4;
-
-    void Create(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, int classid, String pathBackground, String pathWalk1, String pathWalk2, String pathWalk3, String pathWalk4) {
-        tick = 0;
-
-        self.pathTexWalk1 = pathWalk1;
-        self.pathTexWalk2 = pathWalk2;
-        self.pathTexWalk3 = pathWalk3;
-        self.pathTexWalk4 = pathWalk4;
-
-        HXDD_ZF_Frame frameChrClass = HXDD_ZF_Frame.create(
-            location,
-            (112 * scale, 160 * scale)
-        );
-        frameChrClass.pack(parent);
-
-        // artwork
-        let imgClassBackground = HXDD_ZF_Image.create(
-            (0, 0),
-            (112 * scale, 136 * scale),
-            image: pathBackground,
-            imageScale: (scale, scale)
-        );
-        imgClassBackground.pack(frameChrClass);
-        
-        
-        imgWalk = HXDD_ZF_Image.create(
-            // This argument controls the position - 50 pixels under the label.
-            (0, 15 * scale),
-            // This argument controls the size. Here we match STARTAN2.
-            (112 * scale, 68 * scale),
-            // The texture name.
-            image: pathWalk1,
-            alignment: 2 | (3 << 4),
-            imageScale: (scale, scale)
-        );
-        // As before we pack it into `frame`.
-        imgWalk.pack(frameChrClass);
-
-        let hoverOutline = HXDD_ZF_BoxTextures.createTexturePixels(
-            "graphics/SELECTBO.png",
-            (1, 1),
-            (27, 28),
-            true,
-            false
-        );
-        // Here we create our fourth element, a button.
-        // We'll put it under the box image, with the box textures we just created.
-        let btnSelect = HXDD_ZF_Button.create(
-            (0, 0),
-            (112 * scale, 136 * scale),
-            cmdHandler: handler,
-            command: String.format("%d", classid),
-            hover: hoverOutline,
-            click: hoverOutline
-        );
-        btnSelect.pack(frameChrClass);
-
-        let label = HXDD_ZF_Label.create(
-            (0, 136 * scale),
-            (112 * scale, 18 * scale),
-            text: name,
-            alignment: 2 | (3 << 4),
-            textScale: 1.5 * scale
-        );
-        label.pack(frameChrClass);
-
+    override void elementHoverChanged(HXDD_ZF_Element caller, Name command, bool unhovered) {
+        if (unhovered) {
+            ShowEpisodeInformation();
+            return;
+        }
+        if (command == "skill") {
+            optMenu.SetInfoText("Skill", "\c[gray]Game Difficulty \c[gold](Placeholder)");
+        } else if (command == "episode") {
+            ShowEpisodeInformation();
+        } else if (command == "hxdd_gamemode") {
+            optMenu.SetInfoText("Game Detection", "\c[gray]Compatability Mode for user maps not using the standard E#M# or MAP## format or Mods mixing gameplay up.\n_\n\c[ice]Auto-Detect\c[gray]: HXDD attempts to detect which game map set you are using.\n_\n\c[ice]Heretic\c[gray]: Force Heretic Detection.\n_\n\c[ice]Hexen\c[gray]: Force Hexen detection.");
+        } else if (command == "hxdd_armor_mode") {
+            optMenu.SetInfoText("Armor Mode", "\c[ice]Class Default\c[gray]: Armor type used by the selected class\n_\n\c[ice]Basic\c[gray]: Simple armor system found in Heretic.\n_\n\c[ice]Armor Class\c[gray]: Complex armor system found in Hexen or Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Hexen Armor values, no two games ever the same.");
+        } else if (command == "hxdd_progression") {
+            optMenu.SetInfoText("Progression", "\c[ice]Class Default\c[gray]: Progression system used by the selected class\n_\n\c[ice]None\c[gray]: No Leveling\n_\n\c[ice]Levels\c[gray]: Leveling System found in Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Player health, ammo, mana, stats and experience for leveling.");
+        }
     }
 
-    void CreateHX2(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, int classid, String pathBackground) {
-        HXDD_ZF_Frame frameChrClass = HXDD_ZF_Frame.create(
-            location,
-            (112 * scale, 130 * scale)
-        );
-        frameChrClass.pack(parent);
-
-        // artwork
-        let imgClassBackground = HXDD_ZF_Image.create(
-            (22 * scale, 0),
-            (68 * scale, 114 * scale),
-            image: pathBackground,
-            imageScale: (scale, scale)
-        );
-        imgClassBackground.pack(frameChrClass);
-
-        let hoverOutline = HXDD_ZF_BoxTextures.createTexturePixels(
-            "graphics/SELECTBO.png",
-            (1, 1),
-            (27, 28),
-            true,
-            false
-        );
-        // Here we create our fourth element, a button.
-        // We'll put it under the box image, with the box textures we just created.
-        let btnSelect = HXDD_ZF_Button.create(
-            (22 * scale, 0),
-            (68 * scale, 114 * scale),
-            cmdHandler: handler,
-            command: String.format("%d", classid),
-            hover: hoverOutline,
-            click: hoverOutline
-        );
-        btnSelect.pack(frameChrClass);
-
-        let label = HXDD_ZF_Label.create(
-            (0, 110 * scale),
-            (114 * scale, 18 * scale),
-            text: name,
-            alignment: 2 | (3 << 4),
-            textScale: 1.15 * scale
-        );
-        label.pack(frameChrClass);
-
-    }
-
-    void Update() {
-        tick = ++tick % 8;
-        if (tick == 0) {
-            // update frame
-            walkframe = ++walkframe % 4;
-            if (walkframe == 0) {
-                imgWalk.setImage(self.pathTexWalk1);
-            } else if (walkframe == 1) {
-                imgWalk.setImage(self.pathTexWalk2);
-            } else if (walkframe == 2) {
-                imgWalk.setImage(self.pathTexWalk3);
-            } else if (walkframe == 3) {
-                imgWalk.setImage(self.pathTexWalk4);
-            }
+    void ShowEpisodeInformation() {
+        if (menu.selectedEpisode < 6) {
+            optMenu.SetInfoText("Heretic", "Three brothers, known as the Serpent Riders, used their powerful magic to possess and corrupt the seven kings of the realm, plunging it into war and chaos. But a race of elves known as the Sidhe, resisted, and were branded heretics. On the brink of losing the war, the Sidhe elders sacrificed themselves and the elven capital city to destroy the seven kings and their armies. As one of the few surviving elves, you embark on a quest for vengeance against those who slaughtered your friends, family, and entire race.");
+        } else if (menu.selectedEpisode == 6) {
+            optMenu.SetInfoText("Hexen", "While the Sidhe elf Corvus battled the evil forces of D'Sparil, the remaining two Serpent Riders were busy sowing the seeds of destruction in other dimensions. As a Warrior, Mage, or Cleric, you must fight the undead, and brave elemental dungeons and decaying wilderness to defend your realm of Cronos from Korax, the second Serpent Rider.");
+        } else if (menu.selectedEpisode == 7) {
+            optMenu.SetInfoText("Deathkings", "After defeating the evil Korax, the second Serpent Rider, and discovering the Chaos Sphere, you have been transported to the Realm of the Dead. Now, your only way home is blocked by hordes of undead and the Dark Citadel. Where Hexen ends, the true nightmare begins.");
+        } else {
+            optMenu.SetInfoText("Etherial Travel", "Etherial Travel brings you to strange new places.");
         }
     }
 }
@@ -221,16 +114,19 @@ class PlayerClassButton ui {
 class ZFPlayerClassSelection ui {
     HXDD_ZF_Frame frame;
 
-    PlayerClassButton btnClassCorvus;
-    PlayerClassButton btnClassFighter;
-    PlayerClassButton btnClassCleric;
-    PlayerClassButton btnClassMage;
+    ButtonPlayerClass btnClassCorvus;
+    ButtonPlayerClass btnClassFighter;
+    ButtonPlayerClass btnClassCleric;
+    ButtonPlayerClass btnClassMage;
 
-    PlayerClassButton btnClassAssassin;
-    PlayerClassButton btnClassCrusader;
-    PlayerClassButton btnClassNecromancer;
-    PlayerClassButton btnClassPaladin;
-    PlayerClassButton btnClassSuccubus;
+    ButtonPlayerClass btnClassAssassin;
+    ButtonPlayerClass btnClassCrusader;
+    ButtonPlayerClass btnClassNecromancer;
+    ButtonPlayerClass btnClassPaladin;
+    ButtonPlayerClass btnClassSuccubus;
+
+    W_DevilBraizer imgBrazierLeft;
+    W_DevilBraizer imgBrazierRight;
 
     void Create(ZFPreGameSetup parent) {
         self.frame = HXDD_ZF_Frame.create(
@@ -258,7 +154,7 @@ class ZFPlayerClassSelection ui {
         imgGameHTICX.pack(frame);
 
         let header = HXDD_ZF_Label.create(
-            ( 0 , 50),
+            ( 0 , 100),
             (1920, 24 * 4),
             text: "Class Selection",
             fnt: "BIGFONT",
@@ -268,44 +164,53 @@ class ZFPlayerClassSelection ui {
         // We put this in `frame`.
         header.pack(frame);
 
+        self.imgBrazierLeft = new("W_DevilBraizer");
+        self.imgBrazierLeft.Create(frame, (425, 25), 2.5);
+        self.imgBrazierRight = new("W_DevilBraizer");
+        self.imgBrazierRight.Create(frame, (1920 - 425, 25), 2.5, true);
+
         let cmdHandlerClassSelect = new("ZFClassSelectHandler");
         cmdHandlerClassSelect.menu = parent;
 
         double classLineX = (1080 * 0.25) + (56 * 2.5) + 50;
         double hereticPosY = 450 + ((142 * 2.5 * 0.5) - (112 * 1.5 * 0.5));
-        btnClassCorvus = new("PlayerClassButton");
-        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", 0, "graphics/M_HBOX.png", "sprites/PLAYA1.png", "sprites/PLAYB1.png", "sprites/PLAYC1.png", "sprites/PLAYD1.png");
+
+        Array<String> imagesCorvus = {"sprites/PLAYA1.png", "sprites/PLAYB1.png", "sprites/PLAYC1.png", "sprites/PLAYD1.png"};
+        btnClassCorvus = new("ButtonPlayerClass");
+        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", 0, "graphics/M_HBOX.png", imagesCorvus);
 
         double hexenPosY = 1920 - 450 - (144 * 2.5) + ((144 * 2.5 * 0.5) - (112 * 1.5 * 0.5));
-        btnClassFighter = new("PlayerClassButton");
-        btnClassFighter.Create(frame, cmdHandlerClassSelect, (hexenPosY - 200, classLineX), 1.5, "Fighter", 1, "graphics/M_FBOX.png", "graphics/M_FWALK1.png", "graphics/M_FWALK2.png", "graphics/M_FWALK3.png", "graphics/M_FWALK4.png");
+        Array<String> imagesFighter = {"graphics/M_FWALK1.png", "graphics/M_FWALK2.png", "graphics/M_FWALK3.png", "graphics/M_FWALK4.png"};
+        btnClassFighter = new("ButtonPlayerClass");
+        btnClassFighter.Create(frame, cmdHandlerClassSelect, (hexenPosY - 200, classLineX), 1.5, "Fighter", 1, "graphics/M_FBOX.png", imagesFighter);
 
-        btnClassCleric = new("PlayerClassButton");
-        btnClassCleric.Create(frame, cmdHandlerClassSelect, (hexenPosY, classLineX), 1.5, "Cleric", 2, "graphics/M_CBOX.png", "graphics/M_CWALK1.png", "graphics/M_CWALK2.png", "graphics/M_CWALK3.png", "graphics/M_CWALK4.png");
+        Array<String> imagesCleric = {"graphics/M_CWALK1.png", "graphics/M_CWALK2.png", "graphics/M_CWALK3.png", "graphics/M_CWALK4.png"};
+        btnClassCleric = new("ButtonPlayerClass");
+        btnClassCleric.Create(frame, cmdHandlerClassSelect, (hexenPosY, classLineX), 1.5, "Cleric", 2, "graphics/M_CBOX.png", imagesCleric);
 
-        btnClassMage = new("PlayerClassButton");
-        btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", 3, "graphics/M_MBOX.png", "graphics/M_MWALK1.png", "graphics/M_MWALK2.png", "graphics/M_MWALK3.png", "graphics/M_MWALK4.png");
-
+        Array<String> imagesMage = {"graphics/M_MWALK1.png", "graphics/M_MWALK2.png", "graphics/M_MWALK3.png", "graphics/M_MWALK4.png"};
+        btnClassMage = new("ButtonPlayerClass");
+        btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", 3, "graphics/M_MBOX.png", imagesMage);
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
         bool cvarHexII = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2', false);
         if (cvarHexII) {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
-            btnClassAssassin = new("PlayerClassButton");
+            btnClassAssassin = new("ButtonPlayerClass");
             btnClassAssassin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 320, classLineX + classLineXOffset), 1.5, "Paladin", 4, "graphics/netp1.png");
-            btnClassCrusader = new("PlayerClassButton");
+            btnClassCrusader = new("ButtonPlayerClass");
             btnClassCrusader.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 160, classLineX + classLineXOffset), 1.5, "Crusader", 5, "graphics/netp2.png");
-            btnClassNecromancer = new("PlayerClassButton");
+            btnClassNecromancer = new("ButtonPlayerClass");
             btnClassNecromancer.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY, classLineX + classLineXOffset), 1.5, "Necromancer", 6, "graphics/netp3.png");
-            btnClassPaladin = new("PlayerClassButton");
+            btnClassPaladin = new("ButtonPlayerClass");
             btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", 7, "graphics/netp4.png");
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
             bool cvarHexII_EX = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2_expansion', false);
             if (cvarHexII_EX) {
                 // display Hexen II Expansion classes
-                btnClassSuccubus = new("PlayerClassButton");
+                btnClassSuccubus = new("ButtonPlayerClass");
                 btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", 8, "graphics/netp5.png");
             }
         }
@@ -316,16 +221,23 @@ class ZFPlayerClassSelection ui {
         btnClassFighter.Update();
         btnClassCleric.Update();
         btnClassMage.Update();
+
+        self.imgBrazierLeft.Update();
+        self.imgBrazierRight.Update();
     }
 }
 
-class ZFGameOptionsScrollContainerHandler : HXDD_ZF_Handler {
-    ZFPreGameSetup menu;
-}
 class ZFGameOptions ui {
     ZFPreGameSetup parent;
     HXDD_ZF_Frame frame;
     DropDownCombo ddl_Difficulty;
+
+    HXDD_ZF_Frame frameInfo;
+    HXDD_ZF_Label headerInformation;
+    HXDD_ZF_Label labelInformation;
+
+    W_KeyStatue headerStatueLeft;
+    W_KeyStatue headerStatueRight;
 
     Array<HXDD_ZF_DropdownItems> listClassDifficulty;
 
@@ -418,7 +330,7 @@ class ZFGameOptions ui {
         frame.pack(parent.frame);
 
         let labelOpt = HXDD_ZF_Label.create(
-            ( 0 , 50),
+            ( 0 , 100),
             (1920, 24 * 4),
             text: "Gameplay Options",
             fnt: "BIGFONT",
@@ -426,6 +338,40 @@ class ZFGameOptions ui {
             textScale: 4
         );
         labelOpt.pack(frame);
+
+        self.frameInfo = HXDD_ZF_Frame.create(
+            (1920 - (1920 * 0.45) + 150, 300),
+            ((1920 * 0.45) - 300, (1080 * 0.6))
+        );
+        self.frameInfo.pack(self.frame);
+        
+        self.headerInformation = HXDD_ZF_Label.create(
+            (0 , 0),
+            (self.frameInfo.GetWidth(), 50),
+            text: "",
+            fnt: "BIGFONT",
+            alignment: (2 << 4) | 2,
+            textScale: 2
+        );
+        self.headerInformation.pack(self.frameInfo);
+
+        self.labelInformation = HXDD_ZF_Label.create(
+            (0 , 50),
+            (self.frameInfo.GetWidth(), self.frameInfo.GetHeight() - 50),
+            text: "",
+            //fnt: "BIGFONT",
+            alignment: (1 << 4) | 1,
+            textScale: 2.5
+        );
+        self.labelInformation.pack(self.frameInfo);
+
+        self.headerStatueLeft = new("W_KeyStatue");
+        self.headerStatueLeft.Create(frame, (425, 50), 2.5);
+        self.headerStatueRight = new("W_KeyStatue");
+        self.headerStatueRight.Create(frame, (1920 - 425, 50), 2.5, true);
+        int orbColor = random[orbs](0,2);
+        self.headerStatueLeft.SetOrb(orbColor);
+        self.headerStatueRight.SetOrb(orbColor);
         
         let scrollbar_n = HXDD_ZF_BoxTextures.createTexturePixels(
             "assets/ui/scrollbar_n.png",
@@ -452,12 +398,13 @@ class ZFGameOptions ui {
 
 
         let background = HXDD_ZF_BoxTextures.createTexturePixels(
-            "assets/ui/groupbox.png",
+            "assets/ui/groupbox_shadow.png",
             (3, 3),
             (60, 60),
             false,
             false
         );
+
         let optionGroupBackground = HXDD_ZF_BoxImage.create(
             (50, 300),
             (1920 * 0.55, 1080 * 0.6),
@@ -469,12 +416,6 @@ class ZFGameOptions ui {
             (0, 0),
             (1920 * 0.55 - (32 + 4), 1080 * 1.2)
         );
-        let optionGroupBackground2 = HXDD_ZF_BoxImage.create(
-            (0, 0),
-            (1920 * 0.55 - (32 + 4), 1080 * 0.6),
-            background
-        );
-        optionGroupBackground2.pack(optionArea);
 
         let scrollContainer = HXDD_ZF_ScrollContainer.create(
             (50 + 2, 300 + 2),
@@ -492,6 +433,7 @@ class ZFGameOptions ui {
 
         let cmdHandler = new("ZFGameOptionsHandler");
         cmdHandler.menu = parent;
+        cmdHandler.optMenu = self;
 
         HXDD_ZF_DropdownItems listEpisodes = new("HXDD_ZF_DropdownItems");
         listEpisodes.items.push("$MNU_COTD");
@@ -513,7 +455,7 @@ class ZFGameOptions ui {
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("Class Default");
         listArmorMode.items.push("Basic (Heretic)");
-        listArmorMode.items.push("Class Based (Hexen & Hexen II)");
+        listArmorMode.items.push("Armor Class (Hexen)");
         listArmorMode.items.push("Random");
         //listArmorMode.items.push("Custom");
         DropDownCombo ddl_ArmorMode = new ("DropDownCombo");
@@ -533,7 +475,12 @@ class ZFGameOptions ui {
         listMapSet.items.push("Heretic");
         listMapSet.items.push("Hexen");
         DropDownCombo ddl_GameMode = new ("DropDownCombo");
-        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Game Mode", listMapSet, 0, "hxdd_gamemode", cmdHandler);
+        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Game Detection", listMapSet, 0, "hxdd_gamemode", cmdHandler);
+    }
+
+    void SetInfoText(String newHeader, String newText) {
+        self.headerInformation.SetText(newHeader);
+        self.labelInformation.SetText(newText);
     }
 
     void Refresh() {
@@ -542,6 +489,15 @@ class ZFGameOptions ui {
             selected = 0;
         }
         self.ddl_Difficulty.GetDropDownElement().setItems(listClassDifficulty[selected]);
+
+        int orbColor = random[orbs](0,2);
+        self.headerStatueLeft.SetOrb(orbColor);
+        self.headerStatueRight.SetOrb(orbColor);
+    }
+
+    void Update() {
+        self.headerStatueLeft.Update();
+        self.headerStatueRight.Update();
     }
 }
 
@@ -562,7 +518,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
     HXDD_ZF_Frame frameScrollOptions;
 
     HXDD_ZF_Button btnBack;
-    HXDD_ZF_Button btnNext;
+    HXDD_ZF_Button btnStart;
     HXDD_ZF_Button btnUseClassicUI;
 
     ZFPlayerClassSelection framePlayerClassSelection;
@@ -613,10 +569,10 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
         let cmdHandler = new("ZFPreGameSetupHandler");
         cmdHandler.menu = self;
 
-        btnNext = HXDD_ZF_Button.create(
-            (1920 - 250, 1080 - 100),
+        btnStart = HXDD_ZF_Button.create(
+            ((1920 * 0.5) - 100, 1080 + 500),
             (200, 50),
-            text: "Next",
+            text: "Start",
             cmdHandler: cmdHandler,
             command: 'next',
             inactive: normal,
@@ -624,9 +580,9 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
             click: normal,
             textScale: 2.0
         );
-        btnNext.pack(mainFrame);
+        btnStart.pack(mainFrame);
         btnBack = HXDD_ZF_Button.create(
-            (1920 - 500, 1080 - 100),
+            (50, 1080 - 100),
             (200, 50),
             text: "Back",
             cmdHandler: cmdHandler,
@@ -638,7 +594,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
         );
         btnBack.pack(mainFrame);
         btnUseClassicUI = HXDD_ZF_Button.create(
-            (50, 1080 - 100),
+            (1920 - 350, 1080 - 100),
             (300, 50),
             text: "Original Menu",
             cmdHandler: cmdHandler,
@@ -686,5 +642,6 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
         }
 
         framePlayerClassSelection.Update();
+        frameGameOptions.Update();
     }
 }
