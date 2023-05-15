@@ -91,4 +91,17 @@ class HXDDWorldEventHandler : EventHandler {
             }
         }
     }
+
+    MultiGameLookupTable MGLUT;
+    override void CheckReplacement(ReplaceEvent e) {
+        if (!e.IsFinal) {
+            if (!MGLUT) {
+                MGLUT = new("MultiGameLookupTable");
+                MGLUT.LoadData();
+            }
+
+            e.Replacement = MGLUT.GetActorBySource(e.Replacee.GetClassName());
+            //e.IsFinal = true;
+        }
+    }
 }

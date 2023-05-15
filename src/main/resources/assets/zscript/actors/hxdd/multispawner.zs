@@ -73,7 +73,9 @@ class MultiSpawner: RandomSpawner {
         return "Unknown";
     }
 
-    Name SpawnSelector() {
+	// Override this to decide what to spawn in some other way.
+	// Return the class name, or 'None' to spawn nothing, or 'Unknown' to spawn an error marker.
+	override Name ChooseSpawn() {
         if (self.CvarSelect) {
             String spawn = CvarSelector();
             if (spawn != "Unknown") {
@@ -85,10 +87,10 @@ class MultiSpawner: RandomSpawner {
             if (gameType & GAME_Doom) {
                 return self.Doom;
             } else if (gameType & GAME_Raven) {
-                int gameType = LemonUtil.GetOptionGameMode();
-                if (gameType == GAME_Heretic) {
+                int optGameMode = LemonUtil.GetOptionGameMode();
+                if (optGameMode == GAME_Heretic) {
                     return self.Heretic;
-                } else if (gameType == GAME_Hexen) {
+                } else if (optGameMode == GAME_Hexen) {
                     return self.Hexen;
                 }
             }
@@ -126,32 +128,16 @@ class MultiSpawner: RandomSpawner {
             return spawn;
         }
         return "Unknown";
-    }
-
-    int GetGameType() {
-        if (LemonUtil.IsMapHeretic()) {
-            return GAME_Heretic;
-        } else if (LemonUtil.IsMapHexen()) {
-            return GAME_Hexen;
-        } else {
-            return GAME_Heretic;
-        }
-    }
-	// Override this to decide what to spawn in some other way.
-	// Return the class name, or 'None' to spawn nothing, or 'Unknown' to spawn an error marker.
-	override Name ChooseSpawn() {
-        return SpawnSelector();
 	}
 
 	override void BeginPlay() {
+        Bind();
         if (self.SpawnSelect == "GameSelect" || readyState == MSS_READY) {
-            Bind();
             Super.BeginPlay();
         }
 	}
 
     override void PostBeginPlay() {
-        PlayerInfo p = players[0];
         if (self.SpawnSelect == "GameSelect") {
             Super.PostBeginPlay();
         } else if (!self.CvarSelect || readyState == MSS_NOTREADY) {
@@ -164,8 +150,8 @@ class MultiSpawner: RandomSpawner {
     override void Tick() {
         Super.Tick();
 
-        PlayerInfo p = players[0];
         if (self.CvarSelect && readyState == MSS_NOTREADY) {
+            PlayerInfo p = players[0];
             if (p) {
                 Progression prog = Progression(p.mo.FindInventory("Progression"));
                 if (prog) {

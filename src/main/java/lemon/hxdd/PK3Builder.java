@@ -61,7 +61,7 @@ public class PK3Builder {
 
             ActorFactory actors = new ActorFactory();
             actors.Create();
-            actors.CreateEditorNums();
+            //actors.CreateEditorNums();
 
             // If Hexen II paks are found then try to export data
             if (HasOptionalFiles(hx2PakFiles, "pak")) {
