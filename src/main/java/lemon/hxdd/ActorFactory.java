@@ -1,5 +1,7 @@
 package lemon.hxdd;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -12,7 +14,7 @@ import java.util.zip.ZipEntry;
 // Automate creation of Game Unique MapInfo DoomEdNums and SpawnNums.
 public class ActorFactory {
     private static final List<String> TypeOrder = Arrays.asList("doomednums", "spawnnums");
-    private static final List<String> GameOrder = Arrays.asList("heretic", "hexen");
+    private static final List<String> GameOrder = Arrays.asList("heretic", "hexen", "doom");
 
     public void Create() {
         String path = Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/";
@@ -22,6 +24,7 @@ public class ActorFactory {
         }
 
         // Merge DoomEdNums and SpawnNums
+        JSONArray actorsJSON = new JSONArray();
         TypeOrder.forEach((type) -> {
             // 0 = heretic, 1 = hexen
             List<Properties> lists = new ArrayList<>(Collections.emptyList());
@@ -53,17 +56,46 @@ public class ActorFactory {
             });
 
             // Merge Hexen keys with Heretic Keys, if missing add.
-            Properties p_hxdd = lists.get(0);
+            Properties p_hxdd = new Properties();
+            Properties p_heretic = lists.get(0);
             Properties p_hexen = lists.get(1);
-            p_hexen.forEach((k, v) -> {
-                String valueHeretic = (String) p_hxdd.get(k);
-                String valueHexen = (String) p_hexen.get(k);
-                if (valueHexen != null) {
-                    if (valueHeretic == null) {
-                        p_hxdd.put(k, valueHexen);
-                    } else if (!valueHeretic.equals(valueHexen)) {
-                        p_hxdd.put(k, valueHeretic + "," + valueHexen);
+            Properties p_doom = lists.get(2);
+            SortedSet<String> actorKeys = new TreeSet<>();
+            for (int i = 0; i < lists.size(); i++) {
+                lists.get(i).forEach((k,v) -> {
+                    if(!actorKeys.equals(k)) {
+                        actorKeys.add((String) k);
                     }
+                });
+            }
+
+            actorKeys.forEach((key) -> {
+                JSONObject lutActors = new JSONObject();
+                String valueHeretic = (String) p_heretic.get(key);
+                String valueHexen = (String) p_hexen.get(key);
+                String valueDoom = (String) p_doom.get(key);      // pwad mode, NYI
+                if (valueDoom != null) {
+                    lutActors.put("Doom", valueDoom);
+                }
+                if (valueHeretic != null) {
+                    lutActors.put("Heretic", valueHeretic);
+                }
+                if (valueHexen != null) {
+                    lutActors.put("Hexen", valueHexen);
+                }
+                if (!lutActors.isEmpty()) {
+                    actorsJSON.put(lutActors);
+                }
+
+                String newValue = valueHexen;
+                if (newValue == null) {
+                    newValue = valueHeretic;
+                }
+                if (newValue == null) {
+                    newValue = valueDoom;
+                }
+                if (newValue != null) {
+                    p_hxdd.put(key, newValue);
                 }
             });
 
@@ -74,10 +106,10 @@ public class ActorFactory {
                 String zscriptActorListFilename = type + "_compat.zs";
                 String mapInfoFileName = "mapinfo." + type;
 
-                PrintWriter file_hxdd_actors = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/" + zscriptActorListFilename);
+                //PrintWriter file_hxdd_actors = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/" + zscriptActorListFilename);
                 PrintWriter file_mapinfo = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/" + mapInfoFileName);
 
-                AddGeneratedByTag(file_hxdd_actors);
+                //AddGeneratedByTag(file_hxdd_actors);
                 AddGeneratedByTag(file_mapinfo);
                 if (type == "doomednums") {
                     file_mapinfo.print("\nDoomEdNums\n");
@@ -87,24 +119,37 @@ public class ActorFactory {
                 file_mapinfo.print("{\n");
                 for (String key : keys) {
                     String value = actorMap.get(key);
-                    String[] result = value.split(",");
-                    if (result.length > 1) {
+                    //String[] result = value.split(",");
+                    //if (result.length > 1) {
                         //System.out.println("ActorFactory: Found shared Actors " + "ID=" + key + " " + result[0] + " " + result[1]);
-                        String actorFile = CreateActorFile(type, key, result[0], result[1]);
-                        file_hxdd_actors.print("#include \"zscript_generated/actors/hxdd/spawners/" + actorFile + ".zs" + "\"\n");
-                        file_mapinfo.print(key + " = " + actorFile + "\n");
-                    } else {
+                        //String actorFile = CreateActorFile(type, key, result[0], result[1]);
+                        //file_hxdd_actors.print("#include \"zscript_generated/actors/hxdd/spawners/" + actorFile + ".zs" + "\"\n");
+                        //file_mapinfo.print(key + " = " + actorFile + "\n");
+                    //} else {
                         file_mapinfo.print(key + " = " + value + "\n");
-                    }
+                    //}
                 }
                 file_mapinfo.print("}\n");
                 file_mapinfo.close();
-                file_hxdd_actors.close();
+                //file_hxdd_actors.close();
+
             } catch (FileNotFoundException ex) {
                 // FileNotFoundException catch is optional and can be collapsed
                 System.out.println("ActorFactory: gameinfo files not found, skipping");
             }
         });
+        CreateMGLUT(actorsJSON, "all");
+    }
+
+    private void CreateMGLUT(JSONArray list, String type) {
+        String path = Settings.getInstance().Get("PathTemporary") + "/";
+        try {
+            PrintWriter out = new PrintWriter(path + "hxdd." + type + ".mglut");
+            out.print(list);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private String CreateActorFile(String type, String id, String actorHeretic, String actorHexen) {
