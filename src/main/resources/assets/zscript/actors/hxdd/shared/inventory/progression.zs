@@ -799,7 +799,7 @@ class Progression: Inventory {
 	bool xpModWarning;
 	double GiveExperienceByTargetHealth(Actor target) {
 		double exp = 0;
-		if (self.experienceTable[0] == 0 || !target) {
+		if (self.experienceTable.Size() == 0 || !target) {
 			// Experience Table is not setup or no target
 			return exp;
 		}
