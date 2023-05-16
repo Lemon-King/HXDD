@@ -7,7 +7,7 @@ class H2HolyStrength: HXDDPowerupSphere {
         Inventory.PickupMessage "$TXT_H2HOLYSTRENGTH";
         Tag "$TAG_H2HOLYSTRENGTH";
 
-        HXDDPowerupSphere.alignmentType "Good";
+        HXDDPowerupSphere.alignmentType "good";
 	}
 
     override void PostBeginPlay() {
@@ -84,7 +84,7 @@ class H2SoulSphere: HXDDPowerupSphere {
         Inventory.PickupMessage "$TXT_H2SOULSPHERE";
         Tag "$TAG_H2SOULSPHERE";
 
-        HXDDPowerupSphere.alignmentType "Evil";
+        HXDDPowerupSphere.alignmentType "evil";
 	}
 
     override void PostBeginPlay() {
@@ -337,9 +337,9 @@ class HXDDPowerupSphere: Inventory {
     override bool TryPickup(in out Actor toucher) {
         Progression prog = Progression(toucher.FindInventory("Progression"));
         if (prog) {
-            if (prog.Alignment == "Good") {
+            if (prog.Alignment == "good") {
                 OnGoodPickup(toucher);
-            } else if (prog.Alignment == "Evil") {
+            } else if (prog.Alignment == "evil") {
                 OnEvilPickup(toucher);
             } else {
                 OnNeutralPickup(toucher);
