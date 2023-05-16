@@ -1,0 +1,19 @@
+{
+    "class": "HereticPlayer",
+    "armor_type": "simple",
+    "progression_type": "none",
+    "alignment": "good",
+    "max_level": 20,
+    "experience": [675,1600,3750,7250,15000,28500,52000,86000,110000,150000,150000],
+    "health": [65,75,5,10,3],
+    "mana": [80,90,5,10,3],
+    "strength": [6,10],
+    "intelligence": [10,13],
+    "wisdom": [12,15],
+    "dexterity": [15,18],
+    "use_max_health_scaler": false,
+    "skill_modifier": [],
+    "xp_modifier": 1.0,
+    "halve_xp_before_level_4": true,
+    "event_handler": false
+}

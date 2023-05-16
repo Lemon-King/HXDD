@@ -97,9 +97,13 @@ class HXDDWorldEventHandler : EventHandler {
         if (!e.IsFinal) {
             if (!MGLUT) {
                 MGLUT = new("MultiGameLookupTable");
-                MGLUT.LoadData();
+                MGLUT.Init();
             }
 
+            String a = "doomednums";
+            if (GetDefaultByType(e.Replacee).bIsMonster) {
+                a = "spawnnums";
+            }
             e.Replacement = MGLUT.GetActorBySource(e.Replacee.GetClassName());
             //e.IsFinal = true;
         }

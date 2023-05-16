@@ -24,7 +24,6 @@ public class ActorFactory {
         }
 
         // Merge DoomEdNums and SpawnNums
-        JSONArray actorsJSON = new JSONArray();
         TypeOrder.forEach((type) -> {
             // 0 = heretic, 1 = hexen
             List<Properties> lists = new ArrayList<>(Collections.emptyList());
@@ -69,6 +68,7 @@ public class ActorFactory {
                 });
             }
 
+            JSONArray actorsJSON = new JSONArray();
             actorKeys.forEach((key) -> {
                 JSONObject lutActors = new JSONObject();
                 String valueHeretic = (String) p_heretic.get(key);
@@ -98,6 +98,7 @@ public class ActorFactory {
                     p_hxdd.put(key, newValue);
                 }
             });
+            CreateMGLUT(actorsJSON, type);
 
             try {
                 Map<String, String> actorMap = (Map)p_hxdd;
@@ -138,7 +139,6 @@ public class ActorFactory {
                 System.out.println("ActorFactory: gameinfo files not found, skipping");
             }
         });
-        CreateMGLUT(actorsJSON, "all");
     }
 
     private void CreateMGLUT(JSONArray list, String type) {

@@ -16,15 +16,15 @@ class SimpleHexenArmorSelectorTier2: RandomSpawner {
 
 class MultiClassSilverShield : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
+		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.DefaultArmorMode;
+			if (cvarArmorMode == PSAT_DEFAULT) {
+				cvarArmorMode = prog.ArmorType;
             }
 		}
-        if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
+        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
             return "SilverShield";
 		} else {
             return "SimpleHexenArmorSelectorTier1";
@@ -48,16 +48,16 @@ class MultiClassSilverShield : MultiSpawner {
 
 class MultiClassEnchantedShield : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
+		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
 			//HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(p.mo);
-			if (cvarArmorMode == PSAM_DEFAULT) {
-				cvarArmorMode = prog.DefaultArmorMode;
+			if (cvarArmorMode == PSAT_DEFAULT) {
+				cvarArmorMode = prog.ArmorType;
             }
 		}
-        if (cvarArmorMode == PSAM_ARMOR_SIMPLE) {
+        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
             return "EnchantedShield";
 		} else {
             return "SimpleHexenArmorSelectorTier2";

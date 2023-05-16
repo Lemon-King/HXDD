@@ -1,0 +1,19 @@
+{
+    "class": "ClericPlayer",
+    "armor_type": "armorclass",
+    "progression_type": "none",
+    "alignment": "good",
+    "max_level": 20,
+    "experience": [911,2160,5062,9787,20250,38475,70200,116100,148500,202500,202500],
+    "health": [65,75,5,10,3],
+    "mana": [88,98,7,10,2],
+    "strength": [12,15],
+    "intelligence": [10,13],
+    "wisdom": [15,18],
+    "dexterity": [6,10],
+    "use_max_health_scaler": false,
+    "skill_modifier": [],
+    "xp_modifier": 1.0,
+    "halve_xp_before_level_4": true,
+    "event_handler": false
+}

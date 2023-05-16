@@ -1,0 +1,19 @@
+{
+    "class": "NecromancerPlayer",
+    "armor_type": "armorclass",
+    "progression_type": "levels",
+    "alignment": "evil",
+    "max_level": 20,
+    "experience": [823,1952,4575,8845,18300,34770,63440,104920,134200,183000,183000],
+    "health": [65,75,5,10,3],
+    "mana": [96,106,10,12,4],
+    "strength": [6,10],
+    "intelligence": [15,18],
+    "wisdom": [10,13],
+    "dexterity": [8,12],
+    "use_max_health_scaler": false,
+    "skill_modifier": [],
+    "xp_modifier": 1.0,
+    "halve_xp_before_level_4": true,
+    "event_handler": true
+}

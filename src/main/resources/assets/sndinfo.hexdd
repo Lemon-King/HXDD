@@ -1,0 +1,39 @@
+;===========================================================================
+;
+; HXDD MODIFIED MAP SONG LIST - FROM HEXDD.WAD v1.1
+;
+;===========================================================================
+
+$MAP    50              Winnowr
+$MAP    51              Jachr
+$MAP    52              Voidr
+$MAP    53              Deepr
+$MAP    54              Fubasr
+$MAP    55              Sixater
+$MAP    56              Chap_1r
+$MAP    57              Bonesr
+$MAP    58              Wutzitr
+$MAP    59              Chap_2r
+$MAP    60              Octor
+$MAP    61              Stalkr
+$MAP    62              Falconr
+$MAP    63              Chap_3r
+$MAP    64              Percr
+$MAP    65              Rithmr
+$MAP    66              Foojar
+$MAP    67              Cryptr
+$MAP    68              Simonr
+$MAP    69              Crucibr
+
+;===========================================================================
+;
+; DM MAPS
+;
+;===========================================================================
+
+$MAP    42              Grover
+$MAP    43              Fortr
+$MAP    44              Swampr
+$MAP    45              Wobabyr
+$MAP    46              Blechr
+$MAP    47              Falconr

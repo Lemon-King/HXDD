@@ -1,25 +1,235 @@
 //----------------------------------------------------------------------------
 //
-// Hexen II: Progression & Armor System
+// Modified Hexen II: Progression & Armor System
 // Ref: https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/portals/stats.hc
 //
 //----------------------------------------------------------------------------
 
-enum EPlaystyleArmorMode {
-	PSAM_DEFAULT = 0,
-	PSAM_ARMOR_SIMPLE = 1,
-	PSAM_ARMOR_AC = 2,
-	PSAM_ARMOR_RANDOM = 3,
-	PSAM_ARMOR_USER = 4
+enum EPlaystyleArmorType {
+	PSAT_DEFAULT = 0,
+	PSAT_ARMOR_SIMPLE = 1,
+	PSAT_ARMOR_AC = 2,
+	PSAT_ARMOR_RANDOM = 3,
+	PSAT_ARMOR_USER = 4
 };
 
-enum EPlaystyleProgression {
+enum EPlaystyleProgressionType {
 	PSP_DEFAULT = 0,
 	PSP_NONE = 1,
 	PSP_LEVELS = 2,
 	PSP_LEVELS_RANDOM = 3,
 	PSP_LEVELS_USER = 4,
 };
+
+class PlayerSheetJSON {
+	bool IsLoaded;
+
+	String PlayerClass;
+	String Alignment;
+	int ArmorType;
+	int ProgressionType;
+
+	bool UseMaxHealthScaler;
+	bool HalveXPBeforeLevel4;
+	bool UsesEventHandler;
+
+	double experienceModifier;
+
+	Array<double> skillmodifier;
+
+	int maxLevel;
+
+	Array<int> experienceTable;
+	Array<int> hitpointTable;
+	Array<int> manaTable;
+	Array<int> strengthTable;
+	Array<int> intelligenceTable;
+	Array<int> wisdomTable;
+	Array<int> dexterityTable;
+
+    String GetString(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return "";
+        }
+		HXDD_JsonString type_str = HXDD_JsonString(type_elem);
+		return type_str.s;
+    }
+    int GetInt(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return -1;
+        }
+		HXDD_JsonInt type_int = HXDD_JsonInt(type_elem);
+		return type_int.i;
+    }
+    double GetDouble(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return -1;
+        }
+		HXDD_JsonDouble type_double = HXDD_JsonDouble(type_elem);
+		return type_double.d;
+    }
+    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return null;
+        }
+		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
+		return type_arr;
+    }
+    bool GetBool(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return false;
+        }
+		HXDD_JsonBool type_bool = HXDD_JsonBool(type_elem);
+		return type_bool.b;
+    }
+
+	int GetEnumFromArmorType(String type) {
+		if (type == "ac" || type == "armor" || type == "armorclass" || type == "hexen") {
+			return PSAT_ARMOR_AC;
+		} else {
+			return PSAT_ARMOR_SIMPLE;
+		}
+	}
+	int GetEnumFromProgressionType(String type) {
+		if (type == "levels" || type == "level" || type == "leveling" || type == "hexen2") {
+			return PSP_LEVELS;
+		} else {
+			return PSP_NONE;
+		}
+	}
+
+    void Load(String file) {
+		// Create defaults
+		self.alignment = "neutral";
+		self.ArmorType = 0;
+		self.ProgressionType = 0;
+
+		self.UseMaxHealthScaler = true;
+
+		self.HalveXPBeforeLevel4 = true;
+		self.experienceModifier = 1.0;
+		self.maxLevel = 20;
+
+		self.UsesEventHandler = false;
+
+		Array<int> defaultExpTable;
+		int last = 800;
+		defaultExpTable.push(last);
+		for (let i = 1; i < 11; i++) {
+			last = last * 2.0;
+			defaultExpTable.push(last);
+		}
+		self.experienceTable.Copy(defaultExpTable);
+
+		Array<double> defaultSkillMod = {1.5,1.25,1.1,1.0,0.9};
+		self.skillmodifier.Copy(defaultSkillMod);
+
+		Array<int> defaultHPTable = {60,70,2,6,5};
+		Array<int> defaultMPTable = {95,105,5,10,5};
+		self.hitpointTable.Copy(defaultHPTable);
+		self.manaTable.Copy(defaultMPTable);
+
+		Array<int> defaultStatTable = {6,12};
+		self.strengthTable.Copy(defaultStatTable);
+		self.intelligenceTable.Copy(defaultStatTable);
+		self.wisdomTable.Copy(defaultStatTable);
+		self.dexterityTable.Copy(defaultStatTable);
+
+        int lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.playersheet", file));
+        console.printf("Progression: Load %d", lumpIndex);
+        if (lumpIndex != -1) {
+            String lumpData = Wads.ReadLump(lumpIndex);
+            let json = HXDD_JSON.parse(lumpData, false);
+            if (json is "HXDD_JsonElement") {
+                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
+				if (jsonObject) {
+                	console.printf("Progression: Loaded %s!", file);
+
+					String valPlayerClass = GetString(jsonObject, "class");
+					String valArmorType = GetString(jsonObject, "armor_type");
+					String valProgressionType = GetString(jsonObject, "progression_type");
+					int valMaxLevel = GetInt(jsonObject, "max_level");
+					String valAlignment = GetString(jsonObject, "alignment");
+					bool valUseMaxHealthScaler = GetBool(jsonObject, "use_max_health_scaler");
+					let valSkillModifier = GetArray(jsonObject, "skill_modifier");
+					double valXPModifier = GetDouble(jsonObject, "xp_modifier");
+					bool valHalveXPBeforeLevel4 = GetBool(jsonObject, "halve_xp_before_level_4");
+
+					let valExperienceTable = GetArray(jsonObject, "experience");
+					let valHPTable = GetArray(jsonObject, "health");
+					let valManaTable = GetArray(jsonObject, "mana");
+					let valStrTable = GetArray(jsonObject, "strength");
+					let valIntTable = GetArray(jsonObject, "intelligence");
+					let valWisTable = GetArray(jsonObject, "wisdom");
+					let valDexTable = GetArray(jsonObject, "dexterity");
+
+					let valUsesEventHandler = GetBool(jsonObject, "event_handler");
+
+					self.PlayerClass 				= valPlayerClass.MakeLower();
+					self.Alignment 					= valAlignment.MakeLower();
+					self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
+					self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
+
+					self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
+					self.HalveXPBeforeLevel4 		= valHalveXPBeforeLevel4;
+					self.maxlevel 					= valMaxLevel;
+					self.experienceModifier			= valXPModifier;
+
+					self.UsesEventHandler			= valUsesEventHandler;
+
+					if (valSkillModifier) {
+						if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
+							self.skillmodifier.Resize(valSkillModifier.arr.Size());
+						}
+						for (let i = 0; i < valSkillModifier.arr.Size(); i++) {
+							if (valSkillModifier.arr[i]) {
+								self.skillmodifier[i]		= HXDD_JsonDouble(valSkillModifier.arr[i]).d;
+							}
+						}
+					}
+					self.experienceTable.Resize(valExperienceTable.arr.Size());
+					for (let i = 0; i < valExperienceTable.arr.Size(); i++) {
+						self.experienceTable[i] 	= HXDD_JsonInt(valExperienceTable.arr[i]).i;
+					}
+
+					if (valHPTable && valManaTable) {
+						for (let i = 0; i < 5; i++) {
+							if (valHPTable.arr[i]) {
+								self.hitpointTable[i] 		= HXDD_JsonInt(valHPTable.arr[i]).i;
+							}
+							if (valManaTable.arr[i]) {
+								self.manaTable[i] 			= HXDD_JsonInt(valManaTable.arr[i]).i;
+							}
+						}
+					}
+					if (valStrTable && valIntTable && valWisTable && valDexTable) {
+						for (let i = 0; i < 2; i++) {
+							if (valStrTable.arr[i]) {
+								self.strengthTable[i] 		= HXDD_JsonInt(valStrTable.arr[i]).i;
+							}
+							if (valIntTable.arr[i]) {
+								self.intelligenceTable[i] 	= HXDD_JsonInt(valIntTable.arr[i]).i;
+							}
+							if (valWisTable.arr[i]) {
+								self.wisdomTable[i] 		= HXDD_JsonInt(valWisTable.arr[i]).i;
+							}
+							if (valDexTable.arr[i]) {
+								self.dexterityTable[i] 		= HXDD_JsonInt(valDexTable.arr[i]).i;
+							}
+						}
+					}
+				}
+            } else {
+                console.printf("Progression: Failed to load %s data from JSON!", file);
+            }
+        }
+    }
+}
 
 class Progression: Inventory {
 	bool ArmorSelected;
@@ -28,26 +238,25 @@ class Progression: Inventory {
 
 	// Alignment (Used for some pickups)
 	String Alignment;
-	property Alignment: Alignment;
 
 	// Gameplay Modes
-	int DefaultArmorMode;
-	int DefaultProgression;
-	property DefaultArmorMode: DefaultArmorMode;
-	property DefaultProgression: DefaultProgression;
+	int ArmorType;
+	int ProgressionType;
 
 	bool UseMaxHealthScaler;
-	property UseMaxHealthScaler: UseMaxHealthScaler;
 	int SpawnHealth;
 
+	bool HalveXPBeforeLevel4;
+	bool UsesEventHandler;
+
 	// Class Tables
-	double experienceTable[11];	// TODO: Convert to Dynamic Array
-	double hitpointTable[5];
-	double manaTable[5];
-	double strengthTable[2];
-	double intelligenceTable[2];
-	double wisdomTable[2];
-	double dexterityTable[2];
+	Array<int> experienceTable;
+	Array<int> hitpointTable;
+	Array<int> manaTable;
+	Array<int> strengthTable;
+	Array<int> intelligenceTable;
+	Array<int> wisdomTable;
+	Array<int> dexterityTable;
 
 	Array<double> skillmodifier;
 
@@ -64,28 +273,6 @@ class Progression: Inventory {
 	int wisdom;
 	int dexterity;
 
-	// Class Tables
-	property experienceTable: experienceTable;
-	property hitpointTable: hitpointTable;
-	property manaTable: manaTable;
-	property strengthTable: strengthTable;
-	property intelligenceTable: intelligenceTable;
-	property wisdomTable: wisdomTable;
-	property dexterityTable: dexterityTable;
-
-	// Character Stats
-	property Level: level;
-	property MaxLevel: maxlevel;
-	property Experience: experience;
-	property ExperienceModifier: experienceModifier;
-
-	property MaxHealth: maxHealth;
-	property MaxMana: maxMana;
-	property Strength: strength;
-	property Intelligence: intelligence;
-	property Wisdom: wisdom;
-	property Dexterity: dexterity;
-
 	ProgressionEventHandler handler;
 
     Default {
@@ -98,18 +285,6 @@ class Progression: Inventory {
 
         Inventory.MaxAmount 1;
         Inventory.InterHubAmount 1;
-
-		Progression.ExperienceModifier 1.0;
-
-		Progression.Level 0;
-		Progression.Experience 0;
-		
-        Progression.MaxHealth 100;
-		Progression.MaxMana 0;      // TODO: scale off of default if ammo type does not match
-		Progression.Strength 0;
-		Progression.Intelligence 0;
-		Progression.Wisdom 0;
-		Progression.Dexterity 0;
     }
 
 	// Stat Compute
@@ -125,13 +300,24 @@ class Progression: Inventory {
 	bool ProgressionAllowed() {
 		int optionProgression = LemonUtil.CVAR_GetInt("hxdd_progression", PSP_DEFAULT);
 		if (optionProgression == PSP_DEFAULT) {
-			optionProgression = self.DefaultProgression;
+			optionProgression = self.ProgressionType;
 		}
 		return optionProgression == PSP_LEVELS || optionProgression == PSP_LEVELS_RANDOM || optionProgression == PSP_LEVELS_USER;
 	}
 
 	override void BeginPlay() {
 		Super.BeginPlay();
+
+		self.ExperienceModifier = 1.0;
+		self.Level = 0;
+		self.Experience = 0;
+
+		self.MaxHealth = 100;
+		self.MaxMana = 0;
+		self.Strength = 10;
+		self.Intelligence = 10;
+		self.Wisdom = 10;
+		self.Dexterity = 10;
 	}
 
 	override void PostBeginPlay() {
@@ -141,12 +327,6 @@ class Progression: Inventory {
 		if (!ProgressionSelected) {
 			if (ProgressionAllowed()) {
 				InitLevel_PostBeginPlay();
-			} else {
-				// Set stats to 10 to prevent any penalties
-				Strength = 10;
-				Intelligence = 10;
-				Wisdom = 10;
-				Dexterity = 10;
 			}
 			ProgressionSelected = true;
 		}
@@ -166,33 +346,44 @@ class Progression: Inventory {
 
 		String playerClassName = GetPlayerClassName();
 
-		int cvarDefaultArmorMode = PSAM_ARMOR_SIMPLE;
+		int cvarArmorType = PSAT_ARMOR_SIMPLE;
 		let itemHexenArmor = HexenArmor(owner.player.mo.FindInventory("HexenArmor"));
 		if (itemHexenArmor) {
-			cvarDefaultArmorMode = PSAM_ARMOR_AC;
+			cvarArmorType = PSAT_ARMOR_AC;
 		}
 
-		self.DefaultArmorMode = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_armor", playerClassName), cvarDefaultArmorMode);
-		self.DefaultProgression = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_progression", playerClassName), PSP_NONE);
-		self.Alignment = LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_alignment", playerClassName), "Neutral");
+		let PlayerSheet = new("PlayerSheetJSON");
+		PlayerSheet.Load(playerClassName);
 
-		self.UseMaxHealthScaler = LemonUtil.CVAR_GetBool(String.format("hxdd_playersheet_%s_use_maxhealth_scaler", playerClassName), true);
-
-		if (self.DefaultArmorMode == PSAM_DEFAULT) {
-			self.DefaultArmorMode = PSAM_ARMOR_SIMPLE;
-			console.printf("Incorrect Class Armor Mode, PSAM_DEFAULT or 0 should not be used! Using PSAM_SIMPLE as Default.");
+		if (PlayerSheet.ArmorType == PSAT_DEFAULT) {
+			self.ArmorType = cvarArmorType;
+		} else {
+			self.ArmorType = PlayerSheet.ArmorType;
 		}
-		if (self.DefaultProgression == PSP_DEFAULT) {
-			self.DefaultProgression = PSP_NONE;
+		if(PlayerSheet.ProgressionType == PSAT_DEFAULT) {
+			self.ProgressionType = PSP_NONE;
+		} else {
+			self.ProgressionType = PlayerSheet.ProgressionType;
+		}
+		self.Alignment = PlayerSheet.Alignment.MakeLower();
+
+		self.UseMaxHealthScaler = PlayerSheet.UseMaxHealthScaler;
+
+		if (self.ArmorType == PSAT_DEFAULT) {
+			self.ArmorType = PSAT_ARMOR_SIMPLE;
+			console.printf("Incorrect Class Armor Mode, PSAT_DEFAULT or 0 should not be used! Using PSAT_SIMPLE as Default.");
+		}
+		if (self.ProgressionType == PSP_DEFAULT) {
+			self.ProgressionType = PSP_NONE;
 			console.printf("Incorrect Class Progression Mode, PSP_DEFAULT or 0 should not be used! Using PSP_NONE as Default.");
 		}
 
 		if (cvarProgression == PSP_DEFAULT) {
-			cvarProgression = self.DefaultProgression;
+			cvarProgression = self.ProgressionType;
 		}
 
 		if (cvarProgression != PSP_NONE) {
-			bool hasEvents = LemonUtil.CVAR_GetBool(String.format("hxdd_playersheet_%s_eventhandler", playerClassName), false);
+			bool hasEvents = PlayerSheet.UsesEventHandler;
 			if (hasEvents) {
 				String eventClass = String.format("peh_%s", playerClassName);
 				Class<Actor> handler = eventClass;
@@ -206,110 +397,28 @@ class Progression: Inventory {
 			}
 		}
 
-		Array<double> defaultSkillMod = {1.5,1.25,1.1,1.0,0.9};
-		self.skillmodifier.Copy(defaultSkillMod);
 		if (cvarProgression == PSP_LEVELS) {
-			double cvarPS_ExpModifer = LemonUtil.CVAR_GetFloat(String.format("hxdd_playersheet_%s_expmod", playerClassName), 1.0);
+			self.HalveXPBeforeLevel4 = PlayerSheet.HalveXPBeforeLevel4;
 
-			int last = 800;
-			String expDefaultGen = "800";
-			for (let i = 1; i < 11; i++) {
-				last = last * 2.0;
-				expDefaultGen = String.format("%s,%d", expDefaultGen, last);
-			}
+			self.maxlevel 			= PlayerSheet.maxLevel;
+			self.experienceModifier	= PlayerSheet.experienceModifier;
 
-			Array<String> tblExp;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_experience", playerClassName), expDefaultGen).Split(tblExp, ",");
+			self.skillmodifier.Copy(PlayerSheet.skillmodifier);
 
-			Array<String> tblHP;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_hitpoints", playerClassName), "60,70,2,6,5").Split(tblHP, ",");
+			self.experienceTable.Copy(PlayerSheet.experienceTable);
 
-			Array<String> tblMana;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_mana", playerClassName), "95,105,5,10,5").Split(tblMana, ",");
+			self.hitpointTable.Copy(PlayerSheet.hitpointTable);
+			self.manaTable.Copy(PlayerSheet.manaTable);
 
-			Array<String> tblStr;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_strength", playerClassName), "6,16").Split(tblStr, ",");
+			self.strengthTable.Copy(PlayerSheet.strengthTable);
+			self.intelligenceTable.Copy(PlayerSheet.intelligenceTable);
+			self.wisdomTable.Copy(PlayerSheet.wisdomTable);
+			self.dexterityTable.Copy(PlayerSheet.dexterityTable);
 
-			Array<String> tblInt;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_intelligence", playerClassName), "6,16").Split(tblInt, ",");
-
-			Array<String> tblWis;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_wisdom", playerClassName), "6,16").Split(tblWis, ",");
-
-			Array<String> tblDex;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_dexterity", playerClassName), "6,16").Split(tblDex, ",");
-
-			Array<String> tblxpskill;
-			LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_xpskill", playerClassName), "1.5,1.25,1.1,1.0,0.9").Split(tblxpskill, ",");
-
-			int cvarPS_MaxLevel = LemonUtil.CVAR_GetInt(String.format("hxdd_playersheet_%s_maxlevel", playerClassName), 20);
-
-			// validation
-			bool valid = true;
-			if (tblExp.Size() != 11) {
-				valid = false;
-				console.printf("Incorrect size for Experience Table! Size is %d, should be 11.", tblExp.Size());
-			}
-			if (tblHP.Size() != 5) {
-				valid = false;
-				console.printf("Incorrect size for Hitpoints Table! Size is %d, should be 5.", tblHP.Size());
-			}
-			if (tblMana.Size() != 5) {
-				valid = false;
-				console.printf("Incorrect size for Mana Table! Size is %d, should be 5.", tblMana.Size());
-			}
-			if (tblStr.Size() != 2) {
-				valid = false;
-				console.printf("Incorrect size for Strength Table! Size is %d, should be 2.", tblStr.Size());
-			}
-			if (tblInt.Size() != 2) {
-				valid = false;
-				console.printf("Incorrect size for Intelligence Table ! Size is %d, should be 2.", tblInt.Size());
-			}
-			if (tblWis.Size() != 2) {
-				valid = false;
-				console.printf("Incorrect size for Wisdom Table! Size is %d, should be 2.", tblWis.Size());
-			}
-			if (tblDex.Size() != 2) {
-				valid = false;
-				console.printf("Incorrect size for Dexterity Table! Size is %d, should be 2.", tblDex.Size());
-			}
-			if (cvarPS_MaxLevel <= 0) {
-				valid = false;
-				console.printf("MaxLevel should be greater than 0!");
-			}
-
-			if (G_SkillPropertyInt(SKILLP_SpawnFilter) - 1 > tblxpskill.Size()) {
-				console.printf("Skill %d is not defined in cvar %s!", G_SkillPropertyInt(SKILLP_SpawnFilter) - 1, String.format("hxdd_playersheet_%s_xpskill", playerClassName));
-			};
-
-			if (!valid) {
-				S_StartSound("Ambient13", CHAN_AUTO, CHANF_UI, 1.0, ATTN_NONE);
-				return;
-			}
-
-			self.maxlevel 					= cvarPS_MaxLevel;
-			self.experienceModifier			= cvarPS_ExpModifer;
-			self.skillmodifier.Resize(tblxpskill.Size());
-			for (let i = 0; i < tblxpskill.Size(); i++) {
-				self.skillmodifier[i]		= tblxpskill[i].ToDouble();
-			}
-			for (let i = 0; i < 11; i++) {
-				self.experienceTable[i] 	= tblExp[i].ToInt();
-			}
-			for (let i = 0; i < 5; i++) {
-				self.hitpointTable[i] 		= tblHP[i].ToInt();
-				self.manaTable[i] 			= tblMana[i].ToInt();
-			}
-			for (let i = 0; i < 2; i++) {
-				self.strengthTable[i] 		= tblStr[i].ToInt();
-				self.intelligenceTable[i] 	= tblInt[i].ToInt();
-				self.wisdomTable[i] 		= tblWis[i].ToInt();
-				self.dexterityTable[i] 		= tblDex[i].ToInt();
-				}
 		} else if (cvarProgression == PSP_LEVELS_USER) {
 			// User Defined Stats
 			int lastExpDefault = 800;
+			self.experienceTable.Resize(11);
 			self.experienceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_level_0", lastExpDefault);
 			for (let i = 1; i < 11; i++) {
 				lastExpDefault *= 2;
@@ -317,27 +426,33 @@ class Progression: Inventory {
 				self.experienceTable[i] = LemonUtil.CVAR_GetInt(cvarExpTableLevelNum, lastExpDefault);
 			}
 
+			self.hitpointTable.Resize(5);
 			self.hitpointTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_max", 100);
 			self.hitpointTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_base_min", 100);
 			self.hitpointTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_min", 0);
 			self.hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
 			self.hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
 
+			self.manaTable.Resize(5);
 			self.manaTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
 			self.manaTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
 			self.manaTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
 			self.manaTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
 			self.manaTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
 
+			self.strengthTable.Resize(2);
 			self.strengthTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_min", 10);
 			self.strengthTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_strength_max", 10);
 
+			self.intelligenceTable.Resize(2);
 			self.intelligenceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_min", 10);
 			self.intelligenceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_intelligence_max", 10);
 
+			self.wisdomTable.Resize(2);
 			self.wisdomTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_min", 10);
 			self.wisdomTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_wisdom_max", 10);
 
+			self.dexterityTable.Resize(2);
 			self.dexterityTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_min", 10);
 			self.dexterityTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_dexterity_max", 10);
 
@@ -347,23 +462,30 @@ class Progression: Inventory {
 			// TODO: Add ranges?
 			self.experienceModifier = 1.0f + frandom[exprnd](0.0f, 0.5f);
 
+			self.experienceTable.Resize(11);
 			self.experienceTable[0] = (0.2f + frandom[exprnd](0.8f, 1.0f)) * 800;
 			for (let i = 1; i < 11; i++) {
 				self.experienceTable[i] = 	self.experienceTable[i-1] * (1.8 + (frandom[exprnd](0.0, 1.0) * 4.0f));
 			}
 
+			self.hitpointTable.Resize(5);
 			self.hitpointTable[0] = 65.0f;
 			self.hitpointTable[1] = self.hitpointTable[0] + (frandom[exprnd](0.15f, 0.25f) * 100.0f);;
 			self.hitpointTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
 			self.hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
 			self.hitpointTable[4] = self.hitpointTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
+			self.manaTable.Resize(5);
 			self.manaTable[0] = 70.0f;
 			self.manaTable[1] = 80.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
 			self.manaTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
 			self.manaTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
 			self.manaTable[4] = self.manaTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
+			self.strengthTable.Resize(2);
+			self.intelligenceTable.Resize(2);
+			self.wisdomTable.Resize(2);
+			self.dexterityTable.Resize(2);
 			for (let i = 0; i < 2; i++) {
 				double mult = ((i+1) * 10.0f);
 				self.strengthTable[i] =		frandom[exprnd](0.5f, 1.0f) * mult;
@@ -383,17 +505,17 @@ class Progression: Inventory {
 		if (player == NULL) {
 			return;
 		}
-		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAM_DEFAULT);
-		if (optionArmorMode == PSAM_DEFAULT) {
-			optionArmorMode = self.DefaultArmorMode;
+		int optionArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
+		if (optionArmorMode == PSAT_DEFAULT) {
+			optionArmorMode = self.ArmorType;
 		}
-		if (optionArmorMode == PSAM_ARMOR_SIMPLE) {
+		if (optionArmorMode == PSAT_ARMOR_SIMPLE) {
 			ArmorModeSelection_Simple(player);
-		} else if (optionArmorMode == PSAM_ARMOR_AC) {
+		} else if (optionArmorMode == PSAT_ARMOR_AC) {
 			ArmorModeSelection_AC(player);
-		} else if (optionArmorMode == PSAM_ARMOR_RANDOM) {
+		} else if (optionArmorMode == PSAT_ARMOR_RANDOM) {
 			ArmorModeSelection_Random(player);
-		} else if (optionArmorMode == PSAM_ARMOR_USER) {
+		} else if (optionArmorMode == PSAT_ARMOR_USER) {
 			ArmorModeSelection_User(player);
 		}
 		ArmorSelected = true;
@@ -623,7 +745,7 @@ class Progression: Inventory {
 	}
 
 	double GiveExperience(double amount) {
-		if (level < 4) {
+		if (self.HalveXPBeforeLevel4 && level < 4) {
 			amount *= 0.5;
 		}
 

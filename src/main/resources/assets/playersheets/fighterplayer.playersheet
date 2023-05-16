@@ -1,0 +1,19 @@
+{
+    "class": "FighterPlayer",
+    "armor_type": "armorclass",
+    "progression_type": "none",
+    "alignment": "good",
+    "max_level": 20,
+    "experience": [945,2240,5250,10150,21000,39900,72800,120400,154000,210000,210000],
+    "health": [70,85,8,13,4],
+    "mana": [84,94,6,9,1],
+    "strength": [15,18],
+    "intelligence": [6,10],
+    "wisdom": [6,10],
+    "dexterity": [10,13],
+    "use_max_health_scaler": false,
+    "skill_modifier": [],
+    "xp_modifier": 1.0,
+    "halve_xp_before_level_4": true,
+    "event_handler": false
+}
