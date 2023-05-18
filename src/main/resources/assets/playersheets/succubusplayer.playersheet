@@ -7,10 +7,13 @@
     "experience": [871,2060,4822,9319,19278,36626,66804,110494,141334,192700,192700],
     "health": [65,75,5,10,3],
     "mana": [90,100,8,11,3],
-    "strength": [11,14],
-    "intelligence": [9,13],
-    "wisdom": [11,14],
-    "dexterity": [9,13],
+    "stats": {
+        "strength": [11,14],
+        "intelligence": [9,13],
+        "wisdom": [11,14],
+        "dexterity": [9,13]
+    },
+    "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],
     "xp_modifier": 1.0,

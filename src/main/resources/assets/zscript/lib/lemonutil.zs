@@ -2,11 +2,11 @@
 
 class LemonUtil {
     // Determine Map Type
-    static bool IsMapHeretic() {
+    static bool IsMapEpisodic() {
         String mapName = Level.MapName.MakeLower();
         return (mapName.Left(1) == "e" && mapName.Mid(2, 1) == "m");
     }
-    static bool IsMapHexen() {
+    static bool IsMapLinear() {
         String mapName = Level.MapName.MakeLower();
         return (mapName.IndexOf("map") != -1 || mapName.IndexOf("&wt") != -1);
     }
@@ -21,14 +21,19 @@ class LemonUtil {
 
     static int GetOptionGameMode() {
         int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
+        int gameType = gameinfo.gametype;
+        if (gameType & GAME_Doom) {
+            // PWAD Mode
+            return GAME_Doom;
+        }
         int mode = GAME_Heretic;
         if (cvarGameMode == 1) {
             mode = GAME_Heretic;
         } else if (cvarGameMode == 2) {
             mode = GAME_Hexen;
-        } else if (LemonUtil.IsMapHeretic()) {
+        } else if (LemonUtil.IsMapEpisodic()) {
             mode = GAME_Heretic;
-        } else if (LemonUtil.IsMapHexen()) {
+        } else if (LemonUtil.IsMapLinear()) {
             mode = GAME_Hexen;
         }
         return mode;

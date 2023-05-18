@@ -108,7 +108,10 @@ class CWeapWarhammer : CrusaderWeapon
         Progression prog = Progression(Player.mo.FindInventory("Progression"));
 		double strength = 10;
 		if (prog) {
-			strength = prog.strength;
+			PlayerSheetStat statStr = prog.GetStat("strength");
+			if (statStr) {
+				strength = statStr.value;
+			}
 		}
 
 		//Array<Actor> hit;
@@ -120,7 +123,7 @@ class CWeapWarhammer : CrusaderWeapon
 
 				if (t.linetarget) { //&& hit.Find(t.linetarget) != hit.Size()) {
 					
-                    double force = strength / 40.0f + 0.5f;
+                    //double force = strength / 40.0f + 0.5f;	// knockback power, needs implementation
 
 					Actor target = Actor(t.linetarget);
                     double targetMass = target.mass;
