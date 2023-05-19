@@ -25,7 +25,7 @@
 31 = MultiClassEnchantedShield
 32 = ArtiSuperHealth
 33 = ArtiTorch
-34 = ArtiTimeBomb
+34 = MultiClassArtiTimeBomb
 35 = SuperMap
 36 = ArtiTeleport
 37 = StalagmiteSmall
@@ -63,9 +63,9 @@
 81 = CrystalVial
 82 = ArtiHealth
 83 = ArtiFly
-84 = ArtiInvulnerability
+84 = MultiClassArtiInvulnerability
 85 = MultiClassSilverShield
-86 = ArtiTomeOfPower
+86 = MultiClassArtiTomeOfPower
 87 = Volcano
 90 = Clink
 92 = Snake

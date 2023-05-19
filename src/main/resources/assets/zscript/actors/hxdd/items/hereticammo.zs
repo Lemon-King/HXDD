@@ -1,23 +1,3 @@
-
-//
-//  Bag of Holding
-//
-class MultiClassBagOfHolding : MultiSpawner {
-    override void Bind() {
-        self.SpawnSelect = "ClassSelect";
-        self.Fallback = "BagOfHolding";
-        self.Corvus = "BagOfHolding";
-        self.Fighter = "ArtiBoostMana";
-        self.Cleric = "ArtiBoostMana";
-        self.Mage = "ArtiBoostMana";
-        self.Paladin = "ArtiBoostMana";
-        self.Crusader = "ArtiBoostMana";
-        self.Necromancer = "ArtiBoostMana";
-        self.Assassin = "ArtiBoostMana";
-        self.Succubus = "ArtiBoostMana";
-    }
-}
-
 //
 //  Gold Wand Ammo
 //

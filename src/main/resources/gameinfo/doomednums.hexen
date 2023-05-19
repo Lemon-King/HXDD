@@ -70,8 +70,8 @@
 81 = CrystalVial
 82 = ArtiHealth
 83 = ArtiFly
-84 = ArtiInvulnerability2
-86 = ArtiDarkServant
+84 = MultiClassArtiInvulnerability2
+86 = MultiClassArtiDarkServant
 87 = ZTreeGnarled2
 88 = ZLog
 89 = ZStalactiteIceLarge
@@ -116,9 +116,9 @@
 3000 = "$PolyAnchor"
 3001 = "$PolySpawn"
 3002 = "$PolySpawnCrush"
-8000 = ArtiPoisonBag
+8000 = MultiClassArtiPoisonBag
 8002 = ArtiSpeedBoots
-8003 = ArtiBoostMana
+8003 = MultiClassArtiBoostMana
 8004 = MultiClassMana3
 8005 = MultiClassMeshArmor
 8006 = MultiClassFalconShield
@@ -138,7 +138,7 @@
 8038 = KeyHorn
 8039 = KeySwamp
 8040 = MultiClassMWeapLightning
-8041 = ArtiBoostArmor
+8041 = MultiClassArtiBoostArmor
 8042 = ZFireBull
 8043 = ZFireBullUnlit
 8044 = ZStatueGargoyleStripeTall

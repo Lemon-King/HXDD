@@ -34,7 +34,7 @@
 40 = EggFX
 68 = MultiClassSilverShield
 69 = MultiClassEnchantedShield
-72 = ArtiTimeBomb
+72 = MultiClassArtiTimeBomb
 73 = ArtiTorch
 85 = KeyBlue
 86 = KeyGreen
@@ -54,7 +54,7 @@
 131 = MummyFX1
 132 = Snake
 133 = ArtiInvulnerability
-134 = ArtiTomeOfPower
+134 = MultiClassArtiTomeOfPower
 135 = ArtiInvisibility
 136 = MultiClassBagOfHolding
 137 = SuperMap

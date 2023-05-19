@@ -26,8 +26,8 @@ GameInfo {
 	defaultbloodparticlecolor = "ff 00 00"
 	backpacktype = "BagOfHolding"
 	armoricons = "SHLDA0", 0.75, "SHD2A0"
-	//statusbar = "sbarinfo/heretic.txt"
-	statusbarclass = "HereticStatusBar"
+	//statusbar = "hexentype"
+	statusbarclass = "HXDDStatusBar"
 	skyflatname = "F_SKY"
 	DrawReadThis = false
 	intermissionmusic = "mus_intr"
