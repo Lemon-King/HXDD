@@ -13,30 +13,6 @@ class XGT_Group {
     Array<String> Hexen;
 }
 
-class XClassTranslation {
-	Array<XClassTranslationActors> list;
-
-	String TrySwap(String replacee) {
-		for (let i = 0; i < list.Size(); i++) {
-			if (list[i].key.MakeLower() == replacee.MakeLower()) {
-				String replacement;
-				if (list[i].list.Size() > 1) {
-					// choose randomly
-					int size = list[i].list.Size() - 1;
-					int choice = random[xclass](0, size);
-					replacement = list[i].list[choice];
-				} else {
-					replacement = list[i].list[0];
-				}
-				console.printf("XClassTranslation Found: %s, Replacement: %s", replacee, replacement);
-
-				return replacement;
-			}
-		}
-		return replacee;
-	}
-}
-
 class XClassTranslationActors {
 	String key;
 	Array<String> list;
@@ -51,7 +27,7 @@ class XGameTranslation {
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
-    XClassTranslation xclass;
+	Array<XClassTranslationActors> xclass;  // player class actor swaps
 
     String GetString(HXDD_JsonObject jo, String key) {
         HXDD_JsonElement type_elem = jo.get(key);
@@ -136,7 +112,7 @@ class XGameTranslation {
             }
         }
         if (index == group.size) {
-            String newActor = self.xclass.TrySwap(source);
+            String newActor = self.TrySwap(source);
             XGameResponse resp = new ("XGameResponse");
             if (newActor != source) {
                 resp.isFinal = true;
@@ -166,7 +142,7 @@ class XGameTranslation {
                 }
             }
         }
-        String swapped = self.xclass.TrySwap(newActor);
+        String swapped = self.TrySwap(newActor);
         XGameResponse resp = new ("XGameResponse");
         if (swapped != newActor) {
             resp.IsFinal = true;
@@ -180,7 +156,6 @@ class XGameTranslation {
         int lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.playersheet", playerClassName));
         console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, lumpIndex);
 		
-		self.xclass = new("XClassTranslation");
         if (lumpIndex != -1) {
             String lumpData = Wads.ReadLump(lumpIndex);
             let json = HXDD_JSON.parse(lumpData, false);
@@ -194,7 +169,7 @@ class XGameTranslation {
 						Array<String> keys;
 						objClassItems.GetKeysInto(keys);
 
-						self.xclass.list.Resize(keys.Size());
+						self.xclass.Resize(keys.Size());
 						for (let i = 0; i < keys.Size(); i++) {
 							String key = keys[i];
 							String valClassItem = GetString(objClassItems, key);
@@ -204,12 +179,12 @@ class XGameTranslation {
                                 for (let n = 0; n < nClassItems.Size(); n++) {
                                     nClassItems[n].Replace(" ", "");
                                 }
-								self.xclass.list[i] = new ("XClassTranslationActors");
-								self.xclass.list[i].list.Copy(nClassItems);
-                                for (let j = 0; j < self.xclass.list[i].list.Size(); j++) {
-								    console.printf("XGameTranslation %s", self.xclass.list[i].list[j]);
+								self.xclass[i] = new ("XClassTranslationActors");
+								self.xclass[i].list.Copy(nClassItems);
+                                for (let j = 0; j < self.xclass[i].list.Size(); j++) {
+								    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
                                 }
-								self.xclass.list[i].key = key;
+								self.xclass[i].key = key;
 								console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
 							}
 						}
@@ -217,5 +192,25 @@ class XGameTranslation {
 				}
 			}
 		}
+	}
+
+	String TrySwap(String replacee) {
+		for (let i = 0; i < self.xclass.Size(); i++) {
+			if (self.xclass[i].key.MakeLower() == replacee.MakeLower()) {
+				String replacement;
+				if (self.xclass[i].list.Size() > 1) {
+					// choose randomly
+					int size = self.xclass[i].list.Size() - 1;
+					int choice = random[xclass](0, size);
+					replacement = self.xclass[i].list[choice];
+				} else {
+					replacement = self.xclass[i].list[0];
+				}
+				console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
+
+				return replacement;
+			}
+		}
+		return replacee;
 	}
 }
