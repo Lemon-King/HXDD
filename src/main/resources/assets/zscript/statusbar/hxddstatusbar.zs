@@ -75,7 +75,7 @@ class HXDDStatusBar : BaseStatusBar
 		mHealthInterpolator2.Update(CPlayer.health);
 		
 		Progression prog = GetProgression();
-		if (prog.level > 0) {
+		if (prog && prog.level > 0) {
 			mXPInterpolator.Update(prog.levelpct);
 		}
 
@@ -138,16 +138,16 @@ class HXDDStatusBar : BaseStatusBar
 		if ((ammo1 is "Mana1") || (ammo2 is "Mana1") || (ammo1 is "Mana2") || (ammo2 is "Mana2")) {
 			if ((ammo1 is "Mana1") || (ammo2 is "Mana1")){
 				DrawImage("MANABRT1", (-17, -30), DI_ITEM_OFFSETS);
-				DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (-21, -30), DI_TEXT_ALIGN_RIGHT);
 			} else {
 				DrawImage("MANADIM1", (-17, -30), DI_ITEM_OFFSETS);
 			}
 			if ((ammo1 is "Mana2") || (ammo2 is "Mana2")) {
 				DrawImage("MANABRT2", (-17, -15), DI_ITEM_OFFSETS);
-				DrawString(mHUDFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (-21, -15), DI_TEXT_ALIGN_RIGHT);
 			} else {
 				DrawImage("MANADIM2", (-17, -15), DI_ITEM_OFFSETS);
 			}
+			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (-21, -30), DI_TEXT_ALIGN_RIGHT);
+			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (-21, -15), DI_TEXT_ALIGN_RIGHT);
 		} else {
 			int y = -22;
 			if (ammo1 != null)
