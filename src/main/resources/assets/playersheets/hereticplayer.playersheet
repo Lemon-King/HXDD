@@ -24,17 +24,17 @@
         "CWeapFlame": "SkullRod",
         "MWeapLightning": "PhoenixRod",
 
-        "FWeaponPiece1": "none",
-        "FWeaponPiece2": "ArtiTomeOfPower",
-        "FWeaponPiece3": "MaceSpawner",
+        "FWeaponPiece1": "MaceSpawner, ArtiTomeOfPower",
+        "FWeaponPiece2": "ArtiTomeOfPower, none",
+        "FWeaponPiece3": "ArtiTomeOfPower, none",
 
-        "CWeaponPiece1": "none",
-        "CWeaponPiece2": "ArtiTomeOfPower",
-        "CWeaponPiece3": "MaceSpawner",
+        "CWeaponPiece1": "MaceSpawner, ArtiTomeOfPower",
+        "CWeaponPiece2": "ArtiTomeOfPower, none",
+        "CWeaponPiece3": "ArtiTomeOfPower, none",
 
-        "MWeaponPiece1": "none",
-        "MWeaponPiece2": "ArtiTomeOfPower",
-        "MWeaponPiece3": "MaceSpawner",
+        "MWeaponPiece1": "MaceSpawner, ArtiTomeOfPower",
+        "MWeaponPiece2": "ArtiTomeOfPower, none",
+        "MWeaponPiece3": "ArtiTomeOfPower, none",
 
         "ArtiBoostMana": "BagOfHolding",
         "ArtiBoostArmor": "ArtiTomeOfPower",

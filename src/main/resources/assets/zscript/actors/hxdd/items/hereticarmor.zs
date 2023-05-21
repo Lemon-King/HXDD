@@ -52,7 +52,6 @@ class MultiClassEnchantedShield : MultiSpawner {
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			//HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(p.mo);
 			if (cvarArmorMode == PSAT_DEFAULT) {
 				cvarArmorMode = prog.ArmorType;
             }

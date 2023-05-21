@@ -1,7 +1,7 @@
 #include "zscript/actors/hxdd/shared/_shared.zs"
 
 // Player Weapons and Ammo
-#include "zscript/actors/hxdd/items/compatabilityitems.zs"
+//#include "zscript/actors/hxdd/items/compatabilityitems.zs"
 //#include "zscript/actors/hxdd/items/hereticammo.zs"
 #include "zscript/actors/hxdd/items/hereticarmor.zs"
 //#include "zscript/actors/hxdd/items/hereticpickups.zs"

@@ -1,14 +1,14 @@
 class MultiClassMeshArmor : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
+		int cvarArmorType = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			if (cvarArmorMode == PSAT_DEFAULT) {
-				cvarArmorMode = prog.ArmorType;
+			if (cvarArmorType == PSAT_DEFAULT) {
+				cvarArmorType = prog.ArmorType;
             }
 		}
-        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
+        if (cvarArmorType == PSAT_ARMOR_SIMPLE) {
             return "EnchantedShield";
 		} else {
             return "MeshArmor";
@@ -32,15 +32,15 @@ class MultiClassMeshArmor : MultiSpawner {
 
 class MultiClassPlatinumHelm : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
+		int cvarArmorType = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			if (cvarArmorMode == PSAT_DEFAULT) {
-				cvarArmorMode = prog.ArmorType;
+			if (cvarArmorType == PSAT_DEFAULT) {
+				cvarArmorType = prog.ArmorType;
             }
 		}
-        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
+        if (cvarArmorType == PSAT_ARMOR_SIMPLE) {
             return "SilverShield";
 		} else {
             return "PlatinumHelm";
@@ -64,20 +64,15 @@ class MultiClassPlatinumHelm : MultiSpawner {
 
 class MultiClassAmuletOfWarding : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
+		int cvarArmorType = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			if (cvarArmorMode == PSAT_DEFAULT) {
-				cvarArmorMode = prog.ArmorType;
-			} else {
-                return "Unknown";
-                //cvarArmorMode = PSAT_ARMOR_AC;
+			if (cvarArmorType == PSAT_DEFAULT) {
+				cvarArmorType = prog.ArmorType;
             }
-		} else if (cvarArmorMode == PSAT_DEFAULT) {
-			cvarArmorMode = PSAT_ARMOR_AC;
 		}
-        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
+        if (cvarArmorType == PSAT_ARMOR_SIMPLE) {
             return "SilverShield";
 		} else {
             return "AmuletOfWarding";
@@ -101,15 +96,15 @@ class MultiClassAmuletOfWarding : MultiSpawner {
 
 class MultiClassFalconShield : MultiSpawner {
     override String CvarSelector() {
-		int cvarArmorMode = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
+		int cvarArmorType = LemonUtil.CVAR_GetInt("hxdd_armor_mode", PSAT_DEFAULT);
         PlayerInfo p = players[0];
         Progression prog = Progression(p.mo.FindInventory("Progression"));
 		if (prog) {
-			if (cvarArmorMode == PSAT_DEFAULT) {
-				cvarArmorMode = prog.ArmorType;
+			if (cvarArmorType == PSAT_DEFAULT) {
+				cvarArmorType = prog.ArmorType;
             }
 		}
-        if (cvarArmorMode == PSAT_ARMOR_SIMPLE) {
+        if (cvarArmorType == PSAT_ARMOR_SIMPLE) {
             return "EnchantedShield";
 		} else {
             return "FalconShield";
