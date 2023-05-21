@@ -32,10 +32,10 @@
         "MaceAmmo": "Mana3",
         "MaceAmmoHefty": "Mana3",
 
-        "Gauntlets": "Mana3",
-        "GoldWand": "Mana1",
+        "Gauntlets": "FWeaponPiece3",
+        "GoldWand": "Mana3",
         "Crossbow": "FWeapAxe",
-        "Blaster": "FWeaponPiece1",
+        "Blaster": "Mana3",
         "SkullRod": "FWeapHammer",
         "PhoenixRod": "FWeaponPiece2",
         "MaceSpawner": "MultiClassSpecialSpawnerFighter",
