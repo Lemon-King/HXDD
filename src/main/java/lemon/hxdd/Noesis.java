@@ -50,6 +50,7 @@ public class Noesis {
         String textpre = "";
         if (fileName.endsWith(".mdl")) {
             target = fileName.replace("mdl", "md3");
+            //target = fileName.replace("mdl", "iqm");
             textpre = fileName.replace(".mdl", "_");
         } else if (fileName.endsWith(".spr")) {
             target = fileName.replace(".spr", ".png");

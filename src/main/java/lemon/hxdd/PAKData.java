@@ -162,12 +162,14 @@ public class PAKData {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                //options.add("-vertbones");
                 options.add("-nofmtexopt");
                 options.add("-vorder");
                 options.add("-smoothnorm \"180\"");
                 options.add("-texpre " + opt + "\"%s\"");
                 if (ModelEffect.get(shortName) != null) {
                     options.add("-imgoutidx 70");
+                    //options.add("-imgoutidx 271 ");
                 }
                 Noesis.ExportAsset(fileName_Noesis, "models/" + opt, options);
             } else if (fileName.endsWith(".spr")) {

@@ -44,40 +44,6 @@ class HXDDWorldEventHandler : EventHandler {
         UserOptions_TextureSwap();
     }
 
-    override void PlayerSpawned(PlayerEvent e) {
-        PlayerPawn pp = PlayerPawn(players[e.PlayerNumber].mo);
-        if (pp) {
-            Progression prog = Progression(pp.FindInventory("Progression"));
-            if (prog == null) {
-                pp.GiveInventory("Progression", 1);
-                prog = Progression(pp.FindInventory("Progression"));
-            }
-            GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
-            if (gmcompat == null) {
-                pp.GiveInventory("GameModeCompat", 1);
-            }
-        }
-    }
-
-    override void WorldThingDied(WorldEvent e) {
-        if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
-            if (e.thing.target.player.mo is "PlayerPawn") {
-                PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
-                if (pt.FindInventory("Progression")) {
-                    Progression prog = Progression(pt.FindInventory("Progression"));
-                    double exp = 0;
-                    if (prog != NULL) {
-                        exp = prog.GiveExperienceByTargetHealth(e.thing);
-                    }
-                    
-                    if (prog.handler) {
-                        prog.handler.OnKill(pt, e.thing, exp);
-                    }
-                }
-            }
-        }
-    }
-
     override void WorldLinePreActivated(WorldEvent e) {
         // map transfer
         if (e.ActivatedLine.special == 74) {
@@ -92,20 +58,19 @@ class HXDDWorldEventHandler : EventHandler {
         }
     }
 
-    MultiGameLookupTable MGLUT;
+    XGameTranslation xgame;
     override void CheckReplacement(ReplaceEvent e) {
-        if (!e.IsFinal) {
-            if (!MGLUT) {
-                MGLUT = new("MultiGameLookupTable");
-                MGLUT.Init();
-            }
-
-            String a = "doomednums";
-            if (GetDefaultByType(e.Replacee).bIsMonster) {
-                a = "spawnnums";
-            }
-            e.Replacement = MGLUT.GetActorBySource(e.Replacee.GetClassName());
-            //e.IsFinal = true;
+        if (!xgame) {
+            xgame = new("XGameTranslation");
+            xgame.Init();
         }
+        XGameResponse resp = xgame.GetActorBySource(e.Replacee.GetClassName());
+        if (resp.newActor == "none") {
+            // Hack
+            e.Replacement = "RandomSpawner";
+        } else {
+            e.Replacement = resp.newActor;
+        }
+        e.IsFinal = resp.IsFinal;
     }
 }

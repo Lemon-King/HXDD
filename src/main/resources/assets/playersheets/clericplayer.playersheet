@@ -13,6 +13,38 @@
         "wisdom": [15,18],
         "dexterity": [6,10]
     },
+    "xgame": {
+        "GoldWandAmmo": "none",
+        "GoldWandHefty": "Mana1",
+
+        "CrossbowAmmo": "Mana1",
+        "CrossbowHefty": "Mana2",
+
+        "BlasterAmmo": "Mana2",
+        "BlasterHefty": "Mana2",
+
+        "SkullRodAmmo": "Mana2",
+        "SkullRodAmmoHefty": "Mana3",
+
+        "PhoenixRodAmmo": "Mana2",
+        "PhoenixRodAmmoHefty": "Mana3",
+
+        "MaceAmmo": "Mana3",
+        "MaceAmmoHefty": "Mana3",
+
+        "Gauntlets": "Mana3",
+        "GoldWand": "Mana1",
+        "Crossbow": "CWeapStaff",
+        "Blaster": "CWeaponPiece1",
+        "SkullRod": "CWeapFlame",
+        "PhoenixRod": "CWeaponPiece2",
+        "MaceSpawner": "MultiClassSpecialSpawnerCleric",
+        
+        "BagOfHolding": "ArtiBoostMana",
+        "ArtiTomeOfPower": "ArtiDarkServant",
+        "ArtiTimeBomb": "ArtiPoisonBag",
+        "ArtiInvulnerability": "ArtiInvulnerability2"
+    },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],

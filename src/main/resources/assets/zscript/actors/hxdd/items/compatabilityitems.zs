@@ -5,6 +5,7 @@
 
 // BUG: Pickups using Lights from gldefs do not hide lights with VisibleToPlayerClass.
 
+/*
 // Bag & Arti Boost
 class HXDDBagOfHolding: BagOfHolding replaces BagOfHolding {
     Default {
@@ -118,3 +119,4 @@ class HXDDMana3: Mana3 replaces Mana3 {
         Inventory.RestrictedTo "FighterPlayer", "ClericPlayer", "MagePlayer", "PaladinPlayer", "CrusaderPlayer", "NecromancerPlayer", "AssassinPlayer", "SuccubusPlayer";
     }
 }
+*/

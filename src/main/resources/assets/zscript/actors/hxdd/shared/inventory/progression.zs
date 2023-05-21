@@ -21,6 +21,42 @@ enum EPlaystyleProgressionType {
 	PSP_LEVELS_USER = 4,
 };
 
+class PlayerSheetEventHandler: EventHandler {
+    override void PlayerSpawned(PlayerEvent e) {
+        PlayerPawn pp = PlayerPawn(players[e.PlayerNumber].mo);
+        if (pp) {
+            Progression prog = Progression(pp.FindInventory("Progression"));
+            if (prog == null) {
+                pp.GiveInventory("Progression", 1);
+                prog = Progression(pp.FindInventory("Progression"));
+            }
+            GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+            if (gmcompat == null) {
+                pp.GiveInventory("GameModeCompat", 1);
+            }
+        }
+    }
+
+    override void WorldThingDied(WorldEvent e) {
+        if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
+            if (e.thing.target.player.mo is "PlayerPawn") {
+                PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
+                if (pt.FindInventory("Progression")) {
+                    Progression prog = Progression(pt.FindInventory("Progression"));
+                    double exp = 0;
+                    if (prog != NULL) {
+                        exp = prog.AwardExperience(e.thing);
+                    }
+                    
+                    if (prog.handler) {
+                        prog.handler.OnKill(pt, e.thing, exp);
+                    }
+                }
+            }
+        }
+    }
+}
+
 class PlayerSheetStat {
 	String name;
 	Array<int> table;
@@ -280,6 +316,14 @@ class PlayerSheetJSON {
             }
         }
     }
+
+	String GetPlayerClassName(PlayerPawn pp) {
+		String playerClassName = pp.GetClassName();
+		if (playerClassName.IndexOf("HXDD") != -1) {
+			playerClassName = pp.GetParentClass().GetClassName();
+		}
+		return playerClassName.MakeLower();
+	}
 }
 
 class Progression: Inventory {
@@ -879,32 +923,50 @@ class Progression: Inventory {
 		return pLevel;
 	}
 
-	// Allows progression from Doom Engine mobs
-	bool xpModWarning;
-	double GiveExperienceByTargetHealth(Actor target) {
+	double AwardExperience(Actor target) {
 		double exp = 0;
 		if (self.experienceTable.Size() == 0 || !target) {
 			// Experience Table is not setup or no target
 			return exp;
 		}
 		if (target.health <= 0) {
-			double calcExp = target.Default.health;
-			if (LemonUtil.GetOptionGameMode() == GAME_Hexen) {
-				// Hexen receives an xp penalty due to larger health pools vs Heretic and Hexen II
-				calcExp *= 0.5;
+			String name = target.GetClassName();
+			bool useTable = false;
+			// lookup target name, if in table use xp table to give xp
+			// it not in table use legacy system
+			if (useTable) {
+				exp = GetExperienceFromLookupTable(target);
+			} else {
+				exp = GetExperienceByTargetHealth(target);
 			}
-			calcExp *= frandom[ExpRange](0.8, 0.9);
-			if (target.bBoss) {
-				calcExp *= 1.75;
-			}
-			calcExp = (calcExp * 0.9) + frandom[ExpBonus](calcExp * 0.05, calcExp * 0.15);
-			int skSpawnFilter = G_SkillPropertyInt(SKILLP_SpawnFilter) - 1;
-			skSpawnFilter = clamp(skSpawnFilter, 0, 4);
-			if (self.skillmodifier[skSpawnFilter]) {
-				calcExp *= self.skillmodifier[skSpawnFilter];
-			}
-			return GiveExperience(calcExp);
 		}
+		GiveExperience(exp);
 		return exp;
+	}
+
+	double GetExperienceFromLookupTable(Actor target) {
+		// Placeholder
+		return 0;
+	}
+
+	// Allows progression from Doom Engine mobs with no lookup table entry
+	double GetExperienceByTargetHealth(Actor target) {
+		double exp = 0;
+		double calcExp = target.Default.health;
+		if (LemonUtil.GetOptionGameMode() == GAME_Hexen) {
+			// Hexen receives an xp penalty due to larger health pools vs Heretic and Hexen II
+			calcExp *= 0.5;
+		}
+		calcExp *= frandom[ExpRange](0.8, 0.9);
+		if (target.bBoss) {
+			calcExp *= LemonUtil.CVAR_GetFloat("hxdd_progression_xp_health_bossbonus", 1.75);
+		}
+		calcExp = (calcExp * 0.9) + frandom[ExpBonus](calcExp * 0.05, calcExp * 0.15);
+		int skSpawnFilter = G_SkillPropertyInt(SKILLP_SpawnFilter) - 1;
+		skSpawnFilter = clamp(skSpawnFilter, 0, 4);
+		if (self.skillmodifier[skSpawnFilter]) {
+			calcExp *= self.skillmodifier[skSpawnFilter];
+		}
+		return calcExp;
 	}
 }

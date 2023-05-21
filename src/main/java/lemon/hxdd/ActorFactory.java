@@ -98,7 +98,7 @@ public class ActorFactory {
                     p_hxdd.put(key, newValue);
                 }
             });
-            CreateMGLUT(actorsJSON, type);
+            CreateXGT(actorsJSON, type);
 
             try {
                 Map<String, String> actorMap = (Map)p_hxdd;
@@ -141,10 +141,10 @@ public class ActorFactory {
         });
     }
 
-    private void CreateMGLUT(JSONArray list, String type) {
+    private void CreateXGT(JSONArray list, String type) {
         String path = Settings.getInstance().Get("PathTemporary") + "/";
         try {
-            PrintWriter out = new PrintWriter(path + "hxdd." + type + ".mglut");
+            PrintWriter out = new PrintWriter(path + "hxdd." + type + ".xgt");
             out.print(list);
             out.close();
         } catch (FileNotFoundException e) {

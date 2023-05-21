@@ -1,6 +1,40 @@
 // https://zdoom.org/wiki/ZScript_actor_functions
 
 class LemonUtil {
+    static Class<Object> GetPlayerClass() {
+        // Hardcoded for single player atm
+        PlayerInfo p = players[0];
+        int playerClassNum = p.CurrentPlayerClass;
+		for (uint i = 0; i < PlayerClasses.Size(); ++i) {
+            String className = PlayerClasses[i].type.GetClassName();
+            if (playerClassNum == i) {
+                String className = PlayerClasses[i].type.GetClassName();
+		        if (className.IndexOf("HXDD") != -1) {
+			        return PlayerClasses[i].type.GetParentClass();
+                }
+                return PlayerClasses[i].type;
+            }
+        }
+        return null;
+    }
+
+    static String GetPlayerClassName() {
+        // Hardcoded for single player atm
+        PlayerInfo p = players[0];
+        int playerClassNum = p.CurrentPlayerClass;
+		for (uint i = 0; i < PlayerClasses.Size(); ++i) {
+            String className = PlayerClasses[i].type.GetClassName();
+            if (playerClassNum == i) {
+                String className = PlayerClasses[i].type.GetClassName();
+		        if (className.IndexOf("HXDD") != -1) {
+			        className = PlayerClasses[i].type.GetParentClass().GetClassName();
+                }
+                return className.MakeLower();
+            }
+        }
+        return "";
+    }
+
     // Determine Map Type
     static bool IsMapEpisodic() {
         String mapName = Level.MapName.MakeLower();

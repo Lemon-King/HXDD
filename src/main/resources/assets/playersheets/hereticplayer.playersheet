@@ -13,6 +13,41 @@
         "wisdom": [12,15],
         "dexterity": [15,18]
     },
+    "xgame": {
+        "Chainsaw": "Gauntlets",
+
+        "FWeapAxe": "Gauntlets",
+        "CWeapStaff": "Crossbow",
+        "MWeapFrost": "CrossbowHefty",
+
+        "FWeapHammer": "Blaster",
+        "CWeapFlame": "SkullRod",
+        "MWeapLightning": "PhoenixRod",
+
+        "FWeaponPiece1": "Gauntlets",
+        "FWeaponPiece2": "ArtiTomeOfPower",
+        "FWeaponPiece3": "MaceSpawner",
+
+        "CWeaponPiece1": "none",
+        "CWeaponPiece2": "ArtiTomeOfPower",
+        "CWeaponPiece3": "MaceSpawner",
+
+        "MWeaponPiece1": "none",
+        "MWeaponPiece2": "ArtiTomeOfPower",
+        "MWeaponPiece3": "MaceSpawner",
+
+        "ArtiBoostMana": "BagOfHolding",
+        "ArtiBoostArmor": "ArtiTomeOfPower",
+        "ArtiPoisonBag": "ArtiTimeBomb",
+        "Mana1": "GoldWandAmmo,GoldWandHefty,CrossbowAmmo,CrossbowHefty",
+        "Mana2": "BlasterAmmo,BlasterHefty,SkullRodAmmo,SkullRodHefty",
+        "Mana3": "PhoenixRodAmmo,PhoenixRodHefty,MaceAmmo,MaceHefty",
+
+        "ArtiBoostMana": "BagOfHolding",
+        "ArtiDarkServant": "ArtiTomeOfPower",
+        "ArtiPoisonBag": "ArtiTimeBomb",
+        "ArtiInvulnerability2": "ArtiInvulnerability"
+    },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],

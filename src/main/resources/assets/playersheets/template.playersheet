@@ -13,7 +13,7 @@
         "wisdom": [12,15],
         "dexterity": [15,18]
     },
-    "class_items": {
+    "xgame": {
             "item_class_name": "new_item_class_name"
     },
     "xp_bonus_stat": "wisdom",

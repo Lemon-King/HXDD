@@ -2,14 +2,14 @@
 
 // Player Weapons and Ammo
 #include "zscript/actors/hxdd/items/compatabilityitems.zs"
-#include "zscript/actors/hxdd/items/hereticammo.zs"
+//#include "zscript/actors/hxdd/items/hereticammo.zs"
 #include "zscript/actors/hxdd/items/hereticarmor.zs"
-#include "zscript/actors/hxdd/items/hereticpickups.zs"
-#include "zscript/actors/hxdd/items/hereticweapons.zs"
-#include "zscript/actors/hxdd/items/hexenammo.zs"
+//#include "zscript/actors/hxdd/items/hereticpickups.zs"
+//#include "zscript/actors/hxdd/items/hereticweapons.zs"
+//#include "zscript/actors/hxdd/items/hexenammo.zs"
 #include "zscript/actors/hxdd/items/hexenarmor.zs"
-#include "zscript/actors/hxdd/items/hexenpickups.zs"
-#include "zscript/actors/hxdd/items/hexenweapons.zs"
+//#include "zscript/actors/hxdd/items/hexenpickups.zs"
+//#include "zscript/actors/hxdd/items/hexenweapons.zs"
 
 // Mobs
 #include "zscript/actors/hxdd/mobs/hereticaltspawns.zs"
