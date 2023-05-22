@@ -10,6 +10,9 @@ class HXDDStatusBar : BaseStatusBar
 	HUDFont mBigFont;
 	InventoryBarState diparms;
 	InventoryBarState diparms_sbar;
+	private int hwiggle;
+
+	int gemColorAssignment;
 	
 	Progression GetProgression() {
 		Progression prog = Progression(CPlayer.mo.FindInventory("Progression"));
@@ -19,7 +22,7 @@ class HXDDStatusBar : BaseStatusBar
 	int GetPlayerLevel() {
 		Progression prog = GetProgression();
 		if (prog) {
-			return prog.level;
+			return prog.currlevel;
 		}
 		return 0;
 	}
@@ -27,7 +30,7 @@ class HXDDStatusBar : BaseStatusBar
 	String GetPlayerExperience() {
 		Progression prog = GetProgression();
 		if (prog) {
-			return String.format("%.3f", mXPInterpolator.GetValue());
+			return String.format("%.2f", mXPInterpolator.GetValue());
 		}
 		return "";
 	}
@@ -75,7 +78,7 @@ class HXDDStatusBar : BaseStatusBar
 		mHealthInterpolator2.Update(CPlayer.health);
 		
 		Progression prog = GetProgression();
-		if (prog && prog.level > 0) {
+		if (prog && prog.currlevel > 0) {
 			mXPInterpolator.Update(prog.levelpct);
 		}
 
@@ -87,6 +90,10 @@ class HXDDStatusBar : BaseStatusBar
 		if (ammo2) {
 			mAmmoInterpolator2.Update(ammo2.Amount);
 		}
+		
+		if (Level.time & 1)
+		{
+		}
 	}
 
 	override void Draw (int state, double TicFrac)
@@ -96,7 +103,11 @@ class HXDDStatusBar : BaseStatusBar
 		if (state == HUD_StatusBar)
 		{
 			BeginStatusBar();
-			DrawMainBar (TicFrac);
+			if (CPlayer.mo is "HereticPlayer") {
+				DrawMainBarHeretic (TicFrac);
+			} else {
+				DrawMainBar (TicFrac);
+			}
 		}
 		else if (state == HUD_Fullscreen)
 		{
@@ -165,8 +176,8 @@ class HXDDStatusBar : BaseStatusBar
 		}
 
 		Progression prog = GetProgression();
-		if (prog.level > 0) {
-			DrawString(mHUDFont, FormatNumber(GetPlayerLevel()), (-21, -60), DI_TEXT_ALIGN_RIGHT);
+		if (prog.currlevel > 0) {
+			DrawString(mHUDFont, FormatNumber(mXPInterpolator.GetValue()), (-21, -60), DI_TEXT_ALIGN_RIGHT);
 			DrawString(mHUDFont, GetPlayerExperience(), (-21, -45), DI_TEXT_ALIGN_RIGHT);
 		}
 		
@@ -186,26 +197,46 @@ class HXDDStatusBar : BaseStatusBar
 	protected void DrawMainBar (double TicFrac)
 	{
 		DrawImage("H2BAR", (0, 134), DI_ITEM_OFFSETS);
-		
-		String Gem, Chain;
-		if (CPlayer.mo is "ClericPlayer")
-			{
-				Gem = "LIFEGMC2";
-				Chain = "CHAIN2";
-			}
-		else if (CPlayer.mo is "MagePlayer")
-			{
-				Gem = "LIFEGMM2";
-				Chain = "CHAIN3";
-			}
-		else
-			{
-				Gem = "LIFEGMF2";
-				Chain = "CHAIN";
-			}
 
-		int inthealth =  mHealthInterpolator2.GetValue();
-		DrawGem(Chain, Gem, inthealth, CPlayer.mo.GetMaxHealth(true), (30, 193), -23, 49, 15, (multiplayer? DI_TRANSLATABLE : 0) | DI_ITEM_LEFT_TOP); 
+
+		
+		if (!gemColorAssignment) {
+			if (CPlayer.mo is "ClericPlayer") {
+				gemColorAssignment = 1;
+			} else if (CPlayer.mo is "MagePlayer") {
+				gemColorAssignment = 2;
+			} else if (CPlayer.mo is "FighterPlayer") {
+				gemColorAssignment = 3;
+			} else {
+				gemColorAssignment = random(1,3);
+			}
+		}
+
+		String Gem, Chain;
+		if (gemColorAssignment == 1) {
+			Gem = "LIFEGMC2";
+			Chain = "CHAIN2";
+		} else if (gemColorAssignment == 2) {
+			Gem = "LIFEGMM2";
+			Chain = "CHAIN3";
+		} else if (gemColorAssignment == 3) {
+			Gem = "LIFEGMF2";
+			Chain = "CHAIN1";
+		}
+
+		int maxValue = 100;
+		int value = 0;
+		int wiggle = 0;
+		Progression prog = GetProgression();
+		if (prog.currlevel > 0) {
+			value = mXPInterpolator.GetValue();
+			wiggle = (floor(mXPInterpolator.GetValue()) != floor(prog.levelpct)) && Random[ChainWiggle](0, 1);
+		} else {
+			value =  mHealthInterpolator2.GetValue();
+			maxValue = CPlayer.mo.GetMaxHealth(true);
+			// wiggle isn't used on HX health
+		}
+		DrawGem(Chain, Gem, value, maxValue, (30, 193 + wiggle), -23, 49, 15, (multiplayer? DI_TRANSLATABLE : 0) | DI_ITEM_LEFT_TOP); 
 		
 		DrawImage("LFEDGE", (0, 193), DI_ITEM_OFFSETS);
 		DrawImage("RTEDGE", (277, 193), DI_ITEM_OFFSETS);
@@ -219,7 +250,7 @@ class HXDDStatusBar : BaseStatusBar
 			}
 			else
 			{
-				DrawImage("STATBAR", (38, 162), DI_ITEM_OFFSETS);
+				DrawImage("HXSTATBAR", (38, 162), DI_ITEM_OFFSETS);
 
 				//inventory box
 				if (CPlayer.mo.InvSel != null)
@@ -294,6 +325,7 @@ class HXDDStatusBar : BaseStatusBar
 					DrawString(mIndexFont, FormatNumber(amt1, 3), ( 92, 181), DI_TEXT_ALIGN_RIGHT);
 					DrawString(mIndexFont, FormatNumber(amt2, 3), (124, 181), DI_TEXT_ALIGN_RIGHT);
 				}
+
 				if (CPlayer.mo is "ClericPlayer")
 				{
 					DrawImage("WPSLOT1", (190, 162), DI_ITEM_OFFSETS);
@@ -350,6 +382,93 @@ class HXDDStatusBar : BaseStatusBar
 			DrawHexenArmor(HEXENARMOR_SHIELD, "ARMSLOT2", (181, 164), DI_ITEM_OFFSETS);
 			DrawHexenArmor(HEXENARMOR_HELM, "ARMSLOT3", (212, 164), DI_ITEM_OFFSETS);
 			DrawHexenArmor(HEXENARMOR_AMULET, "ARMSLOT4", (243, 164), DI_ITEM_OFFSETS);
+		}
+	}
+
+	protected void DrawMainBarHeretic (double TicFrac)
+	{
+		DrawImage("BARBACK", (0, 158), DI_ITEM_OFFSETS);
+		DrawImage("LTFCTOP", (0, 148), DI_ITEM_OFFSETS);
+		DrawImage("RTFCTOP", (290, 148), DI_ITEM_OFFSETS);
+		if (isInvulnerable())
+		{
+			//god mode
+			DrawImage("GOD1", (16, 167), DI_ITEM_OFFSETS);
+			DrawImage("GOD2", (287, 167), DI_ITEM_OFFSETS);
+		}
+		//health
+		DrawImage("CHAINBAC", (0, 190), DI_ITEM_OFFSETS);
+		// wiggle the chain if it moves
+		int maxValue = 100;
+		int value = 0;
+		int wiggle = 0;
+		Progression prog = GetProgression();
+		if (prog.currlevel > 0) {
+			value = mXPInterpolator.GetValue();
+			wiggle = (floor(mXPInterpolator.GetValue()) != floor(prog.levelpct)) && Random[ChainWiggle](0, 1);
+		} else {
+			value =  mHealthInterpolator2.GetValue();
+			maxValue = CPlayer.mo.GetMaxHealth(true);
+			wiggle = (value != CPlayer.health) && Random[ChainWiggle](0, 1);
+		}
+		DrawGem("CHAIN", "LIFEGEM2",value, maxValue, (2, 191 + wiggle), 15, 25, 16, (multiplayer? DI_TRANSLATABLE : 0) | DI_ITEM_LEFT_TOP); 
+		DrawImage("LTFACE", (0, 190), DI_ITEM_OFFSETS);
+		DrawImage("RTFACE", (276, 190), DI_ITEM_OFFSETS);
+		DrawShader(SHADER_HORZ, (19, 190), (16, 10));
+		DrawShader(SHADER_HORZ|SHADER_REVERSE, (278, 190), (16, 10));
+
+		if (!isInventoryBarVisible())
+		{
+			//statbar
+			if (!deathmatch)
+			{
+				DrawImage("LIFEBAR", (34, 160), DI_ITEM_OFFSETS);
+				DrawImage("ARMCLEAR", (57, 171), DI_ITEM_OFFSETS);
+				DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue(), 3), (88, 170), DI_TEXT_ALIGN_RIGHT);
+			}
+			else
+			{
+				DrawImage("STATBAR", (34, 160), DI_ITEM_OFFSETS);
+				DrawImage("ARMCLEAR", (57, 171), DI_ITEM_OFFSETS);
+				DrawString(mHUDFont, FormatNumber(CPlayer.FragCount, 3), (88, 170), DI_TEXT_ALIGN_RIGHT);
+			}
+			DrawString(mHUDFont, FormatNumber(GetArmorAmount(), 3), (255, 170), DI_TEXT_ALIGN_RIGHT);
+
+			//ammo
+			Ammo ammo1, ammo2;
+			[ammo1, ammo2] = GetCurrentAmmo();
+			if (ammo1 != null && ammo2 == null)
+			{
+				DrawString(mHUDFont, FormatNumber(ammo1.Amount, 3), (136, 162), DI_TEXT_ALIGN_RIGHT);
+				DrawTexture(ammo1.icon, (123, 180), DI_ITEM_CENTER);
+			}
+			else if (ammo2 != null)
+			{
+				DrawString(mIndexFont, FormatNumber(ammo1.Amount, 3), (137, 165), DI_TEXT_ALIGN_RIGHT);
+				DrawString(mIndexFont, FormatNumber(ammo2.Amount, 3), (137, 177), DI_TEXT_ALIGN_RIGHT);
+				DrawTexture(ammo1.icon, (115, 169), DI_ITEM_CENTER);
+				DrawTexture(ammo2.icon, (115, 180), DI_ITEM_CENTER);
+			}
+
+			//keys
+			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (153, 164), DI_ITEM_OFFSETS);
+			if (CPlayer.mo.CheckKeys(1, false, true)) DrawImage("GKEYICON", (153, 172), DI_ITEM_OFFSETS);
+			if (CPlayer.mo.CheckKeys(2, false, true)) DrawImage("BKEYICON", (153, 180), DI_ITEM_OFFSETS);
+
+			//inventory box
+			if (CPlayer.mo.InvSel != null)
+			{
+				DrawInventoryIcon(CPlayer.mo.InvSel, (194, 175), DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28));
+				if (CPlayer.mo.InvSel.Amount > 1)
+				{
+					DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (209, 182), DI_TEXT_ALIGN_RIGHT);
+				}
+			}
+		}
+		else
+		{
+			DrawImage("INVBAR", (34, 160), DI_ITEM_OFFSETS);
+			DrawInventoryBar(diparms_sbar, (49, 160), 7, DI_ITEM_LEFT_TOP, HX_SHADOW);
 		}
 	}
 }

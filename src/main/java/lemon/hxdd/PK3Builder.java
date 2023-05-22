@@ -225,6 +225,9 @@ public class PK3Builder {
 
         this.organizedFiles.get("hexen").BatchRename("graphics", "FONTB", "FONTBX", "startsWith");  // Lets keep Hexen's big red font around
 
+        this.organizedFiles.get("hexen").BatchRename("graphics", "CHAIN", "CHAIN1", "equals");
+        this.organizedFiles.get("hexen").BatchRename("graphics", "STATBAR", "HXSTATBAR", "equals");
+
         // Other shared assets
         this.organizedFiles.get("hexen").BatchRemove("graphics", "PLAYPAL", "equals");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "COLORMAP", "equals");

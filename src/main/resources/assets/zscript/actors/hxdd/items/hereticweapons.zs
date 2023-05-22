@@ -118,7 +118,7 @@ class MultiClassSpecialSpawnerFighter: MaceSpawner {
 	{
 	Spawn:
 		TNT1 A 1;
-		TNT1 A -1 A_SpawnSingleItem("FWeaponPiece3", 64, 64, 0);
+		TNT1 A -1 A_SpawnSingleItem("FWeaponPiece1", 64, 64, 0);
 		Stop;
 	}
 }
@@ -127,7 +127,7 @@ class MultiClassSpecialSpawnerCleric: MaceSpawner {
 	{
 	Spawn:
 		TNT1 A 1;
-		TNT1 A -1 A_SpawnSingleItem("CWeaponPiece3", 64, 64, 0);
+		TNT1 A -1 A_SpawnSingleItem("CWeaponPiece1", 64, 64, 0);
 		Stop;
 	}
 }
@@ -136,7 +136,7 @@ class MultiClassSpecialSpawnerMage: MaceSpawner {
 	{
 	Spawn:
 		TNT1 A 1;
-		TNT1 A -1 A_SpawnSingleItem("MWeaponPiece3", 64, 64, 0);
+		TNT1 A -1 A_SpawnSingleItem("MWeaponPiece1", 64, 64, 0);
 		Stop;
 	}
 }

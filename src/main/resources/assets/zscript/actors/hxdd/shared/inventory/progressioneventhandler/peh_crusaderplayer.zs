@@ -9,15 +9,15 @@ class PEH_CrusaderPlayer: ProgressionEventHandler {
 			return;
 		}
 
-		if (prog.level > 2) {
+		if (prog.currlevel > 2) {
 			double pct40 = 0;
 			double pct80 = 0;
-			int currLevel = prog.level;
+			int currLevel = prog.currlevel;
 			int nextLevel = currLevel + 1;
-			if (prog.level == 1) {
+			if (prog.currlevel == 1) {
 				pct40 = prog.experienceTable[currLevel] * 0.4;
 				pct80 = prog.experienceTable[currLevel] * 0.8;
-			} else if (prog.level <= prog.MaxLevel) {	
+			} else if (prog.currlevel <= prog.MaxLevel) {	
 				double diff = prog.experienceTable[nextLevel] - prog.experienceTable[currLevel]; 
 				pct40 = prog.experienceTable[currLevel] + (diff * 0.4);
 				pct80 = prog.experienceTable[currLevel] + (diff * 0.8);
@@ -35,8 +35,8 @@ class PEH_CrusaderPlayer: ProgressionEventHandler {
 			}
 		}
 
-		if (prog.level > 5) {
-			double chance = 0.05 + (prog.level - 3) * 0.03;
+		if (prog.currlevel > 5) {
+			double chance = 0.05 + (prog.currlevel - 3) * 0.03;
 			if (chance > 0.2) {
 				chance = 0.2;
 			}

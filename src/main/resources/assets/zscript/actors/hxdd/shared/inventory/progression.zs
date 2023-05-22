@@ -30,6 +30,7 @@ class PlayerSheetEventHandler: EventHandler {
                 pp.GiveInventory("Progression", 1);
                 prog = Progression(pp.FindInventory("Progression"));
             }
+
             GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
             if (gmcompat == null) {
                 pp.GiveInventory("GameModeCompat", 1);
@@ -352,7 +353,7 @@ class Progression: Inventory {
 	Array<double> skillmodifier;
 
 	// Character Stats
-	int level;
+	int currlevel;
 	int maxlevel;
 	int experience;
 	double experienceModifier;
@@ -404,7 +405,7 @@ class Progression: Inventory {
 		Super.BeginPlay();
 
 		self.ExperienceModifier = 1.0;
-		self.Level = 0;
+		self.currlevel = 0;
 		self.Experience = 0;
 
 		self.MaxHealth = 100;
@@ -426,6 +427,10 @@ class Progression: Inventory {
 			ProgressionSelected = true;
 		}
 		ArmorModeSelection();
+	}
+
+	override void Tick() {
+		self.SecretWatcher();
 	}
 
 	String GetPlayerClassName() {
@@ -696,7 +701,7 @@ class Progression: Inventory {
 	}
 
 	void InitLevel_PostBeginPlay() {
-		if (level != 0) {
+		if (self.currlevel != 0) {
 			return;
 		}
 		
@@ -745,8 +750,9 @@ class Progression: Inventory {
 			}
 		}
 
-		level = 1;
+		currlevel = 1;
 		experience = 0;
+		self.leveldiffxp = self.experienceTable[0];
 
 		console.printf("");
 		console.printf("----- Stats -----");
@@ -773,8 +779,8 @@ class Progression: Inventory {
 		String cvarLevelUpAudio = LemonUtil.CVAR_GetString(String.format("hxdd_playersheet_%s_level_audio", playerClassName), "misc/chat");
 		S_StartSound(cvarLevelUpAudio, CHAN_AUTO);
 
-		while (self.level < advanceLevel && self.level < self.maxlevel) {
-			int lastLevel = self.level++;
+		while (self.currlevel < advanceLevel && self.currlevel < self.maxlevel) {
+			int lastLevel = self.currlevel++;
 
 			double healthInc = 0;
 			double manaInc = 0;
@@ -844,7 +850,7 @@ class Progression: Inventory {
 			}
 
 			for (let i = 0; i < self.stats.Size(); i++) {
-				self.stats[i].ProcessLevelIncrease(level == self.maxlevel);
+				self.stats[i].ProcessLevelIncrease(self.currlevel == self.maxlevel);
 			}
 
 			console.printf("");
@@ -857,13 +863,13 @@ class Progression: Inventory {
 				console.printf("%s: %0.2f", nameCap, self.stats[i].value);
 			}
 			console.printf("");
-			console.printf("You are now level %d!", level);
+			console.printf("You are now level %d!", self.currlevel);
 			console.printf("");
 		}
 	}
 
 	double GiveExperience(double amount) {
-		if (self.HalveXPBeforeLevel4 && level < 4) {
+		if (self.HalveXPBeforeLevel4 && self.currlevel < 4) {
 			amount *= 0.5;
 		}
 
@@ -877,26 +883,26 @@ class Progression: Inventory {
 			}
 		}
 
-		self.experience += amount;
-
-		//OnExperienceBonus(amount);
-
-		if (self.level == self.maxlevel) {
+		if (self.currlevel == self.maxlevel) {
 			// Max Level
 			return 0.0f;
 		}
+
+		self.experience += amount;
+
 		int MAX_LEVELS = experienceTable.Size() - 1;
-		console.printf("Gained %d Experience! Total Experience: %d (%d)", amount, self.experience, self.experienceTable[clamp(0, self.level - 1, MAX_LEVELS)]);
+		console.printf("Gained %d Experience! Total Experience: %d (%d)", amount, self.experience, self.experienceTable[clamp(0, self.currlevel - 1, MAX_LEVELS)]);
 
 		double afterLevel = FindLevel();
 
-		if (level != afterLevel) {
+		if (self.currlevel != afterLevel) {
 			AdvanceLevel(afterLevel);
 		}
 
 		return amount;
 	}
 
+	double leveldiffxp;
 	double levelpct;
 	double FindLevel() {
 		int MAX_LEVELS = experienceTable.Size() - 1;
@@ -918,7 +924,18 @@ class Progression: Inventory {
 			pLevel = ceil(Amount / self.experienceTable[MAX_LEVELS]) + (MAX_LEVELS - 1);
 		}
 
-		levelpct = 0;
+		int wrappedMaxXP = 1 + floor(self.experience / self.experienceTable[MAX_LEVELS]);
+		double lastXP = self.experienceTable[clamp(0, pLevel - 2, MAX_LEVELS)];
+		double targetXP = self.experienceTable[clamp(0, pLevel - 1, MAX_LEVELS)];
+		if (pLevel < 2) {
+			lastXP = 0;
+		}
+		int lastLevelXP = lastXP * wrappedMaxXP;
+		self.leveldiffxp = targetXP - lastLevelXP;
+		levelpct = ((self.experience - lastLevelXP) / self.leveldiffxp) * 100;
+		if (pLevel == self.MaxLevel) {
+			levelpct = 100;
+		}
 
 		return pLevel;
 	}
@@ -968,5 +985,28 @@ class Progression: Inventory {
 			calcExp *= self.skillmodifier[skSpawnFilter];
 		}
 		return calcExp;
+	}
+
+	// Secret Watcher (Bonus XP)
+	bool sectorSecretsReady;
+	int totalSecrets;
+	int foundSecrets;
+	void SecretWatcher() {
+		if (self.currlevel == 0) {
+			return;
+		}
+
+		if (self.totalSecrets != level.Total_Secrets) {
+			self.totalSecrets = level.Total_Secrets;
+			self.foundSecrets = level.Found_Secrets;
+		}
+		
+		if (self.foundSecrets != level.Found_Secrets) {
+			self.foundSecrets = level.Found_Secrets;
+
+			int MAX_LEVELS = experienceTable.Size() - 1;
+			double xp = self.leveldiffxp * 0.05;	// TODO: add percentage bonus of level to playersheet
+			self.GiveExperience(xp);
+		}
 	}
 }

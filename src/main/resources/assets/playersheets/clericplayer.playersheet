@@ -18,10 +18,10 @@
         "GoldWandHefty": "Mana1",
 
         "CrossbowAmmo": "Mana1",
-        "CrossbowHefty": "Mana2",
+        "CrossbowHefty": "Mana1",
 
-        "BlasterAmmo": "Mana2",
-        "BlasterHefty": "Mana2",
+        "BlasterAmmo": "Mana1",
+        "BlasterHefty": "Mana1",
 
         "SkullRodAmmo": "Mana2",
         "SkullRodAmmoHefty": "Mana3",

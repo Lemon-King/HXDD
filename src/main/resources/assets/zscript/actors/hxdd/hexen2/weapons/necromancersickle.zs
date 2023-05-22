@@ -82,14 +82,14 @@ class NWeapSickle : NecromancerWeapon
 						// Ability 2 (Level 6): Health Drain on Hit;
 						HXDDPlayerPawn hxddplayer = HXDDPlayerPawn(player.mo);
 						Progression prog = Progression(hxddplayer.FindInventory("Progression"));
-						if (t.linetarget.CountsAsKill() && prog.level >= 6) {
-							double drainChance = (prog.level - 5) * 0.04f;
+						if (t.linetarget.CountsAsKill() && prog.currlevel >= 6) {
+							double drainChance = (prog.currlevel - 5) * 0.04f;
 							if (drainChance > 0.20f) {
 								drainChance = 0.20f;
 							}
 
 							if (frandom[sickledrain](0.0f, 1.0f) < drainChance) {
-								double healAmount = min((prog.level - 5) * 2, 10);
+								double healAmount = min((prog.currlevel - 5) * 2, 10);
 								double playerHealth = hxddplayer.Health;
 								double playerMaxHealth = hxddplayer.MaxHealth;
 

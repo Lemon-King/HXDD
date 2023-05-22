@@ -200,7 +200,7 @@ class AssassinPlayer : HXDDHexenIIPlayerPawn
 
 		Progression prog = Progression(Player.mo.FindInventory("Progression"));
 		if (prog) {
-			if (Player && prog.level >= 0) {
+			if (Player && prog.currlevel >= 0) {
 				//GetActorLightLevel
 				// Check Player Light level, update stealth state
 				if (InStateSequence(CurState, Player.mo.FindState("Death")) || InStateSequence(CurState, Player.mo.FindState("XDeath"))) {

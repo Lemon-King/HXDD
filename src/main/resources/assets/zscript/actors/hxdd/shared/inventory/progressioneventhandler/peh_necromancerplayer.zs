@@ -5,8 +5,8 @@ class PEH_NecromancerPlayer: ProgressionEventHandler {
 			return;
 		}
 
-		if (prog.level > 5) {
-			double chance = 0.05 + (prog.level - 3) * 0.03;
+		if (prog.currlevel > 5) {
+			double chance = 0.05 + (prog.currlevel - 3) * 0.03;
 			if (chance > 0.2) {
 				chance = 0.2;
 			}
