@@ -12,7 +12,7 @@ public class Application {
         Settings.getInstance().Initialize();
 
         String version = Application.class.getPackage().getImplementationVersion();
-        if (version.equals(null)) {
+        if (version == null) {
             version = "0.0-Development";
         }
         System.out.println("HXDD v" + version);
