@@ -142,6 +142,9 @@ class LemonUtil {
 
     static vector2 v2normalize(vector2 vec) {
         double mag = sqrt(vec.x * vec.x + vec.y * vec.y);
+        if (mag == 0) {
+            return (0,0);
+        }
         return (vec.x / mag, vec.y / mag);
     }
     
@@ -150,6 +153,9 @@ class LemonUtil {
     }
     static vector3 v3normalize(vector3 vec) {
         double mag = v3magnatude(vec);
+        if (mag == 0) {
+            return (0,0,0);
+        }
         return (vec.x / mag, vec.y / mag, vec.z / mag);
     }
 

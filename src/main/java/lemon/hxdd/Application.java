@@ -11,7 +11,12 @@ public class Application {
     public static void main(String[] args) {
         Settings.getInstance().Initialize();
 
-        System.out.println("HXDD: A Heretic, Hexen, and DeathKings WAD Merger");
+        String version = Application.class.getPackage().getImplementationVersion();
+        if (version.equals(null)) {
+            version = "0.0-Development";
+        }
+        System.out.println("HXDD v" + version);
+        System.out.println("A Heretic, Hexen, and DeathKings WAD Merger");
         System.out.println("Written by Lemon King\n");
         System.out.println("DoomStruct by MTrop: https://github.com/MTrop/DoomStruct");
         System.out.println("zt-zip by ZeroTurnaround: https://github.com/zeroturnaround/zt-zip");

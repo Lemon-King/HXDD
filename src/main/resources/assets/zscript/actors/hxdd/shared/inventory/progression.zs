@@ -160,14 +160,14 @@ class PlayerSheetJSON {
     }
 
 	int GetEnumFromArmorType(String type) {
-		if (type == "ac" || type == "armor" || type == "armorclass" || type == "hexen") {
+		if (type == "ac" || type == "armor" || type == "armorclass" || type == "hexen" || type == "hx") {
 			return PSAT_ARMOR_AC;
 		} else {
 			return PSAT_ARMOR_SIMPLE;
 		}
 	}
 	int GetEnumFromProgressionType(String type) {
-		if (type == "levels" || type == "level" || type == "leveling" || type == "hexen2") {
+		if (type == "levels" || type == "level" || type == "leveling" || type == "hexen2" || type == "hx2") {
 			return PSP_LEVELS;
 		} else {
 			return PSP_NONE;
@@ -597,6 +597,9 @@ class Progression: Inventory {
 			}
 			self.maxlevel = 20;
 		}
+
+		// After assignment, set final type
+		self.ProgressionType = cvarProgression == PSP_NONE ? PSP_NONE : PSP_LEVELS;
 	}
 
 	PlayerSheetStat GetStat(String key) {
@@ -630,6 +633,9 @@ class Progression: Inventory {
 		} else if (optionArmorMode == PSAT_ARMOR_USER) {
 			ArmorModeSelection_User(player);
 		}
+
+		// After assignment, set final type
+		self.ArmorType = optionArmorMode == PSAT_ARMOR_SIMPLE ? PSAT_ARMOR_SIMPLE : PSAT_ARMOR_AC;
 		ArmorSelected = true;
 	}
 
@@ -963,7 +969,9 @@ class Progression: Inventory {
 
 	double GetExperienceFromLookupTable(Actor target) {
 		// Placeholder
-		return 0;
+		// if in table
+		// else
+		return GetExperienceByTargetHealth(target);
 	}
 
 	// Allows progression from Doom Engine mobs with no lookup table entry
@@ -989,15 +997,15 @@ class Progression: Inventory {
 
 	// Secret Watcher (Bonus XP)
 	bool sectorSecretsReady;
-	int totalSecrets;
+	String levelName;
 	int foundSecrets;
 	void SecretWatcher() {
 		if (self.currlevel == 0) {
 			return;
 		}
 
-		if (self.totalSecrets != level.Total_Secrets) {
-			self.totalSecrets = level.Total_Secrets;
+		if (self.levelName != level.MapName) {
+			self.levelName = level.MapName;
 			self.foundSecrets = level.Found_Secrets;
 		}
 		
@@ -1006,6 +1014,13 @@ class Progression: Inventory {
 
 			int MAX_LEVELS = experienceTable.Size() - 1;
 			double xp = self.leveldiffxp * 0.05;	// TODO: add percentage bonus of level to playersheet
+
+			int skSpawnFilter = G_SkillPropertyInt(SKILLP_SpawnFilter) - 1;
+			skSpawnFilter = clamp(skSpawnFilter, 0, 4);
+			if (self.skillmodifier[skSpawnFilter]) {
+				xp *= self.skillmodifier[skSpawnFilter];
+			}
+
 			self.GiveExperience(xp);
 		}
 	}

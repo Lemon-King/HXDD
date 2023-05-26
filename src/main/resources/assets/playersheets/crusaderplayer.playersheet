@@ -18,19 +18,19 @@
         "GoldWandHefty": "Mana1",
 
         "CrossbowAmmo": "Mana1",
-        "CrossbowHefty": "Mana2",
+        "CrossbowHefty": "Mana1",
 
-        "BlasterAmmo": "Mana2",
-        "BlasterHefty": "Mana2",
+        "BlasterAmmo": "Mana1",
+        "BlasterHefty": "Mana1",
 
         "SkullRodAmmo": "Mana2",
-        "SkullRodAmmoHefty": "Mana3",
+        "SkullRodHefty": "Mana3",
 
         "PhoenixRodAmmo": "Mana2",
-        "PhoenixRodAmmoHefty": "Mana3",
+        "PhoenixRodHefty": "Mana3",
 
         "MaceAmmo": "Mana3",
-        "MaceAmmoHefty": "Mana3",
+        "MaceHefty": "Mana3",
 
         "Gauntlets": "Mana3",
         "GoldWand": "Mana1",

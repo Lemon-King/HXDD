@@ -130,8 +130,9 @@ OptionValue "HXDD_Playstyle_ArmorMode"
 
 AddOptionMenu "OptionsMenu"
 {
+    StaticText ""
     StaticText "HXDD", "Red"
-    StaticText "An alternate pre-game setup when using mods"
+    SubMenu "New Game", "ZFPreGameSetup"
     Submenu "Settings", "HXDDAltSetup"
 }
 

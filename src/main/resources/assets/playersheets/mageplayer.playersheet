@@ -24,13 +24,13 @@
         "BlasterHefty": "Mana1",
 
         "SkullRodAmmo": "Mana2",
-        "SkullRodAmmoHefty": "Mana3",
+        "SkullRodHefty": "Mana2",
 
         "PhoenixRodAmmo": "Mana2",
-        "PhoenixRodAmmoHefty": "Mana3",
+        "PhoenixRodHefty": "Mana3",
 
         "MaceAmmo": "Mana3",
-        "MaceAmmoHefty": "Mana3",
+        "MaceHefty": "Mana3",
 
         "Gauntlets": "MWeaponPiece3",
         "GoldWand": "Mana3",
@@ -38,7 +38,7 @@
         "Blaster": "Mana3",
         "SkullRod": "MWeapLightning",
         "PhoenixRod": "MWeaponPiece2",
-        "MaceSpawner": "MultiClassSpecialSpawnerMage",
+        "Mace": "MWeaponPiece1",
 
         "BagOfHolding": "ArtiBoostMana",
         "ArtiTomeOfPower": "ArtiDarkServant",
