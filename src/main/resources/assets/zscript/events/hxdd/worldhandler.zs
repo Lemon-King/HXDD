@@ -41,10 +41,8 @@ class HXDDWorldEventHandler : EventHandler {
             Level.SkySpeed1 /= 256.0;
             Level.SkySpeed2 /= 256.0;
 
-            Levelinfo info = LevelInfo.FindLevelInfo(Level.MapName);
-
-            string infoSky[2] = {info.SkyPic1, info.SkyPic2};
-            TextureID replacementSky[2] = {TexMan.CheckForTexture(info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(info.SkyPic2,TexMan.Type_Any)};
+            string infoSky[2] = {Level.Info.SkyPic1, Level.Info.SkyPic2};
+            TextureID replacementSky[2] = {TexMan.CheckForTexture(Level.Info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(Level.Info.SkyPic2,TexMan.Type_Any)};
 
             for (int i = 0; i < infoSky.Size(); i++) {
                 string pic = infoSky[i];

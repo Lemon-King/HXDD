@@ -355,7 +355,7 @@ class Progression: Inventory {
 	// Character Stats
 	int currlevel;
 	int maxlevel;
-	int experience;
+	double experience;			// uint may not be large enough given some megawads and mods
 	double experienceModifier;
 
 	int maxHealth;
