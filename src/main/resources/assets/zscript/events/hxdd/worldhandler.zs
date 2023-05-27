@@ -34,7 +34,7 @@ class HXDDWorldEventHandler : EventHandler {
         Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
     }
 
-    void HexenSkyFix() {
+    void HexenFixes() {
         // Hack for Hexen Maps
         if (LemonUtil.IsMapLinear()) {
             // https://github.com/ZDoom/gzdoom/blob/677b08406405693ab53c281c4d71c19b9b078030/src/gamedata/g_mapinfo.cpp#L1049
@@ -46,6 +46,7 @@ class HXDDWorldEventHandler : EventHandler {
 
             int numLumps = Wads.GetNumLumps();
 
+            int count_WALL501;
             Array<int> skyAssets;
             for (int i = 0; i < numLumps; i++) {
                 // Wads.CheckNumForName(string name, int ns, int wadnum = -1, bool exact = false);
@@ -58,9 +59,15 @@ class HXDDWorldEventHandler : EventHandler {
                         skyAssets.Resize(skyNameNum);
                     }
                     skyAssets[skyNameNum - 1]++;
+                } else if ("WALL501".Length() == name.Length() && name.IndexOf("WALL501") != -1) {
+                    count_WALL501++;
                 }
             }
 
+
+            if (count_WALL501 < 2) {
+                Level.ReplaceTextures("WALL501", "WALL501X", 0);
+            }
             for (int i = 0; i < infoSky.Size(); i++) {
                 string pic = infoSky[i];
                 if (pic.Length() == 4 && pic.IndexOf("SKY") != -1) {
@@ -80,7 +87,7 @@ class HXDDWorldEventHandler : EventHandler {
         int gameType = gameinfo.gametype;
         if (gameType & GAME_Doom) {
         } else if (gameType & Game_Raven) {
-            HexenSkyFix();
+            HexenFixes();
         }
         UserOptions_TextureSwap();
     }
