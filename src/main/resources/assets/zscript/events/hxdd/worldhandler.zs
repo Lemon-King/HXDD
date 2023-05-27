@@ -33,13 +33,37 @@ class HXDDWorldEventHandler : EventHandler {
         }
         Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
     }
+
+    void HexenSkyFix() {
+        // Hack for Hexen Maps
+        if (LemonUtil.IsMapLinear()) {
+            // https://github.com/ZDoom/gzdoom/blob/677b08406405693ab53c281c4d71c19b9b078030/src/gamedata/g_mapinfo.cpp#L1049
+            Level.SkySpeed1 /= 256.0;
+            Level.SkySpeed2 /= 256.0;
+
+            Levelinfo info = LevelInfo.FindLevelInfo(Level.MapName);
+
+            string infoSky[2] = {info.SkyPic1, info.SkyPic2};
+            TextureID replacementSky[2] = {TexMan.CheckForTexture(info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(info.SkyPic2,TexMan.Type_Any)};
+
+            for (int i = 0; i < infoSky.Size(); i++) {
+                string pic = infoSky[i];
+                if (pic.IndexOf("SKY") != -1 && pic.Length() == 4) {
+                    string picNum = pic.Mid(3, 1);
+                    int num = picNum.ToInt();
+                    string newTexture = String.format("SKY%dX", num);
+                    replacementSky[i] = TexMan.CheckForTexture(newTexture,TexMan.Type_Any);
+                }
+            }
+            Level.ChangeSky(replacementSky[0], replacementSky[1]);
+        }
+    }
     
     override void WorldLoaded(WorldEvent e) {
         int gameType = gameinfo.gametype;
         if (gameType & GAME_Doom) {
         } else if (gameType & Game_Raven) {
-            //PlayerInfo p = players[0];
-            //String playerClass = p.mo.GetPrintableDisplayName(p.cls);
+            HexenSkyFix();
         }
         UserOptions_TextureSwap();
     }

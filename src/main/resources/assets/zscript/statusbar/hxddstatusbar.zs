@@ -172,6 +172,10 @@ class HXDDStatusBar : BaseStatusBar {
 			// View Angle/Pitch capture and comparison
 			self.vecLastView = self.vecView;
 			self.vecView = (angle, CPlayer.mo.Pitch);
+			if (abs(self.vecView.Length() - self.vecLastView.Length()) > 30.0) {
+				// Player camera latched to something (Hexen Melee), update coords to current and treat as 0 distance
+				self.vecLastView = self.vecView;
+			}
 
 			// motion computation
 			self.vecMotion += ((resultForward, resultRight, comp.z) / CPlayer.mo.speed) * BAR_SHIFT_RATE;
@@ -230,7 +234,7 @@ class HXDDStatusBar : BaseStatusBar {
 		view.z += self.vecViewMotion.x;
 
 		vector2 v2Left = (view.x, view.y);
-		vector2 v2Center = (-self.vecMotion.y, view.y);
+		vector2 v2Center = (-self.vecMotion.y + self.vecViewMotion.x, view.y);
 		vector2 v2Right = (view.z, view.y);
 
 		double anchorLeft = 128;
