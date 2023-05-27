@@ -31,7 +31,6 @@ class HXDDWorldEventHandler : EventHandler {
         } else if (hxdd_icestyle == 2) {
             Level.ReplaceTextures("FLAT517", "F_033", 0);
         }
-        Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
     }
 
     void HexenFixes() {
@@ -87,6 +86,7 @@ class HXDDWorldEventHandler : EventHandler {
         int gameType = gameinfo.gametype;
         if (gameType & GAME_Doom) {
         } else if (gameType & Game_Raven) {
+            Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
             HexenFixes();
         }
         UserOptions_TextureSwap();
