@@ -44,13 +44,32 @@ class HXDDWorldEventHandler : EventHandler {
             string infoSky[2] = {Level.Info.SkyPic1, Level.Info.SkyPic2};
             TextureID replacementSky[2] = {TexMan.CheckForTexture(Level.Info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(Level.Info.SkyPic2,TexMan.Type_Any)};
 
+            int numLumps = Wads.GetNumLumps();
+
+            Array<int> skyAssets;
+            for (int i = 0; i < numLumps; i++) {
+                // Wads.CheckNumForName(string name, int ns, int wadnum = -1, bool exact = false);
+                // CheckNumForName does not work when attempting to target a wadnum.
+                // Stepping through all lumps is the current workaround.
+                String name = Wads.GetLumpName(i);
+                if (name.Length() == 4 && name.IndexOf("SKY") != -1) {
+                    int skyNameNum = name.Mid(3, 1).ToInt();
+                    if (skyAssets.Size() < skyNameNum) {
+                        skyAssets.Resize(skyNameNum);
+                    }
+                    skyAssets[skyNameNum - 1]++;
+                }
+            }
+
             for (int i = 0; i < infoSky.Size(); i++) {
                 string pic = infoSky[i];
-                if (pic.IndexOf("SKY") != -1 && pic.Length() == 4) {
+                if (pic.Length() == 4 && pic.IndexOf("SKY") != -1) {
+                    // Use Hexen Swaps
                     string picNum = pic.Mid(3, 1);
                     int num = picNum.ToInt();
-                    string newTexture = String.format("SKY%dX", num);
-                    replacementSky[i] = TexMan.CheckForTexture(newTexture,TexMan.Type_Any);
+                    if (skyAssets[num - 1] < 2) {
+                        replacementSky[i] = TexMan.CheckForTexture(String.format("SKY%dX", num),TexMan.Type_Any);
+                    }
                 }
             }
             Level.ChangeSky(replacementSky[0], replacementSky[1]);
