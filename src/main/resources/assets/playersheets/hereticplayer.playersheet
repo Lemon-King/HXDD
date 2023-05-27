@@ -46,7 +46,8 @@
         "ArtiBoostMana": "BagOfHolding",
         "ArtiDarkServant": "ArtiTomeOfPower",
         "ArtiPoisonBag": "ArtiTimeBomb",
-        "ArtiInvulnerability2": "ArtiInvulnerability"
+        "ArtiInvulnerability2": "ArtiInvulnerability",
+        "ArtiPork": "ArtiEgg"
     },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
