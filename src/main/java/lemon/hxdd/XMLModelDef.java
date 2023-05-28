@@ -21,8 +21,8 @@ public class XMLModelDef {
     public void Export() {
         final float[] count = {0};
         ProgressBar p = new ProgressBar("Generating ModelDefs from XMLModelDef");
+        String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
         try {
-            String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();    // are we running from IDE?
             if (protocol.equals("jar")){
                 final String prefix = "hexen2/modeldef/";
 
@@ -40,10 +40,12 @@ public class XMLModelDef {
                 ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
                     public void process(InputStream in, ZipEntry zipEntry) throws IOException {
                         if (files.contains(zipEntry.getName())) {
-                            Parse(zipEntry.getName(), in);
+                            String[] pathSplit = zipEntry.getName().split("/");
+
+                            Parse(pathSplit[pathSplit.length - 1], in, protocol.equals("jar"));
                             in.close();
+                            p.SetPercent(++count[0] / files.size());
                         }
-                        p.SetPercent(++count[0] / files.size());
                     }
                 });
             } else if (protocol.equals("file")) {
@@ -58,7 +60,7 @@ public class XMLModelDef {
                 for (File file : modeldeflist) {
                     if (file.isFile()) {
                         InputStream in = new FileInputStream(file);
-                        Parse(file.getName(), in);
+                        Parse(file.getName(), in, protocol.equals("jar"));
                         in.close();
                         p.SetPercent(++count[0] / modeldeflist.length);
                     }
@@ -71,14 +73,13 @@ public class XMLModelDef {
         }
     }
 
-    private static void Parse(String fileName, InputStream in) {
+    private static void Parse(String fileName, InputStream in, boolean buildAsSingleFile) {
         try {
-            boolean Setting_Coalesced = (boolean) Settings.getInstance().Get("ModelDefCoalesceData");
             String modelDefPath = "modeldef." + fileName.toLowerCase().replace(".xml", "");
-            if (Setting_Coalesced) {
+            if (buildAsSingleFile) {
                 modelDefPath = "modeldef.hexen2";
             }
-            FileWriter fw = new FileWriter(Settings.getInstance().Get("PathTemporary") + modelDefPath, Setting_Coalesced);
+            FileWriter fw = new FileWriter(Settings.getInstance().Get("PathTemporary") + modelDefPath, buildAsSingleFile);
             PrintWriter out = new PrintWriter(fw);
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

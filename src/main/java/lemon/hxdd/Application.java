@@ -9,8 +9,6 @@ package lemon.hxdd;
 
 public class Application {
     public static void main(String[] args) {
-        Settings.getInstance().Initialize();
-
         String version = Application.class.getPackage().getImplementationVersion();
         if (version == null) {
             version = "0.0-Development";
@@ -24,6 +22,8 @@ public class Application {
             System.out.println("Noesis by Rich Whitehouse: https://richwhitehouse.com\n");                  // only show if noesis files exist
         }
         System.out.println("Updates and source are available at: https://github.com/Lemon-King/HXDD\n");
+
+        Settings.getInstance().Initialize();
 
         PK3Builder ipk3 = new PK3Builder();
         ipk3.Assemble();

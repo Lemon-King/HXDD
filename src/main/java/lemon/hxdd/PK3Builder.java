@@ -240,6 +240,9 @@ public class PK3Builder {
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SELECTB0", "equals");
         this.organizedFiles.get("hexen").BatchRemove("graphics", "SPFLY", "startsWith");
         this.organizedFiles.get("hexen").BatchRemove("lumps", "SNDSEQ", "equals");                 // patched version in resources
+
+        this.organizedFiles.get("heretic").BatchRemove("graphics", "title", "equals");
+        this.organizedFiles.get("hexen").BatchRemove("graphics", "title", "equals");
     }
 
     private FileOrganizer MergeAssets() {
@@ -391,7 +394,7 @@ public class PK3Builder {
             zipBrights.ExtractSingleFile("filter/hexen/gldefs.bm", "gldefs.bmhexen");
         }
 
-        File fileWide = new File(pathSourceFiles + "lights.pk3");
+        File fileWide = new File(pathSourceFiles + "game_widescreen_gfx.pk3");
         ZipAssets zipWide = null;
         if (fileWide.exists()) {
             zipWide = new ZipAssets("game_widescreen_gfx.pk3");
@@ -422,24 +425,19 @@ public class PK3Builder {
     }
 
     private void ExportHXDDFileByName(String source, String target) {
-        System.out.println("Adding HXDD assets");
         String pathTemporary = (String) Settings.getInstance().Get("PathTemporary");
+        File output = new File(pathTemporary + "/" + target);
         try {
             String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();    // are we running from IDE?
             if (protocol.equals("jar")) {
-                final String filePath = "resources/" + source;
                 File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                ZipUtil.unpack(jarHXDD, new File(pathTemporary), new NameMapper() {
-                    public String map(String name) {
-                        if (name.startsWith(filePath)) {
-                            return name.startsWith(filePath) ? name.substring(filePath.length()) : name;
-                        } else {
-                            return null;
-                        }
-                    }
-                });
+
+                ZipAssets zipBrights = new ZipAssets("brightmaps.pk3");
+                zipBrights.ExtractSingleFile("filter/heretic/gldefs.bm", "gldefs.bmheretic");
+
+                ZipUtil.unpackEntry(jarHXDD, source, output);
             } else if (protocol.equals("file")) {
-                FileUtils.copyFile(new File("./src/main/resources/" + source), new File(pathTemporary + "/" + target));
+                FileUtils.copyFile(new File("./src/main/resources/" + source), output);
             } else {
                 System.out.println("Failed to export HXDD Asset.");
             }
@@ -481,7 +479,7 @@ public class PK3Builder {
         // Fix any busted Patches due to export bugs
         String[] hexenSkyPatches = {"SKYFOG2", "SKYWALL", "SKYWALL2"};
 
-        ProgressBar pbar = new ProgressBar("Fixing Hexen sky patches");
+        ProgressBar pbar = new ProgressBar("Fixing Hexen Skies");
         Color colorTarget = new Color(2,2,2);
         float count = 0;
         for (String patch : hexenSkyPatches) {

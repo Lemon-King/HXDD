@@ -17,18 +17,12 @@ public class ActorFactory {
     private static final List<String> GameOrder = Arrays.asList("heretic", "hexen", "doom");
 
     public void Create() {
-        String path = Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/";
-        File dirFile = new File(path + "spawners");
-        if (!dirFile.exists()) {
-            dirFile.mkdirs();
-        }
-
         // Merge DoomEdNums and SpawnNums
         TypeOrder.forEach((type) -> {
             // 0 = heretic, 1 = hexen
             List<Properties> lists = new ArrayList<>(Collections.emptyList());
             GameOrder.forEach((game) -> {
-                System.out.println("Creating " + game + "." + type + " actors");
+                //System.out.println("Creating " + game + "." + type + " actors");
                 // Properties matches GZDOOM's format and does the job.
                 Properties p = new Properties();
                 String filePath = "gameinfo/" + type + "." + game;

@@ -64,7 +64,7 @@ public class PAKData {
         Shared.CreateDirectory(pathHexen2);
 
         ArrayList<String> extractedPaks = new ArrayList<String>();
-        ProgressBar p = new ProgressBar("PAK extraction");
+        ProgressBar p = new ProgressBar("Hexen II PAK extraction");
         float count = 0;
         for (String file : PAKFiles) {
             File pakFile = new File(pathWADs + "/" + file + ".pak");
