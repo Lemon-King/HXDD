@@ -55,14 +55,13 @@ class HXDDWorldEventHandler : EventHandler {
                 if (name.Length() == 4 && name.IndexOf("SKY") != -1) {
                     int skyNameNum = name.Mid(3, 1).ToInt();
                     if (skyAssets.Size() < skyNameNum) {
-                        skyAssets.Resize(skyNameNum);
+                        skyAssets.Resize(skyNameNum + 1);
                     }
                     skyAssets[skyNameNum - 1]++;
                 } else if ("WALL501".Length() == name.Length() && name.IndexOf("WALL501") != -1) {
                     count_WALL501++;
                 }
             }
-
 
             if (count_WALL501 < 2) {
                 Level.ReplaceTextures("WALL501", "WALL501X", 0);
