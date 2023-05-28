@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<XMLModelDef class="NecromancerPlayer">
+<XMLModelDef class="HX2NecromancerPlayer">
     <Group>
         <Path folder="models" />
         <Model file="necro.md3" model="0" />

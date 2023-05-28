@@ -90,7 +90,7 @@ class HXDDStatusBar : BaseStatusBar {
 		mHUDFont = HUDFont.Create(fnt, mHUDFontWidth, Mono_CellLeft, 1, 1);
 		fnt = "INDEXFONT_RAVEN";
 		mIndexFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
-		fnt = "BIGFONT";
+		fnt = "BigFontX";
 		mBigFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 2, 2);
 		diparms = InventoryBarState.Create(mIndexFont);
 		diparms_sbar = InventoryBarState.CreateNoBox(mIndexFont, boxsize:(31, 31), arrowoffs:(0,-10));

@@ -1,5 +1,5 @@
 // The fighter --------------------------------------------------------------
-// Modifcations to sprite names for HHDD, might break?
+// Modifcations to sprite names for HXDD, might break?
 
 class HXDDFighterPlayer : FighterPlayer
 {

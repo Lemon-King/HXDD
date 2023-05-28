@@ -4,7 +4,7 @@ class PWeapPurifierPiece: WeaponPiece {
 	Default {
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_PURIFIER_PIECE";
-		Inventory.RestrictedTo "PaladinPlayer";
+		Inventory.RestrictedTo "HX2PaladinPlayer";
 		WeaponPiece.Weapon "PWeapPurifier";
 		+FLOATBOB
 	}

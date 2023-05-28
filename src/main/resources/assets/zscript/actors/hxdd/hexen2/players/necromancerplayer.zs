@@ -2,7 +2,7 @@
 // Ref: https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/portals/stats.hc
 // Hexen Armor: https://github.com/sezero/uhexen2/blob/5da9351b3a219629ffd1b287d8fa7fa206e7d136/gamecode/hc/h2/damage.hc#L16
 
-class NecromancerPlayer : HXDDHexenIIPlayerPawn
+class HX2NecromancerPlayer : HXDDHexenIIPlayerPawn
 {
 	Default
 	{

@@ -4,7 +4,7 @@ class CWeapLightbringerPiece: WeaponPiece {
 	Default {
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_LIGHTBRINGER_PIECE";
-		Inventory.RestrictedTo "CrusaderPlayer";
+		Inventory.RestrictedTo "HX2CrusaderPlayer";
 		WeaponPiece.Weapon "CWeapLightbringer";
 		+FLOATBOB
 	}

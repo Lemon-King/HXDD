@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<XMLModelDef class="AssassinPlayer">
+<XMLModelDef class="HX2AssassinPlayer">
     <Group>
         <Path folder="models" />
         <Model file="assassin.md3" model="0" />

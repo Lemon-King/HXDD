@@ -1,5 +1,5 @@
 {
-    "class": "SuccubusPlayer",
+    "class": "HX2SuccubusPlayer",
     "armor_type": "armorclass",
     "progression_type": "levels",
     "alignment": "evil",

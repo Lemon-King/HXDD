@@ -4,7 +4,7 @@ class PaladinWeapon : Hexen2Weapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.RestrictedTo "PaladinPlayer";
+		Inventory.RestrictedTo "HX2PaladinPlayer";
 	}
 }
 
@@ -13,7 +13,7 @@ class CrusaderWeapon : Hexen2Weapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.RestrictedTo "CrusaderPlayer";
+		Inventory.RestrictedTo "HX2CrusaderPlayer";
 	}
 }
 
@@ -22,7 +22,7 @@ class NecromancerWeapon : Hexen2Weapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.RestrictedTo "NecromancerPlayer";
+		Inventory.RestrictedTo "HX2NecromancerPlayer";
 	}
 }
 
@@ -31,7 +31,7 @@ class AssassinWeapon : Hexen2Weapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.RestrictedTo "AssassinPlayer";
+		Inventory.RestrictedTo "HX2AssassinPlayer";
 	}
 }
 
@@ -40,7 +40,7 @@ class SuccubusWeapon : Hexen2Weapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.RestrictedTo "SuccubusPlayer";
+		Inventory.RestrictedTo "HX2SuccubusPlayer";
 	}
 }
 

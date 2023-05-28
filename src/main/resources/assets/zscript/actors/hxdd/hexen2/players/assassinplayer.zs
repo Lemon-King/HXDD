@@ -1,6 +1,6 @@
 // Assassin
 
-class AssassinPlayer : HXDDHexenIIPlayerPawn
+class HX2AssassinPlayer : HXDDHexenIIPlayerPawn
 {
 	double stealthLevel;
 

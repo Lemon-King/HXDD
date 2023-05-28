@@ -1,5 +1,5 @@
 {
-    "class": "NecromancerPlayer",
+    "class": "HX2NecromancerPlayer",
     "armor_type": "armorclass",
     "progression_type": "levels",
     "alignment": "evil",

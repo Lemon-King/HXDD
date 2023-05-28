@@ -1,6 +1,6 @@
-// Assassin
+// Paladin
 
-class PaladinPlayer : HXDDHexenIIPlayerPawn {
+class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 	Default {
 		Health 100;
 		PainChance 255;

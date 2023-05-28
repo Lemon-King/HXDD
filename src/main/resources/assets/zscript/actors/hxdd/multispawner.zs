@@ -110,15 +110,15 @@ class MultiSpawner: RandomSpawner {
                 spawn = self.Cleric;
             } else if (player is "MagePlayer") {
                 spawn = self.Mage;
-            } else if (player is "PaladinPlayer") {
+            } else if (player is "HX2PaladinPlayer") {
                 spawn = self.Paladin;
-            } else if (player is "CrusaderPlayer") {
+            } else if (player is "HX2CrusaderPlayer") {
                 spawn = self.Crusader;
-            } else if (player is "AssassinPlayer") {
+            } else if (player is "HX2AssassinPlayer") {
                 spawn = self.Assassin;
-            } else if (player is "NecromancerPlayer") {
+            } else if (player is "HX2NecromancerPlayer") {
                 spawn = self.Necromancer;
-            } else if (player is "SuccubusPlayer") {
+            } else if (player is "HX2SuccubusPlayer") {
                 spawn = self.Succubus;
             }
             if (spawn == "Unknown") {

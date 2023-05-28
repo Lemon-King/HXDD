@@ -1,5 +1,5 @@
 {
-    "class": "CrusaderPlayer",
+    "class": "HX2CrusaderPlayer",
     "armor_type": "armorclass",
     "progression_type": "levels",
     "alignment": "good",

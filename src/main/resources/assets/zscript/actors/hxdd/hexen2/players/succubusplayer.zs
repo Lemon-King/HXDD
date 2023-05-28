@@ -1,6 +1,6 @@
-// Assassin
+// Succubus
 
-class SuccubusPlayer : HXDDHexenIIPlayerPawn
+class HX2SuccubusPlayer : HXDDHexenIIPlayerPawn
 {
 	Default
 	{

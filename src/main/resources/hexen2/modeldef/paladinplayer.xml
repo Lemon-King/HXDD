@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<XMLModelDef class="PaladinPlayer">
+<XMLModelDef class="HX2PaladinPlayer">
     <Group>
         <Path folder="models" />
         <Model file="paladin.md3" model="0" />

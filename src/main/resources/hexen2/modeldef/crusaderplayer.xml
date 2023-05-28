@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<XMLModelDef class="CrusaderPlayer">
+<XMLModelDef class="HX2CrusaderPlayer">
     <Group>
         <Path folder="models" />
         <Model file="crusader.md3" model="0" />

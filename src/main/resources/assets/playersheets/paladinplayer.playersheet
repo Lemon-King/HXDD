@@ -1,5 +1,5 @@
 {
-    "class": "PaladinPlayer",
+    "class": "HX2PaladinPlayer",
     "armor_type": "armorclass",
     "progression_type": "levels",
     "alignment": "good",

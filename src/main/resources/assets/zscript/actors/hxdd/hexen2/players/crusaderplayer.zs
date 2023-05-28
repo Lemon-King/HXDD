@@ -1,6 +1,6 @@
-// Assassin
+// Crusader
 
-class CrusaderPlayer : HXDDHexenIIPlayerPawn
+class HX2CrusaderPlayer : HXDDHexenIIPlayerPawn
 {
 	Default
 	{
