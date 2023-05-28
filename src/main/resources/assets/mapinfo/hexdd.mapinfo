@@ -224,7 +224,7 @@ map MAP68 "ICE HOLD"
 
 map MAP69 "DARK CITADEL"
 {
-	next = "EndChess"
+	next = EndSequence, "Inter_Chess_DD"
 	cluster = 13
 	Sky1 = "SKY4", 0
 	Sky2 = "SKY4", 0
@@ -324,3 +324,55 @@ cluster 12
 	pic = "interpic"
 }
 
+// Modified to support HexDD win#msg
+Intermission Inter_Chess_DD
+{
+	Fader
+	{
+		Music = "Hall"
+		Background = "FINALE1"
+		Time = 2
+		FadeType = FadeIn
+	}
+	TextScreen
+	{
+		Background = "FINALE1"
+		TextSpeed = 3
+		TextLump = "win4msg"
+		Time = -250
+	}
+	TextScreen
+	{
+		Music = "Orb"
+		Background = "FINALE2"
+		TextSpeed = 3
+		TextLump = "win5msg"
+		Time = -250
+	}
+	Fader
+	{
+		Background = "FINALE2"
+		Time = 2
+		FadeType = FadeOut
+	}
+	Fader
+	{
+		Music = "Chess"
+		Background = "FINALE3"
+		DrawConditional = "Multiplayer", "CHESSALL", 20, 0
+		DrawConditional = "ClericPlayer", "CHESSC", 60, 0
+		DrawConditional = "MagePlayer", "CHESSM", 60, 0
+		Time = 2
+		FadeType = FadeIn
+	}
+	TextScreen
+	{
+		Background = "FINALE3"
+		DrawConditional = "Multiplayer", "CHESSALL", 20, 0
+		DrawConditional = "ClericPlayer", "CHESSC", 60, 0
+		DrawConditional = "MagePlayer", "CHESSM", 60, 0
+		TextSpeed = 3
+		TextLump = "win6msg"
+		Position = 5, 135
+	}
+}

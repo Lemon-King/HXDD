@@ -20,4 +20,12 @@ map hextest "Hexen Test"
 	SoundInfo = "sndinfo.hexengz"
 	SndSeq = "sndseq.hexen"
 	NoIntermission
+	activateowndeathspecials
+	infiniteflightpowerup
+	fallingdamage
+	nointermission
+	noautosequences
+	missilesactivateimpactlines
+	monsterfallingdamage
+	enableskyboxao
 }
