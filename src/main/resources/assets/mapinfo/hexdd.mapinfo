@@ -1,3 +1,17 @@
+defaultmap
+{
+	NoIntermission
+	activateowndeathspecials
+	infiniteflightpowerup
+	fallingdamage
+	nointermission
+	noautosequences
+	missilesactivateimpactlines
+	monsterfallingdamage
+	enableskyboxao
+	sucktime = 1
+}
+
 // --- Cluster 1 ---
 
 map MAP50 "RUINED VILLAGE"

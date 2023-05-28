@@ -242,13 +242,4 @@ defaultmap
 	sucktime = 1
 }
 
-gamedefaults
-{
-	activateowndeathspecials
-	infiniteflightpowerup
-	fallingdamage
-	noautosequences
-	missilesactivateimpactlines
-	monsterfallingdamage
-	enableskyboxao
-}
+gamedefaults {}

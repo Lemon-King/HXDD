@@ -1,3 +1,15 @@
+defaultmap
+{
+	activateowndeathspecials
+	infiniteflightpowerup
+	fallingdamage
+	nointermission
+	noautosequences
+	missilesactivateimpactlines
+	monsterfallingdamage
+	enableskyboxao
+	sucktime = 1
+}
 
 // --- Cluster 1 ---
 
