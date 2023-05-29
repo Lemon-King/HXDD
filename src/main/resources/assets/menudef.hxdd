@@ -1,18 +1,18 @@
 // Main Menu
 DEFAULTLISTMENU
 {
-	Font "BigFont", "Untranslated"
+	Font "BigFontX", "DarkGray"
 	LineSpacing 20
 
 	Selector "M_SLCTR1", -28, -1
 }
 
-LISTMENU "MainMenu"
-{
-    // Layout Heretic
-    StaticPatch 88, 0, "M_HTIC"
-    StaticPatch 40, 10, "M_SKL01"
-    StaticPatch 232, 10, "M_SKL00"
+LISTMENU "MainMenu" {
+    StaticPatch 88, 2, "assets/ui/M_HXDD.png"
+    StaticPatch 68, 68, "KGZ1A0"
+    StaticPatch 250, 68, "KGZ1A0"
+    StaticPatch 58, 2, "assets/ui/M_UI_ORB.png"
+    StaticPatch 240, 2, "assets/ui/M_UI_ORB.png"
     Position 110, 66
 
     TextItem "$MNU_NEWGAME", "n", "ZFPreGameSetup"
@@ -20,6 +20,43 @@ LISTMENU "MainMenu"
     TextItem "$MNU_GAMEFILES", "g", "GameFilesMenu"
     TextItem "$MNU_INFO", "i", "ReadThisMenu"
     TextItem "$MNU_QUITGAME", "q", "QuitMenu"
+
+    font "SMALLFONT", "DarkGray"
+	StaticText -52, 190, "$HXDD_BUILD_VERSION"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+    StaticText ""
+    StaticText "HXDD: WAD Merger", "DarkRed"
+    StaticText ""
+    SubMenu "New Game", "ZFPreGameSetup"
+    Submenu "Settings", "HXDDAltSetup"
+    Submenu "Build Details", "HXDDBuildInfo"
+}
+
+OptionMenu "HXDDBuildInfo"
+{
+    StaticText ""
+    Title "HXDD Build Details"
+    StaticText ""
+    StaticText ""
+    StaticText "Current Version:", "White"
+    StaticText "$HXDD_BUILD_VERSION_ID", "Ice"
+    StaticText "$HXDD_BUILD_TIME", "Ice"
+    StaticText "$HXDD_BUILD_BRANCH", "Ice"
+    StaticText ""
+    StaticText ""
+    StaticText "Updates are available at:", "White"
+    StaticText "https://github.com/Lemon-King/HXDD/releases", "Fire"
+    StaticText ""
+    StaticText ""
+    StaticText "DOOMWORLD Forum Thread:", "Teal"
+    StaticText "[PH]", "Fire"
+    StaticText ""
+    StaticText ""
+    StaticText "ZDOOM Forum Thread:", "Sapphire"
+    StaticText "https://forum.zdoom.org/viewtopic.php?t=72799", "Fire"
 }
 
 OptionMenu "HXDDNewGameConfig"
@@ -126,14 +163,6 @@ OptionValue "HXDD_Playstyle_ArmorMode"
     2, "Hexen & Hexen II (Class Defined)"
     3, "Random"
     4, "User Defined"
-}
-
-AddOptionMenu "OptionsMenu"
-{
-    StaticText ""
-    StaticText "HXDD", "Red"
-    SubMenu "New Game", "ZFPreGameSetup"
-    Submenu "Settings", "HXDDAltSetup"
 }
 
 OptionMenu "HXDDSettings"

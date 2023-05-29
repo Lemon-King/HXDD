@@ -157,7 +157,7 @@ class ZFPlayerClassSelection ui {
             ( 0 , 100),
             (1920, 24 * 4),
             text: "Class Selection",
-            fnt: "BIGFONT",
+            fnt: "BigFontX",
             alignment: 2,
             textScale: 4
         );
@@ -333,7 +333,7 @@ class ZFGameOptions ui {
             ( 0 , 100),
             (1920, 24 * 4),
             text: "Gameplay Options",
-            fnt: "BIGFONT",
+            fnt: "BigFontX",
             alignment: 2,
             textScale: 4
         );
@@ -349,7 +349,7 @@ class ZFGameOptions ui {
             (0 , 0),
             (self.frameInfo.GetWidth(), 50),
             text: "",
-            fnt: "BIGFONT",
+            fnt: "BigFontX",
             alignment: (2 << 4) | 2,
             textScale: 2
         );
@@ -359,7 +359,7 @@ class ZFGameOptions ui {
             (0 , 50),
             (self.frameInfo.GetWidth(), self.frameInfo.GetHeight() - 50),
             text: "",
-            //fnt: "BIGFONT",
+            //fnt: "BigFontX",
             alignment: (1 << 4) | 1,
             textScale: 2.5
         );

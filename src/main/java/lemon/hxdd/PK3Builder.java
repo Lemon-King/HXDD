@@ -94,6 +94,8 @@ public class PK3Builder {
 
             ExportHXDDFiles();
 
+            WriteInstallLanguageLookup();
+
             Bundle();
         }
     }
@@ -501,7 +503,7 @@ public class PK3Builder {
         });
         ZipUtil.iterate(fileIpk3, new ZipEntryCallback() {
             public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                if (!zipEntry.isDirectory() && zipEntry.getName().contains("iwadinfo.hxdd")) {
+                if (!zipEntry.isDirectory() && zipEntry.getName().startsWith("iwadinfo.hxdd")) {
                     String owner = System.getProperty("user.name");
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm a");
                     LocalDateTime now = LocalDateTime.now();
@@ -548,6 +550,43 @@ public class PK3Builder {
         }
     }
 
+    public void WriteInstallLanguageLookup() {
+        try {
+            Properties p_gitversion = GITVersion.getInstance().GetProperties();
+            String version = p_gitversion.getProperty("git.closest.tag.name");
+            if (version.equals("")) {
+                version = p_gitversion.getProperty("git.build.version");
+            }
+
+            String SettingPathTemp = (String)Settings.getInstance().Get("PathTemporary");
+            FileWriter fw = new FileWriter(SettingPathTemp + "language.build", false);
+            PrintWriter out = new PrintWriter(fw);
+            out.println("[en default]");
+            out.println(String.format("HXDD_BUILD_BRANCH = \"%s\";", p_gitversion.getProperty("git.branch")));
+            out.println(String.format("HXDD_BUILD_VERSION = \"%s\";", version));
+            out.println(String.format("HXDD_BUILD_TAG_DISTANCE = \"%s\";", p_gitversion.getProperty("git.closest.tag.commit.count")));
+            out.println(String.format("HXDD_BUILD_TIME = \"%s\";", p_gitversion.getProperty("git.build.time")));
+            out.println(String.format("HXDD_BUILD_COMMIT_ID = \"%s\";", p_gitversion.getProperty("git.commit.id.abbrev")));
+            out.println(String.format("HXDD_BUILD_COMMIT_ID_FULL = \"%s\";", p_gitversion.getProperty("git.commit.id.full")));
+            out.println(String.format("HXDD_BUILD_COMMIT_TIME = \"%s\";", p_gitversion.getProperty("git.commit.time")));
+            out.println(String.format("HXDD_BUILD_VERSION_ID = \"%s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev")));
+            out.println(String.format("HXDD_BUILD_VERSION_ID_DATE_OPT = \"Build: %s %s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev"), p_gitversion.getProperty("git.commit.time")));
+            out.close();
+
+            fw = new FileWriter(SettingPathTemp + "language.owner", false);
+            out = new PrintWriter(fw);
+            out.println("[en default]");
+            out.println(String.format("HXDD_INSTALL_USER = \"%s\";", System.getProperty("user.name")));
+            out.println(String.format("HXDD_INSTALL_OS = \"%s\";", System.getProperty("os.name")));
+            out.println(String.format("HXDD_INSTALL_OS_ARCH = \"%s\";", System.getProperty("os.arch")));
+            out.println(String.format("HXDD_INSTALL_OS_VERSION = \"%s\";", System.getProperty("os.version")));
+            out.println(String.format("HXDD_INSTALL_TIME = \"%s\";", LocalDateTime.now()));
+            out.println(String.format("HXDD_CREATION_FOLDER = \"%s\";", System.getProperty("user.dir")));
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void PostProcessImageData(String imagePath, Color colorTarget) {
         // fixes transparency

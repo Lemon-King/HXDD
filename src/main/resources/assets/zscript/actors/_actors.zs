@@ -13,7 +13,7 @@
 
 // Mobs
 #include "zscript/actors/hxdd/mobs/hereticaltspawns.zs"
-#include "zscript/actors/hxdd/mobs/hereticmobs.zs"
+//#include "zscript/actors/hxdd/mobs/hereticmobs.zs"
 #include "zscript/actors/hxdd/mobs/hxddfighterboss.zs"
 #include "zscript/actors/hxdd/mobs/hxddclericboss.zs"
 #include "zscript/actors/hxdd/mobs/hxddmageboss.zs"

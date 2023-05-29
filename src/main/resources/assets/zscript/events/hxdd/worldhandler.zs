@@ -70,6 +70,7 @@ class HXDDWorldEventHandler : EventHandler {
                 string pic = infoSky[i];
                 if (pic.Length() == 4 && pic.IndexOf("SKY") != -1) {
                     // Use Hexen Swaps
+                    console.printf("TEX %s", pic);
                     string picNum = pic.Mid(3, 1);
                     int num = picNum.ToInt();
                     if (skyAssets[num - 1] < 2) {
