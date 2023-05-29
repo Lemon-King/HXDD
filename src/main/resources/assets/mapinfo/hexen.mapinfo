@@ -1,5 +1,6 @@
 defaultmap
 {
+	NoIntermission
 	activateowndeathspecials
 	infiniteflightpowerup
 	fallingdamage
