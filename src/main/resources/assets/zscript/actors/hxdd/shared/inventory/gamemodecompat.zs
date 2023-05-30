@@ -50,7 +50,7 @@ class GameModeCompat: Inventory {
     }
     void SetDamageScale_Hexen() {
         if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
-            DamageMult = 2.0;
+            DamageMult = 1.5;
         } else {
             DamageMult = 1.0;
         }

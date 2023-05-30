@@ -13,7 +13,7 @@ class XGT_Group {
     Array<String> Hexen;
 }
 
-class XClassTranslationActors {
+class XTranslationActors {
 	String key;
 	Array<String> list;
 }
@@ -27,7 +27,8 @@ class XGameTranslation {
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
-	Array<XClassTranslationActors> xclass;  // player class actor swaps
+	Array<XTranslationActors> xclass;  // player class actor swaps
+    Array<XTranslationActors> xswap;
 
     String GetString(HXDD_JsonObject jo, String key) {
         HXDD_JsonElement type_elem = jo.get(key);
@@ -37,16 +38,29 @@ class XGameTranslation {
         HXDD_JsonString type_str = HXDD_JsonString(type_elem);
         return type_str.s;
     }
-
-    void Init() {
-        self.LoadFromJSON("hxdd.doomednums.xgt", "doomednums");
-        self.LoadFromJSON("hxdd.spawnnums.xgt", "spawnnums");
-
-        CreateXClassTranslation();
+    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return null;
+        }
+		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
+		return type_arr;
     }
 
-    void LoadFromJSON(String file, String group) {
-        int lumpIndex = Wads.CheckNumForFullName(file);
+    void Init() {
+        self.LoadFromJSON("doomednums");
+        self.LoadFromJSON("spawnnums");
+
+        CreateXClassTranslation();
+        CreateXSwapTranslation();
+    }
+
+    void LoadFromJSON(String group) {
+        int lumpIndex = Wads.CheckNumForFullName(String.format("xgt/%s.xgt", group));
+        if (lumpIndex == -1) {
+            // try json
+            lumpIndex = Wads.CheckNumForFullName(String.format("xgt/%s.json", group));
+        }
         if (lumpIndex != -1) {
             String lumpData = Wads.ReadLump(lumpIndex);
             let json = HXDD_JSON.parse(lumpData, false);
@@ -96,7 +110,7 @@ class XGameTranslation {
     }
 
     // low effort, but should work
-    XGameResponse GetActorBySource(String source) {
+    XGameResponse GetReplacementActorBySource(String source) {
         XGT_Group group = self.DoomEdNums;
         int index = group.Heretic.Find(source);
         if (index == group.size) {
@@ -112,12 +126,13 @@ class XGameTranslation {
             }
         }
         if (index == group.size) {
-            String newActor = self.TrySwap(source);
+            String swapActor = self.TryXClass(source);
+            swapActor = self.TryXSwap(swapActor);
             XGameResponse resp = new ("XGameResponse");
-            if (newActor != source) {
+            if (swapActor != source) {
                 resp.isFinal = true;
             }
-            resp.newActor = newActor;
+            resp.newActor = ActorNoneFix(swapActor);
             return resp;
         }
         int optGameMode = LemonUtil.GetOptionGameMode();
@@ -142,19 +157,32 @@ class XGameTranslation {
                 }
             }
         }
-        String swapped = self.TrySwap(newActor);
+        String swapActor = self.TryXClass(newActor);
+        swapActor = self.TryXSwap(swapActor);
         XGameResponse resp = new ("XGameResponse");
-        if (swapped != newActor) {
+        if (swapActor != newActor) {
             resp.IsFinal = true;
         }
-        resp.newActor = swapped;
+        resp.newActor = ActorNoneFix(swapActor);
         return resp;
+    }
+
+    String ActorNoneFix(String source) {
+        // hack
+        if (source == "" || source == "none") {
+            return "RandomSpawner";
+        }
+        return source;
     }
 
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
         int lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.playersheet", playerClassName));
-        console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, lumpIndex);
+        if (lumpIndex == -1) {
+            // try json
+            lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.json", playerClassName));
+        }
+        //console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, lumpIndex);
 		
         if (lumpIndex != -1) {
             String lumpData = Wads.ReadLump(lumpIndex);
@@ -179,13 +207,13 @@ class XGameTranslation {
                                 for (let n = 0; n < nClassItems.Size(); n++) {
                                     nClassItems[n].Replace(" ", "");
                                 }
-								self.xclass[i] = new ("XClassTranslationActors");
+								self.xclass[i] = new ("XTranslationActors");
 								self.xclass[i].list.Copy(nClassItems);
-                                for (let j = 0; j < self.xclass[i].list.Size(); j++) {
-								    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
-                                }
+                                //for (let j = 0; j < self.xclass[i].list.Size(); j++) {
+								//    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
+                                //}
 								self.xclass[i].key = key;
-								console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
+								//console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
 							}
 						}
 					}
@@ -194,7 +222,7 @@ class XGameTranslation {
 		}
 	}
 
-	String TrySwap(String replacee) {
+	String TryXClass(String replacee) {
 		for (let i = 0; i < self.xclass.Size(); i++) {
 			if (self.xclass[i].key.MakeLower() == replacee.MakeLower()) {
 				String replacement;
@@ -206,11 +234,82 @@ class XGameTranslation {
 				} else {
 					replacement = self.xclass[i].list[0];
 				}
-				console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
+				//console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
 
 				return replacement;
 			}
 		}
 		return replacee;
 	}
+
+    void CreateXSwapTranslation() {
+        String playerClassName = LemonUtil.GetPlayerClassName();
+        int lumpIndex = Wads.CheckNumForFullName("xgt/xswap.xgt");
+        if (lumpIndex == -1) {
+            // try json
+            lumpIndex = Wads.CheckNumForFullName("xgt/xswap.json");
+        }
+        console.printf("XGameTranslation.XSwap: Load xgt/xswap.xgt", playerClassName, lumpIndex);
+
+        if (lumpIndex != -1) {
+            String lumpData = Wads.ReadLump(lumpIndex);
+            let json = HXDD_JSON.parse(lumpData, false);
+            if (json is "HXDD_JsonElement") {
+                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
+                if (jsonObject) {
+                    String ver = GetString(jsonObject, "version");
+                    if (ver) {
+                        console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
+                    }
+                    HXDD_JsonArray arrListItems = HXDD_JsonArray(jsonObject.get("list"));
+                    if (arrListItems) {
+                        int size = arrListItems.Size();
+						self.xswap.Resize(size);
+						for (let i = 0; i < size; i++) {
+					        HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
+                            if (objListItem) {
+                                String valKey = GetString(objListItem, "key");
+                                String valCategory = GetString(objListItem, "category");
+                                HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
+                                HXDD_JsonArray valActors = GetArray(objListItem, "actors");
+                                if (valKey && valActors) {
+                                    let newXSwap = new ("XTranslationActors"); 
+                                    newXSwap.key = valKey;
+                                    newXSwap.list.Resize(valActors.Size());
+                                    for (int j = 0; j < valActors.Size(); j++) {
+                                        newXSwap.list[j] = HXDD_JsonString(valActors.get(j)).s;
+                                    }
+                                    self.xswap[i] = newXSwap;
+                                    String l =  self.xswap[i].list[0];
+                                    for (let j = 1; j < self.xswap[i].list.Size(); j++) {
+                                        l = String.format("%s,%s", l, self.xswap[i].list[j]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    String TryXSwap(String replacee) {
+		for (let i = 0; i < self.xswap.Size(); i++) {
+            XTranslationActors xtaSwap = self.xswap[i];
+			if (xtaSwap.key.MakeLower().IndexOf(replacee.MakeLower()) != -1) {
+                String key = xtaSwap.key.MakeLower();
+                String cvarKey = String.format("hxdd_xswap_%s", key);
+                int option = LemonUtil.CVAR_GetInt(cvarKey, 0);
+                if (option == 0 || option > xtaSwap.list.Size() + 1) {
+                    return replacee;
+                } else if (option == xtaSwap.list.Size() + 1) {
+                    option = random[xswap](1, xtaSwap.list.Size());
+                }
+                String replacement = xtaSwap.list[option - 1];
+				//console.printf("XGameTranslation.XSwap.TryXSwap %s %d Found: %s, Replacement: %s", cvarKey, i, replacee, replacement);
+                return replacement;
+            }
+        }
+        return replacee;
+    }
 }

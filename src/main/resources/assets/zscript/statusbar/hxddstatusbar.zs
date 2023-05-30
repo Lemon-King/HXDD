@@ -9,6 +9,8 @@ class HXDDStatusBar : BaseStatusBar {
 
 	private double shiftX;
 	private double shiftY;
+	private vector3 vecFacing;
+	private vector3 vecFacingLast;
 	private vector3 vecMotion;
 	private vector2 vecViewMotion;
 
@@ -16,6 +18,8 @@ class HXDDStatusBar : BaseStatusBar {
 
 	private vector2 vecView;
 	private vector2 vecLastView;
+	private double viewDist;
+	private double viewDistLast;
 
 	private double invTime;
 
@@ -169,16 +173,27 @@ class HXDDStatusBar : BaseStatusBar {
 			double resultForward = (comp.x, comp.y) dot forward;
 			double resultRight = (comp.x, comp.y) dot right;
 
+			self.vecFacingLast = self.vecFacing;
+			self.vecFacing = (resultForward, resultRight, comp.z);
+			if (abs(self.vecFacing.Length() - self.vecFacingLast.Length()) > 5.0) {
+				// Player camera latched to something (Hexen Melee), update coords to current and treat as 0 distance
+				self.vecFacingLast = self.vecFacing;
+			}
+
 			// View Angle/Pitch capture and comparison
 			self.vecLastView = self.vecView;
 			self.vecView = (angle, CPlayer.mo.Pitch);
-			if (abs(self.vecView.Length() - self.vecLastView.Length()) > 30.0) {
+			//console.printf("Dist: %0.8f", abs(self.vecView.Length() - self.vecLastView.Length()));
+			self.viewDistLast = self.viewDist;
+			self.viewDist = abs(self.vecView.Length() - self.vecLastView.Length());
+			if (abs(self.viewDistLast - self.viewDist) > 30.0) {
+				//console.printf("Dist Jump: %0.8f", abs(self.vecView.Length() - self.vecLastView.Length()));
 				// Player camera latched to something (Hexen Melee), update coords to current and treat as 0 distance
 				self.vecLastView = self.vecView;
 			}
 
 			// motion computation
-			self.vecMotion += ((resultForward, resultRight, comp.z) / CPlayer.mo.speed) * BAR_SHIFT_RATE;
+			self.vecMotion += (self.vecFacing / CPlayer.mo.speed) * BAR_SHIFT_RATE;
 			self.vecMotion *= BAR_SHIFT_DECAY;
 
 			self.vecViewMotion += (self.vecView.x - self.vecLastView.x, self.vecView.y - self.vecLastView.y) * VIEW_SHIFT_RATE;
@@ -270,12 +285,12 @@ class HXDDStatusBar : BaseStatusBar {
 		String strHealthValue = String.format("%d", mHealthInterpolator.GetValue());
 		int wStrHealthWidth = mHUDFontWidth * strHealthValue.Length();
 
-		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 30) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
+		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
 
 		double armorValue = prog.ArmorType == PSAT_ARMOR_AC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
-		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 81) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
+		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
 
 		Ammo ammo1, ammo2;
 		[ammo1, ammo2] = GetCurrentAmmo();

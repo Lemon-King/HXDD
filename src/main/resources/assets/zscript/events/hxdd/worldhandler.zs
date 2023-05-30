@@ -112,13 +112,11 @@ class HXDDWorldEventHandler : EventHandler {
             xgame = new("XGameTranslation");
             xgame.Init();
         }
-        XGameResponse resp = xgame.GetActorBySource(e.Replacee.GetClassName());
-        if (resp.newActor == "none") {
-            // Hack
-            e.Replacement = "RandomSpawner";
-        } else {
-            e.Replacement = resp.newActor;
+        if (e.IsFinal) {
+            return;
         }
+        XGameResponse resp = xgame.GetReplacementActorBySource(e.Replacee.GetClassName());
+        e.Replacement = resp.newActor;
         e.IsFinal = resp.IsFinal;
     }
 }

@@ -16,7 +16,7 @@ GameInfo {
 	finalepage = "CREDIT"
 	infopage = "HELP1", "HELP2", "CREDIT"
 	quitsound = ""
-	borderflat = "F_057"
+	borderflat = "W_071"
 	border = HereticBorder
 	telefogheight = 32
 	defkickback = 150
@@ -39,9 +39,9 @@ GameInfo {
 	weaponslot = 5, "SkullRod"
 	weaponslot = 6, "PhoenixRod"
 	weaponslot = 7, "Mace"
-	dimcolor = "00 00 40"
+	dimcolor = "1F 17 0B"
 	dimamount = 0.5
-	bluramount = 0
+	bluramount = 0.15
 	menuslidercolor = "Orange"
 	menusliderbackcolor = "White"
 	definventorymaxamount = 16

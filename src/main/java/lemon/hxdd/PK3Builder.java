@@ -55,8 +55,6 @@ public class PK3Builder {
             ExtractAssets(merged);
             FixPatches();
 
-            ExtractFilesFromGZDoomSupportPK3s();
-
             ExportMaps();
 
             ActorFactory actors = new ActorFactory();
@@ -91,6 +89,8 @@ public class PK3Builder {
                     HX2_CopyMusic();
                 }
             }
+
+            ExtractFilesFromGZDoomSupportPK3s();
 
             ExportHXDDFiles();
 
@@ -406,6 +406,16 @@ public class PK3Builder {
             zipWide.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics", "heretic", new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
             zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"h2bar.lmp", "h2top.lmp"}, null);
             zipWide.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", "hexen", new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
+
+            // Copy Hexen's interpic for conback.png
+            String path = Settings.getInstance().Get("PathTemporary") + "/graphics/";
+            File source = new File(path + "interpic.png");
+            File dest = new File(path + "conback.png");
+            try {
+                FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // Title Selection, Heretic, Heretic Shadows, Hexen, or HexDD.

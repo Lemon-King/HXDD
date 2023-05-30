@@ -1,0 +1,17 @@
+{
+    "version": "0.7.0-beta",
+    "list": [
+        {
+            "category": "item",
+            "key": "ArtiEgg,ArtiPork",
+            "labels": ["$TXT_ARTIEGG", "$TXT_ARTIEGG2"],
+            "actors": ["ArtiEgg", "ArtiPork"]
+        },
+        {
+            "category": "enemy",
+            "key": "Wizard,Bishop",
+            "labels": ["Wizard", "Bishop"],
+            "actors": ["Wizard", "Bishop"]
+        }
+    ]
+}

@@ -136,9 +136,14 @@ public class ActorFactory {
     }
 
     private void CreateXGT(JSONArray list, String type) {
-        String path = Settings.getInstance().Get("PathTemporary") + "/";
+        String path = Settings.getInstance().Get("PathTemporary") + "/xgt";
+        File dirFile = new File(path);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+
         try {
-            PrintWriter out = new PrintWriter(path + "hxdd." + type + ".xgt");
+            PrintWriter out = new PrintWriter(path + "/" + type + ".xgt");
             out.print(list);
             out.close();
         } catch (FileNotFoundException e) {
