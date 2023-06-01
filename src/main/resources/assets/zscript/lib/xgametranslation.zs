@@ -288,18 +288,26 @@ class XGameTranslation {
     }
 
     String TryXSwap(String replacee) {
+        bool isDev = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+        if (!isDev) {
+            // not ready for general use
+            return replacee;
+        }
 		for (let i = 0; i < self.xswap.Size(); i++) {
             XTranslationActors xtaSwap = self.xswap[i];
 			if (xtaSwap.key.MakeLower().IndexOf(replacee.MakeLower()) != -1) {
                 String key = xtaSwap.key;
                 String cvarKey = String.format("hxdd_xswap_%s", key);
                 int option = LemonUtil.CVAR_GetInt(cvarKey, 0);
+                option = 1;
                 if (option == 0 || option > xtaSwap.list.Size() + 2) {
                     return replacee;
-                } else if (option == 1) {
-                    option = random[xswap](0, xtaSwap.list.Size() - 1);
                 }
-                String replacement = xtaSwap.list[option - 2];
+                int select = option - 1;
+                if (option == 1) {
+                    select = random[xswap](0, xtaSwap.list.Size() - 1);
+                }
+                String replacement = xtaSwap.list[select];
 				//console.printf("XGameTranslation.XSwap.TryXSwap %s %d Found: %s, Replacement: %s", cvarKey, i, replacee, replacement);
                 return replacement;
             }
