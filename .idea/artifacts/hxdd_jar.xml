@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="hxdd:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/hxdd_jar</output-path>
+    <root id="archive" name="hxdd.jar">
+      <element id="module-output" name="hxdd" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-nop-1.7.36.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-api-1.7.36.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/json-20230227.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/zt-zip-1.15.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
