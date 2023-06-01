@@ -24,7 +24,7 @@
         "BlasterHefty": "Mana1",
 
         "SkullRodAmmo": "Mana2",
-        "SkullRodHefty": "Mana3",
+        "SkullRodHefty": "Mana2",
 
         "PhoenixRodAmmo": "Mana2",
         "PhoenixRodHefty": "Mana3",
@@ -33,12 +33,37 @@
         "MaceHefty": "Mana3",
 
         "Gauntlets": "Mana3",
-        "GoldWand": "Mana1",
-        "Crossbow": "FWeapAxe",
-        "Blaster": "FWeaponPiece1",
-        "SkullRod": "FWeapHammer",
-        "PhoenixRod": "FWeaponPiece2",
-        "MaceSpawner": "MultiClassSpecialSpawnerFighter"
+        "GoldWand": "Mana3",
+        "Crossbow": "CWeapIceMace",
+        "Blaster": "Mana3",
+        "SkullRod": "CWeapMeteorStaff",
+        "PhoenixRod": "Mana3",
+        "Mace": "ArtiDarkServant",
+
+        "BagOfHolding": "ArtiBoostMana",
+        "ArtiTimeBomb": "ArtiPoisonBag",
+        "ArtiInvulnerability": "ArtiInvulnerability2",
+        "ArtiEgg": "ArtiPork",
+
+        "FWeapAxe": "none",
+        "CWeapStaff": "CWeapIceMace",
+        "MWeapFrost": "none",
+
+        "FWeapHammer": "none",
+        "CWeapFlame": "CWeapMeteorStaff",
+        "MWeapLightning": "none",
+
+        "FWeaponPiece1": "none",
+        "FWeaponPiece2": "none",
+        "FWeaponPiece3": "none",
+
+        "CWeaponPiece1": "none",
+        "CWeaponPiece2": "none",
+        "CWeaponPiece3": "none",
+
+        "MWeaponPiece1": "none",
+        "MWeaponPiece2": "none",
+        "MWeaponPiece3": "none",
     },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,

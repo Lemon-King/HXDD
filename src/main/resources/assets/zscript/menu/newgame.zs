@@ -213,9 +213,8 @@ class ZFPlayerClassSelection ui {
         btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", 3, "graphics/M_MBOX.png", imagesMage);
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
-        bool isDev = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
         bool cvarHexII = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2', false);
-        if (isDev && cvarHexII) {
+        if (cvarHexII) {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("ButtonPlayerClass");

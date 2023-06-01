@@ -6,7 +6,7 @@
 
     <groupId>lemon.hxdd</groupId>
     <artifactId>hxdd</artifactId>
-    <version>0.7.0-BETA</version>
+    <version>0.7.1-BETA</version>
     <dependencies>
         <dependency>
             <groupId>org.json</groupId>
