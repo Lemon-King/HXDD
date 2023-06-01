@@ -1,3 +1,6 @@
+
+// TODO: Rewrite & Cleanup
+
 class ZFPreGameSetupHandler : HXDD_ZF_Handler {
     // A reference to the menu we want to modify - the menu has to set this
     // to itself.
@@ -6,19 +9,19 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
     override void buttonClickCommand(HXDD_ZF_Button caller, Name command) {
         // Check if the command matches the button's command.
         if (command == "classic") {
-        Menu.MenuSound("menu/choose");
+            Menu.MenuSound("menu/choose");
             Menu.SetMenu("HXDDNewGameConfig");
         } else if (command == 'back') {
             if (menu.frame.getPosX() == 0) {
                 Menu.MenuSound("menu/choose");
                 Menu.SetMenu("MainMenu");
-
                 menu.btnStart.SetPosY(1080 + 500);
             } else if (menu.frame.getPosX() == -1920) {
                 Menu.MenuSound("menu/choose");
                 menu.time = 0;
                 menu.lastPosX = menu.frame.getPosX();
                 menu.desiredPosX = 0;
+                menu.btnStart.SetPosY(1080 + 500);
             }
         } else if (command == 'next') {
             if (menu.frame.getPosX() == 0) {
@@ -33,6 +36,10 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
                 LemonUtil.CVAR_SetInt("hxdd_gamemode", menu.selectedGameMode);
                 LemonUtil.CVAR_SetInt("hxdd_armor_mode", menu.selectedArmorMode);
                 LemonUtil.CVAR_SetInt("hxdd_progression", menu.selectedProgressionMode);
+                LemonUtil.CVAR_SetInt("hxdd_lavastyle", menu.selectedTextureStyleLava);
+                LemonUtil.CVAR_SetInt("hxdd_waterstyle", menu.selectedTextureStyleWater);
+                LemonUtil.CVAR_SetInt("hxdd_sludgestyle", menu.selectedTextureStyleSludge);
+                LemonUtil.CVAR_SetInt("hxdd_icestyle", menu.selectedTextureStyleIce);
                 Menu.SetMenu("EpisodeMenu", menu.selectedClass);    // Class Selection Response
                 Menu.SetMenu("SkillMenu", menu.selectedEpisode);    // Episode Selection Response
                 Menu.SetMenu("StartGame", menu.selectedSkill);      // Skill Selection Response (Starts Game), Use StartgameConfirm for Nightmare skills
@@ -64,19 +71,32 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
     ZFPreGameSetup menu;
     ZFGameOptions optMenu;
     override void dropdownChanged(HXDD_ZF_DropdownList caller, Name command) {
-        if (command == "episode") {
+        String cmd = command;
+        if (cmd == "episode") {
             String choice = command;
             menu.selectedEpisode = caller.getSelection();
             elementHoverChanged(caller, command, false);
-        } else if (command == "skill") {
+        } else if (cmd == "skill") {
             String choice = command;
             menu.selectedSkill = caller.getSelection();
-        } else if (command == "hxdd_gamemode") {
+        } else if (cmd == "hxdd_gamemode") {
             menu.selectedGameMode = caller.getSelection();
-        } else if (command == "hxdd_armor_mode") {
+        } else if (cmd == "hxdd_armor_mode") {
             menu.selectedArmorMode = caller.getSelection();
-        } else if (command == "hxdd_progression") {
+        } else if (cmd == "hxdd_progression") {
             menu.selectedProgressionMode = caller.getSelection();
+        } else if (cmd == "hxdd_lavastyle") {
+            menu.selectedTextureStyleLava = caller.getSelection();
+        } else if (cmd == "hxdd_waterstyle") {
+            menu.selectedTextureStyleWater = caller.getSelection();
+        } else if (cmd == "hxdd_sludgestyle") {
+            menu.selectedTextureStyleSludge = caller.getSelection();
+        } else if (cmd == "hxdd_icestyle") {
+            menu.selectedTextureStyleIce = caller.getSelection();
+        } else if (cmd.IndexOf("xswap") != -1) {
+            // handle xswap cvars
+            console.printf("%s %d", cmd, caller.getSelection());
+            LemonUtil.CVAR_SetInt(command, caller.getSelection());
         }
     }
 
@@ -86,27 +106,27 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
             return;
         }
         if (command == "skill") {
-            optMenu.SetInfoText("Skill", "\c[gray]Game Difficulty \c[gold](Placeholder)");
+            optMenu.SetInfoText("$MNU_HEADER_SKILLSELECTION", "$MNU_SKILLSELECTION");
         } else if (command == "episode") {
             ShowEpisodeInformation();
         } else if (command == "hxdd_gamemode") {
-            optMenu.SetInfoText("Game Detection", "\c[gray]Compatability Mode for user maps not using the standard E#M# or MAP## format or Mods mixing gameplay up.\n_\n\c[ice]Auto-Detect\c[gray]: HXDD attempts to detect which game map set you are using.\n_\n\c[ice]Heretic\c[gray]: Force Heretic Detection.\n_\n\c[ice]Hexen\c[gray]: Force Hexen detection.");
+            optMenu.SetInfoText("$MNU_HEADER_GAMEMODE", "$MNU_GAMEMODE");
         } else if (command == "hxdd_armor_mode") {
-            optMenu.SetInfoText("Armor Mode", "\c[ice]Class Default\c[gray]: Armor type used by the selected class\n_\n\c[ice]Basic\c[gray]: Simple armor system found in Heretic.\n_\n\c[ice]Armor Class\c[gray]: Complex armor system found in Hexen or Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Hexen Armor values, no two games ever the same.");
+            optMenu.SetInfoText("$MNU_HEADER_ARMORMODE", "$MNU_ARMORMODE");
         } else if (command == "hxdd_progression") {
-            optMenu.SetInfoText("Progression", "\c[ice]Class Default\c[gray]: Progression system used by the selected class\n_\n\c[ice]None\c[gray]: No Leveling\n_\n\c[ice]Levels\c[gray]: Leveling System found in Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Player health, ammo, mana, stats and experience for leveling.");
+            optMenu.SetInfoText("$MNU_HEADER_PROGRESSIONMODE", "$MNU_PROGRESSIONMODE");
         }
     }
 
     void ShowEpisodeInformation() {
         if (menu.selectedEpisode < 6) {
-            optMenu.SetInfoText("Heretic", "Three brothers, known as the Serpent Riders, used their powerful magic to possess and corrupt the seven kings of the realm, plunging it into war and chaos. But a race of elves known as the Sidhe, resisted, and were branded heretics. On the brink of losing the war, the Sidhe elders sacrificed themselves and the elven capital city to destroy the seven kings and their armies. As one of the few surviving elves, you embark on a quest for vengeance against those who slaughtered your friends, family, and entire race.");
+            optMenu.SetInfoText("$MNU_HEADER_HERETIC", "$MNU_STORY_HERETIC");
         } else if (menu.selectedEpisode == 6) {
-            optMenu.SetInfoText("Hexen", "While the Sidhe elf Corvus battled the evil forces of D'Sparil, the remaining two Serpent Riders were busy sowing the seeds of destruction in other dimensions. As a Warrior, Mage, or Cleric, you must fight the undead, and brave elemental dungeons and decaying wilderness to defend your realm of Cronos from Korax, the second Serpent Rider.");
+            optMenu.SetInfoText("$MNU_HEADER_HEXEN", "$MNU_STORY_HEXEN");
         } else if (menu.selectedEpisode == 7) {
-            optMenu.SetInfoText("Deathkings", "After defeating the evil Korax, the second Serpent Rider, and discovering the Chaos Sphere, you have been transported to the Realm of the Dead. Now, your only way home is blocked by hordes of undead and the Dark Citadel. Where Hexen ends, the true nightmare begins.");
+            optMenu.SetInfoText("$MNU_HEADER_HEXDD", "$MNU_STORY_HEXDD");
         } else {
-            optMenu.SetInfoText("Etherial Travel", "Etherial Travel brings you to strange new places.");
+            optMenu.SetInfoText("$MNU_HEADER_OTHER", "$MNU_STORY_OTHER");
         }
     }
 }
@@ -165,9 +185,9 @@ class ZFPlayerClassSelection ui {
         header.pack(frame);
 
         self.imgBrazierLeft = new("W_DevilBraizer");
-        self.imgBrazierLeft.Create(frame, (425, 25), 2.5);
+        self.imgBrazierLeft.Create(frame, (425, 10), 2.5);
         self.imgBrazierRight = new("W_DevilBraizer");
-        self.imgBrazierRight.Create(frame, (1920 - 425, 25), 2.5, true);
+        self.imgBrazierRight.Create(frame, (1920 - 425, 10), 2.5, true);
 
         let cmdHandlerClassSelect = new("ZFClassSelectHandler");
         cmdHandlerClassSelect.menu = parent;
@@ -366,10 +386,10 @@ class ZFGameOptions ui {
         self.labelInformation.pack(self.frameInfo);
 
         self.headerStatueLeft = new("W_KeyStatue");
-        self.headerStatueLeft.Create(frame, (425, 50), 2.5);
+        self.headerStatueLeft.Create(frame, (425, 40), 2.5);
         self.headerStatueRight = new("W_KeyStatue");
-        self.headerStatueRight.Create(frame, (1920 - 425, 50), 2.5, true);
-        int orbColor = random[orbs](0,2);
+        self.headerStatueRight.Create(frame, (1920 - 425, 40), 2.5, true);
+        int orbColor = self.headerStatueLeft.GetRandomOrb();
         self.headerStatueLeft.SetOrb(orbColor);
         self.headerStatueRight.SetOrb(orbColor);
         
@@ -414,14 +434,14 @@ class ZFGameOptions ui {
 
         let optionArea = HXDD_ZF_Frame.create(
             (0, 0),
-            (1920 * 0.55 - (32 + 4), 1080 * 1.2)
+            (1920 * 0.55 - (32 + 4), 1080 * 0.8)
         );
 
         let scrollContainer = HXDD_ZF_ScrollContainer.create(
             (50 + 2, 300 + 2),
             (1920 * 0.55 - 4, 1080 * 0.6 - 4),
             32,
-            1080 * 1.2,
+            optionArea.GetHeight(),
             (1920 * 0.55 - 4) * 0.1,
             scrollbar_n,
             scrollBarHover: scrollbar_h,
@@ -444,43 +464,73 @@ class ZFGameOptions ui {
         listEpisodes.items.push("$MNU_FATEPTH");
         listEpisodes.items.push("$MNU_HEXEN");
         listEpisodes.items.push("$MNU_HEXDD");
-        listEpisodes.items.push("DEV: HERETIC TEST");
-        listEpisodes.items.push("DEV: HEXEN TEST");
+        if (LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false)) {
+            listEpisodes.items.push("Heretic: Modder Test Map");
+            listEpisodes.items.push("Hexen: Modder Test Map");
+        }
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
         ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), "Episode", listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
         self.ddl_Difficulty = new ("DropDownCombo");
-        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), "Difficulty", listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
+        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_SKILLSELECTION"), listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
-        listArmorMode.items.push("Class Default");
-        listArmorMode.items.push("Basic (Heretic)");
-        listArmorMode.items.push("Armor Class (Hexen)");
-        listArmorMode.items.push("Random");
+        listArmorMode.items.push("$OPT_CLASS_DEFAULT");
+        listArmorMode.items.push("$OPT_ARMOR_SIMPLE");
+        listArmorMode.items.push("$OPT_ARMOR_AC");
+        listArmorMode.items.push("$OPT_RANDOM");
         //listArmorMode.items.push("Custom");
         DropDownCombo ddl_ArmorMode = new ("DropDownCombo");
-        ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "Armor Mode", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
+        ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_ARMORMODE"), listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
-        listProgression.items.push("Class Default");
-        listProgression.items.push("None");
-        listProgression.items.push("Levels (Hexen II)");
-        listProgression.items.push("Random");
+        listProgression.items.push("$OPT_CLASS_DEFAULT");
+        listProgression.items.push("$OPT_NONE");
+        listProgression.items.push("$OPT_PROG_LEVELS");
+        listProgression.items.push("$OPT_RANDOM");
         //listProgression.items.push("Custom");
         DropDownCombo ddl_Progression = new ("DropDownCombo");
-        ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "Progression", listProgression, 0, "hxdd_progression", cmdHandler);
+        ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_PROGRESSIONMODE"), listProgression, 0, "hxdd_progression", cmdHandler);
 
         HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
-        listMapSet.items.push("Auto-Detect");
-        listMapSet.items.push("Heretic");
-        listMapSet.items.push("Hexen");
+        listMapSet.items.push("$OPT_AUTO_DETECT");
+        listMapSet.items.push("$OPT_HERETIC");
+        listMapSet.items.push("$OPT_HEXEN");
         DropDownCombo ddl_GameMode = new ("DropDownCombo");
-        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "Game Detection", listMapSet, 0, "hxdd_gamemode", cmdHandler);
+        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_GAMEMODE"), listMapSet, 0, "hxdd_gamemode", cmdHandler);
+
+        
+        let labelTex = HXDD_ZF_Label.create(
+            (0, 25 + 450),
+            (optionArea.GetWidth(), 50),
+            text: "$MNU_TEXTURE_SOURCES",
+            alignment: 2,
+            textScale: 3.5
+        );
+        labelTex.pack(optionArea);
+
+        HXDD_ZF_DropdownItems listMapSetTex = new("HXDD_ZF_DropdownItems");
+        listMapSetTex.items.push("Default");
+        listMapSetTex.items.push("Heretic");
+        listMapSetTex.items.push("Hexen");
+        DropDownCombo ddl_LavaStyle = new ("DropDownCombo");
+        ddl_LavaStyle.Create(optionArea, (0, 25 + 525), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_LAVA_STYLE"), listMapSetTex, 0, "hxdd_lavastyle", cmdHandler);
+
+        DropDownCombo ddl_WaterStyle = new ("DropDownCombo");
+        ddl_WaterStyle.Create(optionArea, (0, 25 + 600), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_WATER_STYLE"), listMapSetTex, 0, "hxdd_waterstyle", cmdHandler);
+
+        DropDownCombo ddl_SludgeStyle = new ("DropDownCombo");
+        ddl_SludgeStyle.Create(optionArea, (0, 25 + 675), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_SLUDGE_STYLE"), listMapSetTex, 0, "hxdd_sludgestyle", cmdHandler);
+
+        DropDownCombo ddl_IceStyle = new ("DropDownCombo");
+        ddl_IceStyle.Create(optionArea, (0, 25 + 750), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_ICE_STYLE"), listMapSetTex, 0, "hxdd_icestyle", cmdHandler);
+
+        //self.CreateXSwapsOptions(optionArea, 25 + 300 + 150, cmdHandler);
     }
 
     void SetInfoText(String newHeader, String newText) {
-        self.headerInformation.SetText(newHeader);
-        self.labelInformation.SetText(newText);
+        self.headerInformation.SetText(Stringtable.Localize(newHeader));
+        self.labelInformation.SetText(Stringtable.Localize(newText));
     }
 
     void Refresh() {
@@ -490,7 +540,7 @@ class ZFGameOptions ui {
         }
         self.ddl_Difficulty.GetDropDownElement().setItems(listClassDifficulty[selected]);
 
-        int orbColor = random[orbs](0,2);
+        int orbColor = self.headerStatueLeft.GetRandomOrb();
         self.headerStatueLeft.SetOrb(orbColor);
         self.headerStatueRight.SetOrb(orbColor);
     }
@@ -499,6 +549,80 @@ class ZFGameOptions ui {
         self.headerStatueLeft.Update();
         self.headerStatueRight.Update();
     }
+
+    /*
+
+    void CreateXSwapsOptions(HXDD_ZF_Frame optionArea, int pos, ZFGameOptionsHandler cmdHandler) {
+        int lumpIndex = Wads.CheckNumForFullName("xgt/xswap.xgt");
+        if (lumpIndex == -1) {
+            // try json
+            lumpIndex = Wads.CheckNumForFullName("xgt/xswap.json");
+        }
+
+        if (lumpIndex != -1) {
+            String lumpData = Wads.ReadLump(lumpIndex);
+            let json = HXDD_JSON.parse(lumpData, false);
+            if (json is "HXDD_JsonElement") {
+                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
+                if (jsonObject) {
+                    String ver = GetString(jsonObject, "version");
+                    //if (ver) {
+                    //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
+                    //}
+                    HXDD_JsonArray arrListItems = HXDD_JsonArray(jsonObject.get("list"));
+                    if (arrListItems) {
+                        int size = arrListItems.Size();
+						for (let i = 0; i < size; i++) {
+					        HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
+                            if (objListItem) {
+                                String valKey = GetString(objListItem, "key");
+                                String valCategory = GetString(objListItem, "category");
+                                HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
+                                HXDD_JsonArray valActors = GetArray(objListItem, "actors");
+                                if (valKey && valActors) {
+                                    int size = valActors.Size();
+
+                                    HXDD_ZF_DropdownItems list = new("HXDD_ZF_DropdownItems");
+                                    list.items.push("Default");
+                                    list.items.push("Random");
+                                    for (int j = 0; j < size; j++) {
+                                        list.items.push(HXDD_JsonString(valLabels.get(j)).s);
+                                    }
+
+                                    String label = HXDD_JsonString(valLabels.get(0)).s;
+                                    for (int j = 1; j < size; j++) {
+                                        label = String.format("%s %s", label, HXDD_JsonString(valLabels.get(j)).s);
+                                    }
+                                    String cvarKey = String.format("hxdd_xswap_%s", valKey);
+                                    DropDownCombo newDDL = new ("DropDownCombo");
+                                    newDDL.Create(optionArea, (0, pos + (i * 75)), (optionArea.GetWidth() - 32, 50), label, list, 0, cvarKey, cmdHandler);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    String GetString(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return "";
+        }
+        HXDD_JsonString type_str = HXDD_JsonString(type_elem);
+        return type_str.s;
+    }
+    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
+        HXDD_JsonElement type_elem = jo.get(key);
+        if (!type_elem) {
+            return null;
+        }
+		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
+		return type_arr;
+    }
+
+    */
 }
 
 
@@ -511,6 +635,12 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
     int selectedGameMode;
     int selectedArmorMode;
     int selectedProgressionMode;
+
+    int selectedTextureStyleLava;
+    int selectedTextureStyleWater;
+    int selectedTextureStyleSludge;
+    int selectedTextureStyleIce;
+
 
     HXDD_ZF_Frame frame;
     HXDD_ZF_Frame frameClass;
@@ -593,6 +723,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
             textScale: 2.0
         );
         btnBack.pack(mainFrame);
+        /*
         btnUseClassicUI = HXDD_ZF_Button.create(
             (1920 - 350, 1080 - 100),
             (300, 50),
@@ -605,6 +736,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
             textScale: 2.0
         );
         btnUseClassicUI.pack(mainFrame);
+        */
 
         framePlayerClassSelection = new("ZFPlayerClassSelection");
         framePlayerClassSelection.Create(self);

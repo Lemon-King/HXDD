@@ -42,43 +42,34 @@ class HXDDWorldEventHandler : EventHandler {
 
             string infoSky[2] = {Level.Info.SkyPic1, Level.Info.SkyPic2};
             TextureID replacementSky[2] = {TexMan.CheckForTexture(Level.Info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(Level.Info.SkyPic2,TexMan.Type_Any)};
-
-            int numLumps = Wads.GetNumLumps();
-
-            int count_WALL501;
-            Array<int> skyAssets;
-            for (int i = 0; i < numLumps; i++) {
-                // Wads.CheckNumForName(string name, int ns, int wadnum = -1, bool exact = false);
-                // CheckNumForName does not work when attempting to target a wadnum.
-                // Stepping through all lumps is the current workaround.
-                String name = Wads.GetLumpName(i);
-                if (name.Length() == 4 && name.IndexOf("SKY") != -1) {
-                    int skyNameNum = name.Mid(3, 1).ToInt();
-                    if (skyAssets.Size() < skyNameNum) {
-                        skyAssets.Resize(skyNameNum + 1);
-                    }
-                    skyAssets[skyNameNum - 1]++;
-                } else if ("WALL501".Length() == name.Length() && name.IndexOf("WALL501") != -1) {
-                    count_WALL501++;
-                }
-            }
-
-            if (count_WALL501 < 2) {
-                Level.ReplaceTextures("WALL501", "WALL501X", 0);
-            }
+            
             for (int i = 0; i < infoSky.Size(); i++) {
                 string pic = infoSky[i];
-                if (pic.Length() == 4 && pic.IndexOf("SKY") != -1) {
-                    // Use Hexen Swaps
-                    console.printf("TEX %s", pic);
+                if (pic.Length() < 6 && pic.IndexOf("SKY") != -1 && pic != "SKY2A") {
                     string picNum = pic.Mid(3, 1);
                     int num = picNum.ToInt();
-                    if (skyAssets[num - 1] < 2) {
-                        replacementSky[i] = TexMan.CheckForTexture(String.format("SKY%dX", num),TexMan.Type_Any);
+
+                    TextureID tidSKYAny = TexMan.CheckForTexture(pic, TexMan.Type_Any, TexMan.ReturnFirst);
+                    TextureID tidSKYOverride = TexMan.CheckForTexture(pic, TexMan.Type_Override, TexMan.ReturnFirst);
+
+                    String texSky = String.format("%sX", pic);
+                    TextureID tidSKYXAny = TexMan.CheckForTexture(texSky, TexMan.Type_Any, TexMan.ReturnFirst);
+                    TextureID tidSKYXOverride = TexMan.CheckForTexture(texSky, TexMan.Type_Override, TexMan.ReturnFirst);
+                    if (tidSKYAny == tidSKYOverride || tidSKYXAny != tidSKYXOverride) {
+                        replacementSky[i] = TexMan.CheckForTexture(texSky,TexMan.Type_Any);
                     }
                 }
             }
             Level.ChangeSky(replacementSky[0], replacementSky[1]);
+            
+            TextureID tidWALL501Any = TexMan.CheckForTexture("WALL501", TexMan.Type_Any, TexMan.ReturnFirst);
+            TextureID tidWALL501Override = TexMan.CheckForTexture("WALL501", TexMan.Type_Override, TexMan.ReturnFirst);
+
+            TextureID tidWALL501XAny = TexMan.CheckForTexture("WALL501X", TexMan.Type_Any, TexMan.ReturnFirst);
+            TextureID tidWALL501XOverride = TexMan.CheckForTexture("WALL501X", TexMan.Type_Override, TexMan.ReturnFirst);
+            if (tidWALL501Any == tidWALL501Override || tidWALL501XAny != tidWALL501XOverride) {
+                Level.ReplaceTextures("WALL501", "WALL501X", 0);
+            }
         }
     }
     

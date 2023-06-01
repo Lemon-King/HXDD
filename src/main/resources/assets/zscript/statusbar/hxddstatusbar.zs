@@ -220,6 +220,8 @@ class HXDDStatusBar : BaseStatusBar {
 	}
 
 	protected void DrawFullScreenNew() {
+		vector2 pixelRatioScale = (1.0, 1.2);	// pixel ratio match
+
 		// Simulates motion on the status bar depending on player movement speed, direction, angle, pitch, and mouse movement.
 
 		double motionXWeight = self.vecMotion.x * 0.8;
@@ -262,83 +264,86 @@ class HXDDStatusBar : BaseStatusBar {
 		if (prog.ArmorType == PSAT_ARMOR_AC) {
 			imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT_AC.png";
 		}
-		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
+		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
 
 		if (prog.ProgressionType == PSP_LEVELS) {
 			// draw xp bar
-			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
 
-			DrawString(mIndexFont, FormatNumber(prog.currlevel), (anchorLeft - 46, anchorBottom - 15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT);
-			DrawBar("assets/ui/FS_HERETIC_SBAR_LEFT_XP_BAR_FILL_SMALL.png", "", mXPInterpolator.GetValue(), 100, (anchorLeft - 57, anchorBottom - 5) + v2Left, 0, SHADER_HORZ, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
+			DrawString(mIndexFont, FormatNumber(prog.currlevel), (anchorLeft - 46, anchorBottom - 15 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT, scale: pixelRatioScale);
+			DrawBarHXDD("assets/ui/FS_HERETIC_SBAR_LEFT_XP_BAR_FILL_SMALL.png", "", mXPInterpolator.GetValue(), 100, (anchorLeft - 57, anchorBottom - 5 * pixelRatioScale.y) + v2Left, 0, SHADER_HORZ, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
 		}
 
-		DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_NOKEYS.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+		DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_NOKEYS.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 
 		if (LemonUtil.IsMapEpisodic()) {
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (anchorRight - 94, anchorBottom - 20) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CPlayer.mo.CheckKeys(1, false, true)) DrawImage("GKEYICON", (anchorRight - 94, anchorBottom - 12) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CPlayer.mo.CheckKeys(2, false, true)) DrawImage("BKEYICON", (anchorRight - 94, anchorBottom - 4) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			// Heretic Keys
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (anchorRight - 94, anchorBottom - 20 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CPlayer.mo.CheckKeys(1, false, true)) DrawImage("GKEYICON", (anchorRight - 94, anchorBottom - 12 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CPlayer.mo.CheckKeys(2, false, true)) DrawImage("BKEYICON", (anchorRight - 94, anchorBottom - 4 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+		} else if (LemonUtil.IsMapLinear()) {
+			// Hexen Keys
 		}
 
 		// draw all text
 		String strHealthValue = String.format("%d", mHealthInterpolator.GetValue());
 		int wStrHealthWidth = mHUDFontWidth * strHealthValue.Length();
 
-		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
+		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
 
 		double armorValue = prog.ArmorType == PSAT_ARMOR_AC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
-		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
+		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
 
 		Ammo ammo1, ammo2;
 		[ammo1, ammo2] = GetCurrentAmmo();
 		if (ammo1 != null && ammo2 == null) {
-			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawTexture(ammo1.icon, (anchorRight - 63, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
+			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
+			DrawTexture(ammo1.icon, (anchorRight - 63, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
 		} else if (ammo2 != null) {
-			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (anchorRight - 50, anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawTexture(ammo1.icon, (anchorRight - 72, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-			DrawTexture(ammo2.icon, (anchorRight - 72, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
+			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
+			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (anchorRight - 50, anchorBottom - 14 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
+			DrawTexture(ammo1.icon, (anchorRight - 72, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
+			DrawTexture(ammo2.icon, (anchorRight - 72, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
 		}
 
 		double posx = anchorRight + 67;
 		double posy = anchorBottom;
 		if (CPlayer.mo is "ClericPlayer") {
-			DrawImage("WPSLOT1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CheckInventory("CWeapWraithverge")) DrawImage("WPFULL1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("WPSLOT1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CheckInventory("CWeapWraithverge")) DrawImage("WPFULL1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			else
 			{
 				int pieces = GetWeaponPieceMask("CWeapWraithverge");
-				if (pieces & 1) DrawImage("WPIECEC1", (posx - 34, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 2) DrawImage("WPIECEC2", (posx - 21, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 4) DrawImage("WPIECEC3", (posx + 1, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 1) DrawImage("WPIECEC1", (posx - 34, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 2) DrawImage("WPIECEC2", (posx - 21, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 4) DrawImage("WPIECEC3", (posx + 1, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 		} else if (CPlayer.mo is "MagePlayer") {
-			DrawImage("WPSLOT2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CheckInventory("MWeapBloodscourge")) DrawImage("WPFULL2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("WPSLOT2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CheckInventory("MWeapBloodscourge")) DrawImage("WPFULL2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			else
 			{
 				int pieces = GetWeaponPieceMask("MWeapBloodscourge");
-				if (pieces & 1) DrawImage("WPIECEM1", (posx - 43, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 2) DrawImage("WPIECEM2", (posx - 23, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 4) DrawImage("WPIECEM3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 1) DrawImage("WPIECEM1", (posx - 43, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 2) DrawImage("WPIECEM2", (posx - 23, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 4) DrawImage("WPIECEM3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 		} else if (CPlayer.mo is "FighterPlayer") {
-			DrawImage("WPSLOT0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			if (CheckInventory("FWeapQuietus")) DrawImage("WPFULL0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("WPSLOT0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			if (CheckInventory("FWeapQuietus")) DrawImage("WPFULL0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			else
 			{
 				int pieces = GetWeaponPieceMask("FWeapQuietus");
-				if (pieces & 1) DrawImage("WPIECEF1", (posx - 22, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 2) DrawImage("WPIECEF2", (posx - 13, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				if (pieces & 4) DrawImage("WPIECEF3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 1) DrawImage("WPIECEF1", (posx - 22, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 2) DrawImage("WPIECEF2", (posx - 13, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 4) DrawImage("WPIECEF3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
 		}
 		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
@@ -348,13 +353,13 @@ class HXDDStatusBar : BaseStatusBar {
 				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  invAnimationDuration);
 			}
 			if (invTime != 0.0) {
-				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration));
-				DrawInventoryBar(diparms_sbar, (0, anchorBottom + posInventory) + v2Center, 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW);
+				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration)) * pixelRatioScale.y;
+				DrawInventoryBarHXDD(diparms_sbar, (0, anchorBottom + posInventory) + v2Center, 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW, scale: pixelRatioScale);
 			}
-			DrawInventoryIcon(CPlayer.mo.InvSel, (anchorRight - 18.5, anchorBottom - 15.5) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28));
+			DrawInventoryIcon(CPlayer.mo.InvSel, (anchorRight - 18.5, anchorBottom - 15.5 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28), scale: pixelRatioScale);
 			if (CPlayer.mo.InvSel.Amount > 1)
 			{
-				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (anchorRight - 4, anchorBottom - 8) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT);
+				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (anchorRight - 4, anchorBottom - 8 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
 			}
 		}
 	}
@@ -712,6 +717,157 @@ class HXDDStatusBar : BaseStatusBar {
 		{
 			DrawImage("INVBAR", (34, 160), DI_ITEM_OFFSETS);
 			DrawInventoryBar(diparms_sbar, (49, 160), 7, DI_ITEM_LEFT_TOP, HX_SHADOW);
+		}
+	}
+
+	// Modified DrawBar and DrawInventory
+
+	//============================================================================
+	//
+	// DrawBar
+	//
+	//============================================================================
+
+	void DrawBarHXDD(String ongfx, String offgfx, double curval, double maxval, Vector2 position, int border, int vertical, int flags = 0, double alpha = 1.0, vector2 scale = (1.0,1.0))
+	{
+		let ontex = TexMan.CheckForTexture(ongfx, TexMan.TYPE_MiscPatch);
+		if (!ontex.IsValid()) return;
+		let offtex = TexMan.CheckForTexture(offgfx, TexMan.TYPE_MiscPatch);
+
+		Vector2 texsize = TexMan.GetScaledSize(ontex);
+		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y * scale.y);
+		
+		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
+		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
+		
+		
+		// {cx, cb, cr, cy}
+		double Clip[4];
+		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
+		
+		bool horizontal = !(vertical & SHADER_VERT);
+		bool reverse = !!(vertical & SHADER_REVERSE);
+		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
+		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
+		
+		// preserve the active clipping rectangle
+		int cx, cy, cw, ch;
+		[cx, cy, cw, ch] = screen.GetClipRect();
+
+		if(border != 0)
+		{
+			for(int i = 0; i < 4; i++) Clip[i] += border;
+
+			//Draw the whole foreground
+			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
+		}
+		
+		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha);
+		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
+		
+		if (border == 0)
+		{
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
+			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
+		}
+		// restore the previous clipping rectangle
+		screen.SetClipRect(cx, cy, cw, ch);
+	}
+	
+	//============================================================================
+	//
+	// DrawInventoryBar
+	//
+	// This function needs too many parameters, so most have been offloaded to
+	// a struct to keep code readable and allow initialization somewhere outside
+	// the actual drawing code.
+	//
+	//============================================================================
+	
+	// Except for the placement information this gets all info from the struct that gets passed in.
+	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0))
+	{
+		double width = parms.boxsize.X * numfields;
+		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y * scale.y);
+		
+		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
+		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
+		
+		Vector2 boxsize = parms.boxsize;
+		// First draw all the boxes
+		for(int i = 0; i < numfields; i++)
+		{
+			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha, scale: scale);
+		}
+		
+		// now the items and the rest
+		
+		Vector2 itempos = position + boxsize / 2;
+		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight() * scale.y);
+
+		int i = 0;
+		Inventory item;
+		for(item = CPlayer.mo.InvFirst; item != NULL && i < numfields; item = item.NextInv())
+		{
+			for(int j = 0; j < 2; j++)
+			{
+				if (j ^ !!(flags & DI_DRAWCURSORFIRST))
+				{
+					if (item == CPlayer.mo.InvSel)
+					{
+						double flashAlpha = bgalpha;
+						if (flags & DI_ARTIFLASH) flashAlpha *= itemflashFade;
+						DrawTexture(parms.selector, position + parms.selectofs + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, flashAlpha, scale: scale);
+					}
+				}
+				else
+				{
+					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, scale: scale);
+				}
+			}
+			
+			if (parms.amountfont != null && (item.Amount > 1 || (flags & DI_ALWAYSSHOWCOUNTERS)))
+			{
+				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, parms.itemalpha, scale: scale);
+			}
+			i++;
+		}
+		// Is there something to the left?
+		if (CPlayer.mo.FirstInv() != CPlayer.mo.InvFirst)
+		{
+			DrawTexture(parms.left, position + (-parms.arrowoffset.X, parms.arrowoffset.Y), flags | DI_ITEM_RIGHT|DI_ITEM_VCENTER, scale: scale);
+		}
+		// Is there something to the right?
+		if (item != NULL)
+		{
+			DrawTexture(parms.right, position + parms.arrowoffset + (width, 0), flags | DI_ITEM_LEFT|DI_ITEM_VCENTER, scale: scale);
+		}
+	}
+
+	//============================================================================
+	//
+	//
+	//
+	//============================================================================
+
+	void DrawInventoryIconHXDD(Inventory item, Vector2 pos, int flags = 0, double alpha = 1.0, Vector2 boxsize = (-1, -1), Vector2 scale = (1.,1.))
+	{
+		static const String flashimgs[]= { "USEARTID", "USEARTIC", "USEARTIB", "USEARTIA" };
+		TextureID texture;
+		Vector2 applyscale;
+		[texture, applyscale] = GetIcon(item, flags, false);
+		
+		if((flags & DI_ARTIFLASH) && artiflashTick > 0)
+		{
+			DrawImage(flashimgs[artiflashTick-1], pos, flags, alpha, boxsize, scale);
+		}
+		else if (texture.IsValid())
+		{
+			if ((flags & DI_DIMDEPLETED) && item.Amount <= 0) flags |= DI_DIM;
+			applyscale.X *= scale.X;
+			applyscale.Y *= scale.Y;
+			DrawTexture(texture, pos, flags, alpha, boxsize, applyscale);
 		}
 	}
 }

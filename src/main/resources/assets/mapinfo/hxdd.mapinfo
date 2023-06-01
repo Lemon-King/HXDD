@@ -3,22 +3,18 @@
 
 map heretest "Heretic Test"
 {
-	next = "E1M1"
+	next = "HERETEST"
 	secretnext = "E1M9"
 	sky1 = "SKY1"
-	music = "MUS_E2M1"
 	NoIntermission
 }
 
 map hextest "Hexen Test"
 {
-	next = "MAP01"
-	secretnext = "MAP13"
-	sky1 = "SKYWALL2", 0
-	sky2 = "SKY4", 40
+	next = "HEXTEST"
+	secretnext = "MAP06"
+	sky1 = "SKY2"
 	cdtrack = 22
-	SoundInfo = "sndinfo.hexengz"
-	SndSeq = "sndseq.hexen"
 	NoIntermission
 	activateowndeathspecials
 	infiniteflightpowerup

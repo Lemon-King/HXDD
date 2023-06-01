@@ -10,6 +10,8 @@ class W_DevilBraizer ui {
     int tickFrame;
 
     void Create(HXDD_ZF_Frame parent, vector2 position, double scale, bool right_align = false) {
+        vector2 prScale = (1.0, 1.2);
+
         Array<String> animatedImages = {
             "KFR1A0",
             "KFR1B0",
@@ -24,16 +26,16 @@ class W_DevilBraizer ui {
 
         self.frame = HXDD_ZF_Frame.create(
             (right_align ? position.x - (41 * scale) : position.x, position.y),
-            (41 * scale, 82 * scale)
+            (41 * scale, 82 * scale * prScale.y)
         );
         self.frame.pack(parent);
 
         self.img = HXDD_ZF_Image.create(
             (0,0),
-            (41 * scale, 82 * scale),
+            (41 * scale, 82 * scale * prScale.y),
             image: self.images[0],
             alignment: 2 | (3 << 4),
-            imageScale: (scale, scale)
+            imageScale: (scale, scale * prScale.y)
         );
         self.img.pack(self.frame);
     }

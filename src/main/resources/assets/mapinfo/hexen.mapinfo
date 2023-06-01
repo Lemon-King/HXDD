@@ -22,7 +22,6 @@ map MAP01 "WINNOWING HALL"
 	sky2 = "SKY3", 0
 	lightning
 	cdtrack = 13
-	NoIntermission
 }
 
 map MAP02 "SEVEN PORTALS"
@@ -32,7 +31,6 @@ map MAP02 "SEVEN PORTALS"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 2
-	NoIntermission
 }
 
 map MAP03 "GUARDIAN OF ICE"
@@ -42,7 +40,6 @@ map MAP03 "GUARDIAN OF ICE"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 22
-	NoIntermission
 }
 
 map MAP04 "GUARDIAN OF FIRE"
@@ -52,7 +49,6 @@ map MAP04 "GUARDIAN OF FIRE"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 15
-	NoIntermission
 }
 
 map MAP05 "GUARDIAN OF STEEL"
@@ -62,7 +58,6 @@ map MAP05 "GUARDIAN OF STEEL"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 9
-	NoIntermission
 }
 
 map MAP06 "BRIGHT CRUCIBLE"
@@ -72,7 +67,6 @@ map MAP06 "BRIGHT CRUCIBLE"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 21
-	NoIntermission
 }
 
 // --- Cluster 2 ---
@@ -85,7 +79,6 @@ map MAP13 "SHADOW WOOD"
 	sky2 = "SKY1", 80
 	doublesky 
 	cdtrack = 8
-	NoIntermission
 }
 
 map MAP08 "DARKMERE"
@@ -97,7 +90,6 @@ map MAP08 "DARKMERE"
 	doublesky 
 	fadetable = "fogmap"
 	cdtrack = 14
-	NoIntermission
 }
 
 map MAP09 "CAVES OF CIRCE"
@@ -108,7 +100,6 @@ map MAP09 "CAVES OF CIRCE"
 	sky2 = "SKY1", 80
 	doublesky 
 	cdtrack = 20
-	NoIntermission
 }
 
 map MAP10 "WASTELANDS"
@@ -119,7 +110,6 @@ map MAP10 "WASTELANDS"
 	sky2 = "SKY1", 80
 	doublesky 
 	cdtrack = 6
-	NoIntermission
 }
 
 map MAP11 "SACRED GROVE"
@@ -131,7 +121,6 @@ map MAP11 "SACRED GROVE"
 	doublesky 
 	fadetable = fogmap
 	cdtrack = 5
-	NoIntermission
 }
 
 map MAP12 "HYPOSTYLE"
@@ -142,7 +131,6 @@ map MAP12 "HYPOSTYLE"
 	sky2 = "SKY1", 80
 	doublesky 
 	cdtrack = 16
-	NoIntermission
 }
 
 // --- Cluster 3 ---
@@ -155,7 +143,6 @@ map MAP27 "HERESIARCH'S SEMINARY"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 19
-	NoIntermission
 }
 
 map MAP28 "DRAGON CHAPEL"
@@ -166,7 +153,6 @@ map MAP28 "DRAGON CHAPEL"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 17
-	NoIntermission
 }
 
 map MAP30 "GRIFFIN CHAPEL"
@@ -177,7 +163,6 @@ map MAP30 "GRIFFIN CHAPEL"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 10
-	NoIntermission
 }
 
 map MAP31 "DEATHWIND CHAPEL"
@@ -188,7 +173,6 @@ map MAP31 "DEATHWIND CHAPEL"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 18
-	NoIntermission
 }
 
 map MAP32 "ORCHARD OF LAMENTATIONS"
@@ -200,7 +184,6 @@ map MAP32 "ORCHARD OF LAMENTATIONS"
 	doublesky 
 	fadetable = "fogmap"
 	cdtrack = 22
-	NoIntermission
 }
 
 map MAP33 "SILENT REFECTORY"
@@ -211,7 +194,6 @@ map MAP33 "SILENT REFECTORY"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 21
-	NoIntermission
 }
 
 map MAP34 "WOLF CHAPEL"
@@ -222,7 +204,6 @@ map MAP34 "WOLF CHAPEL"
 	sky2 = "SKY4", 50
 	doublesky 
 	cdtrack = 14
-	NoIntermission
 }
 
 // --- Cluster 4 ---
@@ -235,7 +216,6 @@ map MAP21 "FORSAKEN OUTPOST"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 20
-	NoIntermission
 }
 
 map MAP22 "CASTLE OF GRIEF"
@@ -246,7 +226,6 @@ map MAP22 "CASTLE OF GRIEF"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 12
-	NoIntermission
 }
 
 map MAP23 "GIBBET"
@@ -257,7 +236,6 @@ map MAP23 "GIBBET"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 15
-	NoIntermission
 }
 
 map MAP24 "EFFLUVIUM"
@@ -268,7 +246,6 @@ map MAP24 "EFFLUVIUM"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 8
-	NoIntermission
 }
 
 map MAP25 "DUNGEONS"
@@ -279,7 +256,6 @@ map MAP25 "DUNGEONS"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 19
-	NoIntermission
 }
 
 map MAP26 "DESOLATE GARDEN"
@@ -290,7 +266,6 @@ map MAP26 "DESOLATE GARDEN"
 	sky2 = "SKY3", 50
 	lightning 
 	cdtrack = 3
-	NoIntermission
 }
 
 // --- Cluster 5 ---
@@ -303,7 +278,6 @@ map MAP35 "NECROPOLIS"
 	sky2 = "SKY3", 40
 	lightning 
 	cdtrack = 16
-	NoIntermission
 }
 
 map MAP36 "ZEDEK'S TOMB"
@@ -314,7 +288,6 @@ map MAP36 "ZEDEK'S TOMB"
 	sky2 = "SKY3", 40
 	lightning 
 	cdtrack = 10
-	NoIntermission
 }
 
 map MAP37 "MENELKIR'S TOMB"
@@ -324,7 +297,6 @@ map MAP37 "MENELKIR'S TOMB"
 	sky1 = "SKY4", 40
 	sky2 = "SKY4", 40
 	cdtrack = 11
-	NoIntermission
 }
 
 map MAP38 "TRADUCTUS' TOMB"
@@ -335,7 +307,6 @@ map MAP38 "TRADUCTUS' TOMB"
 	sky2 = "SKY3", 40
 	lightning 
 	cdtrack = 9
-	NoIntermission
 }
 
 map MAP39 "VIVARIUM"
@@ -346,7 +317,6 @@ map MAP39 "VIVARIUM"
 	sky2 = "SKY3", 40
 	lightning 
 	cdtrack = 17
-	NoIntermission
 }
 
 map MAP40 "DARK CRUCIBLE"
@@ -356,7 +326,6 @@ map MAP40 "DARK CRUCIBLE"
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
 	cdtrack = 2
-	NoIntermission
 }
 
 // --- Miscellaneous maps ---
@@ -367,7 +336,6 @@ map MAP07 "SHADOW WOOD"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY1", 80
 	doublesky
-	NoIntermission
 }
 
 map MAP14 "SWAMP DEMO"
@@ -377,7 +345,6 @@ map MAP14 "SWAMP DEMO"
 	sky2 = "SKYFOG", 60
 	doublesky 
 	fadetable = "fogmap"
-	NoIntermission
 }
 
 map MAP29 "NADA"
@@ -386,7 +353,6 @@ map MAP29 "NADA"
 	sky1 = "SKYWALL2", 70
 	sky2 = "SKY4", 0
 	doublesky 
-	NoIntermission
 }
 
 map MAP42 "ERIC'S WHIRLWIND O' DEATH"
@@ -394,14 +360,12 @@ map MAP42 "ERIC'S WHIRLWIND O' DEATH"
 	sky1 = "SKY2", 0
 	sky2 = "SKY3", 0
 	lightning 
-	NoIntermission
 }
 
 map MAP43 "MAYA"
 {
 	sky1 = "SKY4", 0
 	sky2 = "SKY4", 0
-	NoIntermission
 }
 
 map MAP50 "THE BADLANDS"
@@ -409,7 +373,6 @@ map MAP50 "THE BADLANDS"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP51 "CAVES OF ASCENSION"
@@ -417,7 +380,6 @@ map MAP51 "CAVES OF ASCENSION"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP52 "LOWER CRYPTS"
@@ -425,14 +387,12 @@ map MAP52 "LOWER CRYPTS"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP53 "THE HYPOSTYLE HALL"
 {
 	sky1 = "SKY4", 50
 	sky2 = "SKY4", 50
-	NoIntermission
 }
 
 map MAP54 "THE SANCTORIUM"
@@ -440,7 +400,6 @@ map MAP54 "THE SANCTORIUM"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP55 "THE ATHENAEUM"
@@ -448,7 +407,6 @@ map MAP55 "THE ATHENAEUM"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP56 "THE CLERIC'S CITADEL"
@@ -456,43 +414,36 @@ map MAP56 "THE CLERIC'S CITADEL"
 	sky1 = "SKYWALL", 0
 	sky2 = "SKY4", 50
 	doublesky 
-	NoIntermission
 }
 
 map MAP60 "PROGRAMMER MAP"
 {
 	sky1 = "SKY1", 80
-	NoIntermission
 }
 
 map MAP90 "BGOKEY"
 {
 	sky1 = "SKY1", 0
-	NoIntermission
 }
 
 map MAP92 "PAUL MAP"
 {
 	sky1 = "SKY1", 20
-	NoIntermission
 }
 
 map MAP93 "PAUL MAP2"
 {
 	sky1 = "SKY1", 20
-	NoIntermission
 }
 
 map MAP95 "CJR@RAVENSOFT.COM"
 {
 	sky1 = "SKY1", 0
-	NoIntermission
 }
 
 map MAP96 "SOUND DEVELOPMENT MAP"
 {
 	sky1 = "SKY1", 0
-	NoIntermission
 }
 
 // Clusters

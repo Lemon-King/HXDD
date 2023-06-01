@@ -243,13 +243,11 @@ class XGameTranslation {
 	}
 
     void CreateXSwapTranslation() {
-        String playerClassName = LemonUtil.GetPlayerClassName();
         int lumpIndex = Wads.CheckNumForFullName("xgt/xswap.xgt");
         if (lumpIndex == -1) {
             // try json
             lumpIndex = Wads.CheckNumForFullName("xgt/xswap.json");
         }
-        console.printf("XGameTranslation.XSwap: Load xgt/xswap.xgt", playerClassName, lumpIndex);
 
         if (lumpIndex != -1) {
             String lumpData = Wads.ReadLump(lumpIndex);
@@ -258,9 +256,9 @@ class XGameTranslation {
                 HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
                 if (jsonObject) {
                     String ver = GetString(jsonObject, "version");
-                    if (ver) {
-                        console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
-                    }
+                    //if (ver) {
+                    //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
+                    //}
                     HXDD_JsonArray arrListItems = HXDD_JsonArray(jsonObject.get("list"));
                     if (arrListItems) {
                         int size = arrListItems.Size();
@@ -269,8 +267,8 @@ class XGameTranslation {
 					        HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
                             if (objListItem) {
                                 String valKey = GetString(objListItem, "key");
-                                String valCategory = GetString(objListItem, "category");
-                                HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
+                                //String valCategory = GetString(objListItem, "category");
+                                //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
                                 HXDD_JsonArray valActors = GetArray(objListItem, "actors");
                                 if (valKey && valActors) {
                                     let newXSwap = new ("XTranslationActors"); 
@@ -280,10 +278,6 @@ class XGameTranslation {
                                         newXSwap.list[j] = HXDD_JsonString(valActors.get(j)).s;
                                     }
                                     self.xswap[i] = newXSwap;
-                                    String l =  self.xswap[i].list[0];
-                                    for (let j = 1; j < self.xswap[i].list.Size(); j++) {
-                                        l = String.format("%s,%s", l, self.xswap[i].list[j]);
-                                    }
                                 }
                             }
                         }
@@ -297,15 +291,15 @@ class XGameTranslation {
 		for (let i = 0; i < self.xswap.Size(); i++) {
             XTranslationActors xtaSwap = self.xswap[i];
 			if (xtaSwap.key.MakeLower().IndexOf(replacee.MakeLower()) != -1) {
-                String key = xtaSwap.key.MakeLower();
+                String key = xtaSwap.key;
                 String cvarKey = String.format("hxdd_xswap_%s", key);
                 int option = LemonUtil.CVAR_GetInt(cvarKey, 0);
-                if (option == 0 || option > xtaSwap.list.Size() + 1) {
+                if (option == 0 || option > xtaSwap.list.Size() + 2) {
                     return replacee;
-                } else if (option == xtaSwap.list.Size() + 1) {
-                    option = random[xswap](1, xtaSwap.list.Size());
+                } else if (option == 1) {
+                    option = random[xswap](0, xtaSwap.list.Size() - 1);
                 }
-                String replacement = xtaSwap.list[option - 1];
+                String replacement = xtaSwap.list[option - 2];
 				//console.printf("XGameTranslation.XSwap.TryXSwap %s %d Found: %s, Replacement: %s", cvarKey, i, replacee, replacement);
                 return replacement;
             }

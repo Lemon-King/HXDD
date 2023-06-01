@@ -12,13 +12,64 @@ HXDD_INFO3 = "Date: %s";
  *  MENU
  */
 
-
 // Episodes
+MNU_HEADER_HERETIC = "Heretic";
+MNU_HEADER_HEXEN = "Hexen";
+MNU_HEADER_HEXDD = "Deathkings";
+MNU_HEADER_OTHER = "Etherial Travel";
+
+MNU_STORY_HERETIC = "Three brothers, known as the Serpent Riders, used their powerful magic to possess and corrupt the seven kings of the realm, plunging it into war and chaos. But a race of elves known as the Sidhe, resisted, and were branded heretics. On the brink of losing the war, the Sidhe elders sacrificed themselves and the elven capital city to destroy the seven kings and their armies. As one of the few surviving elves, you embark on a quest for vengeance against those who slaughtered your friends, family, and entire race.";
+MNU_STORY_HEXEN = "While the Sidhe elf Corvus battled the evil forces of D'Sparil, the remaining two Serpent Riders were busy sowing the seeds of destruction in other dimensions. As a Warrior, Mage, or Cleric, you must fight the undead, and brave elemental dungeons and decaying wilderness to defend your realm of Cronos from Korax, the second Serpent Rider.";
+MNU_STORY_HEXDD = "After defeating the evil Korax, the second Serpent Rider, and discovering the Chaos Sphere, you have been transported to the Realm of the Dead. Now, your only way home is blocked by hordes of undead and the Dark Citadel. Where Hexen ends, the true nightmare begins.";
+MNU_STORY_OTHER = "Etherial Travel brings you to strange new places.";
+
 MNU_FATEPTH = "Fate's Path";
 MNU_HEXEN = "Hexen - Beyond Heretic";
 MNU_HEXDD = "Deathkings of the Dark Citadel";
 
- MNU_HXDDOPTIONS = "HXDD Options";
+// Options
+MNU_HXDDOPTIONS = "HXDD Options";
+
+MNU_HEADER_SKILLSELECTION = "Skill";
+MNU_HEADER_GAMEMODE = "Game Detection";
+MNU_HEADER_ARMORMODE = "Armor Mode";
+MNU_HEADER_PROGRESSIONMODE = "Progression";
+MNU_SKILLSELECTION = "\c[gray]Game Difficulty \c[gold](Placeholder)";
+MNU_GAMEMODE = "\c[gray]Compatability Mode for user maps not using the standard E#M# or MAP## format or Mods modifying gameplay.\n_\n\c[ice]Auto-Detect\c[gray]: HXDD attempts to detect which game map set you are using.\n_\n\c[ice]Heretic\c[gray]: Forces Heretic Detection.\n_\n\c[ice]Hexen\c[gray]: Forces Hexen detection.";
+MNU_ARMORMODE = "\c[ice]Class Default\c[gray]: Armor type used by the selected class\n_\n\c[ice]Simple\c[gray]: 2-Tier Armor system found in Heretic.\n_\n\c[ice]Armor Class\c[gray]: Complex armor system found in Hexen or Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Hexen Armor values, no two games ever the same.";
+MNU_PROGRESSIONMODE = "\c[ice]Class Default\c[gray]: Progression system used by the selected class\n_\n\c[ice]None\c[gray]: No Leveling\n_\n\c[ice]Levels\c[gray]: Leveling System found in Hexen II.\n_\n\c[ice]Random\c[gray]: Randomized Player health, ammo, mana, stats and experience for leveling.";
+
+MNU_TEXTURE_SOURCES = "Texture Sources";
+MNU_TEXTURE_LAVA_STYLE = "Lava Style";
+MNU_TEXTURE_WATER_STYLE = "Water Style";
+MNU_TEXTURE_SLUDGE_STYLE = "Sludge Style";
+MNU_TEXTURE_ICE_STYLE = "Ice Style";
+
+OPT_AUTO_DETECT = "Auto-Detect";
+OPT_DEFAULT = "Default";
+OPT_NONE = "None";
+OPT_RANDOM = "Random";
+OPT_CUSTOM = "Custom";
+OPT_CLASS_DEFAULT = "Class Default";
+OPT_HERETIC = "Heretic";
+OPT_HEXEN = "Hexen";
+OPT_CLASS_DEFAULT = "Class Default";
+OPT_ARMOR_SIMPLE = "Simple (Heretic)";
+OPT_ARMOR_AC = "Armor Class (Hexen)";
+OPT_PROG_LEVELS = "Levels (Hexen II)";
+
+// Classes
+MNU_CLASS_CORVUS = "Corvus";
+
+MNU_CLASS_FIGHTER = "Fighter";
+MNU_CLASS_CLERIC = "Cleric";
+MNU_CLASS_Mage = "Mage";
+
+MNU_CLASS_PALADIN = "Paladin";
+MNU_CLASS_CRUSADER = "Crusader";
+MNU_CLASS_NECROMANCER = "Necromancer";
+MNU_CLASS_ASSASSIN = "Assassin";
+MNU_CLASS_SUCCUBUS = "Demoness";
 
 // Paladin
 //MNU_APPRENTICE = "APPRENTICE";    // already localized
