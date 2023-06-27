@@ -1,14 +1,8 @@
-package lemon.hxdd;
-
-import net.mtrop.doom.graphics.Palette;
-import org.zeroturnaround.zip.commons.FileUtils;
+package lemon.hxdd.shared;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
 
-public class Shared {
+public class Util {
     public static final String TAB_SPACE = "    ";
     public static final String TAB_SPACE_DOUBLE = TAB_SPACE + TAB_SPACE;
 
@@ -17,25 +11,6 @@ public class Shared {
         if (!dirFile.exists()) {
             dirFile.mkdirs();
         }
-    }
-
-    public static Palette GetHexen2Palette() {
-        String Setting_PathHexen2 = (String)Settings.getInstance().Get("PathHexen2");
-        Palette pal = new Palette();
-        try {
-            File filePal = new File(Setting_PathHexen2 + "/data1/gfx/palette.lmp");
-            FileInputStream fis = new FileInputStream(filePal);
-            pal.readBytes(fis);
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return pal;
-    }
-    public static Palette GetHexen2TransparencyPalette() {
-        Palette pal = GetHexen2Palette();
-        pal.setColor(0, 100, 100, 100);
-        return pal;
     }
     /*
     public static Palette GetHexen2BrightmapPalette() {

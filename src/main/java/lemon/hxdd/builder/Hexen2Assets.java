@@ -1,7 +1,10 @@
-package lemon.hxdd;
+package lemon.hxdd.builder;
 
-// Uses Noesis for PAK extraction and file type conversion
+// Dedicated Hexen 2 PAK export and conversion via Noesis
 
+import lemon.hxdd.Application;
+import lemon.hxdd.shared.Util;
+import lemon.hxdd.shared.PAKTest;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
@@ -20,7 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PAKData {
+public class Hexen2Assets {
     // Model Effects
     static int EF_TRANSPARENT   = 1 << 12;		// Transparent sprite
     static int EF_HOLEY		    = 1 << 14;		// Solid model with color 0
@@ -33,13 +36,13 @@ public class PAKData {
      * REF: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/code/gl_draw.c#L1402
      * https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2W/Client/gl_model.c#L1523
      *
-	 * if( mdl_flags & EF_HOLEY )
-	 * 	texture_mode = 2;
-	 * else if( mdl_flags & EF_TRANSPARENT )
-	 * 	texture_mode = 1;
-	 * else if( mdl_flags & EF_SPECIAL_TRANS )
-	 * 	texture_mode = 3;
-	 * else
+     * if( mdl_flags & EF_HOLEY )
+     * 	texture_mode = 2;
+     * else if( mdl_flags & EF_TRANSPARENT )
+     * 	texture_mode = 1;
+     * else if( mdl_flags & EF_SPECIAL_TRANS )
+     * 	texture_mode = 3;
+     * else
      * 	texture_mode = 0;
      * mode:
      * 0 - standard
@@ -58,32 +61,67 @@ public class PAKData {
             "pak4"      // Hexen World Files
     };
 
-    static public ArrayList<String> Extract() {
-        String pathWADs = (String) Settings.getInstance().Get("PathSourceWads");
-        String pathHexen2 = Settings.getInstance().Get("PathHexen2") + "/data1/";
-        Shared.CreateDirectory(pathHexen2);
+    Application app;
+    ArrayList<File> paks = new ArrayList<File>();
 
-        ArrayList<String> extractedPaks = new ArrayList<String>();
-        ProgressBar p = new ProgressBar("Hexen II PAK extraction");
-        float count = 0;
-        for (String file : PAKFiles) {
-            File pakFile = new File(pathWADs + "/" + file + ".pak");
-            if (pakFile.exists()) {
-                Noesis.ExtractPak(file + ".pak", pathHexen2);
-                extractedPaks.add(file);
+    Hexen2Assets(Application app) {
+        this.app = app;
+
+        PAKTest paktest = new PAKTest();
+        for (int i = 0; i < 5; i++) {
+            String path = this.app.settings.Get(String.format("PATH_HEXENII_PAK%d", i));
+            if (!path.equals("") && paktest.Test(path)) {
+                this.paks.add(new File(path));
             }
-            p.SetPercent(++count / (float)PAKFiles.length);
         }
-
-        ExportSounds();
-
-        return extractedPaks;
     }
 
-    static public void ExportSounds() {
-        String pathSource = Settings.getInstance().Get("PathHexen2") + "/data1/sound";
-        String pathTarget = Settings.getInstance().Get("PathTemporary") + "/sounds/hexen2";
-        Shared.CreateDirectory(pathTarget);
+    private Palette GetHexen2Palette() {
+        String Setting_PathHexen2 = this.app.settings.GetPath("hexen2");
+        Palette pal = new Palette();
+        try {
+            File filePal = new File(Setting_PathHexen2 + "/gfx/palette.lmp");
+            FileInputStream fis = new FileInputStream(filePal);
+            pal.readBytes(fis);
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pal;
+    }
+    private Palette GetHexen2TransparencyPalette() {
+        Palette pal = GetHexen2Palette();
+        pal.setColor(0, 100, 100, 100);
+        return pal;
+    }
+
+    public void ExtractPakData() {
+        String pathHexen2 = this.app.settings.GetPath("hexen2");
+        Util.CreateDirectory(pathHexen2);
+
+        //ArrayList<File> extractedPaks = new ArrayList<File>();
+        this.app.controller.SetCurrentProgress(0);
+        //ProgressBar p = new ProgressBar("Hexen II PAK extraction");
+        float count = 0;
+        for (File pak : this.paks) {
+            //File pakFile = new File(pathWADs + "/" + file + ".pak");
+            this.app.controller.SetCurrentLabel("Extracting: " + pak.getName());
+
+            System.out.println(pak.getAbsolutePath() + " " + new File(pathHexen2).getAbsolutePath());
+            Noesis.ExtractPak(pak, new File(pathHexen2));
+            //extractedPaks.add(pak);
+            //p.SetPercent(++count / (float)PAKFiles.length);
+            this.app.controller.SetCurrentProgress(++count / this.paks.size());
+        }
+    }
+
+    public void ExportSounds() {
+        this.app.controller.SetCurrentLabel("Exporting Hexen II Sound Data");
+        this.app.controller.SetCurrentProgress(-1);
+
+        String pathSource = this.app.settings.GetPath("hexen2") + "/sound";
+        String pathTarget = this.app.settings.GetPath("temp") + "/sounds/hexen2";
+        Util.CreateDirectory(pathTarget);
         try {
             FileUtils.copyDirectory(new File(pathSource), new File(pathTarget));
             System.out.printf("Exported Hexen II sound data\n");
@@ -92,20 +130,39 @@ public class PAKData {
         }
     }
 
-    static public void ExportAssets() {
-        String Settings_PathHexen2 = (String) Settings.getInstance().Get("PathHexen2");
+    public void ExportMusic() {
+        this.app.controller.SetCurrentLabel("Exporting Hexen II Music Data");
+        this.app.controller.SetCurrentProgress(-1);
+        try {
+            String path = this.app.settings.GetPath("temp") + "/music/";
+            FileUtils.copyDirectory(new File(this.app.settings.GetPath("hexen2") + "/midi"), new File(path));
+
+            String pathSourceMusic = this.app.settings.GetPath("hexen2music");
+            File dirSourceMusic = new File(pathSourceMusic);
+            if (dirSourceMusic.exists() && dirSourceMusic.isDirectory()) {
+                FileUtils.copyDirectory(dirSourceMusic, new File(path));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void ExportAssets() {
+        String Settings_PathHexen2 = this.app.settings.GetPath("hexen2");
         String[] folderPaths = {
-            Settings_PathHexen2 + "data1/gfx/",
-            Settings_PathHexen2 + "data1/gfx/menu/",
-            Settings_PathHexen2 + "data1/gfx/puzzle/",
-            Settings_PathHexen2 + "data1/models/",
-            Settings_PathHexen2 + "data1/models/boss/",
-            Settings_PathHexen2 + "data1/models/puzzle/",
-            Settings_PathHexen2 + "data1/models/sprites/",
+                Settings_PathHexen2 + "/gfx/",
+                Settings_PathHexen2 + "/gfx/menu/",
+                Settings_PathHexen2 + "/gfx/puzzle/",
+                Settings_PathHexen2 + "/models/",
+                Settings_PathHexen2 + "/models/boss/",
+                Settings_PathHexen2 + "/models/puzzle/",
+                Settings_PathHexen2 + "/models/sprites/",
         };
         ArrayList<File> assetListing = new ArrayList<File>();
         for (String path : folderPaths) {
             File folderPath = new File(path);
+            System.out.println(folderPath.getAbsolutePath());
             File[] pathFile = folderPath.listFiles();
             assert pathFile != null;
             for (File asset : pathFile) {
@@ -117,8 +174,10 @@ public class PAKData {
 
         Map<String, String> ModelEffect = new HashMap<String, String>();
 
-        Boolean Settings_UseMultiPass = (Boolean) Settings.getInstance().Get("Hexen2_UseMultiPass");
-        ProgressBar p = new ProgressBar("Asset Export & Conversion");
+        boolean Settings_UseMultiPass = true; //(Boolean) Settings.getInstance().Get("Hexen2_UseMultiPass");
+        //ProgressBar p = new ProgressBar("Asset Export & Conversion");
+        this.app.controller.SetStageLabel("Asset Export & Conversion");
+        this.app.controller.SetCurrentProgress(0);
         float count = 0;
         for (File entry : assetListing) {
             if (entry.isDirectory()) {
@@ -129,6 +188,7 @@ public class PAKData {
             String fileName = entry.getPath();
             String fileName_Noesis =  fileName.replace(".\\", "");  // Noesis has a path bug in some versions
             ArrayList<String> options = new ArrayList<String>();
+            this.app.controller.SetCurrentLabel(name);
             if (fileName.endsWith(".mdl")) {
                 String opt = "";
                 if (fileName.contains("boss")) {
@@ -183,7 +243,8 @@ public class PAKData {
                 Noesis.ExportAsset(fileName_Noesis, "graphics/", options);
                 //FixImageCoords();
             }
-            p.SetPercent(++count / (float)assetListing.size());
+            //p.SetPercent(++count / (float)assetListing.size());
+            this.app.controller.SetCurrentProgress(++count / (float)assetListing.size());
         }
 
         try {
@@ -199,32 +260,40 @@ public class PAKData {
         }
     }
 
-    static private void LMPExport(Map<String, String> ModelEffect) {
-        String Settings_PathTemp = (String) Settings.getInstance().Get("PathTemporary");
-        String PathTempModels = Settings_PathTemp + "models/";
+    private void LMPExport(Map<String, String> ModelEffect) {
+        String Settings_PathTemp = this.app.settings.GetPath("temp");
+        String PathTempModels = Settings_PathTemp + "/models/";
         //String PathTempBrightmaps = Settings_PathTemp + "brightmaps/";
-        //Shared.CreateDirectory(PathTempBrightmaps);
+        //Util.CreateDirectory(PathTempBrightmaps);
 
         // Load pal data
-        Palette palHexen2 = Shared.GetHexen2Palette();
-        Palette palTransparency = Shared.GetHexen2TransparencyPalette();
-        //Palette palBrightmap = Shared.GetHexen2BrightmapPalette();
+        Palette palHexen2 = GetHexen2Palette();
+        Palette palTransparency = GetHexen2TransparencyPalette();
+        //Palette palBrightmap = GetHexen2BrightmapPalette();
 
         ArrayList<File> assetListing = new ArrayList<File>();
         File folderPath = new File(PathTempModels);
         File[] pathFile = folderPath.listFiles();
-        assert pathFile != null;
-        for (File asset : pathFile) {
-            if (asset.isFile()) {
-                if (asset.getName().contains(".lmp")) {
-                    assetListing.add(asset);
+        if (pathFile != null) {
+            for (File asset : pathFile) {
+                if (asset == null) {
+                    System.out.println("Null? " + asset.getAbsolutePath());
+                }
+                if (asset.isFile()) {
+                    if (asset.getName().contains(".lmp")) {
+                        assetListing.add(asset);
+                    }
                 }
             }
         }
 
-        ProgressBar p = new ProgressBar("Creating Model Textures");
+        this.app.controller.SetStageLabel("Creating Model Textures");
+        this.app.controller.SetCurrentProgress(0);
+
+       // ProgressBar p = new ProgressBar("Creating Model Textures");
         float count = 0;
         for (File asset : assetListing) {
+            this.app.controller.SetCurrentLabel(asset.getName());
             // Treat as Flat LMPs
             byte[] fData = null;
             int width = 0;
@@ -261,13 +330,13 @@ public class PAKData {
                 CreateModelTexture(asset, data, width, height, effect, pal);
             }
 
-            p.SetPercent(++count / (float)assetListing.size());
+            //p.SetPercent(++count / (float)assetListing.size());
+            this.app.controller.SetCurrentProgress(++count / (float)assetListing.size());
         }
     }
 
-    static private void CreateModelTexture(File asset, byte[] data, int width, int height, String effect, Palette pal) {
-        String Settings_PathTemp = (String) Settings.getInstance().Get("PathTemporary");
-        String PathTempModels = Settings_PathTemp + "models/";
+    private void CreateModelTexture(File asset, byte[] data, int width, int height, String effect, Palette pal) {
+        String PathTempModels = this.app.settings.GetPath("temp") + "/models/";
         //String PathTempBrightmaps = Settings_PathTemp + "brightmaps/";
 
         try {
@@ -393,7 +462,7 @@ public class PAKData {
                     break;
                 }
 
-                File fileImage = new File("./temp/sprites/" + matchedFileName + ".png");
+                File fileImage = new File("temp/sprites/" + matchedFileName + ".png");
                 BufferedImage source = ImageIO.read(fileImage);
 
                 PNGPicture pngImg = new PNGPicture();

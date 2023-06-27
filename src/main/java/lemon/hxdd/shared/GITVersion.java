@@ -1,4 +1,4 @@
-package lemon.hxdd;
+package lemon.hxdd.shared;
 
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;

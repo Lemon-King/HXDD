@@ -1,4 +1,4 @@
-package lemon.hxdd;
+package lemon.hxdd.builder;
 
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -13,12 +13,11 @@ import java.util.ArrayList;
 public class Noesis {
     static final boolean SHOW_LOGS = true;
 
-    // TODO: Figure out how to make Noesis work with wine on Linux/MacOS via CLI?
+    // TODO: Figure out how to make Noesis work with wine on Linux/MacOS?
 
     static public boolean CheckAndInstall() {
-        String Settings_PathNoesis = (String) Settings.getInstance().Get("PathNoesis");
         boolean hasNoesis = false;
-        File pathNoesis = new File(Settings_PathNoesis);
+        File pathNoesis = new File("./noesis");
         if (pathNoesis.exists()) {
             File pathNoesisExe = new File("./noesis/noesis.exe");
             hasNoesis = pathNoesisExe.exists();
@@ -26,7 +25,7 @@ public class Noesis {
         if (!hasNoesis) {
             File folder = new File("./");
             File[] files = folder.listFiles();
-            for ( File f : files) {
+            for (File f : files) {
                 String fileName = f.getName();
                 if (fileName.startsWith("noesis") && fileName.endsWith(".zip")) {
                     ZipUtil.unpack(f, pathNoesis);
@@ -37,10 +36,10 @@ public class Noesis {
         return hasNoesis;
     }
 
-    static public void ExtractPak(String file, String destination) {
+    static public void ExtractPak(File pak, File destination) {
         // Example: "pak0.pak" "./wads/hexen2/data1"
         //System.out.printf("Dumping Pak File %s\n", file);
-        String args = String.format("\"wads/%s\" \"%s\"", file, destination);
+        String args = String.format("\"%s\" \"%s/\"", pak.getAbsolutePath(), destination.getAbsolutePath());
         Run(args);
     }
 
@@ -73,12 +72,12 @@ public class Noesis {
 
     static private void Run(String args) {
         try {
-            boolean SETTING_USE32BITNOESIS = (boolean) Settings.getInstance().Get("Use32bitNoesis");
+            //boolean SETTING_USE32BITNOESIS = (boolean) Settings.getInstance().Get("Use32bitNoesis");
 
             String exeNoesis = "noesis/Noesis64.exe";
-            if (SETTING_USE32BITNOESIS) {
-                exeNoesis = "noesis/Noesis.exe";
-            }
+            //if (SETTING_USE32BITNOESIS) {
+            //    exeNoesis = "noesis/Noesis.exe";
+            //}
             String exec = String.format("%s ?cmode %s", exeNoesis, args);
             Process process = Runtime.getRuntime().exec(exec);
 

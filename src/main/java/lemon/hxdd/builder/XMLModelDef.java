@@ -1,10 +1,10 @@
-package lemon.hxdd;
+package lemon.hxdd.builder;
 
+import javafx.util.Pair;
+import lemon.hxdd.Application;
+import lemon.hxdd.shared.Util;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
-import org.zeroturnaround.zip.ZipEntryCallback;
-import org.zeroturnaround.zip.ZipInfoCallback;
-import org.zeroturnaround.zip.ZipUtil;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,104 +13,48 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.zip.ZipEntry;
 
 public class XMLModelDef {
-    XMLModelDef() {}
+    Application app;
 
-    public void Export() {
+    XMLModelDef(Application app) {
+        this.app = app;
+    }
+
+    public void Generate() {
         final float[] count = {0};
-        ProgressBar p = new ProgressBar("Generating ModelDefs from XMLModelDef");
+        //ProgressBar p = new ProgressBar("Generating ModelDefs from XMLModelDef");
+        this.app.controller.SetStageLabel("Generating ModelDefs from XMLModelDef");
+        this.app.controller.SetCurrentProgress(0);
+
         String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
         try {
-            if (protocol.equals("jar")){
-                final String prefix = "hexen2/modeldef/";
-
-                ArrayList<String> files = new ArrayList<String>();
-                File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-                // Folder size is unknown until we parse it, this is only does for the progress bar
-                ZipUtil.iterate(jarHXDD, new ZipInfoCallback() {
-                    public void process(ZipEntry zipEntry) throws IOException {
-                        if (zipEntry.getName().contains(prefix) && zipEntry.getName().endsWith(".xml")) {
-                            files.add(zipEntry.getName());
-                        }
-                    }
-                });
-                ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
-                    public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                        if (files.contains(zipEntry.getName())) {
-                            String[] pathSplit = zipEntry.getName().split("/");
-
-                            Parse(pathSplit[pathSplit.length - 1], in, protocol.equals("jar"));
-                            in.close();
-                            p.SetPercent(++count[0] / files.size());
-                        }
-                    }
-                });
-            } else if (protocol.equals("file")) {
-                File folder = new File("./src/main/resources/hexen2/modeldef/");
-                File[] modeldeflist = folder.listFiles();
-
-                if (modeldeflist == null) {
-                    System.out.printf("XMLModelDef Error: Folder not found!");
-                    return;
-                }
-
-                for (File file : modeldeflist) {
-                    if (file.isFile()) {
-                        InputStream in = new FileInputStream(file);
-                        Parse(file.getName(), in, protocol.equals("jar"));
-                        in.close();
-                        p.SetPercent(++count[0] / modeldeflist.length);
-                    }
-                }
-            } else {
-                System.out.println("Failed to export HXDD Assets.");
+            ResourceWalker rw = new ResourceWalker("hexen2/modeldef");
+            for (Pair<String, File> f : rw.files) {
+                Parse(f.getValue(), protocol.equals("jar"));
+                this.app.controller.SetCurrentLabel(f.getValue().getName());
+                this.app.controller.SetCurrentProgress(++count[0] / rw.files.size());
             }
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void Parse(String fileName, InputStream in, boolean buildAsSingleFile) {
+    private void Parse(File file, boolean buildAsSingleFile) {
         try {
-            String modelDefPath = "modeldef." + fileName.toLowerCase().replace(".xml", "");
+            InputStream in = new FileInputStream(file);
+
+            String modelDefPath = "/modeldef." + file.getName().toLowerCase().replace(".xml", "");
             if (buildAsSingleFile) {
-                modelDefPath = "modeldef.hexen2";
+                modelDefPath = "/modeldef.hexen2";
             }
-            FileWriter fw = new FileWriter(Settings.getInstance().Get("PathTemporary") + modelDefPath, buildAsSingleFile);
+            FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, buildAsSingleFile);
             PrintWriter out = new PrintWriter(fw);
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
             Document docXML = dBuilder.parse(in);
-            /*
-            try {
-                String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
-                if (protocol.equals("jar")) {
-                    File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                    ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
-                        public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                            if (zipEntry.getName().startsWith(filePath[0])) {
-                                try {
-                                    dxml[0] = dBuilder.parse(in);
-                                } catch (SAXException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            in.close();
-                        }
-                    });
-                } else if (protocol.equals("file")) {
-                    InputStream in = ClassLoader.getSystemResourceAsStream(filePath[0]);
-                    dxml[0] = dBuilder.parse(in);
-                    assert in != null;
-                    in.close();
-                }
-                Document xml = dxml;
-                */
 
             String className = "";
             Element XMDHeader = docXML.getDocumentElement();
@@ -205,6 +149,7 @@ public class XMLModelDef {
                 }
             }
             out.close();
+            in.close();
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
@@ -223,27 +168,27 @@ public class XMLModelDef {
     }
     private static void WritePath(PrintWriter out, NamedNodeMap attributes) {
         String folder = attributes.getNamedItem("folder").getNodeValue();
-        out.print(Shared.TAB_SPACE + "Path " + "\"" + folder + "\"\n");
+        out.print(Util.TAB_SPACE + "Path " + "\"" + folder + "\"\n");
     }
     private static void WriteModel(PrintWriter out, NamedNodeMap attributes) {
         // Model # "file.ext"
         String model = attributes.getNamedItem("model").getNodeValue();
         String file = attributes.getNamedItem("file").getNodeValue();
-        out.print(Shared.TAB_SPACE + "Model " + model + " \"" + file + "\"\n");
+        out.print(Util.TAB_SPACE + "Model " + model + " \"" + file + "\"\n");
     }
     private static void WriteSkin(PrintWriter out, NamedNodeMap attributes) {
         // Skin # "file.ext"
         String model = attributes.getNamedItem("model").getNodeValue();
         String file = attributes.getNamedItem("file").getNodeValue();
-        out.print(Shared.TAB_SPACE + "Skin " + model + " \"" + file + "\"\n");
+        out.print(Util.TAB_SPACE + "Skin " + model + " \"" + file + "\"\n");
     }
     private static void WriteKeyValue(PrintWriter out, String key, NamedNodeMap attributes) {
         String value = attributes.getNamedItem("value").getNodeValue();
-        out.print(Shared.TAB_SPACE + key + " " + value + "\n");
+        out.print(Util.TAB_SPACE + key + " " + value + "\n");
     }
     private static void WriteFlag(PrintWriter out, NamedNodeMap attributes) {
         String name = attributes.getNamedItem("name").getNodeValue();
-        out.print(Shared.TAB_SPACE + name + "\n");
+        out.print(Util.TAB_SPACE + name + "\n");
     }
     private static int WriteAnimation(PrintWriter out, NamedNodeMap attributes, int frameCounter) {
         String key = attributes.getNamedItem("key").getNodeValue();
@@ -252,7 +197,7 @@ public class XMLModelDef {
 
         Node nodeComment = attributes.getNamedItem("comment");
         if (nodeComment != null) {
-            out.print("\n" + Shared.TAB_SPACE + "// " + nodeComment.getNodeValue() + "\n");
+            out.print("\n" + Util.TAB_SPACE + "// " + nodeComment.getNodeValue() + "\n");
         } else {
             out.print("\n\n");
         }
@@ -277,15 +222,15 @@ public class XMLModelDef {
             String alphaIndexChar = GetCharFromInt(charIndex++ % 26);
 
             if (animationLetterFrames.toString().equals("")) {
-                animationLetterFrames.append(Shared.TAB_SPACE + "// ").append(AnimationId).append(" A");
+                animationLetterFrames.append(Util.TAB_SPACE + "// ").append(AnimationId).append(" A");
             } else {
                 animationLetterFrames.append(alphaIndexChar);
             }
-            buffer.add(Shared.TAB_SPACE + "FrameIndex " + AnimationId + " " + alphaIndexChar + " " + model + " " + frame + "\n");
+            buffer.add(Util.TAB_SPACE + "FrameIndex " + AnimationId + " " + alphaIndexChar + " " + model + " " + frame + "\n");
         }
 
         out.print(animationLetterFrames + "\n");
-        out.printf(Shared.TAB_SPACE + "// " + "Frames: %d - %d\n", frameStart, frameCounter - 1);
+        out.printf(Util.TAB_SPACE + "// " + "Frames: %d - %d\n", frameStart, frameCounter - 1);
         for (String s : buffer) {
             out.print(s);
         }

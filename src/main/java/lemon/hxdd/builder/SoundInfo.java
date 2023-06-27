@@ -1,4 +1,6 @@
-package lemon.hxdd;
+package lemon.hxdd.builder;
+
+import lemon.hxdd.Application;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,10 +9,15 @@ import java.io.PrintWriter;
 import java.util.Collections;
 
 public class SoundInfo {
+    Application app;
+
+    SoundInfo(Application app) {
+        this.app = app;
+    }
     public void Export() {
         try {
-            String SettingPathTemp = (String)Settings.getInstance().Get("PathTemporary");
-            FileWriter fw = new FileWriter(SettingPathTemp + "sndinfo.hexen2", false);
+            String SettingPathTemp = this.app.settings.GetPath("temp");
+            FileWriter fw = new FileWriter(SettingPathTemp + "/sndinfo.hexen2", false);
             PrintWriter out = new PrintWriter(fw);
             AddGeneratedByTag(out);
             ListFiles(null, out);
@@ -22,14 +29,14 @@ public class SoundInfo {
 
     private void ListFiles(String path, PrintWriter out) {
         if (path == null) {
-            path = Settings.getInstance().Get("PathSourceWads") + "/hexen2/data1/pak_files/sound";
+            path = this.app.settings.GetPath("hexen2") + "/pak_files/sound";
         }
 
         String directoryName = path;
         File directory = new File(directoryName);
 
         File[] fileList = directory.listFiles();
-        if(fileList != null)
+        if (fileList != null) {
             for (File file : fileList) {
                 if (file.isFile()) {
                     try {
@@ -37,8 +44,8 @@ public class SoundInfo {
                         p = p.replace("\\", "/");
 
                         String[] s = p.split("pak_files");
-                        String logicalname  = (String)s[1].subSequence(1, s[1].length() - 4);
-                        String lumpname = (String)s[1].subSequence(1, s[1].length());
+                        String logicalname = (String) s[1].subSequence(1, s[1].length() - 4);
+                        String lumpname = (String) s[1].subSequence(1, s[1].length());
 
                         // Setup naming convention and folder paths
                         logicalname = logicalname.replace("sound", "hexen2");
@@ -54,6 +61,7 @@ public class SoundInfo {
                     ListFiles(file.getAbsolutePath(), out);
                 }
             }
+        }
     }
 
     private void AddGeneratedByTag(PrintWriter writer) {

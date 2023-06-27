@@ -1,5 +1,6 @@
-package lemon.hxdd;
+package lemon.hxdd.builder;
 
+import lemon.hxdd.Application;
 import net.mtrop.doom.Wad;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
@@ -16,11 +17,29 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Objects;
+
+// DEPRECATED
 
 public class AssetExtractor {
+    Application app;
     MetaFile mf;
     Wad wad;
-    public AssetExtractor(MetaFile mf, Wad mfWad) {
+
+    ZipAssets za;
+
+    //public AssetExtractor(MetaFile mf, Wad mfWad) {
+    //    this.mf = mf;
+    //    this.wad = mfWad;
+    //}
+
+    public AssetExtractor(Application parent) {
+        this.app = parent;
+
+        this.za = new ZipAssets(this.app);
+    }
+
+    public void SetFile(MetaFile mf, Wad mfWad) {
         this.mf = mf;
         this.wad = mfWad;
     }
@@ -39,9 +58,9 @@ public class AssetExtractor {
 
     public void ExtractFromPK3() {
         // Extract from ZIP
-        String path = (String) Settings.getInstance().Get("PathSourceWads");
-        ZipAssets pk3 = new ZipAssets(path + this.mf.sourcePK3 + ".pk3");
-        byte[] data = pk3.ExtractFileAsData(this.mf.inputName);
+        //ZipAssets pk3 = new ZipAssets(this.mf.sourcePK3 + ".pk3");
+        this.za.SetFile(new File(this.mf.sourcePK3));
+        byte[] data = this.za.ExtractFileAsData(this.mf.inputName);
         Palette pal = GetPlaypal();
         ExportData(data, pal);
     }
@@ -49,15 +68,15 @@ public class AssetExtractor {
     private void ExportData(byte[] data, Palette pal) {
         if (mf.decodeType == "lumps") {
             LumpExport(data);
-        } else if (mf.decodeType == "textlumps") {
+        } else if (Objects.equals(mf.decodeType, "textlumps")) {
             TextLumpExport(data);
-        } else if (mf.decodeType == "graphics" || mf.decodeType == "patches" || mf.decodeType == "sprites") {
+        } else if (Objects.equals(mf.decodeType, "graphics") || Objects.equals(mf.decodeType, "patches") || Objects.equals(mf.decodeType, "sprites")) {
             GraphicsExport(data, pal);
-        } else if (mf.decodeType == "flats") {
+        } else if (Objects.equals(mf.decodeType, "flats")) {
             FlatExport(data, pal);
-        } else if (mf.decodeType == "sounds") {
+        } else if (Objects.equals(mf.decodeType, "sounds")) {
             SoundExport();
-        } else if (mf.decodeType == "music") {
+        } else if (Objects.equals(mf.decodeType, "music")) {
             boolean lowerVolume = mf.source.contains("heretic");
             MusicExport(lowerVolume);
         } else {
@@ -87,7 +106,7 @@ public class AssetExtractor {
 
     // Decode Type handler
     private void LumpExport(byte[] data) {
-        String path = (String) Settings.getInstance().Get("PathTemporary");
+        String path = this.app.settings.GetPath("temp");
         this.CreateFolder(path);
 
         try {
@@ -100,7 +119,8 @@ public class AssetExtractor {
     }
 
     private void TextLumpExport(byte[] data) {
-        String path = (String) Settings.getInstance().Get("PathTemporary");
+        String path = this.app.settings.GetPath("temp");
+        //String path = (String) Settings.getInstance().Get("PathTemporary");
         this.CreateFolder(path);
 
         path = path + "/" + this.mf.outputName;
@@ -118,7 +138,8 @@ public class AssetExtractor {
 
     // Sprites, Patches, and UI Graphics
     private void GraphicsExport(byte[] data, Palette pal) {
-        String path = Settings.getInstance().Get("PathTemporary") + "/" + this.mf.folder + "/";
+        String path = this.app.settings.GetPath("temp") + "/" + this.mf.folder + "/";
+        //String path = Settings.getInstance().Get("PathTemporary") + "/" + this.mf.folder + "/";
         String imagePath = path + this.mf.outputName + ".png";
         this.CreateFolder(path);
 
@@ -145,7 +166,8 @@ public class AssetExtractor {
     }
 
     private void FlatExport(byte[] data, Palette pal) {
-        String path = Settings.getInstance().Get("PathTemporary") + "/flats/";
+        String path = this.app.settings.GetPath("temp") + "/flats/";
+        //String path = Settings.getInstance().Get("PathTemporary") + "/flats/";
         String imagePath = path + this.mf.outputName + ".png";
         this.CreateFolder(path);
 
@@ -168,12 +190,13 @@ public class AssetExtractor {
     }
 
     private void SoundExport() {
-        String path = Settings.getInstance().Get("PathTemporary") + "/sounds/";
+        String path = this.app.settings.GetPath("temp") + "/sounds/";
+        //String path = Settings.getInstance().Get("PathTemporary") + "/sounds/";
         this.CreateFolder(path);
 
-        Boolean AudioResample = (Boolean) Settings.getInstance().Get("AudioResample");
-        String AudioResampleInterpolation = (String) Settings.getInstance().Get("AudioResampleInterpolation");
-        String AudioResampleRate = (String) Settings.getInstance().Get("AudioResampleRate");
+        Boolean AudioResample = false; //(Boolean) Settings.getInstance().Get("AudioResample");
+        String AudioResampleInterpolation = "linear"; //(String) Settings.getInstance().Get("AudioResampleInterpolation");
+        String AudioResampleRate = "44khz"; //(String) Settings.getInstance().Get("AudioResampleRate");
 
         String filePath = path + mf.outputName;
         try {
@@ -211,7 +234,8 @@ public class AssetExtractor {
     }
 
     private void MusicExport(boolean lowerVolume) {
-        String path = Settings.getInstance().Get("PathTemporary") + "/music/";
+        String path = this.app.settings.GetPath("temp") + "/music/";
+        //String path = Settings.getInstance().Get("PathTemporary") + "/music/";
         String filePath = path + mf.outputName;
         this.CreateFolder(path);
         try {
