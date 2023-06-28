@@ -591,7 +591,7 @@ public class PackageBuilder implements Runnable {
         TitleMusic.put("hexen2", "casa1");
 
         try {
-            PrintWriter pw = new PrintWriter(path + "/mapinfo.music");
+            PrintWriter pw = new PrintWriter(path + "/mapinfo.options");
             pw.println("GameInfo {");
             if (TitleMusic.containsKey(OPTION_TITLE_MUSIC)) {
                 pw.println(String.format("\ttitlemusic = \"%s\"", TitleMusic.get(OPTION_TITLE_MUSIC)));
