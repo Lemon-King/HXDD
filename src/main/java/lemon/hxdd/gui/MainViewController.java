@@ -81,7 +81,7 @@ public class MainViewController {
     @FXML
     public ChoiceBox<ChoiceBoxItem> cbTitleScreen;
     public ChoiceBox<ChoiceBoxItem> cbTitleMusic;
-    public ChoiceBox<ChoiceBoxItem> cbKoraxLanguage;
+    public ChoiceBox<ChoiceBoxItem> cbKoraxLocale;
     public CheckBox cxDownloadTitleSteam;
     public CheckBox cxEnableHexenII;
 
@@ -162,7 +162,7 @@ public class MainViewController {
 
         SetupChoiceBoxTitleScreen();
         SetupChoiceBoxTitleMusic();
-        SetupChoiceBoxKoraxLanguage();
+        SetupChoiceBoxKoraxLocalization();
     }
 
     protected void SetupChoiceBoxTitleScreen() {
@@ -183,20 +183,23 @@ public class MainViewController {
     protected void SetupChoiceBoxTitleMusic() {
         ObservableList<ChoiceBoxItem> list = FXCollections.observableArrayList(
                 new ChoiceBoxItem("Heretic", "heretic"),
-                new ChoiceBoxItem("Hexen", "hexen"),
-                new ChoiceBoxItem("Hexen: Deathkings", "hexen.deathkings")
-                //new ChoiceBoxItem("Hexen II", "hexen2")
+                new ChoiceBoxItem("Hexen", "hexen")
         );
+        if (this.mainApp.GetSettings().Get("OPTION_ENABLE_HX2").equals("true")) {
+            list.add(new ChoiceBoxItem("Hexen II", "hexen2"));
+        } else if (this.mainApp.GetSettings().Get("OPTION_TITLE_MUSIC").equals("hexen2")) {
+            this.mainApp.GetSettings().Set("OPTION_TITLE_MUSIC", "heretic");
+        }
         SetChoiceBoxBindings("OPTION_TITLE_MUSIC", "heretic", cbTitleMusic, list);
     }
-    protected void SetupChoiceBoxKoraxLanguage() {
+    protected void SetupChoiceBoxKoraxLocalization() {
         ObservableList<ChoiceBoxItem> list = FXCollections.observableArrayList(
                 new ChoiceBoxItem("English (Default)", "en"),
                 new ChoiceBoxItem("French", "fr"),
                 new ChoiceBoxItem("German", "de"),
                 new ChoiceBoxItem("Japanese", "jp")
         );
-        SetChoiceBoxBindings("OPTION_KORAX_LANGUAGE", "en", cbKoraxLanguage, list);
+        SetChoiceBoxBindings("OPTION_KORAX_LOCALE", "en", cbKoraxLocale, list);
     }
 
     protected void SetChoiceBoxBindings(String key, String default_value, ChoiceBox<ChoiceBoxItem> cb, ObservableList<ChoiceBoxItem> list) {
@@ -239,19 +242,27 @@ public class MainViewController {
 
     protected void HandleCheckBox(String key, Boolean newValue) {
         this.mainApp.GetSettings().Set(key, newValue ? "true" : "false");
+        ChoiceBox cb = null;
         if (key.equals("OPTION_USE_STEAM_ARTWORK")) {
-            ObservableList<ChoiceBoxItem> list = cbTitleScreen.getItems();
+            cb = cbTitleScreen;
+        } else if (key.equals("OPTION_ENABLE_HX2")) {
+            cb = cbTitleMusic;
+        }
+
+        if (!Objects.equals(cb, null)) {
+            ObservableList<ChoiceBoxItem> list = cb.getItems();
             if (newValue) {
                 list.add(new ChoiceBoxItem("Hexen II", "hexen2"));
             } else {
-                if (cbTitleScreen.getValue().equals(list.get(4))) {
-                    cbTitleScreen.setValue(list.get(0));
+                if (cb.getValue().equals(list.get(list.size() - 1))) {
+                    cb.setValue(list.get(0));
                 }
-                list.remove(4);
+                list.remove(list.size() - 1);
             }
-            cbTitleScreen.setItems(list);
+            cb.setItems(list);
         }
     }
+
 
     protected void BindWADButtons() {
         EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {

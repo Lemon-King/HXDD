@@ -35,8 +35,8 @@ public class AppSettings {
         prop_defaults.put("OPTION_TITLE_ARTWORK", "heretic");
         prop_defaults.put("OPTION_TITLE_MUSIC", "heretic");
         prop_defaults.put("OPTION_USE_STEAM_ARTWORK", "false");
-        prop_defaults.put("OPTION_KORAX_LANGUAGE", "en");
-        prop_defaults.put("OPTION_USE_HX2", "false");
+        prop_defaults.put("OPTION_KORAX_LOCALE", "en");
+        prop_defaults.put("OPTION_ENABLE_HX2", "false");
         prop_defaults.put("OPTION_USE_HX2_TITLE_MUSIC", "");
 
         this.prop = new Properties();

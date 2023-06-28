@@ -44,6 +44,10 @@ public class PackageBuilder implements Runnable {
     private AssetExtractor ae;
 
 
+    // local variables
+    boolean hideAdvisory = false;
+
+
     public PackageBuilder(Application parent) {
         this.app = parent;
 
@@ -91,7 +95,7 @@ public class PackageBuilder implements Runnable {
             // HEXEN II EXPORT
             //
             // If Hexen II PAKs are found then try to export data
-            String OPTION_USE_HX2 = this.app.settings.Get("OPTION_USE_HX2");
+            String OPTION_USE_HX2 = this.app.settings.Get("OPTION_ENABLE_HX2");
             if ("true".equals(OPTION_USE_HX2) && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
                 // If Noesis zip or folder with exe is found, try Hexen 2 paks
                 if (Noesis.CheckAndInstall()) {
@@ -117,18 +121,14 @@ public class PackageBuilder implements Runnable {
 
                     SoundInfo si = new SoundInfo(this.app);
                     si.Export();
-
-                    String OPTION_USE_HX2_TITLE_MUSIC = this.app.settings.Get("OPTION_USE_HX2_TITLE_MUSIC");
-                    if ("true".equals(OPTION_USE_HX2_TITLE_MUSIC)) {
-                        ExportHXDDFileByName("configuration/mapinfo.hx2title", "mapinfo.hx2title");
-                    }
                 }
             }
 
             ExtractFilesFromGZDoom();
             FixPatches();
             DownloadSteamArtwork();
-            DownloadKoraxLanguage();
+            DownloadKoraxLocalization();
+            OptionsSetGameInfo();
 
             ExportHXDDFiles();
 
@@ -471,7 +471,7 @@ public class PackageBuilder implements Runnable {
             GameToID.put("hexen2", 9060);
 
             // uses widescreen ids
-            if (GameToID.get(OPTION_ARTWORK) == null) {
+            if (!GameToID.containsKey(OPTION_ARTWORK)) {
                 String[] list = {
                         "heretic", "hexen",
                         "hexen.deathkings", "hexen2"
@@ -502,52 +502,53 @@ public class PackageBuilder implements Runnable {
                     Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
                 Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                hideAdvisory = true;
             } catch (URISyntaxException | IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    private void DownloadKoraxLanguage() {
-        String OPTION_KORAX_LANGUAGE = this.app.settings.Get("OPTION_KORAX_LANGUAGE");
+    private void DownloadKoraxLocalization() {
+        String OPTION_KORAX_LANGUAGE = this.app.settings.Get("OPTION_KORAX_LOCALE");
         if (OPTION_KORAX_LANGUAGE.equals("en")) {
             return;
         }
 
-        HashMap<String, String> list = new HashMap<String, String>();
+        HashMap<String, String> locale = new HashMap<String, String>();
         switch (OPTION_KORAX_LANGUAGE) {
             case "fr" -> {
-                list.put("GRTNGS1", "https://tcrf.net/images/c/cf/Hexen64_koraxvoicegreetings-French.ogg");
-                list.put("READY1", "https://tcrf.net/images/0/06/Hexen64_koraxvoiceready-French.ogg");
-                list.put("BLOOD1", "https://tcrf.net/images/a/a1/Hexen64_koraxvoiceblood-French.ogg");
-                list.put("GAME1", "https://tcrf.net/images/b/b6/Hexen64_koraxvoicegame-French.ogg");
-                list.put("BOARD1", "https://tcrf.net/images/8/87/Hexen64_koraxvoiceboard-French.ogg");
-                list.put("WRSHIP1", "https://tcrf.net/images/7/78/Hexen64_koraxvoiceworship-French.ogg");
-                list.put("MAYBE1", "https://tcrf.net/images/0/04/Hexen64_koraxvoicemaybe-French.ogg");
-                list.put("STRONG1", "https://tcrf.net/images/3/33/Hexen64_koraxvoicestrong-French.ogg");
-                list.put("FACE1", "https://tcrf.net/images/7/7a/Hexen64_koraxvoiceface-French.ogg");
+                locale.put("GRTNGS1", "https://tcrf.net/images/c/cf/Hexen64_koraxvoicegreetings-French.ogg");
+                locale.put("READY1", "https://tcrf.net/images/0/06/Hexen64_koraxvoiceready-French.ogg");
+                locale.put("BLOOD1", "https://tcrf.net/images/a/a1/Hexen64_koraxvoiceblood-French.ogg");
+                locale.put("GAME1", "https://tcrf.net/images/b/b6/Hexen64_koraxvoicegame-French.ogg");
+                locale.put("BOARD1", "https://tcrf.net/images/8/87/Hexen64_koraxvoiceboard-French.ogg");
+                locale.put("WRSHIP1", "https://tcrf.net/images/7/78/Hexen64_koraxvoiceworship-French.ogg");
+                locale.put("MAYBE1", "https://tcrf.net/images/0/04/Hexen64_koraxvoicemaybe-French.ogg");
+                locale.put("STRONG1", "https://tcrf.net/images/3/33/Hexen64_koraxvoicestrong-French.ogg");
+                locale.put("FACE1", "https://tcrf.net/images/7/7a/Hexen64_koraxvoiceface-French.ogg");
             }
             case "de" -> {
-                list.put("GRTNGS1", "https://tcrf.net/images/9/96/Hexen64_koraxvoicegreetings-German.ogg");
-                list.put("READY1", "https://tcrf.net/images/5/5c/Hexen64_koraxvoiceready-German.ogg");
-                list.put("BLOOD1", "https://tcrf.net/images/5/5a/Hexen64_koraxvoiceblood-German.ogg");
-                list.put("GAME1", "https://tcrf.net/images/e/e7/Hexen64_koraxvoicegame-German.ogg");
-                list.put("BOARD1", "https://tcrf.net/images/c/ca/Hexen64_koraxvoiceboard-German.ogg");
-                list.put("WRSHIP1", "https://tcrf.net/images/a/a8/Hexen64_koraxvoiceworship-German.ogg");
-                list.put("MAYBE1", "https://tcrf.net/images/3/36/Hexen64_koraxvoicemaybe-German.ogg");
-                list.put("STRONG1", "https://tcrf.net/images/6/6c/Hexen64_koraxvoicestrong-German.ogg");
-                list.put("FACE1", "https://tcrf.net/images/0/0d/Hexen64_koraxvoiceface-German.ogg");
+                locale.put("GRTNGS1", "https://tcrf.net/images/9/96/Hexen64_koraxvoicegreetings-German.ogg");
+                locale.put("READY1", "https://tcrf.net/images/5/5c/Hexen64_koraxvoiceready-German.ogg");
+                locale.put("BLOOD1", "https://tcrf.net/images/5/5a/Hexen64_koraxvoiceblood-German.ogg");
+                locale.put("GAME1", "https://tcrf.net/images/e/e7/Hexen64_koraxvoicegame-German.ogg");
+                locale.put("BOARD1", "https://tcrf.net/images/c/ca/Hexen64_koraxvoiceboard-German.ogg");
+                locale.put("WRSHIP1", "https://tcrf.net/images/a/a8/Hexen64_koraxvoiceworship-German.ogg");
+                locale.put("MAYBE1", "https://tcrf.net/images/3/36/Hexen64_koraxvoicemaybe-German.ogg");
+                locale.put("STRONG1", "https://tcrf.net/images/6/6c/Hexen64_koraxvoicestrong-German.ogg");
+                locale.put("FACE1", "https://tcrf.net/images/0/0d/Hexen64_koraxvoiceface-German.ogg");
             }
             case "jp" -> {
-                list.put("GRTNGS1", "https://tcrf.net/images/8/8e/Hexen64_koraxvoicegreetings-Japanese.ogg");
-                list.put("READY1", "https://tcrf.net/images/6/6a/Hexen64_koraxvoiceready-Japanese.ogg");
-                list.put("BLOOD1", "https://tcrf.net/images/1/13/Hexen64_koraxvoiceblood-Japanese.ogg");
-                list.put("GAME1", "https://tcrf.net/images/d/db/Hexen64_koraxvoicegame-Japanese.ogg");
-                list.put("BOARD1", "https://tcrf.net/images/c/c5/Hexen64_koraxvoiceboard-Japanese.ogg");
-                list.put("WRSHIP1", "https://tcrf.net/images/6/69/Hexen64_koraxvoiceworship-Japanese.ogg");
-                list.put("MAYBE1", "https://tcrf.net/images/f/f5/Hexen64_koraxvoicemaybe-Japanese.ogg");
-                list.put("STRONG1", "https://tcrf.net/images/0/08/Hexen64_koraxvoicestrong-Japanese.ogg");
-                list.put("FACE1", "https://tcrf.net/images/4/48/Hexen64_koraxvoiceface-Japanese.ogg");
+                locale.put("GRTNGS1", "https://tcrf.net/images/8/8e/Hexen64_koraxvoicegreetings-Japanese.ogg");
+                locale.put("READY1", "https://tcrf.net/images/6/6a/Hexen64_koraxvoiceready-Japanese.ogg");
+                locale.put("BLOOD1", "https://tcrf.net/images/1/13/Hexen64_koraxvoiceblood-Japanese.ogg");
+                locale.put("GAME1", "https://tcrf.net/images/d/db/Hexen64_koraxvoicegame-Japanese.ogg");
+                locale.put("BOARD1", "https://tcrf.net/images/c/c5/Hexen64_koraxvoiceboard-Japanese.ogg");
+                locale.put("WRSHIP1", "https://tcrf.net/images/6/69/Hexen64_koraxvoiceworship-Japanese.ogg");
+                locale.put("MAYBE1", "https://tcrf.net/images/f/f5/Hexen64_koraxvoicemaybe-Japanese.ogg");
+                locale.put("STRONG1", "https://tcrf.net/images/0/08/Hexen64_koraxvoicestrong-Japanese.ogg");
+                locale.put("FACE1", "https://tcrf.net/images/4/48/Hexen64_koraxvoiceface-Japanese.ogg");
             }
             default -> {
                 return;
@@ -555,7 +556,7 @@ public class PackageBuilder implements Runnable {
         }
 
         // Download once and cache
-        list.forEach((fn,uri) -> {
+        locale.forEach((fn,uri) -> {
             String path = this.app.settings.GetPath("temp");
             String path_cache = this.app.settings.GetPath("cache");
 
@@ -578,6 +579,31 @@ public class PackageBuilder implements Runnable {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void OptionsSetGameInfo() {
+        String path = this.app.settings.GetPath("temp");
+
+        String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
+        HashMap<String, String> TitleMusic = new HashMap<String, String>();
+        //TitleMusic.put("heretic", "MUS_TITL");
+        TitleMusic.put("hexen", "HEXEN");
+        TitleMusic.put("hexen2", "casa1");
+
+        try {
+            PrintWriter pw = new PrintWriter(path + "/mapinfo.music");
+            pw.println("GameInfo {");
+            if (TitleMusic.containsKey(OPTION_TITLE_MUSIC)) {
+                pw.println(String.format("\ttitlemusic = \"%s\"", TitleMusic.get(OPTION_TITLE_MUSIC)));
+            }
+            if (hideAdvisory) {
+                pw.println("\tadvisorytime = 0");
+            }
+            pw.println("}");
+            pw.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void WriteHexen2InstallCVAR(String value) {
@@ -752,9 +778,10 @@ public class PackageBuilder implements Runnable {
 
     private void CleanFolder(String path) {
         try {
-            File fileTemporary = new File(path);
-            if (fileTemporary.exists()) {
-                FileUtils.cleanDirectory(fileTemporary);
+            File folder = new File(path);
+            if (folder.exists()) {
+                FileUtils.cleanDirectory(folder);
+                folder.delete();
             }
         } catch (IOException e) {
             //e.printStackTrace();

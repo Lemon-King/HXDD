@@ -2,11 +2,13 @@ package lemon.hxdd.builder;
 
 import lemon.hxdd.Application;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class SoundInfo {
     Application app;
@@ -15,21 +17,38 @@ public class SoundInfo {
         this.app = app;
     }
     public void Export() {
+        String SettingPathTemp = this.app.settings.GetPath("temp");
+        File fileSoundInfo = new File(SettingPathTemp + "/sndinfo.hx2");
+        AtomicReference<String> sndinfo = new AtomicReference<>("");
         try {
-            String SettingPathTemp = this.app.settings.GetPath("temp");
-            FileWriter fw = new FileWriter(SettingPathTemp + "/sndinfo.hexen2", false);
+            ResourceWalker rw = new ResourceWalker("hexen2");
+            rw.files.forEach((o) -> {
+                if (o.getKey().contains("sndinfo.hx2")) {
+                    try {
+                        sndinfo.set(new String(Files.readAllBytes(o.getValue().toPath())));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
+            FileWriter fw = new FileWriter(SettingPathTemp + "/sndinfo.hx2", true);
             PrintWriter out = new PrintWriter(fw);
             AddGeneratedByTag(out);
             ListFiles(null, out);
+            out.println("\n");
+            out.println(sndinfo.get());
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void ListFiles(String path, PrintWriter out) {
         if (path == null) {
-            path = this.app.settings.GetPath("hexen2") + "/pak_files/sound";
+            path = this.app.settings.GetPath("hexen2") + "/sound";
         }
 
         String directoryName = path;
@@ -43,7 +62,7 @@ public class SoundInfo {
                         String p = file.getCanonicalPath();
                         p = p.replace("\\", "/");
 
-                        String[] s = p.split("pak_files");
+                        String[] s = p.split("hexen2_data");
                         String logicalname = (String) s[1].subSequence(1, s[1].length() - 4);
                         String lumpname = (String) s[1].subSequence(1, s[1].length());
 

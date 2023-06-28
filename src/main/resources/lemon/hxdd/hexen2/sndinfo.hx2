@@ -1,6 +1,3 @@
-
-// Todo: Auto merge into sndinfo.hexen2
-
 $random Hexen2PlayerWaterMovement       { hexen2/player/swim1 hexen2/player/swim2 }
 
 $random Hexen2PlayerGib                 { hexen2/player/gib1 hexen2/player/gib2 }
