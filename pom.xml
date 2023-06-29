@@ -118,7 +118,7 @@
           <plugin>
             <groupId>com.gluonhq</groupId>
             <artifactId>gluonfx-maven-plugin</artifactId>
-            <version>${gluonfx.maven.plugin.version}</version>
+            <version>1.0.19</version>
             <configuration>
               <target>${gluonfx.target}</target>
               <mainClass>${main.class}</mainClass>
