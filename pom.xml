@@ -9,6 +9,15 @@
   <version>0.7.2-BETA</version>
   <name>hxdd</name>
 
+  <profiles>
+    <profile>
+      <id>windows</id>
+      <properties>
+        <gluonfx.target>windows</gluonfx.target>
+      </properties>
+    </profile>
+  </profiles>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.9.2</junit.version>      </properties>
