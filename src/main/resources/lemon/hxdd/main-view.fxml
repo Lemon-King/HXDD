@@ -61,7 +61,7 @@
                <children>
             <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <VBox fx:id="fpSetup" prefWidth="740.0">
+                  <VBox fx:id="fpSetup" prefWidth="740.0" visible="false">
                      <children>
                         <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="550.0">
                            <children>
@@ -530,6 +530,9 @@
                                                    <HBox.margin>
                                                       <Insets right="8.0" />
                                                    </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
                                                 </Label>
                                                 <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0" />
                                              </children>
@@ -550,6 +553,9 @@
                                                    <HBox.margin>
                                                       <Insets right="8.0" />
                                                    </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
                                                 </Label>
                                                 <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0" />
                                              </children>
@@ -562,6 +568,9 @@
                                                    <HBox.margin>
                                                       <Insets right="8.0" />
                                                    </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
                                                 </Label>
                                                 <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0" />
                                              </children>
@@ -581,7 +590,16 @@
                         </FlowPane>
                         <HBox alignment="CENTER" prefHeight="60.0">
                            <children>
-                                   <Button alignment="CENTER" maxHeight="-Infinity" onAction="#onButtonClick_Start" prefHeight="26.0" prefWidth="200.0" text="BUILD HXDD" />
+                              <StackPane prefHeight="150.0" prefWidth="740.0">
+                                 <children>
+                                         <Button alignment="CENTER" maxHeight="-Infinity" onAction="#onButtonClick_Start" prefHeight="26.0" prefWidth="200.0" text="BUILD HXDD" />
+                                    <Button mnemonicParsing="false" onAction="#onButtonClick_About" prefWidth="72.0" text="ABOUT" StackPane.alignment="CENTER_RIGHT">
+                                       <StackPane.margin>
+                                          <Insets right="2.0" />
+                                       </StackPane.margin>
+                                    </Button>
+                                 </children>
+                              </StackPane>
                            </children>
                         </HBox>
                      </children>
@@ -647,7 +665,7 @@
                                           <Insets bottom="8.0" />
                                        </padding>
                                     </Label>
-                                    <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="350.0" text="GOTO FOLDER">
+                                    <Button fx:id="btnOpenFolder" mnemonicParsing="false" prefHeight="50.0" prefWidth="350.0" text="OPEN FOLDER">
                                        <font>
                                           <Font name="System Bold" size="22.0" />
                                        </font>
@@ -657,6 +675,132 @@
                                     </Button>
                                  </children>
                               </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="fpInformation" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="740.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="740.0">
+                           <children>
+                              <VBox alignment="CENTER" prefWidth="740.0">
+                                 <children>
+                                    <Label layoutX="227.0" layoutY="163.0" text="Source &amp; Updates can be found on Github:">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <Hyperlink fx:id="hplGithub" text="https://github.com/Lemon-King/HXDD">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="64.0" />
+                                       </VBox.margin>
+                                    </Hyperlink>
+                                    <Label text="Applications &amp; Libraries Used">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="DoomStruct by MTrop:" GridPane.halignment="RIGHT">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplDoomStruct" text="https://github.com/MTrop/DoomStruct" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label layoutX="218.0" layoutY="13.0" text="zt-zip by ZeroTurnaround:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplZip" layoutX="380.0" layoutY="8.0" text="https://github.com/zeroturnaround/zt-zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label layoutX="218.0" layoutY="13.0" text="Noesis by Rich Whitehouse:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplNoesis" layoutX="380.0" layoutY="8.0" text="https://richwhitehouse.com" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="16.0" />
+                                       </VBox.margin>
+                                    </GridPane>
+                                    <Label text="Need Heretic &amp; Hexen?">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Hyperlink fx:id="hplSteam" text="https://store.steampowered.com/sub/439/" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Hyperlink fx:id="hplGOG" text="https://www.gog.com/en/game/heretic_hexen_collection" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label text="Steam HERETIC/HEXEN PACK:" GridPane.halignment="RIGHT">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="10.0" layoutY="13.0" text="GOG Heretic + Hexen Collection:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="60.0">
+                           <children>
+                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="740.0">
+                                 <children>
+                                    <Button alignment="CENTER" maxHeight="-Infinity" onAction="#onButtonClick_Back" prefHeight="26.0" prefWidth="125.0" text="BACK" StackPane.alignment="CENTER">
+                                       <StackPane.margin>
+                                          <Insets right="8.0" />
+                                       </StackPane.margin>
+                                    </Button>
+                                 </children>
+                              </StackPane>
                            </children>
                         </HBox>
                      </children>

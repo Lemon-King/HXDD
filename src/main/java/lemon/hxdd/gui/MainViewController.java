@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -19,7 +21,10 @@ import javafx.util.StringConverter;
 import lemon.hxdd.Application;
 import lemon.hxdd.shared.WADHash;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -35,6 +40,8 @@ public class MainViewController {
     private FlowPane fpProgress;
     @FXML
     private VBox fpComplete;
+    @FXML
+    private VBox fpInformation;
     @FXML
     private FlowPane fpAbout;
 
@@ -84,9 +91,16 @@ public class MainViewController {
     public ChoiceBox<ChoiceBoxItem> cbKoraxLocale;
     public CheckBox cxDownloadTitleSteam;
     public CheckBox cxEnableHexenII;
-
     @FXML
-    private Button btnSelectPath_GZDOOM;
+    public Button btnOpenFolder;
+
+    public Button btnAbout;
+    public Hyperlink hplGithub;
+    public Hyperlink hplDoomStruct;
+    public Hyperlink hplZip;
+    public Hyperlink hplNoesis;
+    public Hyperlink hplSteam;
+    public Hyperlink hplGOG;
 
     private Map<String, Label[]> labelLookup = new HashMap<>();
 
@@ -98,20 +112,29 @@ public class MainViewController {
         this.stage = mainStage;
     }
 
-    public void SetSetupVisiblity(boolean visible) {
-        this.fpSetup.setVisible(visible);
-        this.fpProgress.setVisible(!visible);
-        this.fpComplete.setVisible(!visible);
+    public void ShowSetup() {
+        this.fpSetup.setVisible(true);
+        this.fpProgress.setVisible(false);
+        this.fpComplete.setVisible(false);
+        this.fpInformation.setVisible(false);
     }
-    public void SetProgressVisiblity(boolean visible) {
-        this.fpSetup.setVisible(!visible);
-        this.fpProgress.setVisible(visible);
-        this.fpComplete.setVisible(!visible);
+    public void ShowProgress() {
+        this.fpSetup.setVisible(false);
+        this.fpProgress.setVisible(true);
+        this.fpComplete.setVisible(false);
+        this.fpInformation.setVisible(false);
     }
-    public void SetCompleteVisiblity(boolean visible) {
-        this.fpSetup.setVisible(!visible);
-        this.fpProgress.setVisible(!visible);
-        this.fpComplete.setVisible(visible);
+    public void ShowComplete() {
+        this.fpSetup.setVisible(false);
+        this.fpProgress.setVisible(false);
+        this.fpComplete.setVisible(true);
+        this.fpInformation.setVisible(false);
+    }
+    public void ShowAbout() {
+        this.fpSetup.setVisible(false);
+        this.fpProgress.setVisible(false);
+        this.fpComplete.setVisible(false);
+        this.fpInformation.setVisible(true);
     }
 
     public void SetVersionLabel(String text) {
@@ -156,6 +179,7 @@ public class MainViewController {
 
         BindWADButtons();
         BindPAKButtons();
+        BindOpenFolderButton();
 
         BindCheckBox("OPTION_USE_STEAM_ARTWORK",cxDownloadTitleSteam);
         BindCheckBox("OPTION_ENABLE_HX2", cxEnableHexenII);
@@ -163,6 +187,13 @@ public class MainViewController {
         SetupChoiceBoxTitleScreen();
         SetupChoiceBoxTitleMusic();
         SetupChoiceBoxKoraxLocalization();
+
+        BindHyperlinkURL(hplGithub);
+        BindHyperlinkURL(hplDoomStruct);
+        BindHyperlinkURL(hplZip);
+        BindHyperlinkURL(hplNoesis);
+        BindHyperlinkURL(hplSteam);
+        BindHyperlinkURL(hplGOG);
     }
 
     protected void SetupChoiceBoxTitleScreen() {
@@ -238,6 +269,21 @@ public class MainViewController {
         });
         boolean state = Objects.equals(this.mainApp.GetSettings().Get(key), "true");
         cx.setSelected(state);
+    }
+
+    protected void BindHyperlinkURL(Hyperlink hpl) {
+        hpl.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    // real lazy implementation
+                    URI uri = new URI(hpl.getText());
+                    Desktop.getDesktop().browse(uri);
+                } catch (IOException | URISyntaxException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     protected void HandleCheckBox(String key, Boolean newValue) {
@@ -325,6 +371,20 @@ public class MainViewController {
         btnHexenII_PAK1.setOnAction(handler);
         btnHexenII_PAK3.setOnAction(handler);
         btnHexenII_PAK4.setOnAction(handler);
+    }
+
+    protected void BindOpenFolderButton() {
+        btnOpenFolder.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Desktop desktop = Desktop.getDesktop();
+                try {
+                    desktop.open(new File("./"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
 
@@ -449,6 +509,14 @@ public class MainViewController {
     @FXML
     protected void onButtonClick_Start() {
         this.mainApp.BuildPK3();
+    }
+    @FXML
+    protected void onButtonClick_About() {
+        this.ShowAbout();
+    }
+    @FXML
+    protected void onButtonClick_Back() {
+        this.ShowSetup();
     }
 
     protected File GetPathOrGZDOOM(String key) {

@@ -128,9 +128,9 @@ public class PackageBuilder implements Runnable {
             FixPatches();
             DownloadSteamArtwork();
             DownloadKoraxLocalization();
-            OptionsSetGameInfo();
 
             ExportHXDDFiles();
+            ApplyUserOptions();
 
             WriteInstallLanguageLookup();
 
@@ -460,6 +460,10 @@ public class PackageBuilder implements Runnable {
     }
 
     private void DownloadSteamArtwork() {
+        this.app.controller.SetStageLabel("Title Artwork");
+        this.app.controller.SetCurrentLabel("Checking");
+        this.app.controller.SetCurrentProgress(-1);
+
         String OPTION_USE_STEAM_ARTWORK = this.app.settings.Get("OPTION_USE_STEAM_ARTWORK");
         if ("true".equals(OPTION_USE_STEAM_ARTWORK)) {
             String OPTION_ARTWORK = this.app.settings.Get("OPTION_TITLE_ARTWORK");
@@ -489,7 +493,9 @@ public class PackageBuilder implements Runnable {
                 File steamPNG = new File(path_cache + String.format("/steam_hero_artwork/%s.png", OPTION_ARTWORK));
                 Util.CreateDirectory(heroJPG.getAbsoluteFile().getParent());
 
+
                 if (!steamPNG.exists()) {
+                    this.app.controller.SetCurrentLabel("Downloading");
                     int id = GameToID.get(OPTION_ARTWORK);
 
                     String uriHero = "https://cdn.cloudflare.steamstatic.com/steam/apps/%d/library_hero.jpg";
@@ -556,7 +562,12 @@ public class PackageBuilder implements Runnable {
         }
 
         // Download once and cache
+        System.out.println("Korax Localization");
+        this.app.controller.SetStageLabel(String.format("Korax Localization (%s)", OPTION_KORAX_LANGUAGE.toUpperCase()));
+        this.app.controller.SetCurrentProgress(0);
+        AtomicInteger count = new AtomicInteger();
         locale.forEach((fn,uri) -> {
+            this.app.controller.SetCurrentLabel(String.format("%s : %s", fn, new File(uri).getName()));
             String path = this.app.settings.GetPath("temp");
             String path_cache = this.app.settings.GetPath("cache");
 
@@ -575,33 +586,37 @@ public class PackageBuilder implements Runnable {
                 }
                 Files.copy(audio.toPath(), soundOGG.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 soundLMP.delete();
+                this.app.controller.SetCurrentProgress((float)count.incrementAndGet() / locale.size());
             } catch (URISyntaxException | IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void OptionsSetGameInfo() {
+    private void ApplyUserOptions() {
         String path = this.app.settings.GetPath("temp");
 
-        String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
-        HashMap<String, String> TitleMusic = new HashMap<String, String>();
-        //TitleMusic.put("heretic", "MUS_TITL");
-        TitleMusic.put("hexen", "HEXEN");
-        TitleMusic.put("hexen2", "casa1");
-
         try {
-            PrintWriter pw = new PrintWriter(path + "/mapinfo.options");
-            pw.println("GameInfo {");
+            File fileInfo = new File(path + "/mapinfo.gameinfo");
+            String info = new String(Files.readAllBytes(fileInfo.toPath()));
+
+            // Title Artwork
+            String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
+            HashMap<String, String> TitleMusic = new HashMap<String, String>();
+            //TitleMusic.put("heretic", "MUS_TITL");
+            TitleMusic.put("hexen", "HEXEN");
+            TitleMusic.put("hexen2", "casa1");
             if (TitleMusic.containsKey(OPTION_TITLE_MUSIC)) {
-                pw.println(String.format("\ttitlemusic = \"%s\"", TitleMusic.get(OPTION_TITLE_MUSIC)));
+                info = info.replace("titlemusic = \"MUS_TITL\"", String.format("titlemusic = \"%s\"", TitleMusic.get(OPTION_TITLE_MUSIC)));
             }
             if (hideAdvisory) {
-                pw.println("\tadvisorytime = 0");
+                info = info.replace("advisorytime = 6", "advisorytime = 0");
             }
-            pw.println("}");
+
+            PrintWriter pw = new PrintWriter(fileInfo.getPath());
+            pw.print(info);
             pw.close();
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -735,7 +750,7 @@ public class PackageBuilder implements Runnable {
         this.app.controller.SetCurrentProgress(100);
         this.app.controller.SetStageLabel("COMPLETE!");
 
-        this.app.controller.SetCompleteVisiblity(true);
+        this.app.controller.ShowComplete();
     }
 
     public void WriteInstallLanguageLookup() {

@@ -44,14 +44,12 @@ public class Application extends javafx.application.Application {
         stage.setScene(scene);
         stage.show();
 
-        controller = fxmlLoader.getController();
-        controller.SetApplication(this);
-        controller.SetStage(stage);
-        controller.SetupView();
-
+        this.controller = fxmlLoader.getController();
+        this.controller.SetApplication(this);
+        this.controller.SetStage(stage);
+        this.controller.SetupView();
         this.controller.SetVersionLabel(version);
-
-        this.controller.SetSetupVisiblity(true);
+        this.controller.ShowSetup();
     }
 
     public void DisplayAlert(String title, String text) {
@@ -70,7 +68,7 @@ public class Application extends javafx.application.Application {
     }
 
     public void BuildPK3() {
-        this.controller.SetProgressVisiblity(true);
+        this.controller.ShowProgress();
 
         final Application app = this;
 
