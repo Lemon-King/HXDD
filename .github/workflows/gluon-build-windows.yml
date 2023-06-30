@@ -40,9 +40,6 @@ jobs:
         uses: gluonhq/gluon-build-license@v1
         #with:
         #  gluon-license: ${{ secrets.GLUON_LICENSE }}
-
-      - name: Gluon Build RunAgent
-        run: mvn gluonfx:runagent
         
       # Build your project using Maven
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.

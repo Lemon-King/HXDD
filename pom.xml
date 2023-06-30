@@ -120,7 +120,7 @@
             <artifactId>gluonfx-maven-plugin</artifactId>
             <version>1.0.19</version>
             <configuration>
-              <mainClass>lemon.hxdd.Application</mainClass>
+              <mainClass>lemon.hxdd/lemon.hxdd.Application</mainClass>
             </configuration>
           </plugin>
           <plugin>
