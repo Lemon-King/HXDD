@@ -65,15 +65,14 @@ build/
 hs_err_pid*
 
 # local files
-mtrop/
-libs/
-out/
-ipk3/
-wads/
-target/
-temp*/
+/libs/
+/out/
+/cache/
+/ipk3/
+/wads/
+/target/
+/temp/
 noesis/
 /hexen2/
 sprite_log.txt
 hxdd.settings
-/cache/
