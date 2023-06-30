@@ -44,11 +44,11 @@ jobs:
       # Build your project using Maven
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build
-        run: mvn -Pdesktop gluonfx:build gluonfx:package
+        run: mvn -Pdesktop gluonfx:runagent gluonfx:build gluonfx:package
 
       # Copy the native binary to the staging directory
       - name: Copy native image to staging
-        run: cp -r target/gluonfx/x86_64-windows/hxdd.exe staging
+        run: cp -r target/gluonfx/x86_64-windows/HXDD.exe staging
 
       # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
       - name: Upload
