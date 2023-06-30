@@ -44,7 +44,8 @@ jobs:
       # Build your project using Maven
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build
-        run: mvn -Pdesktop gluonfx:build gluonfx:package
+        shell: cmd
+        run: .\mvnw -Pdesktop gluonfx:build gluonfx:package
 
       # Copy the native binary to the staging directory
       - name: Copy native image to staging
