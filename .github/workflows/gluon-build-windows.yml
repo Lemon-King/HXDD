@@ -1,0 +1,58 @@
+name: "Build-Windows"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 0.7.2-JavaFX-GUI
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      # Checkout your code
+      - name: Checkout
+        uses: actions/checkout@v3.5.3
+
+      # Setup the Windows build environment
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Visual Studio shell
+        uses: egor-tensin/vs-shell@v1
+
+      # Make sure the latest GraalVM is installed.
+      # after this step env.JAVA_HOME and env.GRAALVM_HOME will point to the GraalVM location
+      - name: Setup GraalVM built by Gluon
+        uses: gluonhq/setup-graalvm@master
+        # set GITHUB_TOKEN to avoid exceeding GitHub's API rate limit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Create a staging directory where the binary will be copied into
+      - name: Make staging directory
+        run: mkdir staging
+
+      # Install the Gluon License (optional)
+      # Using this step requires you to set a GLUON_LICENSE secret in the secret configuration of your repo. Have a look at https://gluonhq.com/products/mobile/buy for more information about obtaining a license.
+      - name: Gluon License
+        uses: gluonhq/gluon-build-license@v1
+        #with:
+        #  gluon-license: ${{ secrets.GLUON_LICENSE }}
+
+      # Build your project using Maven
+      # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
+      - name: Gluon Build
+        run: mvn -Pdesktop gluonfx:runagent gluonfx:build gluonfx:package
+
+      # Copy the native binary to the staging directory
+      - name: Copy native image to staging
+        run: cp -r target/gluonfx/x86_64-windows/HXDD.exe staging
+
+      # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: staging
