@@ -502,6 +502,7 @@ public class PackageBuilder implements Runnable {
                     URL dl = new URI(String.format(uriHero, id)).toURL();
                     InputStream in = dl.openStream();
                     Files.copy(in, Path.of(heroJPG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+
                     BufferedImage bufferedImage = ImageIO.read(heroJPG);
                     ImageIO.write(bufferedImage, "png", steamPNG);
                     heroJPG.delete();
@@ -680,7 +681,7 @@ public class PackageBuilder implements Runnable {
         String pathTemporary = this.app.settings.GetPath("temp");
         Path out = Paths.get(pathTemporary + "/" + target);
         try {
-            URL urlPath = Objects.requireNonNull(ResourceWalker.class.getResource(source));
+            URL urlPath = ResourceWalker.class.getResource(source);
             URI uri = urlPath.toURI();
             if (uri.getScheme().equals("jar")) {
                 FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
@@ -757,7 +758,7 @@ public class PackageBuilder implements Runnable {
         try {
             Properties p_gitversion = GITVersion.getInstance().GetProperties();
             String version = p_gitversion.getProperty("git.closest.tag.name");
-            if (version.equals("")) {
+            if (version != null && version.equals("")) {
                 version = p_gitversion.getProperty("git.build.version");
             }
 

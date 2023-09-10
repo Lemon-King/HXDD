@@ -1,10 +1,13 @@
 package lemon.hxdd.shared;
 
+import lemon.hxdd.Application;
+
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -26,19 +29,21 @@ public class GITVersion {
         String fileName = "git.properties";
 
         try {
-            String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
-            if (protocol.equals("jar")) {
-                File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
-                    public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                        if (!zipEntry.isDirectory() && zipEntry.getName().contains(fileName)) {
-                            p_gitversion.load(in);
+            URL res = Application.class.getResource("");
+            if (res != null) {
+                if (res.equals("jar")) {
+                    File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                    ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
+                        public void process(InputStream in, ZipEntry zipEntry) throws IOException {
+                            if (!zipEntry.isDirectory() && zipEntry.getName().contains(fileName)) {
+                                p_gitversion.load(in);
+                            }
                         }
-                    }
-                });
-            } else if (protocol.equals("file")) {
-                FileInputStream fis = new FileInputStream("target/classes/" + fileName);
-                p_gitversion.load(fis);
+                    });
+                } else if (res.equals("file")) {
+                    FileInputStream fis = new FileInputStream("target/classes/" + fileName);
+                    p_gitversion.load(fis);
+                }
             }
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();

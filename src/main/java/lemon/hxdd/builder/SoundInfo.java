@@ -21,7 +21,7 @@ public class SoundInfo {
         File fileSoundInfo = new File(SettingPathTemp + "/sndinfo.hx2");
         AtomicReference<String> sndinfo = new AtomicReference<>("");
         try {
-            ResourceWalker rw = new ResourceWalker("hexen2");
+            ResourceWalker rw = new ResourceWalker("pakdata/hexen2");
             rw.files.forEach((o) -> {
                 if (o.getKey().contains("sndinfo.hx2")) {
                     try {

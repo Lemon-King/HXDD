@@ -1,5 +1,7 @@
 package lemon.hxdd;
 
+import java.awt.*;
+
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -27,7 +29,7 @@ public class Application extends javafx.application.Application {
         Locale.setDefault(new Locale("en", "English"));
         GITVersion.getInstance().Initialize();
         String version = GITVersion.getInstance().GetProperties().getProperty("git.closest.tag.name");
-        if (version.equals("")) {
+        if (Objects.equals(version, "")) {
             version = GITVersion.getInstance().GetProperties().getProperty("git.build.version");
         }
 
@@ -39,7 +41,7 @@ public class Application extends javafx.application.Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("HXDD: A Heretic and Hexen Wad Merger!");
-        stage.getIcons().add(new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icon.png"))));
+        stage.getIcons().add(new Image(Application.class.getResourceAsStream("icon.png")));
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();

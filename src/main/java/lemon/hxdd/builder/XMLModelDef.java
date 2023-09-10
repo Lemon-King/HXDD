@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -27,16 +28,19 @@ public class XMLModelDef {
         this.app.controller.SetStageLabel("Generating ModelDefs from XMLModelDef");
         this.app.controller.SetCurrentProgress(0);
 
-        String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
-        try {
-            ResourceWalker rw = new ResourceWalker("hexen2/modeldef");
-            for (Pair<String, File> f : rw.files) {
-                Parse(f.getValue(), protocol.equals("jar"));
-                this.app.controller.SetCurrentLabel(f.getValue().getName());
-                this.app.controller.SetCurrentProgress(++count[0] / rw.files.size());
+        URL res = this.getClass().getResource("");
+        if (res != null) {
+            String protocol = res.getProtocol();
+            try {
+                ResourceWalker rw = new ResourceWalker("pakdata/modeldef");
+                for (Pair<String, File> f : rw.files) {
+                    Parse(f.getValue(), protocol.equals("jar"));
+                    this.app.controller.SetCurrentLabel(f.getValue().getName());
+                    this.app.controller.SetCurrentProgress(++count[0] / rw.files.size());
+                }
+            } catch (URISyntaxException | IOException e) {
+                e.printStackTrace();
             }
-        } catch (URISyntaxException | IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -46,7 +50,7 @@ public class XMLModelDef {
 
             String modelDefPath = "/modeldef." + file.getName().toLowerCase().replace(".xml", "");
             if (buildAsSingleFile) {
-                modelDefPath = "/modeldef.hexen2";
+                modelDefPath = "/modeldef.hxdd";
             }
             FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, buildAsSingleFile);
             PrintWriter out = new PrintWriter(fw);

@@ -20,7 +20,7 @@ public class ResourceWalker {
     public ResourceWalker(String path) throws URISyntaxException, IOException {
         this.files = new ArrayList<Pair<String, File>>();
 
-        URL urlPath = Objects.requireNonNull(Application.class.getResource(path));
+        URL urlPath = Application.class.getResource(path);
         URI uri = urlPath.toURI();
         Path targetPath;
         if (uri.getScheme().equals("jar")) {

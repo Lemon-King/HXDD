@@ -8,6 +8,7 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
@@ -206,19 +207,21 @@ public class GameActorNums {
                     String filePath = "gameinfo/" + type + "." + game;
 
                     try {
-                        String protocol = Objects.requireNonNull(this.getClass().getResource("")).getProtocol();
-                        if (protocol.equals("jar")) {
-                            File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                            ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
-                                public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                                    if (zipEntry.getName().startsWith(filePath)) {
-                                        p.load(in);
+                        URL res = Application.class.getResource("");
+                        if (res != null) {
+                            if (res.equals("jar")) {
+                                File jarHXDD = new File(lemon.hxdd.Application.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+                                ZipUtil.iterate(jarHXDD, new ZipEntryCallback() {
+                                    public void process(InputStream in, ZipEntry zipEntry) throws IOException {
+                                        if (zipEntry.getName().startsWith(filePath)) {
+                                            p.load(in);
+                                        }
                                     }
-                                }
-                            });
-                        } else if (protocol.equals("file")) {
-                            InputStream inputStream = ClassLoader.getSystemResourceAsStream(filePath);
-                            p.load(inputStream);
+                                });
+                            } else if (res.equals("file")) {
+                                InputStream inputStream = ClassLoader.getSystemResourceAsStream(filePath);
+                                p.load(inputStream);
+                            }
                         }
                     } catch (IOException | URISyntaxException e) {
                         e.printStackTrace();
