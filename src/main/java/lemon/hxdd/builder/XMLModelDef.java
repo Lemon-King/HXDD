@@ -69,6 +69,12 @@ public class XMLModelDef {
             if (XMDHeader.hasAttribute("class")) {
                 className = XMDHeader.getAttributeNode("class").getValue();
             }
+            if (XMDHeader.hasAttribute("skip")) {
+                String value = XMDHeader.getAttributeNode("skip").getValue();
+                if (value.equals("true")) {
+                    return;
+                }
+            }
 
             // All sub model groups
             NodeList groups = docXML.getDocumentElement().getChildNodes();

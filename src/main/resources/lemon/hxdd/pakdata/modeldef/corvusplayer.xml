@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<XMLModelDef class="H2CorvusPlayer">
+<XMLModelDef class="H2CorvusPlayer" skip="true">
     <Group>
         <Path folder="models" />
         <Model file="parts.body.base.head.md3" model="0" />
