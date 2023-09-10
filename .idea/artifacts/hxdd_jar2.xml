@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact name="hxdd:jar2">
+    <output-path>$PROJECT_DIR$/out/artifacts/hxdd_jar2</output-path>
+    <root id="root">
+      <element id="archive" name="hxdd.jar">
+        <element id="module-output" name="hxdd" />
+      </element>
+      <element id="library" level="project" name="Maven: com.dlsc.formsfx:formsfx-core:11.6.0" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.36" />
+      <element id="library" level="project" name="Maven: org.slf4j:slf4j-nop:1.7.36" />
+      <element id="library" level="project" name="io.github.git.commit.id.plugin.core" />
+    </root>
+  </artifact>
+</component>

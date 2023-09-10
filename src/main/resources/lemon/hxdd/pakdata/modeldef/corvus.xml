@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<XMLModelDef class="H2CorvusPlayer">
+    <Group>
+        <Path folder="models" />
+        <Model file="parts.body.base.head.md3" model="0" />
+        <Skin file="elf.png" model="0" />
+
+        <Scale value="1.1 1.1 1.1" />
+
+        <Flag name="USEACTORROLL" />
+
+        <Frame skip="42" />
+        <Animation key="CTST" frames="21" model="0" comment="Testing: Idle"/>
+
+        <Frame skip="89" />
+        <Animation key="CRDF" frames="8" model="0" comment="Testing: Move Forward"/>
+    </Group>
+</XMLModelDef>
