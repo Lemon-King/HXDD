@@ -48,13 +48,6 @@ public class XMLModelDef {
         try {
             InputStream in = new FileInputStream(file);
 
-            String modelDefPath = "/modeldef." + file.getName().toLowerCase().replace(".xml", "");
-            if (buildAsSingleFile) {
-                modelDefPath = "/modeldef.hxdd";
-            }
-            FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, buildAsSingleFile);
-            PrintWriter out = new PrintWriter(fw);
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
@@ -75,6 +68,14 @@ public class XMLModelDef {
                     return;
                 }
             }
+
+
+            String modelDefPath = "/modeldef." + file.getName().toLowerCase().replace(".xml", "");
+            if (buildAsSingleFile) {
+                modelDefPath = "/modeldef.hxdd";
+            }
+            FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, buildAsSingleFile);
+            PrintWriter out = new PrintWriter(fw);
 
             // All sub model groups
             NodeList groups = docXML.getDocumentElement().getChildNodes();
