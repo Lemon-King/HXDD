@@ -16,6 +16,7 @@ public class AppSettings {
 
     public AppSettings() {
         Path dir = Path.of("").toAbsolutePath();
+        this.paths.put("root", dir.toString());
         this.paths.put("cache", dir + "/cache");
         this.paths.put("temp", dir + "/temp");
         this.paths.put("hexen2", dir + "/hexen2_data");

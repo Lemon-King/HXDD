@@ -9,7 +9,6 @@ import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.util.GraphicUtils;
-import org.zeroturnaround.zip.commons.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,6 +17,8 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,9 +26,9 @@ import java.util.regex.Pattern;
 
 public class Hexen2Assets {
     // Model Effects
-    static int EF_TRANSPARENT   = 1 << 12;		// Transparent sprite
-    static int EF_HOLEY		    = 1 << 14;		// Solid model with color 0
-    static int EF_SPECIAL_TRANS = 1 << 15;		// Translucency through the particle table
+    static int EF_TRANSPARENT   = 1 << 12;        // Transparent sprite
+    static int EF_HOLEY            = 1 << 14;        // Solid model with color 0
+    static int EF_SPECIAL_TRANS = 1 << 15;        // Translucency through the particle table
 
     static int[] ColorIndex = {0, 31, 47, 63, 79, 95, 111, 127, 143, 159, 175, 191, 199, 207, 223, 231};
     static int[] ColorPercent = {25, 51, 76, 102, 114, 127, 140, 153, 165, 178, 191, 204, 216, 229, 237, 247};
@@ -37,13 +38,13 @@ public class Hexen2Assets {
      * https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2W/Client/gl_model.c#L1523
      *
      * if( mdl_flags & EF_HOLEY )
-     * 	texture_mode = 2;
+     *     texture_mode = 2;
      * else if( mdl_flags & EF_TRANSPARENT )
-     * 	texture_mode = 1;
+     *     texture_mode = 1;
      * else if( mdl_flags & EF_SPECIAL_TRANS )
-     * 	texture_mode = 3;
+     *     texture_mode = 3;
      * else
-     * 	texture_mode = 0;
+     *     texture_mode = 0;
      * mode:
      * 0 - standard
      * 1 - color 0 transparent, odd - translucent, even - full value
@@ -108,7 +109,7 @@ public class Hexen2Assets {
             this.app.controller.SetCurrentLabel("Extracting: " + pak.getName());
 
             System.out.println(pak.getAbsolutePath() + " " + new File(pathHexen2).getAbsolutePath());
-            Noesis.ExtractPak(pak, new File(pathHexen2));
+            new Noesis(this.app).ExtractPak(pak, new File(pathHexen2));
             //extractedPaks.add(pak);
             //p.SetPercent(++count / (float)PAKFiles.length);
             this.app.controller.SetCurrentProgress(++count / this.paks.size());
@@ -123,7 +124,11 @@ public class Hexen2Assets {
         String pathTarget = this.app.settings.GetPath("temp") + "/sounds/hexen2";
         Util.CreateDirectory(pathTarget);
         try {
-            FileUtils.copyDirectory(new File(pathSource), new File(pathTarget));
+            //Util.TreeCopyFileVisitor fileVisitor = new Util.TreeCopyFileVisitor(pathSource, pathTarget);
+            //Files.walkFileTree(Paths.get(pathSource), fileVisitor);
+            Util.CopyDirectory(Path.of(pathSource), Path.of(pathTarget));
+
+            //FileUtils.copyDirectory(new File(pathSource), new File(pathTarget));
             System.out.printf("Exported Hexen II sound data\n");
         } catch (IOException e) {
             System.out.printf("Failed to Export Hexen II sound data! ( %s )\n", e.getMessage());
@@ -134,13 +139,21 @@ public class Hexen2Assets {
         this.app.controller.SetCurrentLabel("Exporting Hexen II Music Data");
         this.app.controller.SetCurrentProgress(-1);
         try {
-            String path = this.app.settings.GetPath("temp") + "/music/";
-            FileUtils.copyDirectory(new File(this.app.settings.GetPath("hexen2") + "/midi"), new File(path));
+            String target = this.app.settings.GetPath("temp") + "/music/";
+            String source = this.app.settings.GetPath("hexen2") + "/midi";
+            //Util.TreeCopyFileVisitor fileVisitor = new Util.TreeCopyFileVisitor(source, path);
+            //Files.walkFileTree(Paths.get(this.app.settings.GetPath("hexen2") + "/midi"), fileVisitor);
+            //FileUtils.copyDirectory(new File(this.app.settings.GetPath("hexen2") + "/midi"), new File(path));
+
+            Util.CopyDirectory(Path.of(source), Path.of(target));
 
             String pathSourceMusic = this.app.settings.GetPath("hexen2music");
             File dirSourceMusic = new File(pathSourceMusic);
             if (dirSourceMusic.exists() && dirSourceMusic.isDirectory()) {
-                FileUtils.copyDirectory(dirSourceMusic, new File(path));
+                //Util.TreeCopyFileVisitor fv2 = new Util.TreeCopyFileVisitor(dirSourceMusic.getAbsolutePath(), path);
+                //Files.walkFileTree(Paths.get(pathSourceMusic + "/midi"), fv2);
+                //FileUtils.copyDirectory(dirSourceMusic, new File(path));
+                Util.CopyDirectory(dirSourceMusic.toPath(), Path.of(target));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -171,6 +184,8 @@ public class Hexen2Assets {
                 }
             }
         }
+
+        Noesis noe = new Noesis(this.app);
 
         Map<String, String> ModelEffect = new HashMap<String, String>();
 
@@ -231,16 +246,16 @@ public class Hexen2Assets {
                     options.add("-imgoutidx 70");
                     //options.add("-imgoutidx 271 ");
                 }
-                Noesis.ExportAsset(fileName_Noesis, "models/" + opt, options);
+                noe.ExportAsset(fileName_Noesis, "models/" + opt, options);
             } else if (fileName.endsWith(".spr")) {
                 options.add("-texnorepfn");
                 options.add("-forcetc");
                 options.add("-logfile sprite_log.txt");
-                Noesis.ExportAsset(fileName_Noesis, "sprites/", options);
+                noe.ExportAsset(fileName_Noesis, "sprites/", options);
                 AddImageCoords(fileName.replace(".spr", ""));
             } else if (fileName.endsWith(".lmp")) {
                 options.add("-forcetc");
-                Noesis.ExportAsset(fileName_Noesis, "graphics/", options);
+                noe.ExportAsset(fileName_Noesis, "graphics/", options);
                 //FixImageCoords();
             }
             //p.SetPercent(++count / (float)assetListing.size());

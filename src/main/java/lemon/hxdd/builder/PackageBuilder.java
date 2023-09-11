@@ -11,10 +11,6 @@ import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.util.GraphicUtils;
 import net.mtrop.doom.util.MapUtils;
-import org.zeroturnaround.zip.NameMapper;
-import org.zeroturnaround.zip.ZipEntryCallback;
-import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.commons.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -25,10 +21,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -98,7 +97,7 @@ public class PackageBuilder implements Runnable {
             String OPTION_USE_HX2 = this.app.settings.Get("OPTION_ENABLE_HX2");
             if ("true".equals(OPTION_USE_HX2) && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
                 // If Noesis zip or folder with exe is found, try Hexen 2 paks
-                if (Noesis.CheckAndInstall()) {
+                if (new Noesis(this.app).CheckAndInstall()) {
                     String owned = "base";
                     if (HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK3")})) {
                         // Set World flag
@@ -109,7 +108,6 @@ public class PackageBuilder implements Runnable {
                         owned = String.format("%s,world", owned);
                     }
                     WriteHexen2InstallCVAR(owned);
-
                     Hexen2Assets h2a = new Hexen2Assets(this.app);
                     h2a.ExtractPakData();
                     h2a.ExportAssets();
@@ -450,7 +448,7 @@ public class PackageBuilder implements Runnable {
             File dest = new File(path + "conback.png");
             if (source.exists()) {
                 try {
-                    FileUtils.copyFile(source, dest);
+                    Files.copy(source.toPath(), dest.toPath());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -705,8 +703,8 @@ public class PackageBuilder implements Runnable {
             WadFile wadFile = new WadFile(this.app.settings.Get("PATH_HEXEN"));
             Palette pal = wadFile.getDataAs("playpal", Palette.class);
             File pk3File = new File("./hxdd_hexen_palette.pk3");
-            ZipUtil.createEmpty(pk3File);
-            ZipUtil.addEntry(pk3File, "PLAYPAL.lmp", pal.toBytes());
+            //ZipUtil.createEmpty(pk3File);
+            //ZipUtil.addEntry(pk3File, "PLAYPAL.lmp", pal.toBytes());
             wadFile.close();
             System.out.println("Created Hexen Palette PK3");
         } catch (IOException e) {
@@ -723,22 +721,10 @@ public class PackageBuilder implements Runnable {
         String Settings_TempPath = this.app.settings.GetPath("temp");
         File fileTemporary = new File(Settings_TempPath);
         File fileIpk3 = new File("./HXDD.ipk3");
-        ZipUtil.pack(fileTemporary, fileIpk3, new NameMapper() {
-            public String map(String name) {
-                return name;
-            }
-        });
-        ZipUtil.iterate(fileIpk3, new ZipEntryCallback() {
-            public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                if (!zipEntry.isDirectory() && zipEntry.getName().startsWith("iwadinfo.hxdd")) {
-                    String owner = System.getProperty("user.name");
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm a");
-                    LocalDateTime now = LocalDateTime.now();
-                    String creation_date = now.format(formatter);
-                    zipEntry.setComment(String.format("Creator: %s Creation Time: %s", owner, creation_date));
-                }
-            }
-        });
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.PackFolder(fileTemporary, fileIpk3);
+
         this.app.controller.SetCurrentLabel("Cleaning folder");
         this.app.controller.SetCurrentProgress(-1);
         System.out.println("Cleaning up temporary data");
@@ -791,14 +777,29 @@ public class PackageBuilder implements Runnable {
         }
     }
 
-    private void CleanFolder(String path) {
+    private void CleanFolder(String target) {
         try {
-            File folder = new File(path);
+            File folder = new File(target);
             if (folder.exists()) {
-                FileUtils.cleanDirectory(folder);
-                folder.delete();
+                Files.walkFileTree(folder.toPath(), new SimpleFileVisitor<Path>()
+                {
+                    @Override
+                    public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException
+                    {
+                        Files.delete(path);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path directory, IOException ioException) throws IOException
+                    {
+                        Files.delete(directory);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
             }
         } catch (IOException e) {
+            System.out.println(e);
             //e.printStackTrace();
         }
     }

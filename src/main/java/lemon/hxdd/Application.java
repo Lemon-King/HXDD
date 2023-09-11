@@ -1,7 +1,5 @@
 package lemon.hxdd;
 
-import java.awt.*;
-
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;

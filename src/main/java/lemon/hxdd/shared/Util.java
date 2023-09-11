@@ -1,6 +1,10 @@
 package lemon.hxdd.shared;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.stream.Stream;
 
 public class Util {
     public static final String TAB_SPACE = "    ";
@@ -32,4 +36,33 @@ public class Util {
         return newPal;
     }
     */
+
+
+    public static void CopyDirectory(Path source, Path target) throws IOException {
+
+        if (Files.isDirectory(source)) {
+            if (Files.notExists(target)) {
+                Files.createDirectories(target);
+                System.out.println("Directory created : " + target);
+            }
+            try (Stream<Path> paths = Files.list(source)) {
+                paths.forEach(p -> CopyDirectoryWrapper(p, target.resolve(source.relativize(p))));
+
+            }
+        } else {
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println(
+                    String.format("Copy File from \t'%s' to \t'%s'", source, target)
+            );
+        }
+    }
+
+    public static void CopyDirectoryWrapper(Path source, Path target) {
+        try {
+            CopyDirectory(source, target);
+        } catch (IOException e) {
+            System.err.println("IO errors : " + e.getMessage());
+        }
+
+    }
 }

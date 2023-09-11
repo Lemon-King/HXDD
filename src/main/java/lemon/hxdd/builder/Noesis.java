@@ -1,49 +1,84 @@
 package lemon.hxdd.builder;
 
-import org.zeroturnaround.zip.ZipUtil;
+import lemon.hxdd.Application;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 // http://richwhitehouse.com/noesis/nms/index.php?content=userman
 
 public class Noesis {
-    static final boolean SHOW_LOGS = true;
+    Application app;
+    final boolean SHOW_LOGS = true;
 
     // TODO: Figure out how to make Noesis work with wine on Linux/MacOS?
 
-    static public boolean CheckAndInstall() {
+    Noesis(Application app) {
+        this.app = app;
+    }
+
+    public boolean CheckAndInstall() {
         boolean hasNoesis = false;
-        File pathNoesis = new File("./noesis");
+        String SETTINGS_PATH_ROOT = this.app.settings.GetPath("root");
+        String SETTINGS_PATH_NOESIS = this.app.settings.GetPath("noesis");
+        System.out.println(SETTINGS_PATH_NOESIS);
+        File pathNoesis = new File(SETTINGS_PATH_NOESIS);
+
         if (pathNoesis.exists()) {
-            File pathNoesisExe = new File("./noesis/noesis.exe");
+            File pathNoesisExe = new File(SETTINGS_PATH_NOESIS + "/noesis.exe");
             hasNoesis = pathNoesisExe.exists();
         }
         if (!hasNoesis) {
-            File folder = new File("./");
-            File[] files = folder.listFiles();
+            File folderRoot = new File(SETTINGS_PATH_ROOT);
+            File[] files = folderRoot.listFiles();
+
+            File zipNoesis = null;
             for (File f : files) {
                 String fileName = f.getName();
                 if (fileName.startsWith("noesis") && fileName.endsWith(".zip")) {
-                    ZipUtil.unpack(f, pathNoesis);
-                    return true;
+                    zipNoesis = f;
+                    break;
+                }
+            }
+            if (zipNoesis != null) {
+                if (!pathNoesis.exists()) {
+                    pathNoesis.mkdirs();
+                }
+
+                try {
+                    FileInputStream fis = new FileInputStream(zipNoesis);
+                    ZipInputStream zis = new ZipInputStream(fis);
+                    ZipEntry entry;
+                    while ((entry = zis.getNextEntry()) != null) {
+                        File target = new File(pathNoesis, entry.getName());
+                        if (entry.isDirectory() && !target.exists()) {
+                            target.mkdirs();
+                        } else {
+                            OutputStream os = new FileOutputStream(target);
+                            os.write(zis.readAllBytes());
+                            os.close();
+                        }
+                    }
+                    zis.close();
+                    fis.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
         return hasNoesis;
     }
 
-    static public void ExtractPak(File pak, File destination) {
+    public void ExtractPak(File pak, File destination) {
         // Example: "pak0.pak" "./wads/hexen2/data1"
         //System.out.printf("Dumping Pak File %s\n", file);
         String args = String.format("\"%s\" \"%s/\"", pak.getAbsolutePath(), destination.getAbsolutePath());
         Run(args);
     }
 
-    static public void ExportAsset(String assetPath, String outputFolder, ArrayList<String> options) {
+    public void ExportAsset(String assetPath, String outputFolder, ArrayList<String> options) {
         String fileName = new File(assetPath).getName();
         String target = "";
         String textpre = "";
@@ -70,11 +105,13 @@ public class Noesis {
         Run(args);
     }
 
-    static private void Run(String args) {
+    private void Run(String args) {
+        String SETTINGS_PATH_NOESIS = this.app.settings.GetPath("noesis");
+
         try {
             //boolean SETTING_USE32BITNOESIS = (boolean) Settings.getInstance().Get("Use32bitNoesis");
 
-            String exeNoesis = "noesis/Noesis64.exe";
+            String exeNoesis = SETTINGS_PATH_NOESIS + "/Noesis64.exe";
             //if (SETTING_USE32BITNOESIS) {
             //    exeNoesis = "noesis/Noesis.exe";
             //}

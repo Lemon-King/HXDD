@@ -1,33 +1,26 @@
 package lemon.hxdd.builder;
 
 import lemon.hxdd.Application;
-//import net.mtrop.doom.Wad;
-//import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.graphics.Picture;
-//import net.mtrop.doom.object.BinaryObject;
 import net.mtrop.doom.util.GraphicUtils;
-import org.zeroturnaround.zip.ZipEntryCallback;
-import org.zeroturnaround.zip.ZipUtil;
-//import org.zeroturnaround.zip.commons.IOUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-//import java.util.ArrayList;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
-// REPLACE ZTZIP with ZipIO Stream
-// https://stackoverflow.com/questions/23869228/how-to-read-file-from-zip-using-inputstream
-// https://stackoverflow.com/questions/15968883/how-to-zip-a-folder-itself-using-java
+import java.util.zip.ZipOutputStream;
 
 // Much like WADAssets, this will extract assets from GZDoom's pk3 files.
-// ref: https://github.com/zeroturnaround/zt-zip
 public class ZipAssets {
     Application app;
     File zipFile;
@@ -103,29 +96,25 @@ public class ZipAssets {
         } catch (IOException e) {
         }
         return data;
-        //return ZipUtil.unpackEntry(new File(path), path);
     }
 
-    void ExtractFilesFromFolder(String input, String output) {
-        String path = this.app.settings.GetPath("temp");
-        File fileOutputFolder = new File(path + output);
-        if (!fileOutputFolder.exists()) {
-            fileOutputFolder.mkdirs();
-        }
-
-        //System.out.println("Opening PK3 " + wadPath + this.zipFile);
-        ZipUtil.iterate(this.zipFile, new ZipEntryCallback() {
-            public void process(InputStream in, ZipEntry zipEntry) throws IOException {
-                if (!zipEntry.isDirectory() && zipEntry.getName().startsWith(input)) {
-                    String fileName = zipEntry.getName();
-                    String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
-                    File fileOutput = new File(path + output + "/" + cleanedName);
-                    OutputStream outputStream = new FileOutputStream(fileOutput);
-                    outputStream.write(in.read());
-                    outputStream.close();
+    // https://stackoverflow.com/a/57997601
+    public void PackFolder(File source, File target) {
+        try {
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(target));
+            Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    zos.putNextEntry(new ZipEntry(source.toPath().relativize(file).toString()));
+                    Files.copy(file, zos);
+                    zos.closeEntry();
+                    return FileVisitResult.CONTINUE;
                 }
-            }
-        });
+            });
+            zos.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     void ExtractFilesFromFolderAndConvert(String input, String output, String[] limitedFiles, int[] dims) {

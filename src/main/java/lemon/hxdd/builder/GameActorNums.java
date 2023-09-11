@@ -3,15 +3,11 @@ package lemon.hxdd.builder;
 import lemon.hxdd.Application;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.zeroturnaround.zip.ZipEntryCallback;
-import org.zeroturnaround.zip.ZipUtil;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.zip.ZipEntry;
 
 // Automate creation of Game Unique MapInfo DoomEdNums and SpawnNums.
 public class GameActorNums {
