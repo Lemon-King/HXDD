@@ -1,24 +1,30 @@
 package lemon.hxdd.builder;
 
 import lemon.hxdd.Application;
-import net.mtrop.doom.Wad;
-import net.mtrop.doom.WadFile;
+//import net.mtrop.doom.Wad;
+//import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
 import net.mtrop.doom.graphics.Picture;
-import net.mtrop.doom.object.BinaryObject;
+//import net.mtrop.doom.object.BinaryObject;
 import net.mtrop.doom.util.GraphicUtils;
 import org.zeroturnaround.zip.ZipEntryCallback;
 import org.zeroturnaround.zip.ZipUtil;
-import org.zeroturnaround.zip.commons.IOUtils;
+//import org.zeroturnaround.zip.commons.IOUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
+// REPLACE ZTZIP with ZipIO Stream
+// https://stackoverflow.com/questions/23869228/how-to-read-file-from-zip-using-inputstream
+// https://stackoverflow.com/questions/15968883/how-to-zip-a-folder-itself-using-java
 
 // Much like WADAssets, this will extract assets from GZDoom's pk3 files.
 // ref: https://github.com/zeroturnaround/zt-zip
@@ -34,19 +40,70 @@ public class ZipAssets {
         this.zipFile = zf;
     }
 
+    public void readZipStream(InputStream in) throws IOException {
+        ZipInputStream zipIn = new ZipInputStream(in);
+        ZipEntry entry;
+        while ((entry = zipIn.getNextEntry()) != null) {
+            //readContents(zipIn);
+            zipIn.closeEntry();
+        }
+    }
+
+    private void readContents(InputStream contentsIn) throws IOException {
+        byte[] contents = new byte[4096];
+        int direct;
+        while ((direct = contentsIn.read(contents, 0, contents.length)) >= 0) {
+            System.out.println("Read " + direct + "bytes content.");
+        }
+    }
+
     // Dumps files into Temporary
     void ExtractSingleFile(String input, String output) {
         String path = this.app.settings.GetPath("temp");
-        File fileOutputFolder = new File(path);
-        if (!fileOutputFolder.exists()) {
-            fileOutputFolder.mkdirs();
-        }
 
-        ZipUtil.unpackEntry(this.zipFile, input, new File(path + "/" + output));
+        try {
+            FileInputStream fis = new FileInputStream(this.zipFile);
+            ZipInputStream zis = new ZipInputStream(fis);
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (input.equals(entry.getName())) {
+
+                    OutputStream os = new FileOutputStream(path + "/" + output);
+                    os.write(zis.readAllBytes());
+                    os.close();
+
+                    zis.closeEntry();
+                    break;
+                }
+                zis.closeEntry();
+            }
+            zis.close();
+            fis.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     byte[] ExtractFileAsData(String path) {
-        return ZipUtil.unpackEntry(new File(path), path);
+        byte[] data = new byte[0];
+        try {
+            FileInputStream fis = new FileInputStream(this.zipFile);
+            ZipInputStream zis = new ZipInputStream(fis);
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (entry.getName().equals(path)) {
+                    data = zis.readAllBytes();
+                    zis.closeEntry();
+                    break;
+                }
+                zis.closeEntry();
+            }
+            zis.close();
+            fis.close();
+        } catch (IOException e) {
+        }
+        return data;
+        //return ZipUtil.unpackEntry(new File(path), path);
     }
 
     void ExtractFilesFromFolder(String input, String output) {
@@ -64,7 +121,8 @@ public class ZipAssets {
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
                     File fileOutput = new File(path + output + "/" + cleanedName);
                     OutputStream outputStream = new FileOutputStream(fileOutput);
-                    IOUtils.copy(in, outputStream);
+                    outputStream.write(in.read());
+                    outputStream.close();
                 }
             }
         });
@@ -92,17 +150,19 @@ public class ZipAssets {
             pal = GraphicUtils.HEXEN;
         }
 
-        //System.out.println("Opening PK3 " + wadPath + this.zipFile);
         final Palette finalPal = pal;
-        ZipUtil.iterate(this.zipFile, new ZipEntryCallback() {
-            public void process(InputStream in, ZipEntry zipEntry) {
-                if (!zipEntry.isDirectory() && zipEntry.getName().startsWith(input)) {
-                    String fileName = zipEntry.getName();
+
+        try {
+            FileInputStream fis = new FileInputStream(this.zipFile);
+            ZipInputStream zis = new ZipInputStream(fis);
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                if (!entry.isDirectory() && entry.getName().startsWith(input)) {
+                    String fileName = entry.getName();
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
 
                     if (limitedFiles != null && limitedFiles.length > 0) {
                         if (!Arrays.asList(limitedFiles).contains(cleanedName)) {
-                            //System.out.println("Skipped file " + cleanedName);
                             return;
                         }
                     }
@@ -110,26 +170,30 @@ public class ZipAssets {
                         if (fileName.contains(".lmp")) {
                             String npath = path + "/" + output + "/" + cleanedName.replace("lmp", "png");
                             if (dims != null) {
-                                ExportGraphic(npath, in, finalPal, dims);
+                                ExportGraphic(npath, zis, finalPal, dims);
                             } else {
-                                Export(npath, in, finalPal, dims);
+                                Export(npath, zis, finalPal, dims);
                             }
                         } else {
                             try {
                                 File fileOutput = new File(path + "/" + output + "/" + cleanedName);
                                 OutputStream outputStream = new FileOutputStream(fileOutput);
-                                IOUtils.copy(in, outputStream);
+                                outputStream.write(zis.readAllBytes());
+                                outputStream.close();
                             } catch (IOException fileNotFoundException) {
                                 fileNotFoundException.printStackTrace();
                             }
                         }
-                        in.close();
                     } catch (Exception e) {
-                        //e.printStackTrace();
                     }
                 }
+                zis.closeEntry();
             }
-        });
+            zis.close();
+            fis.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void Export(String path, InputStream in, Palette pal, int[] dimensions) {
