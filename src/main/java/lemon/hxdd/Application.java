@@ -32,6 +32,7 @@ public class Application extends javafx.application.Application {
         if (Objects.equals(version, "")) {
             version = GITVersion.getInstance().GetProperties().getProperty("git.build.version");
         }
+        System.out.println("HXDD Version: " + version);
 
         this.appStage = stage;
         this.settings = new AppSettings();

@@ -371,7 +371,6 @@ public class PackageBuilder implements Runnable {
         float count = 0;
         for (Pair<String, Color[]> set : colorSwap) {
             String path = String.format("%s/%s", pathTemporary, set.getKey());
-            System.out.println(path);
             PostProcessImageData(path, set.getValue()[0], set.getValue()[1]);
             this.app.controller.SetCurrentProgress(++count / (float)colorSwap.size());
         }
