@@ -21,7 +21,7 @@ public final class NameUtils
 	/** A regex pattern that matches valid entry names. */
 	public static final Pattern ENTRY_NAME = Pattern.compile("[A-Z0-9\\[\\]\\-\\_\\^+\\\\]{1,8}");
 	/** A regex pattern that matches valid texture names. */
-	public static final Pattern TEXTURE_NAME = Pattern.compile("(\\-|[A-Z0-9\\-\\_+]{1,8})");
+	public static final Pattern TEXTURE_NAME = ENTRY_NAME;
 
 	/** The name of the "blank" texture. */
 	public static final String EMPTY_TEXTURE_NAME = "-";
@@ -59,7 +59,7 @@ public final class NameUtils
 	 * Tests if an input string is a valid entry name.
 	 * <p>
 	 * A WadEntry must have a name that is up to 8 characters long, and can only contain
-	 * A-Z (uppercase only), 0-9, and [ ] - _, and +, plus the backslash ("\"). 
+	 * A-Z (uppercase only), 0-9, and [ ] - _, and +, plus the backslash ("\").
 	 * @param name the input name to test.
 	 * @return true if so, false if not.
 	 */
@@ -86,13 +86,13 @@ public final class NameUtils
 	{
 		if (isValidEntryName(name))
 			return name;
-		
+
 		if (isStringEmpty(name))
 			return "-";
-			
+
 		// remove diacritics
 		name = Normalizer.normalize(name, Form.NFC);
-		
+
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 8 && i < name.length(); i++)
 		{
@@ -125,10 +125,10 @@ public final class NameUtils
 			else
 				sb.append('-');
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Tests if an input string is a valid entry name, and if not, throws an exception.
 	 * @param name the input name to test.
@@ -145,19 +145,19 @@ public final class NameUtils
 	 * Tests if an input string is a valid texture name.
 	 * <p>
 	 * A Texture must have an alphanumeric name that is up to 8 characters long, and can only contain
-	 * A-Z (uppercase only), 0-9, -, _, and + or just "-" 
+	 * A-Z (uppercase only), 0-9, and [ ] - _, and +, plus the backslash ("\") or just "-".
 	 * @param name the input name to test.
 	 * @return true if so, false if not.
 	 */
 	public static boolean isValidTextureName(String name)
 	{
-		return !isStringEmpty(name) && TEXTURE_NAME.matcher(name).matches();
+		return "-".equals(name) || isValidEntryName(name);
 	}
 
 	/**
 	 * Tests if an input string is a valid entry name, and if not, converts it into a valid one.
 	 * <p>
-	 * All characters must be A-Z (uppercase only), 0-9, -, _, and +.
+	 * In a valid texture, all characters must be A-Z (uppercase only), 0-9, and [ ] - _ ^ and + plus the backslash ("\").
 	 * <p>
 	 * Blank/null names are changed to "-".
 	 * <p>
@@ -172,39 +172,11 @@ public final class NameUtils
 	{
 		if (isValidTextureName(name))
 			return name;
-		
+
 		if (isStringEmpty(name))
 			return EMPTY_TEXTURE_NAME;
-			
-		// remove diacritics
-		name = Normalizer.normalize(name, Form.NFC);
-		
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < 8 && i < name.length(); i++)
-		{
-			char c = name.charAt(i);
-			if (c == '\0')
-				break;
-			else if (Character.isLetter(c))
-			{
-				if (Character.isLowerCase(c))
-					sb.append(Character.toUpperCase(c));
-				else
-					sb.append(c);
-			}
-			else if (Character.isDigit(c))
-				sb.append(c);
-			else if (c == '-')
-				sb.append(c);
-			else if (c == '_')
-				sb.append(c);
-			else if (c == '+')
-				sb.append(c);
-			else
-				sb.append('-');
-		}
-		
-		return sb.toString();
+
+		return toValidEntryName(name);
 	}
 
 	/**
@@ -216,7 +188,7 @@ public final class NameUtils
 	public static void checkValidTextureName(String name)
 	{
 		if (!isValidTextureName(name))
-			throw new IllegalArgumentException("The provided texture name, \""+name+"\", is invalid. It must be up to 8 characters long; all characters must be A-Z (uppercase only), 0-9, and - and _.");
+			throw new IllegalArgumentException("The provided texture name, \""+name+"\", is invalid. It must be up to 8 characters long; all characters must be A-Z (uppercase only), 0-9, and [ ] - _ ^ + plus the backslash \\.");
 	}
 
 	/**
