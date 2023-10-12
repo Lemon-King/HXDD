@@ -38,7 +38,7 @@ jobs:
       # Install the Gluon License (optional)
       # Using this step requires you to set a GLUON_LICENSE secret in the secret configuration of your repo. Have a look at https://gluonhq.com/products/mobile/buy for more information about obtaining a license.
       - name: Gluon License
-        uses: gluonhq/gluon-build-license@v2
+        uses: gluonhq/gluon-build-license@v1
         with:
           gluon-license: ${{ secrets.GLUON_LICENSE }}
         
