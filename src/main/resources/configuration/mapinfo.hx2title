@@ -1,4 +1,0 @@
-// only load if Hexen II OST is found
-GameInfo {
-	titlemusic = "casa1"
-}

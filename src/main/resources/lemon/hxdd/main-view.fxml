@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxWidth="740.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lemon.hxdd.gui.MainViewController">
+         <top>
+            <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="240.0" BorderPane.alignment="CENTER">
+               <children>
+                  <StackPane prefHeight="140.0" prefWidth="720.0">
+                     <children>
+                        <Label text="HXDD" textFill="#840000">
+                           <font>
+                              <Font name="Impact" size="78.0" />
+                           </font>
+                        </Label>
+                  <StackPane maxHeight="140.0" maxWidth="108.0" minWidth="108.0" prefHeight="140.0" prefWidth="108.0" translateX="-170.0" translateY="20.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.96">
+                           <image>
+                              <Image url="@keystatue.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.396" translateY="-100.0">
+                           <image>
+                              <Image url="@keystatue_orb.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="256.0" layoutY="55.0" maxHeight="140.0" maxWidth="108.0" minWidth="108.0" prefHeight="140.0" prefWidth="108.0" translateX="170.0" translateY="20.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.96">
+                           <image>
+                              <Image url="@keystatue.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.396" translateY="-100.0">
+                           <image>
+                              <Image url="@keystatue_orb.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <Label fx:id="labelVersion" alignment="TOP_LEFT" text="VERSION" textAlignment="RIGHT" textFill="#00000080" translateX="-4.0" translateY="-4.0" StackPane.alignment="BOTTOM_RIGHT" />
+                     </children>
+               <padding>
+                  <Insets top="24.0" />
+               </padding>
+                  </StackPane>
+               </children>
+            </HBox>
+         </top>
+         <center>
+            <AnchorPane layoutY="128.0">
+               <children>
+            <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox fx:id="fpSetup" prefWidth="740.0" visible="false">
+                     <children>
+                        <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="550.0">
+                           <children>
+                              <AnchorPane prefHeight="550.0" prefWidth="324.0">
+                                 <children>
+                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="324.0" text="Source Files" textFill="#00000099" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <content>
+                                        <AnchorPane>
+                                             <children>
+                                                            <VBox>
+                                                               <children>
+                                                                        <VBox>
+                                                                           <children>
+                                                                              <StackPane prefHeight="60.0" prefWidth="300.0">
+                                                                                 <children>
+                                                                                    <VBox prefHeight="52.0" prefWidth="300.0">
+                                                                                       <children>
+                                                                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                                                       <children>
+                                                                                          <Rectangle arcHeight="30.0" arcWidth="25.0" height="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="0.0" width="300.0" StackPane.alignment="CENTER_LEFT">
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <fill>
+                                                                                                <LinearGradient endX="0.8075709538504905" endY="0.8075709538504905">
+                                                                                                   <stops>
+                                                                                                      <Stop>
+                                                                                                         <color>
+                                                                                                            <Color red="0.5254902243614197" green="0.0941176488995552" blue="0.0941176488995552" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                      <Stop offset="1.0">
+                                                                                                         <color>
+                                                                                                            <Color red="0.5263158082962036" green="0.09421702474355698" blue="0.09421702474355698" opacity="0.0" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                   </stops>
+                                                                                                </LinearGradient>
+                                                                                             </fill>
+                                                                                          </Rectangle>
+                                                                                                <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="300.0" text="GZDOOM PATH" textFill="#ffffffe5" StackPane.alignment="CENTER_LEFT">
+                                                                                                   <font>
+                                                                                                      <Font name="System Bold" size="16.5" />
+                                                                                                   </font>
+                                                                                                   <opaqueInsets>
+                                                                                                      <Insets />
+                                                                                                   </opaqueInsets>
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <padding>
+                                                                                                <Insets left="8.0" />
+                                                                                             </padding>
+                                                                                                </Label>
+                                                                                       </children>
+                                                                                    </StackPane>
+                                                                                          <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="300.0">
+                                                                                             <opaqueInsets>
+                                                                                                <Insets />
+                                                                                             </opaqueInsets>
+                                                                                             <children>
+                                                                                                <Button fx:id="btnSelectPath_GZDOOM" mnemonicParsing="false" onAction="#onButtonClick_SelectPath_GZDOOM" text="📁">
+                                                                                                   <HBox.margin>
+                                                                                                      <Insets left="8.0" />
+                                                                                                   </HBox.margin>
+                                                                                                </Button>
+                                                                                                <Label fx:id="labelPathGZDOOM" prefHeight="17.0" prefWidth="148.0" text="Select GZDOOM Folder" textFill="#00000099">
+                                                                                                   <HBox.margin>
+                                                                                                      <Insets left="9.0" />
+                                                                                                   </HBox.margin>
+                                                                                                </Label>
+                                                                                             </children>
+                                                                                          </HBox>
+                                                                                       </children>
+                                                                                    </VBox>
+                                                                                    <CheckBox disable="true" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" scaleZ="1.5" selected="true" translateX="125.0" translateY="11.0" visible="false" />
+                                                                                 </children>
+                                                                              </StackPane>
+                                                                           </children>
+                                                                     <padding>
+                                                                        <Insets bottom="8.0" top="2.0" />
+                                                                     </padding>
+                                                                        </VBox>
+                                                                  <Separator prefWidth="280.0" scaleX="0.95">
+                                                                     <VBox.margin>
+                                                                        <Insets bottom="4.0" top="4.0" />
+                                                                     </VBox.margin>
+                                                                  </Separator>
+                                                                  <VBox layoutX="10.0" layoutY="10.0" prefWidth="320.0">
+                                                                     <children>
+                                                                        <StackPane prefHeight="60.0" prefWidth="300.0">
+                                                                           <children>
+                                                                              <VBox prefHeight="52.0" prefWidth="300.0">
+                                                                                 <children>
+                                                                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                                                       <children>
+                                                                                          <Rectangle arcHeight="30.0" arcWidth="25.0" height="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="0.0" width="300.0" StackPane.alignment="CENTER_LEFT">
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <fill>
+                                                                                                <LinearGradient endX="0.8075709538504905" endY="0.8075709538504905">
+                                                                                                   <stops>
+                                                                                                      <Stop>
+                                                                                                         <color>
+                                                                                                            <Color red="0.09359999746084213" green="0.5199999809265137" blue="0.18111886084079742" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                      <Stop offset="1.0">
+                                                                                                         <color>
+                                                                                                            <Color red="0.09359999746084213" green="0.5199999809265137" blue="0.16280099749565125" opacity="0.0" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                   </stops>
+                                                                                                </LinearGradient>
+                                                                                             </fill>
+                                                                                          </Rectangle>
+                                                                                          <Label fx:id="labelVersionHeretic" contentDisplay="CENTER" prefHeight="20.0" prefWidth="300.0" text="HERETIC" textFill="#ffffffe5" StackPane.alignment="CENTER_LEFT">
+                                                                                             <font>
+                                                                                                <Font name="System Bold" size="16.5" />
+                                                                                             </font>
+                                                                                             <opaqueInsets>
+                                                                                                <Insets />
+                                                                                             </opaqueInsets>
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <padding>
+                                                                                                <Insets left="8.0" />
+                                                                                             </padding>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </StackPane>
+                                                                                    <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHeretic" mnemonicParsing="false" text="📄">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHeretic" prefHeight="17.0" prefWidth="148.0" text="Select Heretic WAD File" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </HBox>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                           </children>
+                                                                        </StackPane>
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets bottom="8.0" />
+                                                                     </padding>
+                                                                  </VBox>
+                                                                  <VBox layoutX="10.0" layoutY="105.0" prefWidth="320.0">
+                                                                     <children>
+                                                                        <StackPane prefHeight="60.0" prefWidth="300.0">
+                                                                           <children>
+                                                                              <VBox prefHeight="52.0" prefWidth="300.0">
+                                                                                 <children>
+                                                                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                                                       <children>
+                                                                                          <Rectangle arcHeight="30.0" arcWidth="25.0" height="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="0.0" width="300.0" StackPane.alignment="CENTER_LEFT">
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <fill>
+                                                                                                <LinearGradient endX="0.8075709538504905" endY="0.8075709538504905">
+                                                                                                   <stops>
+                                                                                                      <Stop>
+                                                                                                         <color>
+                                                                                                            <Color red="0.5254902243614197" green="0.0941176488995552" blue="0.0941176488995552" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                      <Stop offset="1.0">
+                                                                                                         <color>
+                                                                                                            <Color red="0.09359999746084213" green="0.5199999809265137" blue="0.16280099749565125" opacity="0.0" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                   </stops>
+                                                                                                </LinearGradient>
+                                                                                             </fill>
+                                                                                          </Rectangle>
+                                                                                          <Label fx:id="labelVersionHexen" contentDisplay="CENTER" prefHeight="20.0" prefWidth="300.0" text="HEXEN" textFill="#ffffffe5" StackPane.alignment="CENTER_LEFT">
+                                                                                             <font>
+                                                                                                <Font name="System Bold" size="16.5" />
+                                                                                             </font>
+                                                                                             <opaqueInsets>
+                                                                                                <Insets />
+                                                                                             </opaqueInsets>
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <padding>
+                                                                                                <Insets left="8.0" />
+                                                                                             </padding>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </StackPane>
+                                                                                    <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexen" mnemonicParsing="false" text="📄">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexen" prefHeight="17.0" prefWidth="148.0" text="Select Hexen WAD File" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </HBox>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                           </children>
+                                                                        </StackPane>
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets bottom="8.0" />
+                                                                     </padding>
+                                                                  </VBox>
+                                                                  <VBox layoutX="10.0" layoutY="165.0" prefWidth="320.0">
+                                                                     <children>
+                                                                        <StackPane prefHeight="60.0" prefWidth="300.0">
+                                                                           <children>
+                                                                              <VBox prefHeight="52.0" prefWidth="300.0">
+                                                                                 <children>
+                                                                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                                                       <children>
+                                                                                          <Rectangle arcHeight="30.0" arcWidth="25.0" height="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="0.0" width="300.0" StackPane.alignment="CENTER_LEFT">
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <fill>
+                                                                                                <LinearGradient endX="0.8075709538504905" endY="0.8075709538504905">
+                                                                                                   <stops>
+                                                                                                      <Stop>
+                                                                                                         <color>
+                                                                                                            <Color red="0.5254902243614197" green="0.0941176488995552" blue="0.0941176488995552" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                      <Stop offset="1.0">
+                                                                                                         <color>
+                                                                                                            <Color red="0.09359999746084213" green="0.5199999809265137" blue="0.16280099749565125" opacity="0.0" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                   </stops>
+                                                                                                </LinearGradient>
+                                                                                             </fill>
+                                                                                          </Rectangle>
+                                                                                          <Label fx:id="labelVersionHexenDD" contentDisplay="CENTER" prefHeight="20.0" prefWidth="300.0" text="HEXEN DEATHKINGS" textFill="#ffffffe5" StackPane.alignment="CENTER_LEFT">
+                                                                                             <font>
+                                                                                                <Font name="System Bold" size="16.5" />
+                                                                                             </font>
+                                                                                             <opaqueInsets>
+                                                                                                <Insets />
+                                                                                             </opaqueInsets>
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <padding>
+                                                                                                <Insets left="8.0" />
+                                                                                             </padding>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </StackPane>
+                                                                                    <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexenDD" mnemonicParsing="false" text="📄">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexenDD" prefHeight="17.0" prefWidth="148.0" text="Select HEXDD WAD File" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </HBox>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                           </children>
+                                                                        </StackPane>
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets bottom="8.0" />
+                                                                     </padding>
+                                                                  </VBox>
+                                                                  <Separator layoutX="10.0" layoutY="86.0" prefWidth="280.0" scaleX="0.95">
+                                                                     <VBox.margin>
+                                                                        <Insets bottom="4.0" top="4.0" />
+                                                                     </VBox.margin>
+                                                                  </Separator>
+                                                                  <VBox layoutX="10.0" layoutY="233.0" prefWidth="320.0">
+                                                                     <children>
+                                                                        <StackPane prefHeight="60.0" prefWidth="300.0">
+                                                                           <children>
+                                                                              <VBox prefHeight="52.0" prefWidth="300.0">
+                                                                                 <children>
+                                                                                    <StackPane prefHeight="150.0" prefWidth="200.0">
+                                                                                       <children>
+                                                                                          <Rectangle arcHeight="30.0" arcWidth="25.0" height="20.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="0.0" width="300.0" StackPane.alignment="CENTER_LEFT">
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <fill>
+                                                                                                <LinearGradient endX="0.8075709538504905" endY="0.8075709538504905">
+                                                                                                   <stops>
+                                                                                                      <Stop>
+                                                                                                         <color>
+                                                                                                            <Color red="0.5254902243614197" green="0.0941176488995552" blue="0.0941176488995552" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                      <Stop offset="1.0">
+                                                                                                         <color>
+                                                                                                            <Color red="0.09359999746084213" green="0.5199999809265137" blue="0.16280099749565125" opacity="0.0" />
+                                                                                                         </color>
+                                                                                                      </Stop>
+                                                                                                   </stops>
+                                                                                                </LinearGradient>
+                                                                                             </fill>
+                                                                                          </Rectangle>
+                                                                                          <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="300.0" text="HEXEN II (Optional)" textFill="#ffffffe5" StackPane.alignment="CENTER_LEFT">
+                                                                                             <font>
+                                                                                                <Font name="System Bold" size="16.5" />
+                                                                                             </font>
+                                                                                             <opaqueInsets>
+                                                                                                <Insets />
+                                                                                             </opaqueInsets>
+                                                                                             <StackPane.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </StackPane.margin>
+                                                                                             <padding>
+                                                                                                <Insets left="8.0" />
+                                                                                             </padding>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </StackPane>
+                                                                                    <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexenII_PAK0" mnemonicParsing="false" text="📄 PAK0">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexenII_PAK0" prefHeight="17.0" prefWidth="148.0" text="Select PAK0" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                       <VBox.margin>
+                                                                                          <Insets bottom="4.0" top="4.0" />
+                                                                                       </VBox.margin>
+                                                                                    </HBox>
+                                                                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="43.0" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexenII_PAK1" mnemonicParsing="false" text="📄 PAK1">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexenII_PAK1" prefHeight="17.0" prefWidth="148.0" text="Select PAK1" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                       <VBox.margin>
+                                                                                          <Insets bottom="4.0" />
+                                                                                       </VBox.margin>
+                                                                                    </HBox>
+                                                                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="61.0" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexenII_PAK3" mnemonicParsing="false" text="📄 PAK3">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexenII_PAK3" prefHeight="17.0" prefWidth="148.0" text="Select PAK3 (Expansion)" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                       <VBox.margin>
+                                                                                          <Insets bottom="4.0" />
+                                                                                       </VBox.margin>
+                                                                                    </HBox>
+                                                                                    <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="89.0" prefHeight="40.0" prefWidth="300.0">
+                                                                                       <opaqueInsets>
+                                                                                          <Insets />
+                                                                                       </opaqueInsets>
+                                                                                       <children>
+                                                                                          <Button fx:id="btnHexenII_PAK4" mnemonicParsing="false" text="📄 PAK4">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="8.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Button>
+                                                                                          <Label fx:id="labelPathHexenII_PAK4" prefHeight="17.0" prefWidth="148.0" text="Select PAK4 (Hexen World)" textFill="#00000099">
+                                                                                             <HBox.margin>
+                                                                                                <Insets left="9.0" />
+                                                                                             </HBox.margin>
+                                                                                          </Label>
+                                                                                       </children>
+                                                                                    </HBox>
+                                                                                 </children>
+                                                                              </VBox>
+                                                                              <CheckBox disable="true" mnemonicParsing="false" scaleX="1.5" scaleY="1.5" scaleZ="1.5" selected="true" translateX="125.0" translateY="11.0" visible="false" />
+                                                                           </children>
+                                                                        </StackPane>
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets bottom="8.0" />
+                                                                     </padding>
+                                                                  </VBox>
+                                                               </children>
+                                                            </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                    </TitledPane>
+                                 </children>
+                              </AnchorPane>
+                              <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="550.0" prefWidth="380.0" text="Options" textFill="#00000099">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="225.0" prefHeight="35.0" prefWidth="352.0">
+                                             <children>
+                                                <CheckBox fx:id="cxEnableHexenII" mnemonicParsing="false" text="Enable HEXEN II (WIP)">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin>
+                                                </CheckBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="14.0" prefHeight="28.0" prefWidth="352.0">
+                                             <children>
+                                                <Label prefHeight="17.0" prefWidth="147.0" text="Title Screen">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="42.0" prefHeight="35.0" prefWidth="352.0">
+                                             <children>
+                                                <CheckBox fx:id="cxDownloadTitleSteam" mnemonicParsing="false" text="Download Steam Header as Title Screen">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin>
+                                                </CheckBox>
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="9.0" layoutY="212.0" prefWidth="360.0" />
+                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="132.0" prefHeight="28.0" prefWidth="352.0">
+                                             <children>
+                                                <Label prefHeight="17.0" prefWidth="147.0" text="Korax Localization">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0" />
+                                             </children>
+                                          </HBox>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="This setting will download Korax Voice files from TCRF in the selected language." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="260.0" prefHeight="41.0" prefWidth="293.0" text="WARNING: Hexen II functionality is a work in progress, has classes which are being developed, and may crash." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
+                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="77.0" prefHeight="28.0" prefWidth="352.0">
+                                             <children>
+                                                <Label prefHeight="17.0" prefWidth="147.0" text="Title Music">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0" />
+                                             </children>
+                                          </HBox>
+                                          <Separator layoutX="9.0" layoutY="118.0" prefWidth="360.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                                 <FlowPane.margin>
+                                    <Insets left="16.0" />
+                                 </FlowPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </TitledPane>
+                           </children>
+                        </FlowPane>
+                        <HBox alignment="CENTER" prefHeight="60.0">
+                           <children>
+                              <StackPane prefHeight="150.0" prefWidth="740.0">
+                                 <children>
+                                         <Button alignment="CENTER" maxHeight="-Infinity" onAction="#onButtonClick_Start" prefHeight="26.0" prefWidth="200.0" text="BUILD HXDD" />
+                                    <Button mnemonicParsing="false" onAction="#onButtonClick_About" prefWidth="72.0" text="ABOUT" StackPane.alignment="CENTER_RIGHT">
+                                       <StackPane.margin>
+                                          <Insets right="2.0" />
+                                       </StackPane.margin>
+                                    </Button>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <FlowPane fx:id="fpProgress" alignment="TOP_CENTER" prefWidth="740.0" prefWrapLength="740.0" visible="false">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="75.0" prefWidth="740.0" text="BUILDING HXDD">
+                           <font>
+                              <Font name="System Bold" size="40.0" />
+                           </font>
+                           <FlowPane.margin>
+                              <Insets bottom="50.0" top="50.0" />
+                           </FlowPane.margin>
+                        </Label>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="740.0">
+                           <children>
+                              <Label fx:id="labelStage" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="740.0" text="HXDD PROGRESS" textAlignment="CENTER">
+                                 <font>
+                                    <Font name="System Bold" size="22.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="8.0" top="8.0" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="labelCurrent" alignment="CENTER" prefWidth="740.0" text="CURRENT PROCESS" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="8.0" top="12.0" />
+                                 </padding>
+                              </Label>
+                              <ProgressBar fx:id="pbCurrent" prefHeight="35.0" prefWidth="740.0" progress="0.0">
+                                 <padding>
+                                    <Insets left="64.0" right="64.0" />
+                                 </padding>
+                              </ProgressBar>
+                              <Pane prefHeight="40.0" prefWidth="740.0" />
+                           </children>
+                        </VBox>
+                     </children></FlowPane>
+                  <VBox fx:id="fpComplete" alignment="CENTER" prefWidth="740.0" visible="false">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="740.0">
+                           <children>
+                              <VBox alignment="CENTER" prefWidth="740.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="75.0" prefWidth="740.0" text="COMPLETE!">
+                                       <font>
+                                          <Font name="System Bold" size="40.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="32.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Label text="Your copy of HXDD has finished building." textAlignment="CENTER">
+                                       <padding>
+                                          <Insets bottom="8.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label text="Copy HXDD.ipk3 to your GZDOOM wad folder where it can be detected.">
+                                       <padding>
+                                          <Insets bottom="8.0" />
+                                       </padding>
+                                    </Label>
+                                    <Button fx:id="btnOpenFolder" mnemonicParsing="false" prefHeight="50.0" prefWidth="350.0" text="OPEN FOLDER">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets top="16.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="fpInformation" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="740.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="740.0">
+                           <children>
+                              <VBox alignment="CENTER" prefWidth="740.0">
+                                 <children>
+                                    <Label layoutX="227.0" layoutY="163.0" text="Source &amp; Updates can be found on Github:">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <Hyperlink fx:id="hplGithub" text="https://github.com/Lemon-King/HXDD">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="64.0" />
+                                       </VBox.margin>
+                                    </Hyperlink>
+                                    <Label text="Applications &amp; Libraries Used">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="DoomStruct by MTrop:" GridPane.halignment="RIGHT">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplDoomStruct" text="https://github.com/MTrop/DoomStruct" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label layoutX="218.0" layoutY="13.0" text="zt-zip by ZeroTurnaround:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplZip" layoutX="380.0" layoutY="8.0" text="https://github.com/zeroturnaround/zt-zip" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label layoutX="218.0" layoutY="13.0" text="Noesis by Rich Whitehouse:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Hyperlink fx:id="hplNoesis" layoutX="380.0" layoutY="8.0" text="https://richwhitehouse.com" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Hyperlink>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="16.0" />
+                                       </VBox.margin>
+                                    </GridPane>
+                                    <Label text="Need Heretic &amp; Hexen?">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane>
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Hyperlink fx:id="hplSteam" text="https://store.steampowered.com/sub/439/" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Hyperlink fx:id="hplGOG" text="https://www.gog.com/en/game/heretic_hexen_collection" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Hyperlink>
+                                          <Label text="Steam HERETIC/HEXEN PACK:" GridPane.halignment="RIGHT">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="10.0" layoutY="13.0" text="GOG Heretic + Hexen Collection:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </GridPane>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="60.0">
+                           <children>
+                              <StackPane alignment="CENTER_LEFT" prefHeight="150.0" prefWidth="740.0">
+                                 <children>
+                                    <Button alignment="CENTER" maxHeight="-Infinity" onAction="#onButtonClick_Back" prefHeight="26.0" prefWidth="125.0" text="BACK" StackPane.alignment="CENTER">
+                                       <StackPane.margin>
+                                          <Insets right="8.0" />
+                                       </StackPane.margin>
+                                    </Button>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+               </padding>
+            </AnchorPane>
+         </center>
+         <bottom>
+            <HBox alignment="CENTER" BorderPane.alignment="CENTER" />
+         </bottom>
+</BorderPane>
