@@ -44,7 +44,7 @@ jobs:
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build with Git-Commit-ID
         shell: cmd
-        run: .\mvnw -Pdesktop git-commit-id:revision gluonfx:build gluonfx:package assembly:single
+        run: .\mvnw -Pdesktop git-commit-id:revision gluonfx:build assembly:single
 
       # Copy the native binary to the staging directory, resources, and supporting graalvm dlls
       - name: Copy native image to staging
@@ -64,7 +64,7 @@ jobs:
           cp -r ${env:GRAALVM_HOME}/bin/jvm.dll staging |
           cp -r ${env:GRAALVM_HOME}/bin/net.dll staging |
           cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging |
-          cp -r ${env:GRAALVM_HOME}/bin/zip.dll staging |
+          cp -r ${env:GRAALVM_HOME}/bin/zip.dll staging
 
       # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
       - name: Upload
