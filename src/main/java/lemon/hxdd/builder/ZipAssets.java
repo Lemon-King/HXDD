@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -25,12 +26,31 @@ public class ZipAssets {
     Application app;
     File zipFile;
 
+    FileInputStream fis;
+    ZipInputStream zis;
+
     ZipAssets(Application parent) {
         this.app = parent;
     }
 
     void SetFile(File zf) {
         this.zipFile = zf;
+    }
+
+    private void Open() {
+        try {
+            this.fis = new FileInputStream(this.zipFile);
+            this.zis = new ZipInputStream(fis);
+        } catch (FileNotFoundException e) {
+        }
+    }
+
+    private void Close() {
+        try {
+            this.zis.close();
+            this.fis.close();
+        } catch (IOException e) {
+        }
     }
 
     public void readZipStream(InputStream in) throws IOException {
@@ -50,51 +70,88 @@ public class ZipAssets {
         }
     }
 
+    ArrayList<String> GetFolderContents(String path) {
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            this.Open();
+
+            ZipEntry entry;
+            while ((entry = this.zis.getNextEntry()) != null) {
+                if (!entry.isDirectory() && entry.getName().startsWith(path)) {
+                    list.add(entry.getName());
+                    this.zis.closeEntry();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+        this.Close();
+        return list;
+    }
+
+    String ReadFileAsString(String target) {
+        String path = this.app.settings.GetPath("temp");
+
+        try {
+            this.Open();
+            ZipEntry entry;
+            while ((entry = this.zis.getNextEntry()) != null) {
+                if (target.equals(entry.getName())) {
+
+                    String data = new String(this.zis.readAllBytes());
+                    this.zis.closeEntry();
+                    return data;
+                }
+                this.zis.closeEntry();
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+        this.Close();
+        return "";
+    }
+
     // Dumps files into Temporary
     void ExtractSingleFile(String input, String output) {
         String path = this.app.settings.GetPath("temp");
 
         try {
-            FileInputStream fis = new FileInputStream(this.zipFile);
-            ZipInputStream zis = new ZipInputStream(fis);
+            this.Open();
             ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
+            while ((entry = this.zis.getNextEntry()) != null) {
                 if (input.equals(entry.getName())) {
-
                     OutputStream os = new FileOutputStream(path + "/" + output);
-                    os.write(zis.readAllBytes());
+                    os.write(this.zis.readAllBytes());
                     os.close();
 
-                    zis.closeEntry();
+                    this.zis.closeEntry();
                     break;
                 }
                 zis.closeEntry();
             }
-            zis.close();
-            fis.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e);
         }
+        this.Close();
     }
 
     byte[] ExtractFileAsData(String path) {
         byte[] data = new byte[0];
         try {
-            FileInputStream fis = new FileInputStream(this.zipFile);
-            ZipInputStream zis = new ZipInputStream(fis);
+            this.Open();
             ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
+            while ((entry = this.zis.getNextEntry()) != null) {
                 if (entry.getName().equals(path)) {
-                    data = zis.readAllBytes();
-                    zis.closeEntry();
+                    data = this.zis.readAllBytes();
+                    this.zis.closeEntry();
                     break;
                 }
-                zis.closeEntry();
+                this.zis.closeEntry();
             }
-            zis.close();
-            fis.close();
         } catch (IOException e) {
+            System.out.println("Error: " + e);
         }
+        this.Close();
         return data;
     }
 
@@ -113,8 +170,52 @@ public class ZipAssets {
             zos.close();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e);
         }
+    }
+
+    void ExtractFilesToFolder(String input, String output) {
+        String path = this.app.settings.GetPath("temp");
+        File fileOutputFolder = new File(path + "/" + output);
+        if (!fileOutputFolder.exists()) {
+            fileOutputFolder.mkdirs();
+        }
+
+        try {
+            this.Open();
+            ZipEntry entry;
+            while ((entry = this.zis.getNextEntry()) != null) {
+                if (entry.getName().startsWith(input)) {
+                    if (entry.isDirectory()) {
+                        File folder = new File(path + "/" + entry.getName());
+                        if (!folder.exists()) {
+                            folder.mkdirs();
+                        }
+                    } else {
+                        String fileName = entry.getName();
+                        String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
+
+                        try {
+                            File fileOutput = new File(output + "/" + cleanedName);
+                            File filePath = new File(fileOutput.getParent());
+                            if (!filePath.exists()) {
+                                filePath.mkdirs();
+                            };
+                            OutputStream outputStream = new FileOutputStream(fileOutput);
+                            this.zis.transferTo(outputStream);
+                            //outputStream.write(this.zis.readAllBytes());
+                            outputStream.close();
+                        } catch (IOException fileNotFoundException) {
+                            fileNotFoundException.printStackTrace();
+                        }
+                    }
+                }
+                this.zis.closeEntry();
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e);
+        }
+        this.Close();
     }
 
     void ExtractFilesFromFolderAndConvert(String input, String output, String[] limitedFiles, int[] dims) {
@@ -142,10 +243,9 @@ public class ZipAssets {
         final Palette finalPal = pal;
 
         try {
-            FileInputStream fis = new FileInputStream(this.zipFile);
-            ZipInputStream zis = new ZipInputStream(fis);
+            this.Open();
             ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
+            while ((entry = this.zis.getNextEntry()) != null) {
                 if (!entry.isDirectory() && entry.getName().startsWith(input)) {
                     String fileName = entry.getName();
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
@@ -159,15 +259,15 @@ public class ZipAssets {
                         if (fileName.contains(".lmp")) {
                             String npath = path + "/" + output + "/" + cleanedName.replace("lmp", "png");
                             if (dims != null) {
-                                ExportGraphic(npath, zis, finalPal, dims);
+                                ExportGraphic(npath, this.zis, finalPal, dims);
                             } else {
-                                Export(npath, zis, finalPal, dims);
+                                Export(npath, this.zis, finalPal, dims);
                             }
                         } else {
                             try {
                                 File fileOutput = new File(path + "/" + output + "/" + cleanedName);
                                 OutputStream outputStream = new FileOutputStream(fileOutput);
-                                outputStream.write(zis.readAllBytes());
+                                outputStream.write(this.zis.readAllBytes());
                                 outputStream.close();
                             } catch (IOException fileNotFoundException) {
                                 fileNotFoundException.printStackTrace();
@@ -176,13 +276,12 @@ public class ZipAssets {
                     } catch (Exception e) {
                     }
                 }
-                zis.closeEntry();
+                this.zis.closeEntry();
             }
-            zis.close();
-            fis.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e);
         }
+        this.Close();
     }
 
     private void Export(String path, InputStream in, Palette pal, int[] dimensions) {

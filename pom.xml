@@ -9,149 +9,266 @@
   <version>0.7.2-BETA</version>
   <name>hxdd</name>
 
+  <properties>
+    <imageName>HXDD</imageName>
+    <mainClassName>lemon.hxdd.Application</mainClassName>
+    <application.classname>lemon.hxdd.Application</application.classname>
+    <application.resources>resources</application.resources>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <javafx.version>20.0.2</javafx.version>
+
+    <gluonfx.target>host</gluonfx.target>
+  </properties>
+
   <profiles>
     <profile>
-      <id>windows</id>
+      <id>desktop</id>
       <properties>
-        <gluonfx.target>windows</gluonfx.target>
+        <gluonfxTarget>host</gluonfxTarget>
+        <orientationService>com.gluonhq.attach.orientation.impl.DesktopOrientationService</orientationService>
+        <positionService>com.gluonhq.attach.position.impl.DesktopPositionService</positionService>
       </properties>
     </profile>
   </profiles>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.9.2</junit.version>
-    <main.class>lemon.hxdd.Application</main.class>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.openjfx</groupId>
+      <artifactId>javafx-base</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>17.0.6</version>
+      <version>${javafx.version}</version>
+      <classifier>win</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-graphics</artifactId>
+      <version>${javafx.version}</version>
+      <classifier>win</classifier>
     </dependency>
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>17.0.6</version>
-    </dependency>
-            <dependency>
-      <groupId>org.controlsfx</groupId>
-      <artifactId>controlsfx</artifactId>
-      <version>11.1.2</version>
-    </dependency>    <dependency>
-      <groupId>com.dlsc.formsfx</groupId>
-      <artifactId>formsfx-core</artifactId>
-      <version>11.6.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.openjfx</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>                    
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
+      <version>${javafx.version}</version>
+      <classifier>win</classifier>
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.13.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20230227</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-nop</artifactId>
-      <version>1.7.36</version>
-    </dependency>
-    <dependency>
-      <groupId>org.zeroturnaround</groupId>
-      <artifactId>zt-zip</artifactId>
-      <version>1.15</version>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <id>Gluon</id>
+      <url>https://nexus.gluonhq.com/nexus/content/repositories/releases</url>
+    </repository>
+  </repositories>
+
   <build>
-        <plugins>
-            <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-          <source>17</source>
-          <target>17</target>
-        </configuration>
-            </plugin>
+      <plugins>
+        <plugin>
+          <groupId>com.gluonhq</groupId>
+          <artifactId>gluonfx-maven-plugin</artifactId>
+          <version>1.0.21</version>
+          <configuration>
+            <mainClass>${application.classname}</mainClass>
+            <target>${gluonfx.target}</target>
+            <nativeImageArgs>
+              -Djava.awt.headless=false
+            </nativeImageArgs>
+            <nativeImageArgs>
+              --allow-incomplete-classpath
+            </nativeImageArgs>
+            <reflectionList>
+              <list>${mainClassName}</list>
+            </reflectionList>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.6.0</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <finalName>${application.resources}</finalName>
+            <appendAssemblyId>false</appendAssemblyId>
+            <descriptors>
+              <descriptor>src/assembly/resources.xml</descriptor>
+            </descriptors>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.0.0</version>
+          <executions>
+            <execution>
+              <id>java</id>
+              <goals>
+                <goal>java</goal>
+              </goals>
+              <configuration>
+                <mainClass>${mainClassName}</mainClass>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.2.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>${mainClassName}</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.graalvm.buildtools</groupId>
+          <artifactId>native-maven-plugin</artifactId>
+          <version>0.9.26</version>
+          <configuration>
+            <buildArgs combine.children="append">
+              <buildArg>-Djava.awt.headless=false</buildArg>
+            </buildArgs>
+            <useArgFile>false</useArgFile>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.6.0</version>
+          <executions>
+            <execution>
+              <id>copy-dependencies</id>
+              <phase>package</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.directory}/modules</outputDirectory>
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>false</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
           <plugin>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-maven-plugin</artifactId>
-            <version>0.0.8</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+              <source>17</source>
+              <target>17</target>
+            </configuration>
             <executions>
               <execution>
-                <!-- Default configuration for running with: mvn clean javafx:run -->
-                <id>default-cli</id>
+                <id>copy-dependencies</id>
+                <phase>package</phase>
                 <configuration>
-                  <mainClass>lemon.hxdd.Application</mainClass>
-                  <launcher>app</launcher>
-                  <jlinkZipName>app</jlinkZipName>
-                  <jlinkImageName>app</jlinkImageName>
-                  <noManPages>true</noManPages>
-                  <stripDebug>true</stripDebug>
-                  <noHeaderFiles>true</noHeaderFiles>
+                  <mainClass>${mainClassName}</mainClass>
+                  <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                  <overWriteReleases>true</overWriteReleases>
+                  <overWriteSnapshots>true</overWriteSnapshots>
+                  <overWriteIfNewer>true</overWriteIfNewer>
+                  <includeScope>compile</includeScope>
+                  <includeScope>runtime</includeScope>
+                  <minimizeJar>true</minimizeJar>
+                </configuration>
+              </execution>
+              <execution>
+                <phase>package</phase>
+                <configuration>
+                  <minimizeJar>true</minimizeJar>
+                  <filters>
+                    <filter>
+                      <artifact>*:*</artifact>
+                      <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                      </excludes>
+                    </filter>
+                  </filters>
                 </configuration>
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>com.gluonhq</groupId>
-            <artifactId>gluonfx-maven-plugin</artifactId>
-            <version>1.0.19</version>
-            <configuration>
-              <mainClass>lemon.hxdd/lemon.hxdd.Application</mainClass>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>io.github.git-commit-id</groupId>
-            <artifactId>git-commit-id-maven-plugin</artifactId>
-            <version>6.0.0</version>
-            <executions>
-              <execution>
-                <id>get-the-git-infos</id>
-                <goals>
-                  <goal>revision</goal>
-                </goals>
-                <phase>initialize</phase>
-              </execution>
-            </executions>
-            <configuration>
-              <verbose>true</verbose>
-              <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
-              <generateGitPropertiesFile>true</generateGitPropertiesFile>
-              <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-              <includeOnlyProperties>
-                <includeOnlyProperty>^git.(branch|tags)$</includeOnlyProperty>
-                <includeOnlyProperty>^git.closest.tag.name$</includeOnlyProperty>
-                <includeOnlyProperty>^git.closest.tag.commit.count$</includeOnlyProperty>
-                <includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
-                <includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
-                <includeOnlyProperty>^git.commit.time$</includeOnlyProperty>
-              </includeOnlyProperties>
-              <commitIdGenerationMode>full</commitIdGenerationMode>
-            </configuration>
-          </plugin>
-        </plugins>
+        <plugin>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-maven-plugin</artifactId>
+          <version>0.0.8</version>
+          <configuration>
+            <mainClass>${mainClassName}</mainClass>
+          </configuration>
+          <executions>
+            <execution>
+              <!-- Default configuration for running with: mvn clean javafx:run -->
+              <id>default-cli</id>
+              <configuration>
+                <mainClass>lemon.hxdd/lemon.hxdd.Application</mainClass>
+                <launcher>hxdd</launcher>
+                <jlinkZipName>hxdd</jlinkZipName>
+                <jlinkImageName>hxdd</jlinkImageName>
+                <noManPages>true</noManPages>
+                <stripDebug>true</stripDebug>
+                <noHeaderFiles>true</noHeaderFiles>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>6.0.0</version>
+          <executions>
+            <execution>
+              <id>get-the-git-infos</id>
+              <goals>
+                <goal>revision</goal>
+              </goals>
+              <phase>initialize</phase>
+            </execution>
+          </executions>
+          <configuration>
+            <verbose>true</verbose>
+            <dateFormat>yyyy-MM-dd HH:mm:ss</dateFormat>
+            <generateGitPropertiesFile>true</generateGitPropertiesFile>
+            <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+            <includeOnlyProperties>
+              <includeOnlyProperty>^git.(branch|tags)$</includeOnlyProperty>
+              <includeOnlyProperty>^git.closest.tag.name$</includeOnlyProperty>
+              <includeOnlyProperty>^git.closest.tag.commit.count$</includeOnlyProperty>
+              <includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
+              <includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
+              <includeOnlyProperty>^git.commit.time$</includeOnlyProperty>
+            </includeOnlyProperties>
+            <commitIdGenerationMode>full</commitIdGenerationMode>
+          </configuration>
+        </plugin>
+      </plugins>
   </build>
 </project>

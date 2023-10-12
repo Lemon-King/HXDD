@@ -73,7 +73,6 @@ public class Noesis {
 
     public void ExtractPak(File pak, File destination) {
         // Example: "pak0.pak" "./wads/hexen2/data1"
-        //System.out.printf("Dumping Pak File %s\n", file);
         String args = String.format("\"%s\" \"%s/\"", pak.getAbsolutePath(), destination.getAbsolutePath());
         Run(args);
     }

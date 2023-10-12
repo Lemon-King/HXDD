@@ -24,19 +24,22 @@ public class AppSettings {
         this.paths.put("hexen2music", dir + "/hexen2music");
 
         prop_defaults.put("PATH_GZDOOM", "./");
-        prop_defaults.put("PATH_HERETIC", "");
-        prop_defaults.put("PATH_HEXEN", "");
-        prop_defaults.put("PATH_HEXDD", "");
-        prop_defaults.put("PATH_HEXENII_PAK0", "");
-        prop_defaults.put("PATH_HEXENII_PAK1", "");
-        prop_defaults.put("PATH_HEXENII_PAK2", "");
-        prop_defaults.put("PATH_HEXENII_PAK3", "");
-        prop_defaults.put("PATH_HEXENII_PAK4", "");
+        prop_defaults.put("PATH_HERETIC", "./");
+        prop_defaults.put("PATH_HEXEN", "./");
+        prop_defaults.put("PATH_HEXDD", "./");
+        prop_defaults.put("PATH_HEXENII_PAK0", "./");
+        prop_defaults.put("PATH_HEXENII_PAK1", "./");
+        prop_defaults.put("PATH_HEXENII_PAK2", "./");
+        prop_defaults.put("PATH_HEXENII_PAK3", "./");
+        prop_defaults.put("PATH_HEXENII_PAK4", "./");
+
+        prop_defaults.put("USE_DEVELOPMENT_RESOURCES", "false");
 
         prop_defaults.put("OPTION_TITLE_ARTWORK", "heretic");
         prop_defaults.put("OPTION_TITLE_MUSIC", "heretic");
         prop_defaults.put("OPTION_USE_STEAM_ARTWORK", "false");
-        prop_defaults.put("OPTION_KORAX_LOCALE", "en");
+        prop_defaults.put("OPTION_KORAX_LOCALIZATION", "en");
+        prop_defaults.put("OPTION_ENABLE_H2", "false");
         prop_defaults.put("OPTION_ENABLE_HX2", "false");
         prop_defaults.put("OPTION_USE_HX2_TITLE_MUSIC", "");
 

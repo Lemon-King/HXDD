@@ -1,3 +1,7 @@
 Manifest-Version: 1.0
 Main-Class: lemon.hxdd.Application
+Class-Path: javafx-graphics-20.0.2-win.jar javafx-base-20.0.2.jar javafx
+ -fxml-20.0.2-win.jar javafx-controls-20.0.2.jar javaf
+ x-controls-20.0.2-win.jar javafx-graphics-20.0.2.jar javafx-base-20.0.2
+ -win.jar
 

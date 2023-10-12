@@ -87,7 +87,7 @@ public class PackageBuilder implements Runnable {
             ExportMaps();
 
 
-            GameActorNums af = new GameActorNums(this.app.settings.GetPath("temp"));
+            GameActorNums af = new GameActorNums(this.app);
             af.Create();
 
             //
@@ -95,7 +95,7 @@ public class PackageBuilder implements Runnable {
             //
             // If Hexen II PAKs are found then try to export data
             String OPTION_USE_HX2 = this.app.settings.Get("OPTION_ENABLE_HX2");
-            if ("true".equals(OPTION_USE_HX2) && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
+            if (OPTION_USE_HX2.equals("true") && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
                 // If Noesis zip or folder with exe is found, try Hexen 2 paks
                 if (new Noesis(this.app).CheckAndInstall()) {
                     String owned = "base";
@@ -486,9 +486,8 @@ public class PackageBuilder implements Runnable {
                 String path_cache = this.app.settings.GetPath("cache");
 
                 File titlePNG = new File(path + "/graphics/title.png");
-                File heroJPG = new File(path_cache + "/steam_hero_artwork/_temp.jpg");
                 File steamPNG = new File(path_cache + String.format("/steam_hero_artwork/%s.png", OPTION_ARTWORK));
-                Util.CreateDirectory(heroJPG.getAbsoluteFile().getParent());
+                Util.CreateDirectory(steamPNG.getAbsoluteFile().getParent());
 
 
                 if (!steamPNG.exists()) {
@@ -498,11 +497,9 @@ public class PackageBuilder implements Runnable {
                     String uriHero = "https://cdn.cloudflare.steamstatic.com/steam/apps/%d/library_hero.jpg";
                     URL dl = new URI(String.format(uriHero, id)).toURL();
                     InputStream in = dl.openStream();
-                    Files.copy(in, Path.of(heroJPG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(in, Path.of(steamPNG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+                    in.close();
 
-                    BufferedImage bufferedImage = ImageIO.read(heroJPG);
-                    ImageIO.write(bufferedImage, "png", steamPNG);
-                    heroJPG.delete();
                     Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
                 Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -514,13 +511,13 @@ public class PackageBuilder implements Runnable {
     }
 
     private void DownloadKoraxLocalization() {
-        String OPTION_KORAX_LANGUAGE = this.app.settings.Get("OPTION_KORAX_LOCALE");
-        if (OPTION_KORAX_LANGUAGE.equals("en")) {
+        String OPTION_KORAX_LOCALIZATION = this.app.settings.Get("OPTION_KORAX_LOCALIZATION");
+        if (OPTION_KORAX_LOCALIZATION.equals("en")) {
             return;
         }
 
         HashMap<String, String> locale = new HashMap<String, String>();
-        switch (OPTION_KORAX_LANGUAGE) {
+        switch (OPTION_KORAX_LOCALIZATION) {
             case "fr" -> {
                 locale.put("GRTNGS1", "https://tcrf.net/images/c/cf/Hexen64_koraxvoicegreetings-French.ogg");
                 locale.put("READY1", "https://tcrf.net/images/0/06/Hexen64_koraxvoiceready-French.ogg");
@@ -561,7 +558,7 @@ public class PackageBuilder implements Runnable {
 
         // Download once and cache
         System.out.println("Korax Localization");
-        this.app.controller.SetStageLabel(String.format("Korax Localization (%s)", OPTION_KORAX_LANGUAGE.toUpperCase()));
+        this.app.controller.SetStageLabel(String.format("Korax Localization (%s)", OPTION_KORAX_LOCALIZATION.toUpperCase()));
         this.app.controller.SetCurrentProgress(0);
         AtomicInteger count = new AtomicInteger();
         locale.forEach((fn,uri) -> {
@@ -572,7 +569,7 @@ public class PackageBuilder implements Runnable {
             File soundOGG = new File(path + String.format("/sounds/%s.ogg", fn));
             File soundLMP = new File(path + String.format("/sounds/%s.lmp", fn));
 
-            File audio = new File(path_cache + String.format("/tcrf/%s/%s.ogg", OPTION_KORAX_LANGUAGE, fn));
+            File audio = new File(path_cache + String.format("/tcrf/%s/%s.ogg", OPTION_KORAX_LOCALIZATION, fn));
 
             Util.CreateDirectory(audio.getAbsoluteFile().getParent());
 
@@ -637,6 +634,13 @@ public class PackageBuilder implements Runnable {
         this.app.controller.SetStageLabel("Adding HXDD Assets");
         this.app.controller.SetCurrentLabel("");
         this.app.controller.SetCurrentProgress(0);
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.SetFile(new File("resources.zip"));
+        //ArrayList<String> listGameInfo = za.GetFolderContents("assets");
+        za.ExtractFilesToFolder("assets", path);
+
+        /*
         try {
             ResourceWalker rwAssets = new ResourceWalker("assets");
 
@@ -656,6 +660,7 @@ public class PackageBuilder implements Runnable {
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
+        */
     }
 
     private boolean HasPAKFiles(String[] paths) {

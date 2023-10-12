@@ -57,22 +57,33 @@ build/
 *.zip
 *.tar.gz
 *.rar
-*.pk3
-*.ipk3
 *.pdn
+
+# Native-Image files
+*.dll
+*.exe
+*.build_artifacts.txt
+svm_err*.md
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
 # local files
+*.bat
+*.txt
+hxdd.settings
+resources.zip
 /libs/
 /out/
 /cache/
 /ipk3/
 /wads/
+/models/
+
+# build process files
+*.pk3
+*.ipk3
 /target/
 /temp/
-noesis/
+/noesis/
 /hexen2/
-sprite_log.txt
-hxdd.settings

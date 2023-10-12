@@ -5,6 +5,7 @@ import lemon.hxdd.Application;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,41 +19,26 @@ public class SoundInfo {
     }
     public void Export() {
         String SettingPathTemp = this.app.settings.GetPath("temp");
-        File fileSoundInfo = new File(SettingPathTemp + "/sndinfo.hx2");
-        AtomicReference<String> sndinfo = new AtomicReference<>("");
         try {
-            ResourceWalker rw = new ResourceWalker("pakdata/hexen2");
-            rw.files.forEach((o) -> {
-                if (o.getKey().contains("sndinfo.hx2")) {
-                    try {
-                        sndinfo.set(new String(Files.readAllBytes(o.getValue().toPath())));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(new File("resources.zip"));
+            String sndinfohx2 = za.ReadFileAsString("pakdata/hexen2/sndinfo.hx2");
 
             FileWriter fw = new FileWriter(SettingPathTemp + "/sndinfo.hx2", true);
             PrintWriter out = new PrintWriter(fw);
             AddGeneratedByTag(out);
-            ListFiles(null, out);
+            ListFiles(out);
             out.println("\n");
-            out.println(sndinfo.get());
+            out.println(sndinfohx2);
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
         }
     }
 
-    private void ListFiles(String path, PrintWriter out) {
-        if (path == null) {
-            path = this.app.settings.GetPath("hexen2") + "/sound";
-        }
-
-        String directoryName = path;
-        File directory = new File(directoryName);
+    private void ListFiles(PrintWriter out) {
+        String path = this.app.settings.GetPath("hexen2") + "/sound";
+        File directory = new File(path);
 
         File[] fileList = directory.listFiles();
         if (fileList != null) {
@@ -77,7 +63,7 @@ public class SoundInfo {
                     }
                 } else if (file.isDirectory()) {
                     out.println("");
-                    ListFiles(file.getAbsolutePath(), out);
+                    //ListFiles(file.getAbsolutePath(), out);
                 }
             }
         }

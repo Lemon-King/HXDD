@@ -230,7 +230,7 @@ public class MainViewController {
                 new ChoiceBoxItem("German", "de"),
                 new ChoiceBoxItem("Japanese", "jp")
         );
-        SetChoiceBoxBindings("OPTION_KORAX_LOCALE", "en", cbKoraxLocale, list);
+        SetChoiceBoxBindings("OPTION_KORAX_LOCALIZATION", "en", cbKoraxLocale, list);
     }
 
     protected void SetChoiceBoxBindings(String key, String default_value, ChoiceBox<ChoiceBoxItem> cb, ObservableList<ChoiceBoxItem> list) {
@@ -409,7 +409,7 @@ public class MainViewController {
             boolean hasGZDoom = new File(path + "/gzdoom.pk3").isFile();
             boolean hasLights = new File(path + "/lights.pk3").isFile();
             if (hasBrightmaps && hasGamesupport && hasGameWSGFX && hasGZDoom && hasLights) {
-                this.mainApp.GetSettings().Set("Path_GZDOOM", path);
+                this.mainApp.GetSettings().Set("PATH_GZDOOM", path);
                 labelPathGZDOOM.setText(path);
                 System.out.println("GZDOOM Path: " + path);
             } else {
@@ -475,6 +475,28 @@ public class MainViewController {
     protected boolean CheckPAKAndSetLabels(String key) {
         File target = GetPathOrGZDOOM(String.format("PATH_%s", key));
 
+        if (target.isDirectory()) {
+            System.out.println("CheckPAKAndSetLabels Error: Path is a folder - " + target.toPath());
+            return false;
+        }
+        boolean success = PAKFileHasHeaders(target);
+        if (success) {
+            Label[] labels = this.labelLookup.get(key);
+            labels[0].setText(GetFileNameFromPath(target.getAbsolutePath()));
+
+            Tooltip tt = new Tooltip();
+            tt.setText(target.getAbsolutePath());
+            labels[0].setTooltip(tt);
+        }
+        return success;
+    }
+    protected boolean CheckPAKAndSetLabels(String key, String path) {
+        File target = new File(path);
+
+        if (target.isDirectory()) {
+            System.out.println("CheckPAKAndSetLabels Error: Path is a folder - " + target.toPath());
+            return false;
+        }
         boolean success = PAKFileHasHeaders(target);
         if (success) {
             Label[] labels = this.labelLookup.get(key);
@@ -490,18 +512,20 @@ public class MainViewController {
 
     @FXML
     protected void onButtonClick_SelectPath_HEXENIIPAK(Label lbl, int id) {
-        String filename_long = String.format("pak%d.pak",id);
+        String filename_long = String.format("pak%d.pak", id);
         String key = String.format("HEXENII_PAK%d", id);
         String keyPath = String.format("PATH_%s", key);
         File storedPath = GetPathOrGZDOOM(keyPath);
         File selected = OpenFileDialog(storedPath, "Select Hexen II pak0.pak File",  filename_long, filename_long);
         if (selected != null) {
-            boolean success = CheckPAKAndSetLabels(key);
+            String selectedPath = selected.getAbsolutePath();
+            boolean success = CheckPAKAndSetLabels(key, selectedPath);
             if (success) {
-                this.mainApp.GetSettings().Set(keyPath, selected.getAbsolutePath());
-                System.out.println(keyPath + " " + selected.getAbsolutePath());
+                this.mainApp.GetSettings().Set(keyPath, selectedPath);
+                System.out.println(keyPath + " " + selectedPath);
             } else {
-                DisplayAlert(selected, filename_long);
+                System.out.println(selected + " " + filename_long);
+                DisplayAlertPAK(selected, filename_long);
             }
         }
     }
@@ -575,9 +599,14 @@ public class MainViewController {
 
     // Can't find a list of known Hexen II PAK MD5s, so we're just checking for headers.
     protected boolean PAKFileHasHeaders(File target) {
+        if (!target.exists()) {
+            System.out.println("PAKFileHasHeaders Error: target does not exists");
+            return false;
+        }
         try {
             FileInputStream fIn = new FileInputStream(target);
             if (fIn.available() <= 0x36) {
+                System.out.println("PAKFileHasHeaders Error: Less than 0x36");
                 return false;
             }
             byte[] binHeader = fIn.readNBytes(4);
@@ -589,7 +618,8 @@ public class MainViewController {
 
             return header.equals("PACK") && headerData.equals("data");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("PAKFileHasHeaders Error: " + e);
+            return false;
         }
     }
 
@@ -606,14 +636,14 @@ public class MainViewController {
     protected void DisplayAlert(File f, String wadName) {
         String fileName = f.getName();
         String title = "WAD File Error";
-        String message = String.format("The file %s does not match any known %s wad.\nIf your wad file has been modified, please reinstall from the original source and try again.", fileName, wadName);
+        String message = String.format("The file %s does not match any known %s.\nIf your wad file has been modified, please reinstall from the original source and try again.", fileName, wadName);
         this.mainApp.DisplayAlert(title, message);
     }
 
     protected void DisplayAlertPAK(File f, String wadName) {
         String fileName = f.getName();
         String title = "PAK File Error";
-        String message = String.format("The headers for file %s do not match Hexen II's PAK files.", fileName);
+        String message = String.format("The headers for %s do not match Hexen II's PAK files.", fileName);
         this.mainApp.DisplayAlert(title, message);
     }
 }

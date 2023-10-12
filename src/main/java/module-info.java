@@ -1,12 +1,12 @@
-module lemon.hxdd.hxdd {
+module lemon.hxdd {
+    requires java.desktop;
+
     requires javafx.controls;
     requires javafx.fxml;
-            
-    requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires java.desktop;
-    requires zt.zip;
-    requires org.json;
+    requires javafx.graphics;
+    requires javafx.base;
+
+    requires com.google.gson;
 
     opens lemon.hxdd to javafx.fxml;
     exports lemon.hxdd;

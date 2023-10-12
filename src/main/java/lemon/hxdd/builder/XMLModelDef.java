@@ -28,6 +28,18 @@ public class XMLModelDef {
         this.app.controller.SetStageLabel("Generating ModelDefs from XMLModelDef");
         this.app.controller.SetCurrentProgress(0);
 
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.SetFile(new File("resources.zip"));
+        ArrayList<String> listModelDefs = za.GetFolderContents("pakdata/modeldef");
+
+        for (String entry : listModelDefs) {
+            String xml = za.ReadFileAsString(entry);
+            String[] entrySplit = entry.split("/");
+            Parse(xml, entrySplit[entrySplit.length - 1]);
+        }
+
+        /*
         URL res = this.getClass().getResource("");
         if (res != null) {
             String protocol = res.getProtocol();
@@ -42,16 +54,21 @@ public class XMLModelDef {
                 e.printStackTrace();
             }
         }
+        */
     }
 
-    private void Parse(File file, boolean buildAsSingleFile) {
+    private void Parse(String xml, String name) {
         try {
-            InputStream in = new FileInputStream(file);
+            //InputStream in = new FileInputStream(file);
+
+            boolean USE_DEVELOPMENT_RESOURCES = this.app.settings.Get("USE_DEVELOPMENT_RESOURCES").equals("true");
 
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-            Document docXML = dBuilder.parse(in);
+            InputStream is = new ByteArrayInputStream(xml.getBytes());
+            Document docXML = dBuilder.parse(is);
+            is.close();
 
             String className = "";
             Element XMDHeader = docXML.getDocumentElement();
@@ -70,11 +87,11 @@ public class XMLModelDef {
             }
 
 
-            String modelDefPath = "/modeldef." + file.getName().toLowerCase().replace(".xml", "");
-            if (buildAsSingleFile) {
+            String modelDefPath = "/modeldef." + name.toLowerCase().replace(".xml", "");
+            if (!USE_DEVELOPMENT_RESOURCES) {
                 modelDefPath = "/modeldef.hxdd";
             }
-            FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, buildAsSingleFile);
+            FileWriter fw = new FileWriter(this.app.settings.GetPath("temp") + modelDefPath, !USE_DEVELOPMENT_RESOURCES);
             PrintWriter out = new PrintWriter(fw);
 
             // All sub model groups
@@ -160,7 +177,7 @@ public class XMLModelDef {
                 }
             }
             out.close();
-            in.close();
+            //in.close();
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }

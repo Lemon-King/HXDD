@@ -34,4 +34,4 @@ GZDoom's pk3 assets are also processed too, due to filtering rules between Heret
 Once complete copy the result **HXXD.ipk3** to your GZDoom iwad folder.
 
 ### Libraries
-HXDD makes use of [DoomStruct](https://github.com/MTrop/DoomStruct) by Mtrop and [zt-zip](https://github.com/zeroturnaround/zt-zip) by ZeroTurnaround.
+HXDD makes use of [DoomStruct](https://github.com/MTrop/DoomStruct) by Mtrop.

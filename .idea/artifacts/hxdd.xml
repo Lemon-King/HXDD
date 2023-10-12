@@ -1,10 +1,18 @@
 <component name="ArtifactManager">
-  <artifact type="javafx" name="hxdd">
+  <artifact type="jar" name="hxdd">
     <output-path>$PROJECT_DIR$/out/artifacts/hxdd</output-path>
-    <root id="root">
+    <root id="archive" name="hxdd.jar">
       <element id="archive" name="hxdd.jar">
         <element id="module-output" name="hxdd" />
       </element>
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:win:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-fxml:win:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-controls:win:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-graphics:20.0.2" />
+      <element id="library" level="project" name="Maven: org.openjfx:javafx-base:win:20.0.2" />
+      <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.10.1" />
     </root>
   </artifact>
 </component>

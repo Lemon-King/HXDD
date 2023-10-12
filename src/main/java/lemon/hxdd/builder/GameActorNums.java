@@ -1,50 +1,48 @@
 package lemon.hxdd.builder;
 
 import lemon.hxdd.Application;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 // Automate creation of Game Unique MapInfo DoomEdNums and SpawnNums.
 public class GameActorNums {
+    Application app;
     String pathTemp;
 
     private static final List<String> TypeOrder = Arrays.asList("doomednums", "spawnnums");
     private static final List<String> GameOrder = Arrays.asList("heretic", "hexen", "doom");
 
-    GameActorNums(String pathTemp) {
-        this.pathTemp = pathTemp;
+    GameActorNums(Application app) {
+        this.app = app;
+        this.pathTemp = this.app.settings.GetPath("temp");
     }
 
     public void Create() {
         // Merge DoomEdNums and SpawnNums
-        ResourceWalker rw;
-        try {
-            rw = new ResourceWalker("gameinfo");
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.SetFile(new File("resources.zip"));
+        ArrayList<String> listGameInfo = za.GetFolderContents("gameinfo/");
 
         TypeOrder.forEach((type) -> {
-            // 0 = heretic, 1 = hexen
             List<Properties> lists = new ArrayList<>(Collections.emptyList());
             GameOrder.forEach((game) -> {
-                //System.out.println("Creating " + game + "." + type + " actors");
+                System.out.println("Creating " + game + "." + type + " actors");
                 // Properties matches GZDOOM's format and does the job.
                 Properties p = new Properties();
-                String filePath = "gameinfo/" + type + "." + game;
-                for (int i = 0; i < rw.files.size(); i++) {
-                    if (rw.files.get(i).getKey().endsWith(game)) {
+                //String filePath = "gameinfo/" + type + "." + game;
+                for (int i = 0; i < listGameInfo.size(); i++) {
+                    System.out.println(listGameInfo.get(i));
+                    String name = listGameInfo.get(i).toLowerCase().replace("gameinfo/", "");
+                    if (name.startsWith(type) && name.endsWith(game)) {
                         try {
-                            InputStream in = Application.class.getResourceAsStream(filePath);
-                            p.load(in);
-                            in.close();
+                            String data = za.ReadFileAsString(listGameInfo.get(i));
+                            p.load(new StringReader(data));
                         } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            System.out.println("Error: " + e);
                         }
                     }
                 }
@@ -60,29 +58,29 @@ public class GameActorNums {
             SortedSet<String> actorKeys = new TreeSet<>();
             for (int i = 0; i < lists.size(); i++) {
                 lists.get(i).forEach((k,v) -> {
-                    if(!actorKeys.equals(k)) {
+                    if (!actorKeys.equals(k)) {
                         actorKeys.add((String) k);
                     }
                 });
             }
 
-            JSONArray actorsJSON = new JSONArray();
+            JsonArray actorsJSON = new JsonArray();
             actorKeys.forEach((key) -> {
-                JSONObject lutActors = new JSONObject();
+                JsonObject lutActors = new JsonObject();
                 String valueHeretic = (String) p_heretic.get(key);
                 String valueHexen = (String) p_hexen.get(key);
                 String valueDoom = (String) p_doom.get(key);      // pwad mode, NYI
                 if (valueDoom != null) {
-                    lutActors.put("Doom", valueDoom);
+                    lutActors.addProperty("Doom", valueDoom);
                 }
                 if (valueHeretic != null) {
-                    lutActors.put("Heretic", valueHeretic);
+                    lutActors.addProperty("Heretic", valueHeretic);
                 }
                 if (valueHexen != null) {
-                    lutActors.put("Hexen", valueHexen);
+                    lutActors.addProperty("Hexen", valueHexen);
                 }
                 if (!lutActors.isEmpty()) {
-                    actorsJSON.put(lutActors);
+                    actorsJSON.add(lutActors);
                 }
 
                 String newValue = valueHexen;
@@ -102,35 +100,23 @@ public class GameActorNums {
                 Map<String, String> actorMap = (Map)p_hxdd;
                 SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
 
-                String zscriptActorListFilename = type + "_compat.zs";
                 String mapInfoFileName = "mapinfo." + type;
 
-                //PrintWriter file_hxdd_actors = new PrintWriter(Settings.getInstance().Get("PathTemporary") + "/zscript_generated/actors/hxdd/" + zscriptActorListFilename);
                 PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/" + mapInfoFileName);
 
-                //AddGeneratedByTag(file_hxdd_actors);
                 AddGeneratedByTag(file_mapinfo);
-                if (type == "doomednums") {
+                if (Objects.equals(type, "doomednums")) {
                     file_mapinfo.print("\nDoomEdNums\n");
-                } else if (type == "spawnnums") {
+                } else if (Objects.equals(type, "spawnnums")) {
                     file_mapinfo.print("\nSpawnNums\n");
                 }
                 file_mapinfo.print("{\n");
                 for (String key : keys) {
                     String value = actorMap.get(key);
-                    //String[] result = value.split(",");
-                    //if (result.length > 1) {
-                    //System.out.println("GameActorNums: Found shared Actors " + "ID=" + key + " " + result[0] + " " + result[1]);
-                    //String actorFile = CreateActorFile(type, key, result[0], result[1]);
-                    //file_hxdd_actors.print("#include \"zscript_generated/actors/hxdd/spawners/" + actorFile + ".zs" + "\"\n");
-                    //file_mapinfo.print(key + " = " + actorFile + "\n");
-                    //} else {
                     file_mapinfo.print(key + " = " + value + "\n");
-                    //}
                 }
                 file_mapinfo.print("}\n");
                 file_mapinfo.close();
-                //file_hxdd_actors.close();
 
             } catch (FileNotFoundException ex) {
                 // FileNotFoundException catch is optional and can be collapsed
@@ -139,7 +125,7 @@ public class GameActorNums {
         });
     }
 
-    private void CreateXGT(JSONArray list, String type) {
+    private void CreateXGT(JsonArray list, String type) {
         String path = this.pathTemp + "/xgt";
         File dirFile = new File(path);
         if (!dirFile.exists()) {
@@ -151,76 +137,6 @@ public class GameActorNums {
             out.print(list);
             out.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String CreateActorFile(String type, String id, String actorHeretic, String actorHexen) {
-        String path = this.pathTemp + "/zscript_generated/actors/hxdd/spawners/";
-        try {
-            String fileName = type + "_" + id + "_" + actorHeretic + "_" + actorHexen;
-            PrintWriter out = new PrintWriter(path + fileName + ".zs");
-            AddGeneratedByTag(out);
-            out.print("class " + fileName + " : MultiSpawner {\n");
-            out.print("    override void Bind() {\n");
-            out.print("        self.SpawnSelect = \"GameSelect\";\n");
-            out.print("        self.Heretic = \"" + actorHeretic + "\";\n");
-            out.print("        self.Hexen = \"" + actorHexen + "\";\n");
-            out.print("    }\n");
-            out.print("}");
-            out.close();
-            //System.out.println("GameActorNums: " + fileName + ".zs");
-            return fileName;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return "error.zs";
-    }
-
-    public void CreateEditorNums() {
-        // For Doom Editors using HXDD combined things as a base
-
-        System.out.println("Creating Heretic & Hexen combined editornums");
-        try {
-            String editornumsFileName = "mapinfo.editornums";
-            PrintWriter writerEditornums = new PrintWriter(this.pathTemp + "/" + editornumsFileName);
-            AddGeneratedByTag(writerEditornums);
-
-            AtomicInteger nextId = new AtomicInteger();
-            TypeOrder.forEach((type) -> {
-                if (Objects.equals(type, "doomednums")) {
-                    nextId.set(11000);
-                    writerEditornums.print("\nDoomEdNums\n");
-                } else if (Objects.equals(type, "spawnnums")) {
-                    nextId.set(200);
-                    writerEditornums.print("\nSpawnNums\n");
-                }
-                writerEditornums.print("{\n");
-
-                GameOrder.forEach((game) -> {
-                    // Properties matches GZDOOM's format and does the job.
-                    Properties p = new Properties();
-                    String filePath = "gameinfo/" + type + "." + game;
-
-                    try {
-                        InputStream inputStream = ClassLoader.getSystemResourceAsStream(filePath);
-                        p.load(inputStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    Map<String, String> actorMap = (Map)p;
-                    SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
-                    for (String key : keys) {
-                        int spawnNum = nextId.getAndIncrement();
-                        String value = actorMap.get(key);
-                        writerEditornums.print(spawnNum + " = " + value + "\n");
-                    }
-                });
-                writerEditornums.print("}\n");
-            });
-            writerEditornums.close();
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
