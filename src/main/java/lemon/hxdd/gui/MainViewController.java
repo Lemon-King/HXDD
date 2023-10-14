@@ -97,7 +97,7 @@ public class MainViewController {
     public Button btnAbout;
     public Hyperlink hplGithub;
     public Hyperlink hplDoomStruct;
-    public Hyperlink hplZip;
+    public Hyperlink hplGson;
     public Hyperlink hplNoesis;
     public Hyperlink hplSteam;
     public Hyperlink hplGOG;
@@ -190,7 +190,7 @@ public class MainViewController {
 
         BindHyperlinkURL(hplGithub);
         BindHyperlinkURL(hplDoomStruct);
-        BindHyperlinkURL(hplZip);
+        BindHyperlinkURL(hplGson);
         BindHyperlinkURL(hplNoesis);
         BindHyperlinkURL(hplSteam);
         BindHyperlinkURL(hplGOG);
