@@ -1,6 +1,6 @@
 # Lazy method until I add workflow runners
 
-name: "Test-Release"
+name: "Build-Windows-Release"
 
 on:
   workflow_dispatch:
@@ -78,4 +78,6 @@ jobs:
         with:
           name: ${{env.ARCHIVE_NAME}}
           artifacts: ${{env.ARCHIVE_NAME}}.zip
+          artifactContentType: application/zip
+          generateReleaseNotes: true
           draft: true
