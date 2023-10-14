@@ -47,10 +47,6 @@ jobs:
         with:
           gluon-license: ${{ secrets.GLUON_LICENSE }}
 
-      # Set pom.xml version
-      - name: Set version in pom.xml (Release)
-        run: .\mvnw -B versions:set -DnewVersion=0.0.1-DEV-TEST -DgenerateBackupPoms=false
-
       # Build your project using Maven
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build with Git-Commit-ID
