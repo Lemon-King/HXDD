@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.repository.updated_at }}
+      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.ref_name }}
     steps:
       # Checkout your code
       - name: Checkout
