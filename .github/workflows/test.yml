@@ -69,7 +69,8 @@ jobs:
           cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging
 
       - name: Prepare Release
-        run: zip ${{env.ARCHIVE_NAME}}.zip ./staging/* -r
+        shell: pwsh
+        run: Compress-Archive -Path staging/* -DestinationPath ${{env.ARCHIVE_NAME}}.zip
 
       # Upload as release, generate notes, and mark as draft for manual release
       - name: Upload Release
