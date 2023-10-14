@@ -3,10 +3,9 @@
 name: "Build-Windows-Release"
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
   build:
