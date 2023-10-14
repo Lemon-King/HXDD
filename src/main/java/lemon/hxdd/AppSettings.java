@@ -1,5 +1,6 @@
 package lemon.hxdd;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,12 +10,17 @@ import java.util.Map;
 import java.util.Properties;
 
 public class AppSettings {
-    static String filePath = "./hxdd.settings";
+    static String pathSettings = "./hxdd.settings";
+    static String pathResources = "./resources.zip";
+
+    public File fileResources;
     Properties prop;
     HashMap<String, String> prop_defaults = new HashMap<String, String>();
     public Map<String, String> paths = new HashMap<>();
 
     public AppSettings() {
+        fileResources = new File(pathResources);
+
         Path dir = Path.of("").toAbsolutePath();
         this.paths.put("root", dir.toString());
         this.paths.put("cache", dir + "/cache");
@@ -45,7 +51,7 @@ public class AppSettings {
 
         this.prop = new Properties();
         try {
-            FileReader reader = new FileReader(filePath);
+            FileReader reader = new FileReader(pathSettings);
             this.prop.load(reader);
             reader.close();
         } catch (IOException e) {
@@ -68,7 +74,7 @@ public class AppSettings {
 
     private void Save() {
         try {
-            FileWriter writer = new FileWriter(filePath);
+            FileWriter writer = new FileWriter(pathSettings);
             this.prop.store(writer, "HXDD User Settings");
             writer.close();
         } catch (IOException e) {

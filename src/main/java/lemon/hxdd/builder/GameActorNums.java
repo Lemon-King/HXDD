@@ -24,7 +24,7 @@ public class GameActorNums {
         // Merge DoomEdNums and SpawnNums
 
         ZipAssets za = new ZipAssets(this.app);
-        za.SetFile(new File("resources.zip"));
+        za.SetFile(this.app.settings.fileResources);
         ArrayList<String> listGameInfo = za.GetFolderContents("gameinfo/");
 
         TypeOrder.forEach((type) -> {

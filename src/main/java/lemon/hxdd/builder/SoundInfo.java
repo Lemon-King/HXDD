@@ -21,7 +21,7 @@ public class SoundInfo {
         String SettingPathTemp = this.app.settings.GetPath("temp");
         try {
             ZipAssets za = new ZipAssets(this.app);
-            za.SetFile(new File("resources.zip"));
+            za.SetFile(this.app.settings.fileResources);
             String sndinfohx2 = za.ReadFileAsString("pakdata/hexen2/sndinfo.hx2");
 
             FileWriter fw = new FileWriter(SettingPathTemp + "/sndinfo.hx2", true);

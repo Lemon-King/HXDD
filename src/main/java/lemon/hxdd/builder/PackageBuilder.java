@@ -636,7 +636,7 @@ public class PackageBuilder implements Runnable {
         this.app.controller.SetCurrentProgress(0);
 
         ZipAssets za = new ZipAssets(this.app);
-        za.SetFile(new File("resources.zip"));
+        za.SetFile(this.app.settings.fileResources);
         //ArrayList<String> listGameInfo = za.GetFolderContents("assets");
         za.ExtractFilesToFolder("assets", path);
 

@@ -46,15 +46,23 @@ jobs:
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build with Git-Commit-ID
         shell: cmd
-        run: .\mvnw -Pdesktop git-commit-id:revision gluonfx:build assembly:single
+        run: .\mvnw -Pdesktop git-commit-id:revision gluonfx:build
 
       # Copy the native binary to the staging directory
       - name: Copy native image to staging
         run: cp -r target/gluonfx/x86_64-windows/HXDD.exe staging
 
       # Copy the hxdd resources to the staging directory
-      - name: Copy resources to staging
-        run: cp -r target/resources.zip staging
+      - name: Compress HXDD Resources
+        shell: pwsh
+        run: Compress-Archive -Path resources/* -DestinationPath staging/resources.zip
+
+      #- name: Copy resources to staging
+      #  run: cp -r target/resources.zip staging
+
+      - name: Copy Licenses
+        shell: pwsh
+        run: Copy-Item -Path licenses/* -Destination staging/licenses -PassThru
 
       # Copy supporting files for HXDD executable from graalvm to the staging directory
       - name: Copy supporting GRAALVM dlls to staging

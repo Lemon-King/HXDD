@@ -30,7 +30,7 @@ public class XMLModelDef {
 
 
         ZipAssets za = new ZipAssets(this.app);
-        za.SetFile(new File("resources.zip"));
+        za.SetFile(this.app.settings.fileResources);
         ArrayList<String> listModelDefs = za.GetFolderContents("pakdata/modeldef");
 
         for (String entry : listModelDefs) {
