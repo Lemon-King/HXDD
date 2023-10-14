@@ -39,6 +39,9 @@ jobs:
       - name: Make staging directory
         run: mkdir staging
 
+      - name: Make Licenses directory
+        run: mkdir staging/licenses
+
       # Install the Gluon License (optional)
       # Using this step requires you to set a GLUON_LICENSE secret in the secret configuration of your repo. Have a look at https://gluonhq.com/products/mobile/buy for more information about obtaining a license.
       - name: Gluon License
@@ -64,16 +67,16 @@ jobs:
       #- name: Copy resources to staging
       #  run: cp -r target/resources.zip staging
 
-      - name: Copy Licenses
-        shell: pwsh
-        run: Copy-Item -Path licenses/* -Destination staging/licenses -PassThru
-
       # Copy supporting files for HXDD executable from graalvm to the staging directory
       - name: Copy supporting GRAALVM dlls to staging
         run: cp -r ${env:GRAALVM_HOME}/bin/awt.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/java.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/server/jvm.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging
+
+      - name: Copy Licenses
+        shell: pwsh
+        run: Copy-Item -Path licenses/* -Destination staging/licenses -PassThru
 
       - name: Prepare Release
         shell: pwsh
