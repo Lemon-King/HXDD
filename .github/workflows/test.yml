@@ -1,4 +1,6 @@
-name: "Build-Windows-Staging"
+# Lazy method until I add workflow runners
+
+name: "Test-Release"
 
 on:
   workflow_dispatch:
@@ -10,11 +12,14 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.repository.updated_at }}
+      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
       # Checkout your code
       - name: Checkout
         uses: actions/checkout@v4.1.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
 
       # Setup the Windows build environment
       - name: Add msbuild to PATH
@@ -41,7 +46,11 @@ jobs:
         uses: gluonhq/gluon-build-license@v1
         with:
           gluon-license: ${{ secrets.GLUON_LICENSE }}
-        
+
+      # Set pom.xml version
+      - name: Set version in pom.xml (Release)
+        run: .\mvnw -B versions:set -DnewVersion=${{ github.event.release.tag_name }} -DgenerateBackupPoms=false
+
       # Build your project using Maven
       # The desktop profile is used, which means a native build will be created for the host platform (in this case Windows) itself.
       - name: Gluon Build with Git-Commit-ID
@@ -63,10 +72,13 @@ jobs:
           cp -r ${env:GRAALVM_HOME}/bin/server/jvm.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging
 
-      # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
-      - name: Upload
-        uses: actions/upload-artifact@v3
+      - name: Prepare Release
+        run: zip ${{env.ARCHIVE_NAME}}.zip ./staging/* -r
+
+      # Upload as release, generate notes, and mark as draft for manual release
+      - name: Upload Release
+        uses: ncipollo/release-action@v1.13.0
         with:
           name: ${{env.ARCHIVE_NAME}}
-          path: staging
-          retention-days: 7
+          artifacts: ${{env.ARCHIVE_NAME}}.zip
+          draft: true
