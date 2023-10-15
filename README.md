@@ -23,7 +23,7 @@
 
 <a href="https://github.com/Lemon-King/HXDD/releases">![Releases](https://img.shields.io/github/v/release/Lemon-King/HXDD?logo=github)</a>
 <a href="https://github.com/Lemon-King/HXDD/issues">![Issues](https://img.shields.io/github/issues/Lemon-King/HXDD.svg)</a>
-<a href="https://github.com/Lemon-King/HXDD/blob/master/LICENSE.txt">![MIT License](https://img.shields.io/github/license/Lemon-King/HXDD.svg)</a>
+<a href="https://github.com/Lemon-King/HXDD/blob/master/LICENSE.md">![MIT License](https://img.shields.io/github/license/Lemon-King/HXDD.svg)</a>
 
 <a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DoomStruct-000063?style=for-the-badge&logoColor=white)</a>
 <a href="https://github.com/google/gson">![Gson](https://img.shields.io/badge/Gson-000?style=for-the-badge&logo=google&logoColor=61DAFB)</a>
