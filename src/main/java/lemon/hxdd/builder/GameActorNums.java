@@ -30,12 +30,11 @@ public class GameActorNums {
         TypeOrder.forEach((type) -> {
             List<Properties> lists = new ArrayList<>(Collections.emptyList());
             GameOrder.forEach((game) -> {
-                System.out.println("Creating " + game + "." + type + " actors");
+                // System.out.println("Creating " + game + "." + type + " actors");
                 // Properties matches GZDOOM's format and does the job.
                 Properties p = new Properties();
                 //String filePath = "gameinfo/" + type + "." + game;
                 for (int i = 0; i < listGameInfo.size(); i++) {
-                    System.out.println(listGameInfo.get(i));
                     String name = listGameInfo.get(i).toLowerCase().replace("gameinfo/", "");
                     if (name.startsWith(type) && name.endsWith(game)) {
                         try {
