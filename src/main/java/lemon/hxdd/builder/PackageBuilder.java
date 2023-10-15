@@ -124,6 +124,7 @@ public class PackageBuilder implements Runnable {
 
             ExtractFilesFromGZDoom();
             FixPatches();
+
             DownloadSteamArtwork();
             DownloadKoraxLocalization();
 
@@ -813,6 +814,10 @@ public class PackageBuilder implements Runnable {
         // fixes transparency
         try {
             File fileTarget = new File(path);
+            if (!fileTarget.exists()) {
+                System.out.printf("PackageBuilder.PostProcessImageData: Warning path %s not found!%n", fileTarget.getPath());
+                return;
+            }
             BufferedImage source = ImageIO.read(fileTarget);
 
             Image image = colorSwap(source, from, to);

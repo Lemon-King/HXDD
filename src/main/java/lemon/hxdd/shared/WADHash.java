@@ -82,7 +82,7 @@ public class WADHash {
                 System.out.println("WADHash: skipping, path is folder.");
                 return null;
             }
-            InputStream in = new BufferedInputStream(new FileInputStream(file));
+            InputStream in = new BufferedInputStream(new FileInputStream(this.file));
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             DigestInputStream digestStream = new DigestInputStream(in, digest);
             digestStream.readAllBytes();
