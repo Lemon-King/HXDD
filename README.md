@@ -51,12 +51,14 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
   </a>
 </div>
 
-## Gameplay Features
+## Features
 
 * **Unified Game & Episode Structure**<br/>Play Heretic, Hexen and Deathkings from one menu with any class from either game!
 * **Hexen II Leveling**<br/>A highly expanded version of the leveling system found in Hexen II.
 * **Selectable Armor Modes**<br/>Choose between Simple and AC, compatible with all characters from both games!
 * **Mod Support via PlayerSheets**<br/>Allows for cross game pickups and actors and expanded PlayerClass definitions. PlayerSheets will allow your mod to support HXDD only features without needing to expand actors or make another version of your mod. Just create a new json under playersheets/<classname>.json and you're ready to start!
+* **Korax Localization**<br/>Select between English, French, German, and Japanese for languages used by Hexen 64 Localizations.
+* **Title Screen Customization**<br/>Change the Artwork and Music to any of the games in the series, also has support for using Steam's Hero Artwork as Titles.
 
 ## Current Upcoming & Planned Features
 * **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are next for the major gameplay updates.
