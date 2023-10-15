@@ -38,7 +38,7 @@
 
 <br/>
 
-**HXDD** takes everything from Heretic, Hexen and other games. Then arranges and cooks them out into a new GZDOOM compatible format, allowing you play them as if they were a single game.
+**HXDD** takes everything from Heretic, Hexen and other games. Then arranges and converts them into a new GZDOOM compatible format, allowing you play them as if they were a single game.
 There is a fair amount of code acting as glue to make everything functional - not to mention numerous (optional) added features.
 
 This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBreton. Go check it out too.
