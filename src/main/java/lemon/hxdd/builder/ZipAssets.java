@@ -250,18 +250,13 @@ public class ZipAssets {
                     String fileName = entry.getName();
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
 
-                    if (limitedFiles != null && limitedFiles.length > 0) {
-                        if (!Arrays.asList(limitedFiles).contains(cleanedName)) {
-                            return;
-                        }
-                    }
                     try {
                         if (fileName.contains(".lmp")) {
-                            String npath = path + "/" + output + "/" + cleanedName.replace("lmp", "png");
+                            String pathOutput = path + "/" + output + "/" + cleanedName.replace("lmp", "png");
                             if (dims != null) {
-                                ExportGraphic(npath, this.zis, finalPal, dims);
+                                ExportGraphic(pathOutput, this.zis.readAllBytes(), finalPal, dims);
                             } else {
-                                Export(npath, this.zis, finalPal, dims);
+                                Export(pathOutput, this.zis.readAllBytes(), finalPal, dims);
                             }
                         } else {
                             try {
@@ -284,12 +279,12 @@ public class ZipAssets {
         this.Close();
     }
 
-    private void Export(String path, InputStream in, Palette pal, int[] dimensions) {
+    private void Export(String path, byte [] data, Palette pal, int[] dimensions) {
         try {
             File fileOutput = new File(path);
             Picture p = new Picture();
 
-            byte[] bytesGraphic = GetBytesFromInputStream(in);
+            byte[] bytesGraphic = data;
             p.fromBytes(bytesGraphic);
             if (dimensions != null) {
                 p.setDimensions(dimensions[0], dimensions[1]);
@@ -304,31 +299,22 @@ public class ZipAssets {
             }
             pngImg.writeBytes(new FileOutputStream(fileOutput, false));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("ZipAssets.Export: Failed to export " + path);
         }
     }
 
-    private void ExportGraphic(String path, InputStream in, Palette pal, int[] dimensions) {
+    private void ExportGraphic(String path, byte [] data, Palette pal, int[] dimensions) {
         try {
             File target = new File(path);
 
-            BufferedImage image = null;
+            Picture p = new Picture();
+            p.setDimensions(dimensions[0], dimensions[1]);
+            p.fromBytes(data);
+            BufferedImage image = GraphicUtils.createImage(p, pal);
 
-            boolean AsFlat = false;
-            if (AsFlat) {
-                // Results in corrupted data: https://github.com/MTrop/DoomStruct/issues/17#issuecomment-1603050005
-                Flat f = Flat.read(dimensions[0], dimensions[1], in);
-                image = GraphicUtils.createImage(f, pal);
-            } else {
-                Picture p = new Picture();
-                p.setDimensions(dimensions[0], dimensions[1]);
-                p.readBytes(in);
-                image = GraphicUtils.createImage(p, pal);
-            }
             ImageIO.write(image, "PNG", target);
-            //System.out.println("Wrote " + path);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("ZipAssets.ExportGraphic: Failed to export " + path + "\n" + e);
         }
     }
 
