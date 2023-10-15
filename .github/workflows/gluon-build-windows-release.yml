@@ -36,11 +36,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Create a staging directory where the binary will be copied into
-      - name: Make staging directory
-        run: mkdir staging
-
-      - name: Make Licenses directory
-        run: mkdir staging/licenses
+      - name: Setup directories
+        run: mkdir staging && mkdir staging/licenses
 
       # Install the Gluon License (optional)
       # Using this step requires you to set a GLUON_LICENSE secret in the secret configuration of your repo. Have a look at https://gluonhq.com/products/mobile/buy for more information about obtaining a license.
@@ -77,6 +74,9 @@ jobs:
       - name: Copy Licenses
         shell: pwsh
         run: Copy-Item -Path licenses/* -Destination staging/licenses -PassThru
+
+      - name: Copy Project License
+        run: cp -r LICENSE.md staging
 
       - name: Prepare Release
         shell: pwsh
