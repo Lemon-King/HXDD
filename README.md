@@ -23,7 +23,7 @@
 
 <div align="center">
 
-<a href="https://github.com/Lemon-King/HXDD/release">![Release](https://img.shields.io/github/v/release/Lemon-King/HXDD?logo=github)</a>
+<a href="https://github.com/Lemon-King/HXDD/releases">![Releases](https://img.shields.io/github/v/release/Lemon-King/HXDD?logo=github)</a>
 <a href="https://github.com/Lemon-King/HXDD/issues">![Issues](https://img.shields.io/github/issues/Lemon-King/HXDD.svg)</a>
 <a href="https://github.com/Lemon-King/HXDD/blob/master/LICENSE.txt">![MIT License](https://img.shields.io/github/license/Lemon-King/HXDD.svg)</a>
 
@@ -65,7 +65,7 @@ A modern version of Windows or Wine on MacOS and Linux.
 
 HXDD has a minimum version requirement with [GZDOOM 4.11+](https://zdoom.org/downloads), if you do not have it please download and update to it.
 
-Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/release) and unzip it into its own folder.
+Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
 
 ## Usage
 
