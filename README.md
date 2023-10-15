@@ -73,7 +73,7 @@ Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and u
 
 ## Usage
 
-HXDD will need to make use of files from GZDOOM, Heretic, Hexen, Hexen's Expansion Deathkings, and optionally Hexen II.
+HXDD will make use of data from GZDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.
 
 1. Launch HXDD.exe
 2. Select your GZDOOM Folder
@@ -81,11 +81,11 @@ HXDD will need to make use of files from GZDOOM, Heretic, Hexen, Hexen's Expansi
 4. Select your Hexen wad File (hexen.wad)
 5. Select your Hexen DeathKings wad file (hexdd.wad)
 6. Choose the options you want to utilize - if any.
-7. Click on Build HXDD and let it build hxdd.ipk3.
-8. Copy hxdd.ipk3 where you keep your wads for GZDOOM.
+7. Click on **Build HXDD** to start building hxdd.ipk3 - this may take more than a few minutes.
+8. When complete, copy hxdd.ipk3 to where you keep your wads for GZDOOM.
 9. Run GZDOOM and select HXDD.
 
-Once you select locations for these files, HXDD will store these next time you run it.
+Your selections will be stored for the next time you run it.
 
 ## Hexen II Usage
 
@@ -121,7 +121,5 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 Lemon King - [@lemonkingi](https://twitter.com/lemonkingi)
 
 Doomworld Thread - [HXDD: A Heretic & Hexen WAD Merger](https://www.doomworld.com/forum/topic/136255-hxdd-a-heretic-hexen-wad-merger-071-beta/)
-
-Project Link: [https://github.com/Lemon-King/HXDD](https://github.com/Lemon-King/HXDD)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
