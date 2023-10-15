@@ -59,7 +59,7 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 * **Mod Support via PlayerSheets**<br/>Allows for cross game pickups and actors and expanded PlayerClass definitions. PlayerSheets will allow your mod to support HXDD only features without needing to expand actors or make another version of your mod. Just create a new json under playersheets/<classname>.json and you're ready to start!
 
 ## Current Upcoming & Planned Features
-* **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are focused for the next major gameplay updates.
+* **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are next for the major gameplay updates.
 * **PWAD Mode**<br/>HXDD will build out to a slimmed DOOM compatible pwad, sometime during beta or post 1.0 release.
 * **Heretic II Corvus**<br/>Currently in an [prototyping phase](https://www.youtube.com/watch?v=RV1bI9vbNs8), due to the amount of work required.
 
