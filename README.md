@@ -32,7 +32,8 @@
 <a href="https://openjfx.io/">![Java](https://img.shields.io/badge/javafx-55889E.svg?style=for-the-badge&logo=openjdk&logoColor=white)</a>
 <br/>
 <a href="https://gluonhq.com/">![Gluon](https://img.shields.io/badge/gluon-0A6DB0?style=for-the-badge&logo=gluon&logoColor=white)</a>
-<a href="https://www.graalvm.org/">![GRAALVM](https://img.shields.io/badge/GRAALVM-192229?style=for-the-badge&logo=graalvm&logoColor=61DAFB)</a>
+<a href="https://www.graalvm.org/">![GRAALVM](https://img.shields.io/badge/GRAALVM-192229?style=for-the-badge&logo=graalvm&logoColor=61DAFB)</a><br/>
+<a href="https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91">![NOESIS](https://img.shields.io/badge/NOESIS-ff6600?style=for-the-badge&logoColor=#ff6600)</a>
 
 </div>
 
@@ -85,6 +86,16 @@ HXDD will need to make use of files from GZDOOM, Heretic, Hexen, Hexen's Expansi
 9. Run GZDOOM and select HXDD.
 
 Once you select locations for these files, HXDD will store these next time you run it.
+
+## Hexen II Usage
+
+When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).
+
+Download and place the Noesis zip file in the same folder as HXDD's exe.
+
+Select the PAK files in the application and ensure Enable Hexen II is checked.
+
+HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
 
 ## Screenshots & Video
 <a href="https://i.imgur.com/8W0VM5p.png">
