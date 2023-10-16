@@ -60,6 +60,7 @@ public class Noesis {
                             os.write(zis.readAllBytes());
                             os.close();
                         }
+                        zis.closeEntry();
                     }
                     zis.close();
                     fis.close();
@@ -68,7 +69,7 @@ public class Noesis {
                 }
             }
         }
-        return hasNoesis;
+        return new File(SETTINGS_PATH_NOESIS).exists();
     }
 
     public void ExtractPak(File pak, File destination) {
