@@ -1,6 +1,40 @@
 // https://zdoom.org/wiki/ZScript_actor_functions
 
 class LemonUtil {
+    // Used only with NEWGAME Menu
+    static int ClassNameToID(string className) {
+        Array<string> classes = {
+            "HXDDCorvusPlayer",
+            "HXDDFighterPlayer",
+            "HXDDClericPlayer",
+            "HXDDMagePlayer",
+            "HX2PaladinPlayer",
+            "HX2ClericPlayer",
+            "HX2NecromancerPlayer",
+            "HX2AssassinPlayer",
+            "HX2SuccubusPlayer",
+            "H2CorvusPlayer"
+        };
+        return classes.Find(className);
+    }
+    
+    // Used only with NEWGAME Menu
+    static string IDToClassName(int id) {
+        Array<string> classes = {
+            "HXDDCorvusPlayer",
+            "HXDDFighterPlayer",
+            "HXDDClericPlayer",
+            "HXDDMagePlayer",
+            "HX2PaladinPlayer",
+            "HX2ClericPlayer",
+            "HX2NecromancerPlayer",
+            "HX2AssassinPlayer",
+            "HX2SuccubusPlayer",
+            "H2CorvusPlayer"
+        };
+        return classes[id];
+    }
+
     static Class<Object> GetPlayerClass() {
         // Hardcoded for single player atm
         PlayerInfo p = players[0];

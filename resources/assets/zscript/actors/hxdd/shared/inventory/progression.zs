@@ -118,47 +118,6 @@ class PlayerSheetJSON {
 	Array<String> stats_lookup;
 	String xp_bonus_stat;
 
-    String GetString(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return "";
-        }
-		HXDD_JsonString type_str = HXDD_JsonString(type_elem);
-		return type_str.s;
-    }
-    int GetInt(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return -1;
-        }
-		HXDD_JsonInt type_int = HXDD_JsonInt(type_elem);
-		return type_int.i;
-    }
-    double GetDouble(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return -1;
-        }
-		HXDD_JsonDouble type_double = HXDD_JsonDouble(type_elem);
-		return type_double.d;
-    }
-    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return null;
-        }
-		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
-		return type_arr;
-    }
-    bool GetBool(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return false;
-        }
-		HXDD_JsonBool type_bool = HXDD_JsonBool(type_elem);
-		return type_bool.b;
-    }
-
 	int GetEnumFromArmorType(String type) {
 		if (type == "ac" || type == "armor" || type == "armorclass" || type == "hexen" || type == "hx") {
 			return PSAT_ARMOR_AC;
@@ -205,110 +164,107 @@ class PlayerSheetJSON {
 		self.hitpointTable.Copy(defaultHPTable);
 		self.manaTable.Copy(defaultMPTable);
 
-        int lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.playersheet", file));
-        console.printf("PlayerSheetJSON: Load %d", lumpIndex);
-        if (lumpIndex != -1) {
-            String lumpData = Wads.ReadLump(lumpIndex);
-            let json = HXDD_JSON.parse(lumpData, false);
-            if (json is "HXDD_JsonElement") {
-                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
-				if (jsonObject) {
-                	console.printf("PlayerSheetJSON: Loaded %s!", file);
+        FileJSON fJSON = new ("FileJSON");
+        let success = fJSON.Open(String.format("playersheets/%s.playersheet", file));
+        console.printf("PlayerSheetJSON: Load %d", fJSON.index);
+        if (success) {
+			HXDD_JsonObject jsonObject = HXDD_JsonObject(fJSON.json);
+			if (jsonObject) {
+				console.printf("PlayerSheetJSON: Loaded %s!", file);
 
-					String valPlayerClass = GetString(jsonObject, "class");
-					String valArmorType = GetString(jsonObject, "armor_type");
-					String valProgressionType = GetString(jsonObject, "progression_type");
-					int valMaxLevel = GetInt(jsonObject, "max_level");
-					String valAlignment = GetString(jsonObject, "alignment");
-					bool valUseMaxHealthScaler = GetBool(jsonObject, "use_max_health_scaler");
-					let valSkillModifier = GetArray(jsonObject, "skill_modifier");
-					double valXPModifier = GetDouble(jsonObject, "xp_modifier");
-					bool valHalveXPBeforeLevel4 = GetBool(jsonObject, "halve_xp_before_level_4");
+				String valPlayerClass = FileJSON.GetString(jsonObject, "class");
+				String valArmorType = FileJSON.GetString(jsonObject, "armor_type");
+				String valProgressionType = FileJSON.GetString(jsonObject, "progression_type");
+				int valMaxLevel = FileJSON.GetInt(jsonObject, "max_level");
+				String valAlignment = FileJSON.GetString(jsonObject, "alignment");
+				bool valUseMaxHealthScaler = FileJSON.GetBool(jsonObject, "use_max_health_scaler");
+				let valSkillModifier = FileJSON.GetArray(jsonObject, "skill_modifier");
+				double valXPModifier = FileJSON.GetDouble(jsonObject, "xp_modifier");
+				bool valHalveXPBeforeLevel4 = FileJSON.GetBool(jsonObject, "halve_xp_before_level_4");
 
-					let valExperienceTable = GetArray(jsonObject, "experience");
-					let valHPTable = GetArray(jsonObject, "health");
-					let valManaTable = GetArray(jsonObject, "mana");
-					
-					// Dynamic User Defined Stats
-					HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
-					if (objStats) {
-						Array<String> keys;
-						objStats.GetKeysInto(keys);
+				let valExperienceTable = FileJSON.GetArray(jsonObject, "experience");
+				let valHPTable = FileJSON.GetArray(jsonObject, "health");
+				let valManaTable = FileJSON.GetArray(jsonObject, "mana");
+				
+				// Dynamic User Defined Stats
+				HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
+				if (objStats) {
+					Array<String> keys;
+					objStats.GetKeysInto(keys);
 
-						self.stats.Resize(keys.Size());
-						self.stats_lookup.Resize(keys.Size());
-						for (let i = 0; i < keys.Size(); i++) {
-							String key = keys[i];
-							HXDD_JsonArray stat = GetArray(objStats, key);
-							if (stat) {
-								if (stat.arr.size() >= 2) {
-									PlayerSheetStat nStat = new ("PlayerSheetStat");
-									nStat.name = key.MakeLower();
-									nStat.table.Resize(stat.arr.Size());
-									for (let i = 0; i < stat.arr.Size(); i++) {
-										nStat.table[i] = HXDD_JsonInt(stat.arr[i]).i;
-									}
-									//nStat.value = 0;
-									nStat.Roll();
-
-									self.stats[i] = nStat;
-									self.stats_lookup[i] = nStat.name;
-								} else {
-									console.printf("PlayerSheetJSON: Stat %s array must be 2 or higher. [start_low, start_high] or [start_low, start_high, level_low, level_high, level_max, stat_cap]", key);
+					self.stats.Resize(keys.Size());
+					self.stats_lookup.Resize(keys.Size());
+					for (let i = 0; i < keys.Size(); i++) {
+						String key = keys[i];
+						HXDD_JsonArray stat = FileJSON.GetArray(objStats, key);
+						if (stat) {
+							if (stat.arr.size() >= 2) {
+								PlayerSheetStat nStat = new ("PlayerSheetStat");
+								nStat.name = key.MakeLower();
+								nStat.table.Resize(stat.arr.Size());
+								for (let i = 0; i < stat.arr.Size(); i++) {
+									nStat.table[i] = HXDD_JsonInt(stat.arr[i]).i;
 								}
+								//nStat.value = 0;
+								nStat.Roll();
+
+								self.stats[i] = nStat;
+								self.stats_lookup[i] = nStat.name;
 							} else {
-								console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
+								console.printf("PlayerSheetJSON: Stat %s array must be 2 or higher. [start_low, start_high] or [start_low, start_high, level_low, level_high, level_max, stat_cap]", key);
 							}
+						} else {
+							console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
 						}
 					}
-					String valXPStat = GetString(jsonObject, "xp_bonus_stat");
-					if (self.stats_lookup.Find(valXPStat) != self.stats.Size()) {
-						self.xp_bonus_stat = valXPStat;
+				}
+				String valXPStat = FileJSON.GetString(jsonObject, "xp_bonus_stat");
+				if (self.stats_lookup.Find(valXPStat) != self.stats.Size()) {
+					self.xp_bonus_stat = valXPStat;
+				}
+
+				let valUsesEventHandler = FileJSON.GetBool(jsonObject, "event_handler");
+
+				// TODO: Setup Item Class Table Here for MultiClassItem Refactor
+
+				self.PlayerClass 				= valPlayerClass.MakeLower();
+				self.Alignment 					= valAlignment.MakeLower();
+				self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
+				self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
+
+				self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
+				self.HalveXPBeforeLevel4 		= valHalveXPBeforeLevel4;
+				self.maxlevel 					= valMaxLevel;
+				self.experienceModifier			= valXPModifier;
+
+				self.UsesEventHandler			= valUsesEventHandler;
+
+				if (valSkillModifier) {
+					if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
+						self.skillmodifier.Resize(valSkillModifier.arr.Size());
 					}
-
-					let valUsesEventHandler = GetBool(jsonObject, "event_handler");
-
-					// TODO: Setup Item Class Table Here for MultiClassItem Refactor
-
-					self.PlayerClass 				= valPlayerClass.MakeLower();
-					self.Alignment 					= valAlignment.MakeLower();
-					self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
-					self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
-
-					self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
-					self.HalveXPBeforeLevel4 		= valHalveXPBeforeLevel4;
-					self.maxlevel 					= valMaxLevel;
-					self.experienceModifier			= valXPModifier;
-
-					self.UsesEventHandler			= valUsesEventHandler;
-
-					if (valSkillModifier) {
-						if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
-							self.skillmodifier.Resize(valSkillModifier.arr.Size());
-						}
-						for (let i = 0; i < valSkillModifier.arr.Size(); i++) {
-							if (valSkillModifier.arr[i]) {
-								self.skillmodifier[i]		= HXDD_JsonDouble(valSkillModifier.arr[i]).d;
-							}
+					for (let i = 0; i < valSkillModifier.arr.Size(); i++) {
+						if (valSkillModifier.arr[i]) {
+							self.skillmodifier[i]		= HXDD_JsonDouble(valSkillModifier.arr[i]).d;
 						}
 					}
-					self.experienceTable.Resize(valExperienceTable.arr.Size());
-					for (let i = 0; i < valExperienceTable.arr.Size(); i++) {
-						self.experienceTable[i] 	= HXDD_JsonInt(valExperienceTable.arr[i]).i;
-					}
+				}
+				self.experienceTable.Resize(valExperienceTable.arr.Size());
+				for (let i = 0; i < valExperienceTable.arr.Size(); i++) {
+					self.experienceTable[i] 	= HXDD_JsonInt(valExperienceTable.arr[i]).i;
+				}
 
-					if (valHPTable && valManaTable) {
-						self.hitpointTable.Resize(clamp(5, valHPTable.arr.Size(), 6));
-						for (let i = 0; i < valHPTable.arr.Size(); i++) {
-							if (valHPTable.arr[i]) {
-								self.hitpointTable[i] 		= HXDD_JsonInt(valHPTable.arr[i]).i;
-							}
+				if (valHPTable && valManaTable) {
+					self.hitpointTable.Resize(clamp(5, valHPTable.arr.Size(), 6));
+					for (let i = 0; i < valHPTable.arr.Size(); i++) {
+						if (valHPTable.arr[i]) {
+							self.hitpointTable[i] 		= HXDD_JsonInt(valHPTable.arr[i]).i;
 						}
-						self.manaTable.Resize(clamp(5, valManaTable.arr.Size(), 6));
-						for (let i = 0; i < valManaTable.arr.Size(); i++) {
-							if (valManaTable.arr[i]) {
-								self.manaTable[i] 			= HXDD_JsonInt(valManaTable.arr[i]).i;
-							}
+					}
+					self.manaTable.Resize(clamp(5, valManaTable.arr.Size(), 6));
+					for (let i = 0; i < valManaTable.arr.Size(); i++) {
+						if (valManaTable.arr[i]) {
+							self.manaTable[i] 			= HXDD_JsonInt(valManaTable.arr[i]).i;
 						}
 					}
 				}

@@ -8,7 +8,7 @@ class ButtonPlayerClass ui {
 
     Array<String> imgClassWalk;
 
-    void Create(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, int classid, String pathBackground, Array<String> images) {
+    void Create(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, string className, String pathBackground, Array<String> images) {
         tick = 0;
 
         self.imgClassWalk.Copy(images);
@@ -55,7 +55,7 @@ class ButtonPlayerClass ui {
             (0, 0),
             (112 * scale, 136 * scale),
             cmdHandler: handler,
-            command: String.format("%d", classid),
+            command: className,
             hover: hoverOutline,
             click: hoverOutline
         );
@@ -72,7 +72,7 @@ class ButtonPlayerClass ui {
 
     }
 
-    void CreateHX2(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, int classid, String pathBackground) {
+    void CreateHX2(HXDD_ZF_Frame parent, HXDD_ZF_Handler handler, vector2 location, double scale, String name, string className, String pathBackground) {
         HXDD_ZF_Frame frameChrClass = HXDD_ZF_Frame.create(
             location,
             (112 * scale, 130 * scale)
@@ -101,7 +101,7 @@ class ButtonPlayerClass ui {
             (22 * scale, 0),
             (68 * scale, 114 * scale),
             cmdHandler: handler,
-            command: String.format("%d", classid),
+            command: className,
             hover: hoverOutline,
             click: hoverOutline
         );

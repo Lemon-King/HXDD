@@ -30,73 +30,60 @@ class XGameTranslation {
 	Array<XTranslationActors> xclass;  // player class actor swaps
     Array<XTranslationActors> xswap;
 
-    String GetString(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return "";
-        }
-        HXDD_JsonString type_str = HXDD_JsonString(type_elem);
-        return type_str.s;
-    }
-    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return null;
-        }
-		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
-		return type_arr;
-    }
-
     void Init() {
-        self.LoadFromJSON("doomednums");
-        self.LoadFromJSON("spawnnums");
+        self.CreateDoomEdNums();
+        self.CreateSpawnNums();
 
-        CreateXClassTranslation();
-        CreateXSwapTranslation();
+        self.CreateXClassTranslation();
+        self.CreateXSwapTranslation();
+    }
+
+    void CreateDoomEdNums() {
+        self.LoadFromJSON("doomednums");
+    }
+
+    void CreateSpawnNums() {
+        self.LoadFromJSON("spawnnums");
     }
 
     void LoadFromJSON(String group) {
-        int lumpIndex = Wads.CheckNumForFullName(String.format("xgt/%s.xgt", group));
-        if (lumpIndex == -1) {
-            // try json
-            lumpIndex = Wads.CheckNumForFullName(String.format("xgt/%s.json", group));
+        FileJSON fJSON = new ("FileJSON");
+        let success = fJSON.Open(String.format("xgt/%s.xgt", group));
+        if (!success) {
+            success = fJSON.Open(String.format("xgt/%s.json", group));
         }
-        if (lumpIndex != -1) {
-            String lumpData = Wads.ReadLump(lumpIndex);
-            let json = HXDD_JSON.parse(lumpData, false);
-            if (json is "HXDD_JsonElement") {
-                let jsonArray = HXDD_JsonArray(json);
+        if (success) {
+            let jsonArray = HXDD_JsonArray(fJSON.json);
 
-                XGT_Group targetGroup;
-                if (group == "doomednums") {
-                    self.DoomEdNums = new("XGT_Group");
-                    targetGroup = self.DoomEdNums;
-                } else if (group == "spawnnums") {
-                    self.SpawnNums = new("XGT_Group");
-                    targetGroup = self.SpawnNums;
-                } else {
-                    console.printf("XGameTranslation: Unknown group [%s]!", group);
-                    return;
-                }
-                for (let i = 0; i < jsonArray.Size(); i++) {
-                    HXDD_JsonObject jo = HXDD_JsonObject(jsonArray.arr[i]);
-                    if (jo) {
-                        String valDoom = "";
-                        String valHeretic = "";
-                        String valHexen = "";
-
-                        valDoom = GetString(jo, "Doom");
-                        valHeretic = GetString(jo, "Heretic");
-                        valHexen = GetString(jo, "Hexen");
-                        targetGroup.Doom.Push(valDoom);
-                        targetGroup.Heretic.Push(valHeretic);
-                        targetGroup.Hexen.Push(valHexen);
-                    }
-                }
-                targetGroup.size = targetGroup.Doom.Size();
+            XGT_Group targetGroup;
+            if (group == "doomednums") {
+                self.DoomEdNums = new("XGT_Group");
+                targetGroup = self.DoomEdNums;
+            } else if (group == "spawnnums") {
+                self.SpawnNums = new("XGT_Group");
+                targetGroup = self.SpawnNums;
             } else {
-                console.printf("XGameTranslation: Failed to load actor groups from JSON!");
+                console.printf("XGameTranslation: Unknown group [%s]!", group);
+                return;
             }
+            for (let i = 0; i < jsonArray.Size(); i++) {
+                HXDD_JsonObject jo = HXDD_JsonObject(jsonArray.arr[i]);
+                if (jo) {
+                    String valDoom = "";
+                    String valHeretic = "";
+                    String valHexen = "";
+
+                    valDoom = FileJSON.GetString(jo, "Doom");
+                    valHeretic = FileJSON.GetString(jo, "Heretic");
+                    valHexen = FileJSON.GetString(jo, "Hexen");
+                    targetGroup.Doom.Push(valDoom);
+                    targetGroup.Heretic.Push(valHeretic);
+                    targetGroup.Hexen.Push(valHexen);
+                }
+            }
+            targetGroup.size = targetGroup.Doom.Size();
+        } else {
+            console.printf("XGameTranslation Error: Group [%s] could not be found!", group);
         }
     }
 
@@ -177,48 +164,42 @@ class XGameTranslation {
 
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
-        int lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.playersheet", playerClassName));
-        if (lumpIndex == -1) {
-            // try json
-            lumpIndex = Wads.CheckNumForFullName(String.format("playersheets/%s.json", playerClassName));
-        }
-        //console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, lumpIndex);
 		
-        if (lumpIndex != -1) {
-            String lumpData = Wads.ReadLump(lumpIndex);
-            let json = HXDD_JSON.parse(lumpData, false);
-            if (json is "HXDD_JsonElement") {
-                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
-				if (jsonObject) {
-					
-					// Class Item Swap List Generation
-					HXDD_JsonObject objClassItems = HXDD_JsonObject(jsonObject.get("xgame"));
-					if (objClassItems) {
-						Array<String> keys;
-						objClassItems.GetKeysInto(keys);
+        FileJSON fJSON = new ("FileJSON");
+        let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
+        if (!success) {
+            success = fJSON.Open(String.format("playersheets/%s.json", playerClassName));
+        }
+        if (success) {
+            console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, fJSON.index);
+            // Class Item Swap List Generation
+            HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
+            String ver = FileJSON.GetString(json, "version");
+            HXDD_JsonObject objClassItems = HXDD_JsonObject(json.get("xgame"));
+            if (objClassItems) {
+                Array<String> keys;
+                objClassItems.GetKeysInto(keys);
 
-						self.xclass.Resize(keys.Size());
-						for (let i = 0; i < keys.Size(); i++) {
-							String key = keys[i];
-							String valClassItem = GetString(objClassItems, key);
-							if (valClassItem) {
-								Array<String> nClassItems;
-								valClassItem.Split(nClassItems, ",");
-                                for (let n = 0; n < nClassItems.Size(); n++) {
-                                    nClassItems[n].Replace(" ", "");
-                                }
-								self.xclass[i] = new ("XTranslationActors");
-								self.xclass[i].list.Copy(nClassItems);
-                                //for (let j = 0; j < self.xclass[i].list.Size(); j++) {
-								//    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
-                                //}
-								self.xclass[i].key = key;
-								//console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
-							}
-						}
-					}
-				}
-			}
+                self.xclass.Resize(keys.Size());
+                for (let i = 0; i < keys.Size(); i++) {
+                    String key = keys[i];
+                    String valClassItem = FileJSON.GetString(objClassItems, key);
+                    if (valClassItem) {
+                        Array<String> nClassItems;
+                        valClassItem.Split(nClassItems, ",");
+                        for (let n = 0; n < nClassItems.Size(); n++) {
+                            nClassItems[n].Replace(" ", "");
+                        }
+                        self.xclass[i] = new ("XTranslationActors");
+                        self.xclass[i].list.Copy(nClassItems);
+                        //for (let j = 0; j < self.xclass[i].list.Size(); j++) {
+                        //    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
+                        //}
+                        self.xclass[i].key = key;
+                        //console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
+                    }
+                }
+            }
 		}
 	}
 
@@ -243,43 +224,36 @@ class XGameTranslation {
 	}
 
     void CreateXSwapTranslation() {
-        int lumpIndex = Wads.CheckNumForFullName("xgt/xswap.xgt");
-        if (lumpIndex == -1) {
-            // try json
-            lumpIndex = Wads.CheckNumForFullName("xgt/xswap.json");
+        FileJSON fJSON = new ("FileJSON");
+        let success = fJSON.Open("xgt/xswap.xgt");
+        if (!success) {
+            success = fJSON.Open("xgt/xswap.json");
         }
-
-        if (lumpIndex != -1) {
-            String lumpData = Wads.ReadLump(lumpIndex);
-            let json = HXDD_JSON.parse(lumpData, false);
-            if (json is "HXDD_JsonElement") {
-                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
-                if (jsonObject) {
-                    String ver = GetString(jsonObject, "version");
-                    //if (ver) {
-                    //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
-                    //}
-                    HXDD_JsonArray arrListItems = HXDD_JsonArray(jsonObject.get("list"));
-                    if (arrListItems) {
-                        int size = arrListItems.Size();
-						self.xswap.Resize(size);
-						for (let i = 0; i < size; i++) {
-					        HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
-                            if (objListItem) {
-                                String valKey = GetString(objListItem, "key");
-                                //String valCategory = GetString(objListItem, "category");
-                                //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
-                                HXDD_JsonArray valActors = GetArray(objListItem, "actors");
-                                if (valKey && valActors) {
-                                    let newXSwap = new ("XTranslationActors"); 
-                                    newXSwap.key = valKey;
-                                    newXSwap.list.Resize(valActors.Size());
-                                    for (int j = 0; j < valActors.Size(); j++) {
-                                        newXSwap.list[j] = HXDD_JsonString(valActors.get(j)).s;
-                                    }
-                                    self.xswap[i] = newXSwap;
-                                }
+        if (success) {
+            HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
+            String ver = FileJSON.GetString(json, "version");
+            //if (ver) {
+            //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
+            //}
+            HXDD_JsonArray arrListItems = HXDD_JsonArray(json.get("list"));
+            if (arrListItems) {
+                int size = arrListItems.Size();
+                self.xswap.Resize(size);
+                for (let i = 0; i < size; i++) {
+                    HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
+                    if (objListItem) {
+                        String valKey = FileJSON.GetString(objListItem, "key");
+                        //String valCategory = GetString(objListItem, "category");
+                        //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
+                        HXDD_JsonArray valActors = FileJSON.GetArray(objListItem, "actors");
+                        if (valKey && valActors) {
+                            let newXSwap = new ("XTranslationActors"); 
+                            newXSwap.key = valKey;
+                            newXSwap.list.Resize(valActors.Size());
+                            for (int j = 0; j < valActors.Size(); j++) {
+                                newXSwap.list[j] = HXDD_JsonString(valActors.get(j)).s;
                             }
+                            self.xswap[i] = newXSwap;
                         }
                     }
                 }

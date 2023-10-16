@@ -206,7 +206,7 @@ class SWeapAcidRune: SuccubusWeapon {
 			refire = 0.7;
 			sfx = "hexen2/succubus/acidpfir";
 		}
-		A_PlaySound(sfx, CHAN_WEAPON);
+		A_StartSound(sfx, CHAN_WEAPON);
 		SetCooldown(weapon, refire, 2);
 	}
 
@@ -621,9 +621,9 @@ class SWeapAcidRune_AcidDrop: Hexen2Projectile {
 
         if (tracer) {
          	tracer.DamageMobj(self, self, damage, "Normal");
-			A_PlaySound("hexen2/succubus/acidhit", CHAN_WEAPON);
+			A_StartSound("hexen2/succubus/acidhit", CHAN_WEAPON);
         } else {
-			A_PlaySound("hexen2/succubus/dropfizz", CHAN_WEAPON);
+			A_StartSound("hexen2/succubus/dropfizz", CHAN_WEAPON);
 		}
 
         if (pg) {

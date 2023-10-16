@@ -167,7 +167,7 @@ class PWeapPurifier: PaladinWeapon {
 			}
 		}
 		weapon.AddRecoil(recoil);
-		A_PlaySound(sfx, CHAN_WEAPON, 0.5);
+		A_StartSound(sfx, CHAN_WEAPON, 0.5);
 		SetCooldown(weapon, refire, 2);
 	}
 }

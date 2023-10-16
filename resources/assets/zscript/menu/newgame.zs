@@ -40,9 +40,8 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
                 LemonUtil.CVAR_SetInt("hxdd_waterstyle", menu.selectedTextureStyleWater);
                 LemonUtil.CVAR_SetInt("hxdd_sludgestyle", menu.selectedTextureStyleSludge);
                 LemonUtil.CVAR_SetInt("hxdd_icestyle", menu.selectedTextureStyleIce);
-                Menu.SetMenu("EpisodeMenu", menu.selectedClass);    // Class Selection Response
-                Menu.SetMenu("SkillMenu", menu.selectedEpisode);    // Episode Selection Response
-                Menu.SetMenu("StartGame", menu.selectedSkill);      // Skill Selection Response (Starts Game), Use StartgameConfirm for Nightmare skills
+                Console.printf("Episode #%d", menu.selectedEpisode);
+                Menu.StartGameDirect(true, false, menu.selectedClass, menu.selectedEpisode, menu.selectedSkill);
             }
         }
     }
@@ -53,9 +52,7 @@ class ZFClassSelectHandler : HXDD_ZF_Handler {
     override void buttonClickCommand(HXDD_ZF_Button caller, Name command) {
         if (menu.frame.getPosX() == 0) {
             Menu.MenuSound("menu/choose");
-            String cmd = command;
-            int choice = cmd.ToInt();
-            menu.selectedClass = choice;
+            menu.selectedClass = command;
             menu.time = 0;
             menu.lastPosX = menu.frame.getPosX();
             menu.desiredPosX = -1920;
@@ -71,13 +68,13 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
     ZFPreGameSetup menu;
     ZFGameOptions optMenu;
     override void dropdownChanged(HXDD_ZF_DropdownList caller, Name command) {
+        console.printf("Command %s", command);
         String cmd = command;
+        cmd = cmd.MakeLower();   // hack for episode command somehow returning as capitalized (localization?)
         if (cmd == "episode") {
-            String choice = command;
             menu.selectedEpisode = caller.getSelection();
-            elementHoverChanged(caller, command, false);
+            elementHoverChanged(caller, cmd, false);
         } else if (cmd == "skill") {
-            String choice = command;
             menu.selectedSkill = caller.getSelection();
         } else if (cmd == "hxdd_gamemode") {
             menu.selectedGameMode = caller.getSelection();
@@ -96,7 +93,7 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
         } else if (cmd.IndexOf("xswap") != -1) {
             // handle xswap cvars
             console.printf("%s %d", cmd, caller.getSelection());
-            LemonUtil.CVAR_SetInt(command, caller.getSelection());
+            LemonUtil.CVAR_SetInt(cmd, caller.getSelection());
         }
     }
 
@@ -197,20 +194,20 @@ class ZFPlayerClassSelection ui {
 
         Array<String> imagesCorvus = {"sprites/PLAYA1.png", "sprites/PLAYB1.png", "sprites/PLAYC1.png", "sprites/PLAYD1.png"};
         btnClassCorvus = new("ButtonPlayerClass");
-        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", 0, "graphics/M_HBOX.png", imagesCorvus);
+        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", "HXDDHereticPlayer", "graphics/M_HBOX.png", imagesCorvus);
 
         double hexenPosY = 1920 - 450 - (144 * 2.5) + ((144 * 2.5 * 0.5) - (112 * 1.5 * 0.5));
         Array<String> imagesFighter = {"graphics/M_FWALK1.png", "graphics/M_FWALK2.png", "graphics/M_FWALK3.png", "graphics/M_FWALK4.png"};
         btnClassFighter = new("ButtonPlayerClass");
-        btnClassFighter.Create(frame, cmdHandlerClassSelect, (hexenPosY - 200, classLineX), 1.5, "Fighter", 1, "graphics/M_FBOX.png", imagesFighter);
+        btnClassFighter.Create(frame, cmdHandlerClassSelect, (hexenPosY - 200, classLineX), 1.5, "Fighter", "HXDDFighterPlayer", "graphics/M_FBOX.png", imagesFighter);
 
         Array<String> imagesCleric = {"graphics/M_CWALK1.png", "graphics/M_CWALK2.png", "graphics/M_CWALK3.png", "graphics/M_CWALK4.png"};
         btnClassCleric = new("ButtonPlayerClass");
-        btnClassCleric.Create(frame, cmdHandlerClassSelect, (hexenPosY, classLineX), 1.5, "Cleric", 2, "graphics/M_CBOX.png", imagesCleric);
+        btnClassCleric.Create(frame, cmdHandlerClassSelect, (hexenPosY, classLineX), 1.5, "Cleric", "HXDDClericPlayer", "graphics/M_CBOX.png", imagesCleric);
 
         Array<String> imagesMage = {"graphics/M_MWALK1.png", "graphics/M_MWALK2.png", "graphics/M_MWALK3.png", "graphics/M_MWALK4.png"};
         btnClassMage = new("ButtonPlayerClass");
-        btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", 3, "graphics/M_MBOX.png", imagesMage);
+        btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", "HXDDMagePlayer", "graphics/M_MBOX.png", imagesMage);
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
         bool cvarHexII = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2', false);
@@ -218,20 +215,20 @@ class ZFPlayerClassSelection ui {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("ButtonPlayerClass");
-            btnClassAssassin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 320, classLineX + classLineXOffset), 1.5, "Paladin", 4, "graphics/netp1.png");
+            btnClassAssassin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 320, classLineX + classLineXOffset), 1.5, "Paladin", "HX2PaladinPlayer", "graphics/netp1.png");
             btnClassCrusader = new("ButtonPlayerClass");
-            btnClassCrusader.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 160, classLineX + classLineXOffset), 1.5, "Crusader", 5, "graphics/netp2.png");
+            btnClassCrusader.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 160, classLineX + classLineXOffset), 1.5, "Crusader", "HX2CrusaderPlayer", "graphics/netp2.png");
             btnClassNecromancer = new("ButtonPlayerClass");
-            btnClassNecromancer.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY, classLineX + classLineXOffset), 1.5, "Necromancer", 6, "graphics/netp3.png");
+            btnClassNecromancer.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY, classLineX + classLineXOffset), 1.5, "Necromancer", "HX2NecromancerPlayer", "graphics/netp3.png");
             btnClassPaladin = new("ButtonPlayerClass");
-            btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", 7, "graphics/netp4.png");
+            btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", "HX2AssassinPlayer", "graphics/netp4.png");
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
             bool cvarHexII_EX = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2_expansion', false);
             if (cvarHexII_EX) {
                 // display Hexen II Expansion classes
                 btnClassSuccubus = new("ButtonPlayerClass");
-                btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", 8, "graphics/netp5.png");
+                btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", "HX2SuccubusPlayer", "graphics/netp5.png");
             }
         }
     }
@@ -469,7 +466,7 @@ class ZFGameOptions ui {
             listEpisodes.items.push("Hexen: Modder Test Map");
         }
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
-        ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), "Episode", listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
+        ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_EPISODE"), listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
         self.ddl_Difficulty = new ("DropDownCombo");
         self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_SKILLSELECTION"), listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
@@ -534,7 +531,7 @@ class ZFGameOptions ui {
     }
 
     void Refresh() {
-        int selected = parent.selectedClass;
+        int selected = LemonUtil.ClassNameToID(parent.selectedClass);
         if (selected > listClassDifficulty.Size() - 1) {
             selected = 0;
         }
@@ -628,7 +625,7 @@ class ZFGameOptions ui {
 
 class ZFPreGameSetup : HXDD_ZF_GenericMenu {
     // Player Selection
-    int selectedClass;
+    string selectedClass;
     int selectedEpisode;
     int selectedSkill;
 
@@ -666,7 +663,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
     override void init(Menu parent) {
         Super.init(parent);
 
-        selectedClass = 0;
+        selectedClass = "corvus";
         selectedEpisode = 0;
         selectedSkill = 2;
 

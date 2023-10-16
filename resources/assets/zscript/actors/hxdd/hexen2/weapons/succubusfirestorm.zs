@@ -200,7 +200,7 @@ class SWeapFireStorm: SuccubusWeapon {
 			SWeapFireStorm_FlameStream(proj).isPowered = true;
 		}
 		weapon.AddRecoil(recoil);
-		A_PlaySound(sfx, CHAN_WEAPON, 0.5);
+		A_StartSound(sfx, CHAN_WEAPON, 0.5);
 		SetCooldown(weapon, refire, 2);
 	}
 
@@ -452,7 +452,7 @@ class SWeapFireStorm_Burner: Actor {
 		self.nextDamage--;
 		if (self.nextDamage <= 0) {
 			self.burnTarget.DamageMobj(self, self.target, random[swfs_burndmg](2,3), 'Fire');
-			self.A_PlaySound("hexen2/raven/fire1", CHAN_WEAPON, 1);
+			self.A_StartSound("hexen2/raven/fire1", CHAN_WEAPON, 1);
 
 			self.nextDamage = frandom(0.0, 0.5) * 35.0;
 		}
@@ -557,7 +557,7 @@ class SWeapFireStorm_Boom: Actor {
 
 		self.attackCount--;
 		if (self.attackCount <= 0.0) {
-			self.A_PlaySound("hexen2/succubus/flamend", CHAN_WEAPON, 0.5);
+			self.A_StartSound("hexen2/succubus/flamend", CHAN_WEAPON, 0.5);
 			self.Destroy();
 		}
 	}

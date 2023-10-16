@@ -306,11 +306,11 @@ class AWeapGrenades_Grenade: Hexen2Projectile {
         if ((self.pos.z - self.floorz) <= 0.0 && frandom(0.0, 1.0) > 0.5) {
             Actor ex = Spawn("AWeapGrenades_Grenade_ExplodeFloor");
             ex.SetOrigin((self.pos.x, self.pos.y, self.floorz + 64.0), false);
-            A_PlaySound("hexen2/weapons/explode", CHAN_WEAPON, 1.0);
+            A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, 1.0);
         } else {
             Actor ex = Spawn("AWeapGrenades_Grenade_Explode");
             ex.SetOrigin(self.pos, false);
-            A_PlaySound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
+            A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
         }
 
         if (tracer) {
@@ -396,18 +396,18 @@ class AWeapGrenades_SuperGrenade: Hexen2Projectile {
                         ex = Spawn("AWeapGrenades_Grenade_SM_Explode");
                     }
                     ex.SetOrigin(self.pos, false);
-                    A_PlaySound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
+                    A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
                 }
             } else {
                 self.ex_damage = 70;
                 if ((self.pos.z - self.floorz) == 0.0 && frandom(0.0, 1.0) > 0.25) {
                     Actor ex = Spawn("AWeapGrenades_Grenade_ExplodeFloor");
                     ex.SetOrigin((self.pos.x, self.pos.y, self.floorz + 64.0), false);
-                    A_PlaySound("hexen2/weapons/explode", CHAN_WEAPON, 1.0);
+                    A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, 1.0);
                 } else {
                     Actor ex = Spawn("AWeapGrenades_Grenade_Explode");
                     ex.SetOrigin(self.pos, false);
-                    A_PlaySound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
+                    A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, 0.5);
                 }
             }
 		    self.A_Explode(self.ex_damage, self.ex_damage * 0.75, 0, true);
