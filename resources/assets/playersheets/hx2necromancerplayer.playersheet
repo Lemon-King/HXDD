@@ -63,7 +63,7 @@
 
         "MWeaponPiece1": "none",
         "MWeaponPiece2": "none",
-        "MWeaponPiece3": "none",
+        "MWeaponPiece3": "none"
     },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
