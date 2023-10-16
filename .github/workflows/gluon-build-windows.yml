@@ -65,7 +65,8 @@ jobs:
         run: cp -r ${env:GRAALVM_HOME}/bin/awt.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/java.dll staging &&
           cp -r ${env:GRAALVM_HOME}/bin/server/jvm.dll staging &&
-          cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging
+          cp -r ${env:GRAALVM_HOME}/bin/windowsaccessbridge-64.dll staging &&
+          cp -r ${env:GRAALVM_HOME}/bin/net.dll staging
 
       - name: Copy Licenses
         shell: pwsh
