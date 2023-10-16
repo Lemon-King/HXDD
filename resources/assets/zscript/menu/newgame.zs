@@ -210,8 +210,8 @@ class ZFPlayerClassSelection ui {
         btnClassMage.Create(frame, cmdHandlerClassSelect, (hexenPosY + 200, classLineX), 1.5, "Mage", "HXDDMagePlayer", "graphics/M_MBOX.png", imagesMage);
 
         // Cvar hxdd_installed_hexen2 is located in cvarinfo.installed_hexen2
-        bool cvarHexII = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2', false);
-        if (cvarHexII) {
+        string cvarHX2 = LemonUtil.CVAR_GetString('hxdd_installed_hexen2', "");
+        if (cvarHX2.IndexOf("base") != -1) {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("ButtonPlayerClass");
@@ -224,8 +224,7 @@ class ZFPlayerClassSelection ui {
             btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", "HX2AssassinPlayer", "graphics/netp4.png");
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
-            bool cvarHexII_EX = LemonUtil.CVAR_GetBool('hxdd_installed_hexen2_expansion', false);
-            if (cvarHexII_EX) {
+            if (cvarHX2.IndexOf("portals") != -1) {
                 // display Hexen II Expansion classes
                 btnClassSuccubus = new("ButtonPlayerClass");
                 btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", "HX2SuccubusPlayer", "graphics/netp5.png");

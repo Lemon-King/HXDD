@@ -251,18 +251,19 @@ class NWeapSpellbook : NecromancerWeapon
 
 		// All 3 projectiles use veer
 		// Make this work: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/hcode/projbhvr.hc#L51
+		String cvarHX2 = LemonUtil.CVAR_GetString("hxdd_installed_hexen2_world", "", Player);
 		if (hasTome) {
 			NWeapSpellbook_MagicMissile mmisA = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
 			NWeapSpellbook_MagicMissile mmisB = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
 			NWeapSpellbook_MagicMissile mmisC = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissilePower", 30, 10, -3, false, 0, 0));
-			if (LemonUtil.CVAR_GetBool("hxdd_installed_hexen2_world", false, Player)) {
+			if (cvarHX2.IndexOf("world") != -1) {
 				mmisA.useNewModel = true;
 				mmisB.useNewModel = true;
 				mmisC.useNewModel = true;
 			}
 		} else {
 			NWeapSpellbook_MagicMissile mmis = NWeapSpellbook_MagicMissile(SpawnFirstPerson("NWeapSpellbook_MagicMissile", 40, 10, -3, false, 0, 0));
-			if (LemonUtil.CVAR_GetBool("hxdd_installed_hexen2_world", false, Player)) {
+			if (cvarHX2.IndexOf("world") != -1) {
 				mmis.useNewModel = true;
 			}
 		}
