@@ -39,31 +39,34 @@ public class SoundInfo {
     private void ListFiles(PrintWriter out) {
         String path = this.app.settings.GetPath("hexen2") + "/sound";
         File directory = new File(path);
+        System.out.println(directory.getPath());
 
-        File[] fileList = directory.listFiles();
-        if (fileList != null) {
-            for (File file : fileList) {
-                if (file.isFile()) {
-                    try {
-                        String p = file.getCanonicalPath();
-                        p = p.replace("\\", "/");
+        File[] folderList = directory.listFiles();
+        if (folderList != null) {
+            for (File file : folderList) {
+                if (file.isDirectory()) {
+                    File[] subFolderLIst = file.listFiles();
+                    for (File sfile : subFolderLIst) {
+                        if (sfile.isFile()) {
+                            try {
+                                String p = sfile.getCanonicalPath();
+                                p = p.replace("\\", "/");
 
-                        String[] s = p.split("hexen2_data");
-                        String logicalname = (String) s[1].subSequence(1, s[1].length() - 4);
-                        String lumpname = (String) s[1].subSequence(1, s[1].length());
+                                String[] s = p.split("hexen2_data");
+                                String logicalname = (String) s[1].subSequence(1, s[1].length() - 4);
+                                String lumpname = (String) s[1].subSequence(1, s[1].length());
 
-                        // Setup naming convention and folder paths
-                        logicalname = logicalname.replace("sound", "hexen2");
-                        lumpname = lumpname.replace("sound", "sounds/hexen2");
+                                // Setup naming convention and folder paths
+                                logicalname = logicalname.replace("sound", "hexen2");
+                                lumpname = lumpname.replace("sound", "sounds/hexen2");
 
-                        String space = String.join("", Collections.nCopies(32 - logicalname.length(), " "));    // dumb, but it works
-                        out.println(logicalname + space + "\"" + lumpname + "\"");
-                    } catch (IOException ignored) {
-
+                                String space = String.join("", Collections.nCopies(32 - logicalname.length(), " "));    // dumb, but it works
+                                out.println(logicalname + space + "\"" + lumpname + "\"");
+                            } catch (IOException e) {
+                                System.out.println(e);
+                            }
+                        }
                     }
-                } else if (file.isDirectory()) {
-                    out.println("");
-                    //ListFiles(file.getAbsolutePath(), out);
                 }
             }
         }

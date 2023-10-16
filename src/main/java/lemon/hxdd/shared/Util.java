@@ -43,7 +43,7 @@ public class Util {
         if (Files.isDirectory(source)) {
             if (Files.notExists(target)) {
                 Files.createDirectories(target);
-                System.out.println("Directory created : " + target);
+                //System.out.println("Directory created : " + target);
             }
             try (Stream<Path> paths = Files.list(source)) {
                 paths.forEach(p -> CopyDirectoryWrapper(p, target.resolve(source.relativize(p))));
@@ -51,9 +51,9 @@ public class Util {
             }
         } else {
             Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println(
-                    String.format("Copy File from \t'%s' to \t'%s'", source, target)
-            );
+            //System.out.println(
+            //        String.format("Copy File from \t'%s' to \t'%s'", source, target)
+            //);
         }
     }
 
