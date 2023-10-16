@@ -449,9 +449,9 @@ public class PackageBuilder implements Runnable {
             File dest = new File(path + "conback.png");
             if (source.exists()) {
                 try {
-                    Files.copy(source.toPath(), dest.toPath());
+                    Files.copy(source.toPath(), dest.toPath(), REPLACE_EXISTING);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("HXDD Conback: " + e);
                 }
             }
         }
