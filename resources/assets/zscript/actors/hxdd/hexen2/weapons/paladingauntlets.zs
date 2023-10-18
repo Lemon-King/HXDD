@@ -1,4 +1,5 @@
 // Paladin Weapon: Gauntlets
+// REF: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/gauntlet.hc
 
 class PWeapGauntlet : PaladinWeapon
 {
@@ -90,7 +91,16 @@ class PWeapGauntlet : PaladinWeapon
 			return;
 		}
 
-		int damage = random[GauntletAtk](GAUNT_BASE_DAMAGE, GAUNT_BASE_DAMAGE + GAUNT_ADD_DAMAGE);
+		double damage_amount = GAUNT_BASE_DAMAGE;
+		double damage_amount_add = GAUNT_ADD_DAMAGE;
+		Weapon weapon = Player.ReadyWeapon;
+        bool hasTome = Player.mo.FindInventory("PowerWeaponLevel2", true);
+        if (hasTome) {
+			damage_amount = GAUNT_PWR_BASE_DAMAGE;
+			damage_amount_add = GAUNT_PWR_ADD_DAMAGE;
+        }
+
+		int damage = random[GauntletAtk](damage_amount, damage_amount + damage_amount_add);
 		damage += GetPowerUpHolyStrengthMultiplier() * damage;
 		for (int i = 0; i < 16; i++)
 		{
