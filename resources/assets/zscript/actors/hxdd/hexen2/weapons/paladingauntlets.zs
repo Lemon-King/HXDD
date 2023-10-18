@@ -110,7 +110,12 @@ class PWeapGauntlet : PaladinWeapon
 				double slope = AimLineAttack(ang, MELEE_RANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget)
 				{
-					LineAttack(ang, MELEE_RANGE, slope, damage, 'Melee', "SickleSparks_Hit", true, t);
+					
+					String fx = "Hexen2HitSFX";
+					if (hasTome) {
+						fx = "WhiteFlash";
+					}
+					LineAttack(ang, MELEE_RANGE, slope, damage, 'Melee', fx, LAF_ISMELEEATTACK, t);
 					if (t.linetarget != null)
 					{
 						AdjustPlayerAngle(t);
@@ -121,11 +126,11 @@ class PWeapGauntlet : PaladinWeapon
 		}
 		
 		// didn't find any creatures, so try to strike any walls
-		String sparksEffect = "SickleSparks";
+		String fx = "Sparks";
 		if (hasTome) {
-			sparksEffect = "SickleSparks_PowerHit";
+			fx = "WhiteFlash";
 		}
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', sparksEffect);
+		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', fx);
 	}
 }

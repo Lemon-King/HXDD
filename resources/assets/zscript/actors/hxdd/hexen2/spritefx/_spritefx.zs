@@ -45,3 +45,5 @@ class SpriteFXParticle: ActorParticle {
 #include "zscript/actors/hxdd/hexen2/spritefx/flamestream.zs"
 #include "zscript/actors/hxdd/hexen2/spritefx/pow.zs"
 #include "zscript/actors/hxdd/hexen2/spritefx/smallexplosion.zs"
+#include "zscript/actors/hxdd/hexen2/spritefx/sparks.zs"
+#include "zscript/actors/hxdd/hexen2/spritefx/whiteflash.zs"

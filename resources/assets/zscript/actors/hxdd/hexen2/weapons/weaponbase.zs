@@ -363,3 +363,25 @@ class Hexen2Weapon: Weapon {
         return proj;
     }
 }
+
+class Hexen2HitSFX : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+        +FORCEXYBILLBOARD;
+		RenderStyle "Add";
+		Alpha 0.0;
+		SeeSound "hexen2/weapons/slash";
+		AttackSound "hexen2/weapons/hitwall";
+		ActiveSound "hexen2/weapons/gaunt1";
+		VSpeed 0;
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	}
+}
