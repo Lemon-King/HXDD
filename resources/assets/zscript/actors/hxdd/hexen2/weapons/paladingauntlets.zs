@@ -1,5 +1,5 @@
 // Paladin Weapon: Gauntlets
-// REF: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/gauntlet.hc
+// REF: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/gauntlet.hc~
 
 class PWeapGauntlet : PaladinWeapon
 {
@@ -121,7 +121,11 @@ class PWeapGauntlet : PaladinWeapon
 		}
 		
 		// didn't find any creatures, so try to strike any walls
+		String sparksEffect = "SickleSparks";
+		if (hasTome) {
+			sparksEffect = "SickleSparks_PowerHit";
+		}
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "SickleSparks");
+		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', sparksEffect);
 	}
 }
