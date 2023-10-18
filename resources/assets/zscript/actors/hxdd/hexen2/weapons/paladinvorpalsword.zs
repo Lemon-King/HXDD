@@ -1,4 +1,6 @@
-// ref: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/vorpal.hc
+// Paladin Weapon: Vorpal Sword
+// REF: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/vorpal.hc
+
 class PWeapVorpalSword : PaladinWeapon
 {
 	Default
@@ -118,6 +120,7 @@ class PWeapVorpalSword : PaladinWeapon
 			return false;
 		}
 
+		String fx = "Hexen2HitSFX";
 		if (ammoAmount > 2) {
 			// spawn swipe
 			PWeapVorpalSword_Swipe swipe = PWeapVorpalSword_Swipe(Spawn("PWeapVorpalSword_Swipe"));
@@ -130,6 +133,8 @@ class PWeapVorpalSword : PaladinWeapon
 
 				Vector3 pos = (swipe.target.pos.x, swipe.target.pos.y - (sin(angle) * 10), player.viewz - (cos(angle) * 10));
 				swipe.SetOrigin(pos, true);
+
+				fx = "SmallWhiteFlashSFX";
 			}
 		}
 
@@ -155,7 +160,7 @@ class PWeapVorpalSword : PaladinWeapon
 				double slope = AimLineAttack(ang, MELEE_RANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget)
 				{
-					LineAttack(ang, MELEE_RANGE, slope, damage, 'Melee', "SickleSparks_Hit", true, t);
+					LineAttack(ang, MELEE_RANGE, slope, damage, 'Melee', fx, LAF_ISMELEEATTACK, t);
 					if (t.linetarget != null)
 					{
 						AdjustPlayerAngle(t);
@@ -167,11 +172,7 @@ class PWeapVorpalSword : PaladinWeapon
 		
 		// didn't find any creatures, try to strike any walls
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		String sparksEffect = "SickleSparks";
-		if (hasTome) {
-			sparksEffect = "SickleSparks_PowerHit";
-		}
-		LineAttack(angle, DEFMELEERANGE, slope, damage, 'Melee', sparksEffect);
+		LineAttack(angle, DEFMELEERANGE, slope, damage, 'Melee', "WhiteSmokeSFX", offsetz: 2);
         return false;
     }
 }

@@ -1,20 +1,20 @@
 
 // HitFX, will play a sound
 
-class WhiteFlash : SpriteFX {
+class WhiteSmoke : SpriteFX {
 	Default {
-		RenderStyle "Add";
-		Alpha 0.8;
+		RenderStyle "Translucent";
+		Alpha 0.5;
 	}
 
 	States {
 		Spawn:
-		    GRYS ABCDE 3 Bright;
+		    WHT1 ABCDEF 3 Bright;
 			Stop;
 	}
 }
 
-class WhiteFlashSFX : WhiteFlash {
+class WhiteSmokeSFX : WhiteSmoke {
 	Default {
 		SeeSound "hexen2/weapons/slash";
 		AttackSound "hexen2/weapons/hitwall";

@@ -113,7 +113,7 @@ class PWeapGauntlet : PaladinWeapon
 					
 					String fx = "Hexen2HitSFX";
 					if (hasTome) {
-						fx = "WhiteFlash";
+						fx = "WhiteFlashSFX";
 					}
 					LineAttack(ang, MELEE_RANGE, slope, damage, 'Melee', fx, LAF_ISMELEEATTACK, t);
 					if (t.linetarget != null)
@@ -126,9 +126,9 @@ class PWeapGauntlet : PaladinWeapon
 		}
 		
 		// didn't find any creatures, so try to strike any walls
-		String fx = "Sparks";
+		String fx = "SparksSFX";
 		if (hasTome) {
-			fx = "WhiteFlash";
+			fx = "WhiteFlashSFX";
 		}
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', fx);
