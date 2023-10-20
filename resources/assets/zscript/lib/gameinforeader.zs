@@ -9,20 +9,44 @@
 
 
 class GameInfoReader {
+    Array<String> classes;
     Array<SkillInfo> skills;
     Array<EpisodeInfo> episodes;
 
     void Find() {
         for (int i = 0; i < Wads.GetNumLumps(); i++) {
-            //Wads.CheckNumForName(i)
             String name = Wads.GetLumpName(i);
             String fullname = Wads.GetLumpFullName(i);
             if (name.MakeLower().IndexOf("mapinfo") != -1 || fullname.MakeLower().IndexOf("mapinfo.") != -1) {
                 Console.printf("Lump %d %d: %s %s", i, Wads.GetLumpNamespace(i), name, fullname);
                 String info = Wads.ReadLump(i);
-                String skInfo = Wads.ReadLump(i);
+                self.ParsePlayerClassList(info);
                 self.ParseEpisodeInfo(info);
-                self.ParseSkillInfo(skInfo);
+                self.ParseSkillInfo(info);
+            }
+        }
+    }
+
+    void ParsePlayerClassList(String info) {
+        if (info.IndexOf("PlayerClasses") != -1) {
+            Array<String> lines;
+            info.split(lines, "\n");
+
+            for (let i = 0; i < lines.Size(); i++) {
+                if (lines[i].IndexOf("PlayerClasses") != -1) {
+                    String line = lines[i];
+
+                    line.Substitute('"', "");  // remove quotes
+                    line.Substitute(" ", "");  // remove spaces
+
+                    Array<String> classLine;
+                    line.split(classLine, "=");
+
+                    String lineClasses = classLine[classLine.Size() - 1];
+                    lineClasses.split(classes, ",");
+
+                    break;
+                }
             }
         }
     }
