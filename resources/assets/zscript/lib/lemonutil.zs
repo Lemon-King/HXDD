@@ -35,6 +35,24 @@ class LemonUtil {
         return classes[id];
     }
 
+    static void LaunchMap(String mapId, int skill) {
+        LemonUtil.CVAR_SetString("hxdd_map_select", String.format("%s,%d", mapId, skill));
+    }
+
+    static bool TryOpenMapByName() {
+        String mapOverride = LemonUtil.CVAR_GetString("hxdd_map_select", "");
+        if (mapOverride.IndexOf(",") != -1) {
+            LemonUtil.CVAR_Reset("hxdd_map_select");
+            //LemonUtil.CVAR_SetString("hxdd_map_select", "111");
+            Array<String> selected;
+            mapOverride.Split(selected, ",");
+            Console.printf("Map: %s, Skill: %s", selected[0], selected[1]);
+            LevelLocals.ChangeLevel(selected[0], 0, CHANGELEVEL_NOINTERMISSION|CHANGELEVEL_RESETINVENTORY|CHANGELEVEL_RESETHEALTH|CHANGELEVEL_CHANGESKILL, selected[1].ToInt());
+            return true;
+        }
+        return false;
+    }
+
     static Class<Object> GetPlayerClass() {
         // Hardcoded for single player atm
         PlayerInfo p = players[0];
@@ -156,6 +174,12 @@ class LemonUtil {
     }
     static void CVAR_SetColor(string name, string value, PlayerInfo player = null) {
         CVAR_SetString(name, value, player);
+    }
+    static void CVAR_Reset(string name, PlayerInfo player = null) {
+        cvar cv = GetCVAR(name, player);
+        if (cv) {
+            cv.ResetToDefault();
+        }
     }
     // General Math
     static vector3 RandomVector3(double x, double y, double z) {

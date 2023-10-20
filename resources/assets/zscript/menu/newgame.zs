@@ -40,8 +40,10 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
                 LemonUtil.CVAR_SetInt("hxdd_waterstyle", menu.selectedTextureStyleWater);
                 LemonUtil.CVAR_SetInt("hxdd_sludgestyle", menu.selectedTextureStyleSludge);
                 LemonUtil.CVAR_SetInt("hxdd_icestyle", menu.selectedTextureStyleIce);
-                Console.printf("Episode #%d", menu.selectedEpisode);
+
+                LemonUtil.LaunchMap("MAP47", menu.selectedSkill);
                 Menu.StartGameDirect(true, false, menu.selectedClass, menu.selectedEpisode, menu.selectedSkill);
+                //LevelLocals.ChangeLevel("MAP02", 0, CHANGELEVEL_NOINTERMISSION|CHANGELEVEL_RESETINVENTORY|CHANGELEVEL_RESETHEALTH|CHANGELEVEL_CHANGESKILL, menu.selectedSkill); // NEEDS TITLEMAP?
             }
         }
     }
@@ -255,6 +257,8 @@ class ZFGameOptions ui {
     W_KeyStatue headerStatueLeft;
     W_KeyStatue headerStatueRight;
 
+    GameInfoReader gameinfo;
+
     Array<HXDD_ZF_DropdownItems> listClassDifficulty;
 
     void CreateDifficultyLists() {
@@ -452,14 +456,14 @@ class ZFGameOptions ui {
         cmdHandler.optMenu = self;
 
         HXDD_ZF_DropdownItems listEpisodes = new("HXDD_ZF_DropdownItems");
-        listEpisodes.items.push("$MNU_COTD");
-        listEpisodes.items.push("$MNU_HELLSMAW");
-        listEpisodes.items.push("$MNU_DOME");
-        listEpisodes.items.push("$MNU_OSSUARY");
-        listEpisodes.items.push("$MNU_DEMESNE");
-        listEpisodes.items.push("$MNU_FATEPTH");
-        listEpisodes.items.push("$MNU_HEXEN");
-        listEpisodes.items.push("$MNU_HEXDD");
+        gameinfo = new("GameInfoReader");
+        gameinfo.Find();
+        bool isdev = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+        for (let i = 0; i < gameinfo.episodes.Size(); i++) {
+            if (!gameinfo.episodes[i].development || (gameinfo.episodes[i].development && isdev)) {
+                listEpisodes.items.push(gameinfo.episodes[i].name);
+            }
+        }
         if (LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false)) {
             listEpisodes.items.push("Heretic: Modder Test Map");
             listEpisodes.items.push("Hexen: Modder Test Map");
@@ -467,8 +471,12 @@ class ZFGameOptions ui {
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
         ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_EPISODE"), listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
+        HXDD_ZF_DropdownItems skList = new("HXDD_ZF_DropdownItems");
+        for (int i = 0; i < gameinfo.skills.Size(); i++) {
+            skList.items.push(gameinfo.skills[i].Get(parent.selectedClass));
+        }
         self.ddl_Difficulty = new ("DropDownCombo");
-        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_SKILLSELECTION"), listClassDifficulty[0], parent.selectedSkill, "skill", cmdHandler);
+        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_SKILLSELECTION"), skList, parent.selectedSkill, "skill", cmdHandler);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("$OPT_CLASS_DEFAULT");
@@ -531,10 +539,16 @@ class ZFGameOptions ui {
 
     void Refresh() {
         int selected = LemonUtil.ClassNameToID(parent.selectedClass);
-        if (selected > listClassDifficulty.Size() - 1) {
+        if (selected > gameinfo.skills.Size() - 1) {
             selected = 0;
         }
-        self.ddl_Difficulty.GetDropDownElement().setItems(listClassDifficulty[selected]);
+
+        HXDD_ZF_DropdownItems skList = new("HXDD_ZF_DropdownItems");
+        for (int i = 0; i < gameinfo.skills.Size(); i++) {
+            skList.items.push(gameinfo.skills[i].Get(parent.selectedClass));
+        }
+
+        self.ddl_Difficulty.GetDropDownElement().setItems(skList);
 
         int orbColor = self.headerStatueLeft.GetRandomOrb();
         self.headerStatueLeft.SetOrb(orbColor);
@@ -545,80 +559,6 @@ class ZFGameOptions ui {
         self.headerStatueLeft.Update();
         self.headerStatueRight.Update();
     }
-
-    /*
-
-    void CreateXSwapsOptions(HXDD_ZF_Frame optionArea, int pos, ZFGameOptionsHandler cmdHandler) {
-        int lumpIndex = Wads.CheckNumForFullName("xgt/xswap.xgt");
-        if (lumpIndex == -1) {
-            // try json
-            lumpIndex = Wads.CheckNumForFullName("xgt/xswap.json");
-        }
-
-        if (lumpIndex != -1) {
-            String lumpData = Wads.ReadLump(lumpIndex);
-            let json = HXDD_JSON.parse(lumpData, false);
-            if (json is "HXDD_JsonElement") {
-                HXDD_JsonObject jsonObject = HXDD_JsonObject(json);
-                if (jsonObject) {
-                    String ver = GetString(jsonObject, "version");
-                    //if (ver) {
-                    //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
-                    //}
-                    HXDD_JsonArray arrListItems = HXDD_JsonArray(jsonObject.get("list"));
-                    if (arrListItems) {
-                        int size = arrListItems.Size();
-						for (let i = 0; i < size; i++) {
-					        HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
-                            if (objListItem) {
-                                String valKey = GetString(objListItem, "key");
-                                String valCategory = GetString(objListItem, "category");
-                                HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
-                                HXDD_JsonArray valActors = GetArray(objListItem, "actors");
-                                if (valKey && valActors) {
-                                    int size = valActors.Size();
-
-                                    HXDD_ZF_DropdownItems list = new("HXDD_ZF_DropdownItems");
-                                    list.items.push("Default");
-                                    list.items.push("Random");
-                                    for (int j = 0; j < size; j++) {
-                                        list.items.push(HXDD_JsonString(valLabels.get(j)).s);
-                                    }
-
-                                    String label = HXDD_JsonString(valLabels.get(0)).s;
-                                    for (int j = 1; j < size; j++) {
-                                        label = String.format("%s %s", label, HXDD_JsonString(valLabels.get(j)).s);
-                                    }
-                                    String cvarKey = String.format("hxdd_xswap_%s", valKey);
-                                    DropDownCombo newDDL = new ("DropDownCombo");
-                                    newDDL.Create(optionArea, (0, pos + (i * 75)), (optionArea.GetWidth() - 32, 50), label, list, 0, cvarKey, cmdHandler);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    String GetString(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return "";
-        }
-        HXDD_JsonString type_str = HXDD_JsonString(type_elem);
-        return type_str.s;
-    }
-    HXDD_JsonArray GetArray(HXDD_JsonObject jo, String key) {
-        HXDD_JsonElement type_elem = jo.get(key);
-        if (!type_elem) {
-            return null;
-        }
-		HXDD_JsonArray type_arr = HXDD_JsonArray(type_elem);
-		return type_arr;
-    }
-
-    */
 }
 
 
