@@ -16,24 +16,23 @@ class GameInfoReader {
             String name = Wads.GetLumpName(i);
             String fullname = Wads.GetLumpFullName(i);
             if (name.MakeLower().IndexOf("mapinfo") != -1 || fullname.MakeLower().IndexOf("mapinfo.") != -1) {
-                String info = Wads.ReadLump(i);
-                self.ParsePlayerClassList(info);
-                self.ParseEpisodeInfo(info);
-                self.ParseSkillInfo(info);
+                String lumpString = Wads.ReadLump(i);
+                self.ParsePlayerClassList(lumpString);
+                self.ParseEpisodeInfo(lumpString);
+                self.ParseSkillInfo(lumpString);
             }
         }
     }
 
-    void ParsePlayerClassList(String info) {
-        if (info.IndexOf("PlayerClasses") != -1) {
+    void ParsePlayerClassList(String lumpString) {
+        if (lumpString.IndexOf("PlayerClasses") != -1) {
             Array<String> lines;
-            info.split(lines, "\n");
+            lumpString.split(lines, "\n");
 
             for (let i = 0; i < lines.Size(); i++) {
                 String line = lines[i];
                 if (line.IndexOf("PlayerClasses") != -1) {
-                    line.Substitute('"', "");  // remove quotes
-                    line.Substitute(" ", "");  // remove spaces
+                    line = self.CleanLine(line);
 
                     Array<String> split;
                     line.split(split, "=");
@@ -46,17 +45,17 @@ class GameInfoReader {
         }
     }
 
-    void ParseSkillInfo(String info) {
+    void ParseSkillInfo(String lumpString) {
         int CLEARSKILLS_SIZE = "clearskills".Length();
         int SKILL_SIZE = "skill".Length();
 
         int pos = 0;
-        String minfo = info;
+        String minfo = lumpString;
         while (minfo.IndexOf("clearskills") != -1 || minfo.IndexOf("skill") != -1) {
             pos++;
             // valid
             if (minfo.IndexOf("clearskills") != -1) {
-                int nextPos = info.IndexOf("clearskills");
+                int nextPos = minfo.IndexOf("clearskills");
                 self.skills.Clear();
 
                 minfo = minfo.Mid(nextPos + CLEARSKILLS_SIZE);
@@ -78,8 +77,7 @@ class GameInfoReader {
                     for (let i = 0; i < lines.Size(); i++) {
                         String line = lines[i];
                         if (line.MakeLower().IndexOf("playerclassname") != -1) {
-                            line.Substitute('"', "");  // remove quotes
-                            line.Substitute(" ", "");  // remove spaces
+                            line = self.CleanLine(line);
 
                             Array<String> split;
                             line.split(split, "=");
@@ -108,17 +106,17 @@ class GameInfoReader {
         }
     }
 
-    void ParseEpisodeInfo(String info) {
+    void ParseEpisodeInfo(String lumpString) {
         int CLEAREPISODES_SIZE = "clearepisodes".Length();
         int EPISODE_SIZE = "episode".Length();
 
         int pos = 0;
-        String minfo = info;
+        String minfo = lumpString;
         while (minfo.IndexOf("clearepisodes") != -1 || minfo.IndexOf("episode") != -1) {
             pos++;
             // valid
             if (minfo.IndexOf("clearepisodes") != -1) {
-                int nextPos = info.IndexOf("clearepisodes");
+                int nextPos = minfo.IndexOf("clearepisodes");
                 self.episodes.Clear();
 
                 minfo = minfo.Mid(nextPos + CLEAREPISODES_SIZE);
@@ -139,9 +137,7 @@ class GameInfoReader {
                     strBlock.split(lines, "\n");
                     for (int i = 0; i < lines.Size(); i++) {
                         String line = lines[i];
-
-                        line.Substitute('"', "");  // remove quotes
-                        line.Substitute(" ", "");  // remove spaces
+                        line = self.CleanLine(line);
 
                         Array<String> split;
                         line.split(split, "=");
@@ -165,6 +161,18 @@ class GameInfoReader {
                 }
             }
         }
+    }
+
+    String CleanLine(String line) {
+        line.Substitute('"', "");
+        line.Substitute(" = ", "=");
+        line.Substitute("= ", "=");
+        line.Substitute(" =", "=");
+        line.Substitute(" , ", ",");
+        line.Substitute(", ", ",");
+        line.Substitute(" ,", ",");
+
+        return line;
     }
 }
 
