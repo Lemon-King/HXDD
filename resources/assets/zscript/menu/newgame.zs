@@ -33,6 +33,10 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
             } else if (menu.frame.getPosX() == -1920) {
                 // start game with selected settings
                 Menu.MenuSound("menu/choose");
+                if (menu.selectedGameMode == 0) {
+                    EpisodeInfo episode = menu.frameGameOptions.gameinfo.episodes[menu.selectedEpisode];
+                    menu.selectedGameMode = LemonUtil.GetGameType(episode.gametype);
+                }
                 LemonUtil.CVAR_SetInt("hxdd_gamemode", menu.selectedGameMode);
                 LemonUtil.CVAR_SetInt("hxdd_armor_mode", menu.selectedArmorMode);
                 LemonUtil.CVAR_SetInt("hxdd_progression", menu.selectedProgressionMode);
@@ -118,12 +122,17 @@ class ZFGameOptionsHandler : HXDD_ZF_Handler {
     }
 
     void ShowEpisodeInformation() {
-        if (menu.selectedEpisode < 6) {
-            optMenu.SetInfoText("$MNU_HEADER_HERETIC", "$MNU_STORY_HERETIC");
-        } else if (menu.selectedEpisode == 6) {
-            optMenu.SetInfoText("$MNU_HEADER_HEXEN", "$MNU_STORY_HEXEN");
-        } else if (menu.selectedEpisode == 7) {
-            optMenu.SetInfoText("$MNU_HEADER_HEXDD", "$MNU_STORY_HEXDD");
+        if (optMenu.gameinfo.episodes.Size() - 1 < menu.selectedEpisode) {
+            optMenu.SetInfoText("ERROR!", "THIS EPISODE IS OUT OF RANGE AND MAY CRASH UPON STARTING!\nCHECK YOUR WADS AND PK3 FILES!");
+            return;
+        }
+        EpisodeInfo episode = optMenu.gameinfo.episodes[menu.selectedEpisode];
+        if (episode.description != "") {
+            String header = episode.header;
+            if (header == "") {
+                header = episode.name;
+            }
+            optMenu.SetInfoText(header, episode.description);
         } else {
             optMenu.SetInfoText("$MNU_HEADER_OTHER", "$MNU_STORY_OTHER");
         }

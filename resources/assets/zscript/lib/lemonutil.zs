@@ -34,6 +34,21 @@ class LemonUtil {
         };
         return classes[id];
     }
+    static int ClassNameToSimple(string className) {
+        Array<string> simple = {
+            "corvus",
+            "fighter",
+            "cleric",
+            "mage",
+            "paladin",
+            "cleric",
+            "necromancer",
+            "assassin",
+            "succubus",
+            "corvus"
+        };
+        return simple.Find(className);
+    }
 
     static void LaunchMap(String mapId, int skill) {
         LemonUtil.CVAR_SetString("hxdd_map_select", String.format("%s,%d", mapId, skill));
@@ -103,6 +118,19 @@ class LemonUtil {
             return number.ToInt();
         }
         return -1;
+    }
+
+    static int GetGameType(String type) {
+        String gametype = type.MakeLower();
+        if (gametype == "heretic") {
+            return 1;
+        } else if (gametype == "hexen") {
+            return 2;
+        } else if (gametype == "doom") {
+            return 3;
+        } else {
+            return 0;
+        }
     }
 
     static int GetOptionGameMode() {

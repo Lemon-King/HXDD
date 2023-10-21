@@ -2,6 +2,7 @@ include mapinfo/heretic.mapinfo
 include mapinfo/hexen.mapinfo
 include mapinfo/hexdd.mapinfo
 include mapinfo/hxdd.mapinfo
+include mapinfo/title.mapinfo
 
 GameInfo {
 	titlepage = "TITLE"
@@ -177,24 +178,36 @@ episode e1m1
 {
 	name = "$MNU_COTD"
 	key = "c"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
 }
 
 episode e2m1
 {
 	name = "$MNU_HELLSMAW"
 	key = "h"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
 }
 
 episode e3m1
 {
 	name = "$MNU_DOME"
 	key = "d"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
 }
 
 episode e4m1
 {
 	name = "$MNU_OSSUARY"
 	key = "o"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
 	extended
 }
 
@@ -202,6 +215,10 @@ episode e5m1
 {
 	name = "$MNU_DEMESNE"
 	key = "s"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
+	optional
 	extended
 }
 
@@ -209,6 +226,10 @@ episode e6m1
 {
 	name = "$MNU_FATEPTH"
 	key = "f"
+	//gametype = "heretic"
+	//header = "$MNU_HEADER_HERETIC"
+	//description = "$MNU_STORY_HERETIC"
+	optional
 	extended
 }
 
@@ -216,13 +237,18 @@ episode MAP01
 {
 	name = "$MNU_HEXEN"
 	key = "b"
-	optional
+	//gametype = "hexen"
+	//header = "$MNU_HEADER_HEXEN"
+	//description = "$MNU_STORY_HEXEN"
 }
 
 episode MAP50
 {
 	name = "$MNU_HEXDD"
 	key = "k"
+	//gametype = "hexen"
+	//header = "$MNU_HEADER_HEXEN"
+	//description = "$MNU_STORY_HEXDD"
 	optional
 }
 
@@ -230,13 +256,17 @@ episode heretest
 {
 	name = "HERETIC TEST"
 	key = "1"
+	//gametype = "heretic"
 	optional
+	//development
 }
 episode hextest
 {
 	name = "HEXEN TEST"
 	key = "2"
+	//gametype = "hexen"
 	optional
+	//development
 }
 
 defaultmap

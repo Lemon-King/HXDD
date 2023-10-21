@@ -33,18 +33,17 @@ class GameInfoReader {
             info.split(lines, "\n");
 
             for (let i = 0; i < lines.Size(); i++) {
-                if (lines[i].IndexOf("PlayerClasses") != -1) {
-                    String line = lines[i];
+                String line = lines[i];
+                if (line.IndexOf("PlayerClasses") != -1) {
 
                     line.Substitute('"', "");  // remove quotes
                     line.Substitute(" ", "");  // remove spaces
 
-                    Array<String> classLine;
-                    line.split(classLine, "=");
+                    Array<String> split;
+                    line.split(split, "=");
 
-                    String lineClasses = classLine[classLine.Size() - 1];
+                    String lineClasses = split[split.Size() - 1];
                     lineClasses.split(classes, ",");
-
                     break;
                 }
             }
@@ -77,41 +76,33 @@ class GameInfoReader {
                 if (idxSkill != -1 && idxBraceOpen != -1 && idxBraceClose != -1) {
                     SkillInfo skInfo = new("SkillInfo");
 
-                    String between = minfo.Mid(idxBraceOpen, idxBraceClose);
+                    String strBlock = minfo.Mid(idxBraceOpen, idxBraceClose);
 
-                    //console.printf("info %s", between);
-
-                    Array<String> split;
-                    between.split(split, "\n");
-                    for (int i = 0; i < split.Size(); i++) {
-                        String line = split[i];
-
-                        int idxQuoteOpen = line.IndexOf('"');
-                        String value = line.Mid(idxQuoteOpen + 1);
-                        int idxQuoteClosed = value.IndexOf('"');
-                        value = value.Mid(0, idxQuoteClosed);
-
+                    Array<String> lines;
+                    strBlock.split(lines, "\n");
+                    for (let i = 0; i < lines.Size(); i++) {
+                        String line = lines[i];
                         if (line.MakeLower().IndexOf("playerclassname") != -1) {
-                            String className = value;
+                            line.Substitute('"', "");  // remove quotes
+                            line.Substitute(" ", "");  // remove spaces
 
-                            Array<String> splitLine;
-                            line.split(splitLine, ",");
+                            Array<String> split;
+                            line.split(split, "=");
+
+                            String details = split[split.Size() - 1];
                             
-                            String section = splitLine[splitLine.Size() - 1];
-                            idxQuoteOpen = section.IndexOf('"');
-                            String classSkill = section.Mid(idxQuoteOpen + 1);
-                            idxQuoteClosed = classSkill.IndexOf('"');
-                            classSkill = classSkill.Mid(0, idxQuoteClosed);
-                            console.printf("classSkill %s", classSkill);
-
-                            skInfo.classes.push(className);
-                            skInfo.names.push(classSkill);
-                            console.printf("class %s, skill %s", className, classSkill);
+                            split.Clear();
+                            details.split(split, ",");
+                            skInfo.classes.push(split[0]);
+                            skInfo.names.push(split[1]);
                         } else if (line.MakeLower().IndexOf("name") != -1) {
-                            skInfo.name = value;
-                            console.printf("skill %s", value);
+                            line.Substitute('"', "");  // remove quotes
+                            line.Substitute(" ", "");  // remove spaces
+
+                            Array<String> split;
+                            line.split(split, "=");
+                            skInfo.name = split[1];
                         }
-                        
                     }
 
                     self.skills.Push(skInfo);
@@ -148,24 +139,27 @@ class GameInfoReader {
                 if (idxEpisode != -1 && idxBraceOpen != -1 && idxBraceClose != -1) {
                     EpisodeInfo epInfo = new("EpisodeInfo");
 
-                    String between = minfo.Mid(idxBraceOpen, idxBraceClose);
+                    String strBlock = minfo.Mid(idxBraceOpen, idxBraceClose);
 
-                    Array<String> split;
-                    between.split(split, "\n");
-                    for (int i = 0; i < split.Size(); i++) {
-                        String line = split[i];
+                    Array<String> lines;
+                    strBlock.split(lines, "\n");
+                    for (int i = 0; i < lines.Size(); i++) {
+                        String line = lines[i];
 
-                        int idxQuoteOpen = line.IndexOf('"');
-                        String value = line.Mid(idxQuoteOpen + 1);
-                        int idxQuoteClosed = value.IndexOf('"');
+                        line.Substitute('"', "");  // remove quotes
+                        line.Substitute(" ", "");  // remove spaces
 
-                        value = value.Mid(0, idxQuoteClosed);
+                        Array<String> split;
+                        line.split(split, "=");
+
                         if (line.IndexOf("name") != -1) {
-                            epInfo.name = value;
+                            epInfo.name = split[1];
+                        } else if (line.IndexOf("header") != -1) {
+                            epInfo.header = split[1];
                         } else if (line.IndexOf("description") != -1) {
-                            epInfo.description = value;
+                            epInfo.description = split[1];
                         } else if (line.IndexOf("gametype") != -1) {
-                            epInfo.gametype = value;
+                            epInfo.gametype = split[1];
                         } else if (line.IndexOf("development")) {
                             epInfo.development = true;
                         }
@@ -204,6 +198,7 @@ class SkillInfo {
 class EpisodeInfo {
     String name;
     String gametype;
+    String header;
     String description;
     bool extended;
     bool development;
