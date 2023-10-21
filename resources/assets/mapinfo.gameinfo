@@ -2,7 +2,7 @@ include mapinfo/heretic.mapinfo
 include mapinfo/hexen.mapinfo
 include mapinfo/hexdd.mapinfo
 include mapinfo/hxdd.mapinfo
-include mapinfo/title.mapinfo
+//include mapinfo/title.mapinfo
 
 GameInfo {
 	titlepage = "TITLE"

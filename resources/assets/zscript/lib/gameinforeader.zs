@@ -6,8 +6,6 @@
  *
  */
 
-
-
 class GameInfoReader {
     Array<String> classes;
     Array<SkillInfo> skills;
@@ -18,7 +16,6 @@ class GameInfoReader {
             String name = Wads.GetLumpName(i);
             String fullname = Wads.GetLumpFullName(i);
             if (name.MakeLower().IndexOf("mapinfo") != -1 || fullname.MakeLower().IndexOf("mapinfo.") != -1) {
-                Console.printf("Lump %d %d: %s %s", i, Wads.GetLumpNamespace(i), name, fullname);
                 String info = Wads.ReadLump(i);
                 self.ParsePlayerClassList(info);
                 self.ParseEpisodeInfo(info);
@@ -35,7 +32,6 @@ class GameInfoReader {
             for (let i = 0; i < lines.Size(); i++) {
                 String line = lines[i];
                 if (line.IndexOf("PlayerClasses") != -1) {
-
                     line.Substitute('"', "");  // remove quotes
                     line.Substitute(" ", "");  // remove spaces
 
@@ -61,7 +57,6 @@ class GameInfoReader {
             // valid
             if (minfo.IndexOf("clearskills") != -1) {
                 int nextPos = info.IndexOf("clearskills");
-                console.printf("clearskills");
                 self.skills.Clear();
 
                 minfo = minfo.Mid(nextPos + CLEARSKILLS_SIZE);
@@ -124,7 +119,6 @@ class GameInfoReader {
             // valid
             if (minfo.IndexOf("clearepisodes") != -1) {
                 int nextPos = info.IndexOf("clearepisodes");
-                console.printf("clearepisodes");
                 self.episodes.Clear();
 
                 minfo = minfo.Mid(nextPos + CLEAREPISODES_SIZE);
