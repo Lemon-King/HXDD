@@ -473,10 +473,6 @@ class ZFGameOptions ui {
                 listEpisodes.items.push(gameinfo.episodes[i].name);
             }
         }
-        if (LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false)) {
-            listEpisodes.items.push("Heretic: Modder Test Map");
-            listEpisodes.items.push("Hexen: Modder Test Map");
-        }
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
         ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_EPISODE"), listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
