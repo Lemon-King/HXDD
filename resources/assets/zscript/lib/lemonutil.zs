@@ -72,7 +72,7 @@ class LemonUtil {
         // Hardcoded for single player atm
         PlayerInfo p = players[0];
         int playerClassNum = p.CurrentPlayerClass;
-		for (uint i = 0; i < PlayerClasses.Size(); ++i) {
+		for (int i = 0; i < PlayerClasses.Size(); ++i) {
             String className = PlayerClasses[i].type.GetClassName();
             if (playerClassNum == i) {
                 String className = PlayerClasses[i].type.GetClassName();
@@ -89,7 +89,7 @@ class LemonUtil {
         // Hardcoded for single player atm
         PlayerInfo p = players[0];
         int playerClassNum = p.CurrentPlayerClass;
-		for (uint i = 0; i < PlayerClasses.Size(); ++i) {
+		for (int i = 0; i < PlayerClasses.Size(); ++i) {
             String className = PlayerClasses[i].type.GetClassName();
             if (playerClassNum == i) {
                 String className = PlayerClasses[i].type.GetClassName();

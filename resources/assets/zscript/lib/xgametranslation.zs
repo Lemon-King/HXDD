@@ -66,7 +66,7 @@ class XGameTranslation {
                 console.printf("XGameTranslation: Unknown group [%s]!", group);
                 return;
             }
-            for (let i = 0; i < jsonArray.Size(); i++) {
+            for (int i = 0; i < jsonArray.Size(); i++) {
                 HXDD_JsonObject jo = HXDD_JsonObject(jsonArray.arr[i]);
                 if (jo) {
                     String valDoom = "";
