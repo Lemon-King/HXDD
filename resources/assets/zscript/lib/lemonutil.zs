@@ -271,6 +271,23 @@ class LemonUtil {
         return atan2(y, x) * (180.0 / M_PI);
     }
 
+    static vector3 Vector3ToEularAngles(Vector3 v) {
+        double angle = atan2(v.y, v.x);
+        double pitch = atan2(-v.z, sqrt(v.x ** 2 + v.y ** 2));
+        double roll = atan2(
+            v.x * sin(angle) - v.y * cos(angle),
+            v.x * cos(angle) + v.y * sin(angle)
+        );
+
+        return (angle, pitch, roll);
+    }
+
+    // Used to convert Velocity to Facing Angle, Pitch, and Roll
+    static vector3 GetEularFromVelocity(Vector3 v) {
+        vector3 norm = LemonUtil.v3normalize(v);
+        return Vector3ToEularAngles(norm);
+    }
+
 
     // Easings
     static double Easing_Quadradic_In(double val) {
@@ -293,5 +310,13 @@ class LemonUtil {
         else {
             return 7.5625*(val -= (2.625/2.75))*val + 0.984375;
         }
+    }
+
+    static double MathPI() {
+        return 3.141592653589793238462643383279502884197;
+    }
+
+    static double GetDegrees() {
+        return 180.0 / LemonUtil.MathPI();
     }
 }
