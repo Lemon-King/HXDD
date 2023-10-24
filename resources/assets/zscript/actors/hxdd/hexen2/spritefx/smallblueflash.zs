@@ -1,5 +1,4 @@
-
-class SmallExplosion: SpriteFX {
+class SmallBlueFlash : SpriteFX {
 	Default {
 		RenderStyle "Add";
 		Alpha 0.75;
@@ -7,7 +6,7 @@ class SmallExplosion: SpriteFX {
 
 	States {
 		Spawn:
-            SMEX ABCDEFGHIJKL 3 Bright;
+			SMBL ABC 2 Bright;
 			Stop;
 	}
 }

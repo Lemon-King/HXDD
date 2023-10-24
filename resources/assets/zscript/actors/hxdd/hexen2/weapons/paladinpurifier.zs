@@ -216,6 +216,11 @@ class PWeapPurifier_Missile: Actor {
 			return;
 		}
 
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
+
 		self.tickDuration -= 1;
 		if (self.tickDuration <= 0) {
 			self.Destroy();
@@ -310,6 +315,11 @@ class PWeapPurifier_DragonBall: Actor {
 		if (InStateSequence(CurState, self.Findstate("Death"))) {
 			return;
 		}
+		
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
 
 		self.tickDuration -= 1;
 		if (self.tickDuration <= 0) {

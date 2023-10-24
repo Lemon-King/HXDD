@@ -10,7 +10,7 @@ class PWeapVorpalSword : PaladinWeapon
 		Weapon.YAdjust 0;
 		Weapon.AmmoType1 "Mana1";
 		Weapon.AmmoUse 0;
-		Weapon.AmmoGive 100;
+		Weapon.AmmoGive 25;
 		+BLOODSPLATTER
 		+FLOATBOB
         +WEAPON.AMMO_OPTIONAL
@@ -21,35 +21,34 @@ class PWeapVorpalSword : PaladinWeapon
 		FloatBobStrength 0.25;
 	}
 
-	States
-	{
-	Spawn:
-		PKUP A -1;
-		Stop;
-	Select:
-        TNT1 A 0 Offset(0, 32);
-        PSWA EDCBA 2;
-		PSWA ABCDEFG 2;
-		PSWA H 2 A_StartSound("hexen2/weapons/vorpswng");
-		PSWA IJKL 2;
-		PSWA M 2 A_StartSound("hexen2/weapons/vorpswng");
-		PSWA NOPQRSTUV 2;
-		PSWR A 0 A_Raise(100);
-		Loop;
-	Deselect:
-        PSWR A 2 Offset(0, 32);		// has a unique blending issue, setting to 2 ticks corrects deselect motion
-        PSWC ABCDE 2;
-		TNT1 A 0 A_Lower(100);
-		Loop;
-	Ready:
-		PSWR A 2 A_WeaponReady;
-		Loop;
-	Fire:
-		PSWB A 2;
-        PSWB B 2 A_SwingSFX;
-        PSWB C 2 A_Swing;
-		PSWB DEFGHIJKLM 2;
-		Goto Ready;
+	States {
+		Spawn:
+			PKUP A -1;
+			Stop;
+		Select:
+			TNT1 A 0 Offset(0, 32);
+			PSWA EDCBA 2;
+			PSWA ABCDEFG 2;
+			PSWA H 2 A_StartSound("hexen2/weapons/vorpswng");
+			PSWA IJKL 2;
+			PSWA M 2 A_StartSound("hexen2/weapons/vorpswng");
+			PSWA NOPQRSTUV 2;
+			PSWR A 0 A_Raise(100);
+			Loop;
+		Deselect:
+			PSWR A 2 Offset(0, 32);		// has a unique blending issue, setting to 2 ticks corrects deselect motion
+			PSWC ABCDE 2;
+			TNT1 A 0 A_Lower(100);
+			Loop;
+		Ready:
+			PSWR A 2 A_WeaponReady;
+			Loop;
+		Fire:
+			PSWB A 2;
+			PSWB B 2 A_SwingSFX;
+			PSWB C 2 A_Swing;
+			PSWB DEFGHIJKLM 2;
+			Goto Ready;
 	}
 
 	override void Tick() {
@@ -99,8 +98,11 @@ class PWeapVorpalSword : PaladinWeapon
             }
         }
         if (hasTome && amount > 0) {
-		    PWeapVorpalSword_MissileWave projWave = PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapVorpalSword_MissileWave", angle, 0, 0, 12));
+		    PWeapVorpalSword_MissileWave projWave = PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapVorpalSword_MissileWave", angle, 0, 0, 7));
 			if (projWave) {
+				projWave.angle = Player.mo.angle;
+				projWave.pitch = Player.mo.pitch;
+				projWave.roll = Player.mo.roll;
 				projWave.waveType = weaponspecial;
 				weaponspecial++;
 				if (weaponspecial > 1) {
@@ -125,14 +127,7 @@ class PWeapVorpalSword : PaladinWeapon
 			// spawn swipe
 			PWeapVorpalSword_Swipe swipe = PWeapVorpalSword_Swipe(Spawn("PWeapVorpalSword_Swipe"));
 			if (swipe) {
-				swipe.playerInfo = player;
-				swipe.target = player.mo;
-				swipe.angle = swipe.target.angle;
-				swipe.pitch = swipe.target.pitch;
-				swipe.roll = swipe.target.roll;
-
-				Vector3 pos = (swipe.target.pos.x, swipe.target.pos.y - (sin(angle) * 10), player.viewz - (cos(angle) * 10));
-				swipe.SetOrigin(pos, true);
+				swipe.SetOwner(player);
 
 				fx = "SmallWhiteFlashSFX";
 			}
@@ -178,7 +173,7 @@ class PWeapVorpalSword : PaladinWeapon
 }
 
 class PWeapVorpalSword_Swipe : Actor {
-	PlayerInfo playerInfo;
+	PlayerInfo owner;
 
 	Default
 	{
@@ -204,14 +199,41 @@ class PWeapVorpalSword_Swipe : Actor {
         Super.BeginPlay();
     }
 
+	override void PostBeginPlay() {
+		Super.PostBeginPlay();
+
+		self.UpdateOrigin();
+	}
+
 	override void Tick() {
 		Super.Tick();
 
-		angle = self.target.angle;
-		pitch = self.target.pitch;
-		roll = self.target.roll;
+		self.UpdateOrigin();
+	}
 
-		Vector3 pos = (self.target.pos.x, self.target.pos.y, self.playerInfo.viewz - 10);
+	void SetOwner(PlayerInfo p) {
+		self.owner = p;
+		self.target = self.owner.mo;
+		self.angle = self.target.angle;
+		self.pitch = self.target.pitch;
+		self.roll = self.target.roll;
+
+		self.UpdateOrigin();
+	}
+
+	void UpdateOrigin() {
+		self.angle = self.target.angle;
+		self.pitch = self.target.pitch;
+		self.roll = self.target.roll;
+
+		double a = self.angle;
+        double p = Clamp(self.pitch, -90, 90);
+        double r = self.roll;
+        let mat = HXDD_GM_Matrix.fromEulerAngles(a, p, r);
+        mat = mat.multiplyVector3((0, 0, -10));
+        vector3 offsetPos = mat.asVector3(false);
+
+		Vector3 pos = (self.target.pos.x, self.target.pos.y, self.owner.viewz) + offsetPos;
 		SetOrigin(pos, true);
 	}
 }
@@ -269,6 +291,7 @@ class PWeapVorpalSword_MissileWaveFX : Actor {
 	}
 }
 
+// TODO REPLACE WITH CHANGEMODEL
 class PWeapVorpalSword_MissileWaveA : PWeapVorpalSword_MissileWaveFX {
 	override void Tick() {
 		Super.Tick();
@@ -351,6 +374,11 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 
 		tickDuration -= 35.0f / 1000.0f;
 
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
+		
 		//if (!self.tracer) {
 			//TraceSide(-90.0);
 			//TraceSide(90.0);
@@ -393,6 +421,7 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 			shock.roll = self.roll;
 			shock.target = self.target;
 			shock.SetOrigin(self.pos, false);
+			shock.damageMulti = self.damageMulti;
 		}
 
 		if (attachedActor[0]) {
@@ -443,7 +472,10 @@ class PWeapVorpalSword_Shock : Actor {
 	double tickDuration;
 	property tickDuration: tickDuration;
 
+	double damageMulti;
 	int waveType;
+
+	int idx;
 
 	Default {
 		+NOBLOCKMAP
@@ -459,14 +491,13 @@ class PWeapVorpalSword_Shock : Actor {
 		Height 0;
 		Radius 0;
 		
-		PWeapVorpalSword_Shock.tickDuration 0.75;
+		PWeapVorpalSword_Shock.tickDuration 0.5 * 35;
 	}
 
-	States
-	{
-	Spawn:
-		SHOK AB 1 Bright;
-		Loop;
+	States {
+		Spawn:
+			SHOK AB 1 Bright;
+			Loop;
 	}
 
     override void BeginPlay() {
@@ -475,8 +506,6 @@ class PWeapVorpalSword_Shock : Actor {
 
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
-
-		roll = frandom[shokrng](0.0, 360.0);
 	}
 
 	override void Tick() {
@@ -495,6 +524,58 @@ class PWeapVorpalSword_Shock : Actor {
 		Scale.x = self.Default.Scale.x * frandom[shokrng](0.8, 1.4);
 		Scale.y = self.Default.Scale.y * frandom[shokrng](0.8, 1.4);
 
-		tickDuration -= 35.0f / 1000.0f;
+		self.tickDuration--;
+		self.idx = (idx + 1) % 2;
+		if (self.idx == 1 && self.target && self.target.health > 0) {
+			if (self.damageMulti == 0) {
+				self.damageMulti = 1.0;
+			}
+			double damage = 5.0 * self.damageMulti;
+         	int newDamage = self.DamageMobj(self, self.target, damage, 'Electric');
+			self.target.TraceBleed(newDamage > 0 ? newDamage : damage, self);
+		}
+	}
+}
+
+class PWeapVorpalSword_Shock2 : Actor {
+	int idxTexture;
+	double lifeTime;
+
+	double damageMulti;
+
+	Actor parent;
+
+	States {
+		Spawn:
+			PSK2 A 1 Bright;
+			Loop;
+	}
+
+	override void BeginPlay() {
+		self.lifeTime = 0.5 * 35.0;
+	}
+
+	override void Tick() {
+		Super.Tick();
+
+		self.lifeTime--;
+
+		SwapTexture();
+
+		self.Scale.x;
+		self.Scale.y;	
+	}
+
+	void SetParent(Actor nextParent) {
+		self.parent = nextParent;
+	}
+
+	void SwapTexture() {
+		self.idxTexture = (idxTexture + 1) % 2;
+		self.A_ChangeModel(self.GetClassName(),
+			modelindex: 0, modelpath: "models/", model: "vorpshk2.md3",
+			skinindex: 0, skinpath: "models/", String.format("vorpshk2_skin%d", self.idxTexture),
+			generatorindex: 0
+        );
 	}
 }

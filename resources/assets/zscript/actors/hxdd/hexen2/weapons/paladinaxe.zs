@@ -1,4 +1,6 @@
+// Paladin Weapon: Axe
 // ref: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/axe.hc
+
 class PWeapAxe : PaladinWeapon {
 	Default {
 		Weapon.SelectionOrder 1000;
@@ -79,7 +81,7 @@ class PWeapAxe : PaladinWeapon {
 		    PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapAxe_BladeProjectilePower", angle + angOff, 0, 10, 12));
         } else {
 			A_StartSound("hexen2/paladin/axgen");
-		    PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapAxe_BladeProjectile", angle, 0, 10, 12));
+		    PWeapAxe_BladeProjectilePower projAxe = PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectile", angle, 1, -7, true));
 		}
 	}
 
@@ -146,11 +148,15 @@ class PWeapAxe_BladeProjectileTail: Actor {
 	States {
 		Spawn:
 			TAIL AB 2;
-			Stop;
+			Loop;
 	}
 
 	override void Tick() {
 		Super.Tick();
+		
+		if (!self.target) {
+			self.Destroy();
+		}
 	}
 }
 
@@ -204,6 +210,14 @@ class PWeapAxe_BladeProjectileFade: Actor {
 class PWeapAxe_BladeProjectilePower : PWeapAxe_BladeProjectile {
 	Default {
 		RenderStyle "Add";
+	}
+
+	override void BeginPlay() {
+		self.A_ChangeModel(self.GetClassName(),
+			modelindex: 0, modelpath: "models/", model: "axblade.md3",
+			skinindex: 0, skinpath: "models/", "axblade_skin1",
+			generatorindex: 0
+        );
 	}
 }
 class PWeapAxe_BladeProjectile : Hexen2Projectile {
@@ -261,23 +275,32 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 			Stop;
 	}
 
+	override void PostBeginPlay() {
+		Super.PostBeginPlay();
+		PWeapAxe_BladeProjectileTail tail = PWeapAxe_BladeProjectileTail(Spawn("PWeapAxe_BladeProjectileTail"));
+		if (tail) {
+			tail.target = self;
+			tail.angle = self.angle;
+			tail.pitch = self.pitch;
+			tail.roll = self.roll;
+			tail.SetOrigin(self.pos, false);
+			self.attachedTail = tail;
+		}
+	}
+
 	override void Tick() {
 		Super.Tick();
 		
-		if (attachedTail) {
-			attachedTail.angle = self.angle;
-			attachedTail.pitch = self.pitch;
-			attachedTail.roll = self.roll;
-			attachedTail.SetOrigin(self.pos, true);
-		} else {
-			PWeapAxe_BladeProjectileTail tail = PWeapAxe_BladeProjectileTail(Spawn("PWeapAxe_BladeProjectileTail"));
-			if (tail) {
-				tail.angle = self.angle;
-				tail.pitch = self.pitch;
-				tail.roll = self.roll;
-				tail.SetOrigin(self.pos, false);
-				attachedTail = tail;
-			}
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
+
+		if (self.attachedTail) {
+			self.attachedTail.angle = self.angle;
+			self.attachedTail.pitch = self.pitch;
+			self.attachedTail.roll = self.roll;
+			self.attachedTail.SetOrigin(self.pos, true);
 		}
 
 		if (tickDuration <= 0) {
@@ -288,26 +311,28 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 	}
 
 	void A_OnBounce() {
+		// use lightbringer code for adjustment!
+
 		Actor fxHit;
 		A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, CHANF_OVERLAP);
 		if (self is "PWeapAxe_BladeProjectilePower") {
-			fxHit = Actor(Spawn("PWeapAxe_BladeProjectileExplodePowerHit"));
+			fxHit = Actor(Spawn("BlueExplosion"));
 		} else {
-			fxHit = Actor(Spawn("PWeapAxe_BladeProjectileExplodeHit"));
+			fxHit = Actor(Spawn("SmallExplosion"));
 		}
 		if (fxHit) {
 			fxHit.SetOrigin(self.pos, false);
 		}
 
-		bounces++;
+		self.bounces++;
 		if (tracer && (tracer.bIsMonster || tracer.bShootable)) {
-			bounces++;
+			self.bounces++;	// doubled on monster hit
 			if (self is "PWeapAxe_BladeProjectilePower") {
 				A_DamageRadius();
 			}
 			A_DamageHit();
 		}
-		if (bounces >= 4) {
+		if (self.bounces >= 4) {
 			A_DestroySelf();
 		}
 	}
@@ -329,7 +354,12 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 	}
 
 	void A_DestroySelf() {
-		Actor fxFade = Actor(Spawn("PWeapAxe_BladeProjectileFade"));
+		Actor fxFade;
+		if (self is "PWeapAxe_BladeProjectilePower") {
+			fxFade = Actor(Spawn("SmallWhiteFlash"));
+		} else {
+			fxFade = Actor(Spawn("SmallBlueFlash"));
+		}
 		if (fxFade) {
 			fxFade.SetOrigin(self.pos, false);
 		}
