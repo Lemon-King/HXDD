@@ -1,3 +1,4 @@
+// Paladin Weapon: Purifier
 // https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/purifier.hc
 
 class PWeapPurifierPiece: WeaponPiece {
@@ -152,7 +153,7 @@ class PWeapPurifier: PaladinWeapon {
 		}
 
 		double refire = 0.0;
-		vector2 recoil = (frandom(-3.0, 0.0), 0.0);
+		vector2 recoil = (frandom(-1.75, -0.75), 0.0);	// modified from hx2's -3 recoil strength to -1.75 to -0.75 for GZDoom
 		String sfx = "hexen2/paladin/purfire";
 		Actor proj;
 		if (isPowered) {
@@ -163,7 +164,7 @@ class PWeapPurifier: PaladinWeapon {
 		} else {
 			proj = SpawnFirstPerson("PWeapPurifier_Missile", 32, position == "left" ? -15 : 15, -9, true, 0, 0);
 			if (position == "right") {
-				proj.Scale.y = -1;		// hack: it works by flipping the model
+				proj.Scale.y = -1;
 			}
 		}
 		weapon.AddRecoil(recoil);
@@ -250,6 +251,7 @@ class PWeapPurifier_DragonBall: Actor {
 	Default {
 		+HITTRACER;
         +ZDOOMTRANS;
+		+FORCERADIUSDMG;
 
 		RenderStyle "Add";
 
@@ -301,10 +303,10 @@ class PWeapPurifier_DragonBall: Actor {
 		pg.velocity[0] = (0, 0, 15);
 		pg.velocity[1] = (0, 0, 15);
 		pg.amount = 1;
-		pg.lifetime = 1.2;
+		pg.lifetime = 1.7;
 		pg.rate = 35 * 0.15;
 		pg.startalpha = 1.0;
-		pg.sizestep = 0.00;
+		pg.sizestep = 0.12;
 		pg.size = 5;
 		pg.actorParticleTypes.push("PWeapPurifier_PuffRing");
 	}
@@ -342,19 +344,48 @@ class PWeapPurifier_DragonBall: Actor {
 }
 
 class PWeapPurifier_PuffRing: SpriteFXParticle {
-	double tickDuration;
-	property tickDuration: tickDuration;
+	double duration;
+	property duration: duration;
+
+	int idxTexture;
 
 	Default {
 		RenderStyle "Translucent";
 		Alpha 0.9;
 
-		PWeapPurifier_PuffRing.tickDuration (2.5 * 35.0);
+		PWeapPurifier_PuffRing.duration 1.7;	// ramp up time is ~1/3rd of a second
 	}
 
 	States {
 		Spawn:
 			RING A 1;
 			Loop;
+	}
+
+	override void Tick() {
+		Super.Tick();
+
+		self.duration -= 1.0 / 35.0;
+
+		if (self.duration < 0.30) {
+			self.ChangeTexture(4);
+		} else if (self.duration < 0.60) {
+			self.ChangeTexture(3);
+		} else if (self.duration < 0.90) {
+			self.ChangeTexture(2);
+		} else if (self.duration < 1.20) {
+			self.ChangeTexture(1);
+		}
+	}
+
+	void ChangeTexture(int nextIdx) {
+		if (self.idxTexture != nextIdx) {
+			self.idxTexture = nextIdx;
+			self.A_ChangeModel(self.GetClassName(),
+				modelindex: 0, modelpath: "models/", model: "ring.md3",
+				skinindex: 0, skinpath: "models/", String.format("ring_skin%d", self.idxTexture),
+				generatorindex: 0
+			);
+		}
 	}
 }
