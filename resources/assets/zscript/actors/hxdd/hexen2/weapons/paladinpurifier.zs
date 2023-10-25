@@ -194,7 +194,6 @@ class PWeapPurifier_Missile: Actor {
 		Projectile;
 		Scale 1;
 		
-		//SeeSound "hexen2/succubus/acidfire";
 		DeathSound "hexen2/weapons/expsmall";
 		Obituary "$OB_MPPWEAPPURIFIER";
 

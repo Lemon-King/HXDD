@@ -8,6 +8,10 @@
           <option name="goal" value="io.github.git-commit-id:git-commit-id-maven-plugin:6.0.0:revision" />
           <option name="projectPath" value="$PROJECT_DIR$/pom.xml" />
         </MavenCompilerTask>
+        <MavenCompilerTask>
+          <option name="goal" value="org.apache.maven.plugins:maven-assembly-plugin:3.6.0:single" />
+          <option name="projectPath" value="$PROJECT_DIR$/pom.xml" />
+        </MavenCompilerTask>
       </set>
     </option>
   </component>

@@ -7,8 +7,6 @@
 
         <Scale value="1.05 1.05 1.05" />
 
-        <Flag name="USEACTORROLL" />
-
         <!-- Skip Ref Pose -->
         <Animation key="PRH" frames="12" model="0" comment="Run: Blood Fire"/>
         <Animation key="PRR" frames="12" model="0" comment="Run: Acid Rune / Firestorm"/>
@@ -34,9 +32,19 @@
 
         <Animation key="PMC" frames="20" model="0" comment="Crouch"/>
 
-        <!--
         <Animation key="PDE" frames="20" model="0" comment="Death"/>
         <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
-        -->
+    </Group>
+    <Group class="HX2SuccubusPlayer_Head">
+        <Path folder="models" />
+        <Model file="h_suc.md3" model="0" />
+        <Skin file="h_suc_skin0.png" model="0" />
+
+        <Scale value="1.1 1.1 1.1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="PSHD" frames="1" model="0" comment="Decap Head"/>
     </Group>
 </XMLModelDef>

@@ -32,14 +32,13 @@
     </Group>
     <Group class="CWeapMeteorStaff_Meteor">
         <Path folder="models" />
-        <Model file="tempmeteor.md3" model="0" />
-        <Skin file="tempmeteor_skin0.png" model="0" />
+        <Model file="tempmetr.md3" model="0" />
+        <Skin file="tempmetr_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="ICE1" frames="1" model="0" comment="Ref"/>
     </Group>

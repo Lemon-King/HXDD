@@ -13,11 +13,11 @@ class SWeapBloodRain : SuccubusWeapon {
 
 	States {
 		Select:
-			SWSE ABCDEFGHIJKLMNOPQRST 2 Offset(0, 32);
+			SWSE ABCDEFGHIJKLMNOPQRST 1 Offset(0, 32);
 			TNT1 A 0 A_Raise(100);
 			Loop;
 		Deselect:
-			SWSE TSRQPONMLKJIHGFEDCBA 2;
+			SWSE TSRQPONMLKJIHGFEDCBA 1;
 			TNT1 A 0 A_Lower(100);
 			Loop;
 		Ready:
@@ -29,9 +29,9 @@ class SWeapBloodRain : SuccubusWeapon {
 			Goto Ready;
 		Fire:
 			SWAA ABCDEF 2;
-			SWAA G 2 A_BloodRain;
-			SWAA HIJK 2;
-			SWAA L 2 A_ReFire("Fire");
+			SWAA G 1 A_BloodRain;
+			SWAA HIJK 1;
+			SWAA L 1 A_ReFire("Fire");
 			Goto Ready;
 	}
 
@@ -56,9 +56,8 @@ class SWeapBloodRain : SuccubusWeapon {
 			if (!weapon.DepleteAmmo (weapon.bAltFire))
 				return;
 		}
-		SpawnPlayerMissile("SWeapBloodRain_Missile", angle, -5 * sin(angle), 5 * cos(angle), 11);
-		//Fire3DProjectile("SWeapBloodRain_Missile", 30, -13, -3, false, 0, 0);
-		//A_StartSound("hexen2/succubus/brnfire", CHAN_WEAPON);
+		SpawnFirstPerson("SWeapBloodRain_Missile", 25, -5.75, -5, true);
+		A_StartSound("hexen2/succubus/brnfire", CHAN_WEAPON);
 	}
 }
 
@@ -88,7 +87,7 @@ class SWeapBloodRain_Missile : Actor
 		Height 8;
 		Projectile;
 		
-		SeeSound "hexen2/succubus/brnfire";
+		//SeeSound "hexen2/succubus/brnfire";
 		DeathSound "hexen2/succubus/brnwall";
 		Obituary "$OB_MPSWEAPBLOODRAIN";
 
@@ -118,6 +117,11 @@ class SWeapBloodRain_Missile : Actor
 		if (InStateSequence(CurState, self.Findstate("Death"))) {
 			return;
 		}
+		
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
 
 		Vector3 vecDiff = (start.x - self.pos.x, start.y - self.pos.y, start.z - self.pos.z);
 		double distance = sqrt((vecDiff.x * vecDiff.x) + (vecDiff.y * vecDiff.y) + (vecDiff.z * vecDiff.z));

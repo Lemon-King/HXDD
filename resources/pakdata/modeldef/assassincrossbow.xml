@@ -37,7 +37,6 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="BOLT" frames="1" model="0" comment="Bolt"/>
     </Group>
@@ -50,7 +49,6 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="BOLT" frames="9" model="0" comment="Flaming Bolt"/>
     </Group>

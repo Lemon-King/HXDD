@@ -15,6 +15,7 @@ class HX2NecromancerPlayer : HXDDHexenIIPlayerPawn
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
+		PainSound "Hexen2PlayerMalePain";
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
 		Player.Viewheight 41;

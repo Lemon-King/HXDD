@@ -48,7 +48,6 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="FBAL" frames="4" model="0" comment="Loop"/>
     </Group>

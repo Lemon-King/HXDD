@@ -10,6 +10,7 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
+		PainSound "Hexen2PlayerMalePain";
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
 		Player.Viewheight 41;
@@ -141,19 +142,26 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 			PPST ABCDEFG 2;
 			Goto Spawn4;
 		Death:
-			PLAY H 6;
-			PLAY I 6 A_PlayerScream;
-			PLAY JK 6;
-			PLAY L 6 A_NoBlocking;
-			PLAY M 6;
-			PLAY N -1;
+			PDEA A 2 A_PlayerScream;
+			PDEA BCDEFGHIJKLMNOPQRS 2;
+			PDEA T -1;
+			//PLAY H 6;
+			//PLAY I 6 A_PlayerScream;
+			//PLAY JK 6;
+			//PLAY L 6 A_NoBlocking;
+			//PLAY M 6;
+			//PLAY N -1;
 			Stop;		
 		XDeath:
-			PLAY O 5 A_PlayerScream;
-			PLAY P 5 A_SkullPop("BloodyFighterSkull");
-			PLAY R 5 A_NoBlocking;
-			PLAY STUV 5;
-			PLAY W -1;
+			PDDA A 2 A_SkullPop("HX2PaladinPlayer_Head");
+			PDDA BCDEFGHIJKLMNOPQRSTUVWXYZ 2;
+			PDDB A 2;
+			PDDB B -1;
+			//PLAY O 5 A_PlayerScream;
+			//PLAY P 5 A_SkullPop("BloodyFighterSkull");
+			//PLAY R 5 A_NoBlocking;
+			//PLAY STUV 5;
+			//PLAY W -1;
 			Stop;
 		Ice:
 			PLAY X 5 A_FreezeDeath;
@@ -181,6 +189,28 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 			ACLO E 35 A_CheckPlayerDone;
 			Wait;
 			ACLO E 8;
+			Stop;
+	}
+}
+
+class HX2PaladinPlayer_Head : PlayerChunk {
+	Default {
+		Radius 4;
+		Height 4;
+		Gravity 0.125;
+		+NOBLOCKMAP
+		+DROPOFF
+		+CANNOTPUSH
+		+SKYEXPLODE
+		+NOBLOCKMONST
+		+NOSKIN
+	}
+	States {
+		Spawn:
+			PHED A 1 A_CheckFloor("Hit");
+			Loop;
+		Hit:
+			PHED A 16 A_CheckPlayerDone;
 			Stop;
 	}
 }

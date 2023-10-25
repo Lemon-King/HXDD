@@ -14,6 +14,7 @@ class HX2AssassinPlayer : HXDDHexenIIPlayerPawn
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
+		PainSound "Hexen2PlayerFemalePain";
 		RadiusDamageFactor 0.25;
 		Player.JumpZ 9;
 		Player.Viewheight 41;

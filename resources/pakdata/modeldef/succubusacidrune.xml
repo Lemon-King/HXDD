@@ -48,7 +48,6 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="AMIS" frames="1" model="0" comment="Loop"/>
     </Group>
@@ -61,7 +60,6 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
 
         <Animation key="AMIS" frames="1" model="0" comment="Loop"/>
     </Group>

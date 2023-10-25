@@ -46,14 +46,16 @@ class HXDDStatusBar : BaseStatusBar {
 	private int gemColorAssignment;
 
 	private bool hasACArmor;
+
+	Progression prog;
 	
-	Progression GetProgression() {
-		Progression prog = Progression(CPlayer.mo.FindInventory("Progression"));
-		return prog;
+	void UpdateProgression() {
+		if (CPlayer.mo is "PlayerPawn") {
+			prog = Progression(CPlayer.mo.FindInventory("Progression"));
+		}
 	}
 
 	int GetPlayerLevel() {
-		Progression prog = GetProgression();
 		if (prog) {
 			return prog.currlevel;
 		}
@@ -61,7 +63,6 @@ class HXDDStatusBar : BaseStatusBar {
 	}
 
 	String GetPlayerExperience() {
-		Progression prog = GetProgression();
 		if (prog) {
 			return String.format("%.2f", mXPInterpolator.GetValue());
 		}
@@ -69,7 +70,6 @@ class HXDDStatusBar : BaseStatusBar {
 	}
 
 	int GetPlayerProgressionType() {
-		Progression prog = GetProgression();
 		if (prog) {
 			return prog.ProgressionType;
 		}
@@ -77,7 +77,6 @@ class HXDDStatusBar : BaseStatusBar {
 	}
 
 	bool IsPlayerArmorAC() {
-		Progression prog = GetProgression();
 		if (prog) {
 			return prog.ArmorType == PSAT_ARMOR_AC;
 		}
@@ -134,8 +133,9 @@ class HXDDStatusBar : BaseStatusBar {
 		Super.Tick();
 		mHealthInterpolator.Update(CPlayer.health);
 		mHealthInterpolator2.Update(CPlayer.health);
+
+		UpdateProgression();
 		
-		Progression prog = GetProgression();
 		if (prog) {
 			if (prog.ProgressionType == PSP_LEVELS) {
 				mXPInterpolator.Update(prog.levelpct);
@@ -260,13 +260,12 @@ class HXDDStatusBar : BaseStatusBar {
 
 
 		String imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT.png";
-		Progression prog = GetProgression();
-		if (prog.ArmorType == PSAT_ARMOR_AC) {
+		if (prog && prog.ArmorType == PSAT_ARMOR_AC) {
 			imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT_AC.png";
 		}
 		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
 
-		if (prog.ProgressionType == PSP_LEVELS) {
+		if (prog && prog.ProgressionType == PSP_LEVELS) {
 			// draw xp bar
 			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
 
@@ -292,7 +291,10 @@ class HXDDStatusBar : BaseStatusBar {
 
 		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
 
-		double armorValue = prog.ArmorType == PSAT_ARMOR_AC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
+		double armorValue = mArmorInterpolator.GetValue();
+		if (prog) {
+			armorValue = prog.ArmorType == PSAT_ARMOR_AC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
+		}
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
 		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
@@ -423,8 +425,7 @@ class HXDDStatusBar : BaseStatusBar {
 			}
 		}
 
-		Progression prog = GetProgression();
-		if (prog.currlevel > 0) {
+		if (prog && prog.currlevel > 0) {
 			DrawString(mHUDFont, FormatNumber(mXPInterpolator.GetValue()), (-21, -60), DI_TEXT_ALIGN_RIGHT);
 			DrawString(mHUDFont, GetPlayerExperience(), (-21, -45), DI_TEXT_ALIGN_RIGHT);
 		}
@@ -475,8 +476,7 @@ class HXDDStatusBar : BaseStatusBar {
 		int maxValue = 100;
 		int value = 0;
 		int wiggle = 0;
-		Progression prog = GetProgression();
-		if (prog.currlevel > 0) {
+		if (prog && prog.currlevel > 0) {
 			value = mXPInterpolator.GetValue();
 			wiggle = (floor(mXPInterpolator.GetValue()) != floor(prog.levelpct)) && Random[ChainWiggle](0, 1);
 		} else {
@@ -650,8 +650,7 @@ class HXDDStatusBar : BaseStatusBar {
 		int maxValue = 100;
 		int value = 0;
 		int wiggle = 0;
-		Progression prog = GetProgression();
-		if (prog.currlevel > 0) {
+		if (prog && prog.currlevel > 0) {
 			value = mXPInterpolator.GetValue();
 			wiggle = (floor(mXPInterpolator.GetValue()) != floor(prog.levelpct)) && Random[ChainWiggle](0, 1);
 		} else {

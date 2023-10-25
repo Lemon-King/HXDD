@@ -33,7 +33,7 @@ class HXDDClericBoss : ClericBoss replaces ClericBoss
 		CLER S 5;
 		CLER T 5 A_NoBlocking;
 		CLER UVWXYZ 5;
-		CLER [ -1;
+		CLRF A -1;
 		Stop;
 	Ice:
 		CLRF B 5 A_FreezeDeath;
