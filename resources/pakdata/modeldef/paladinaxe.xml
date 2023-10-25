@@ -41,7 +41,18 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
-        <Flag name="PITCHFROMMOMENTUM" />
+
+        <Animation key="AXEP" frames="5" model="0" comment="Loop"/>
+    </Group>
+    <Group class="PWeapAxe_BladeProjectilePower">
+        <Path folder="models" />
+        <Model file="axblade.md3" model="0" />
+        <Skin file="axblade_skin1.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
 
         <Animation key="AXEP" frames="5" model="0" comment="Loop"/>
     </Group>

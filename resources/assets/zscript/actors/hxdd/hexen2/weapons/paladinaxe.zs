@@ -76,12 +76,12 @@ class PWeapAxe : PaladinWeapon {
         if (hasTome) {
 			double angOff = 5.0 * 3.2;
 			A_StartSound("hexen2/paladin/axgenpr");
-		    PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapAxe_BladeProjectilePower", angle, 0, 10, 12));
-		    PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapAxe_BladeProjectilePower", angle - angOff, 0, 10, 12));
-		    PWeapVorpalSword_MissileWave(SpawnPlayerMissile("PWeapAxe_BladeProjectilePower", angle + angOff, 0, 10, 12));
+		    PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectilePower", 30, 7, -5, 0));
+		    PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectilePower", 30, 7, -5, false, -angOff));
+		    PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectilePower", 30, 7, -5, false, angOff));
         } else {
 			A_StartSound("hexen2/paladin/axgen");
-		    PWeapAxe_BladeProjectilePower projAxe = PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectile", angle, 1, -7, true));
+		    PWeapAxe_BladeProjectilePower(SpawnFirstPerson("PWeapAxe_BladeProjectile", 30, 7, -5, true));
 		}
 	}
 
@@ -297,9 +297,9 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 		self.roll = facing.z;
 
 		if (self.attachedTail) {
-			self.attachedTail.angle = self.angle;
-			self.attachedTail.pitch = self.pitch;
-			self.attachedTail.roll = self.roll;
+			self.attachedTail.angle = facing.x;
+			self.attachedTail.pitch = facing.y;
+			self.attachedTail.roll = facing.z;
 			self.attachedTail.SetOrigin(self.pos, true);
 		}
 
@@ -313,15 +313,15 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 	void A_OnBounce() {
 		// use lightbringer code for adjustment!
 
-		Actor fxHit;
-		A_StartSound("hexen2/weapons/explode", CHAN_WEAPON, CHANF_OVERLAP);
+		Actor fx;
+		A_StartSound("hexen2/weapons/explode");
 		if (self is "PWeapAxe_BladeProjectilePower") {
-			fxHit = Actor(Spawn("BlueExplosion"));
+			fx = Actor(Spawn("BlueExplosion"));
 		} else {
-			fxHit = Actor(Spawn("SmallExplosion"));
+			fx = Actor(Spawn("SmallExplosion"));
 		}
-		if (fxHit) {
-			fxHit.SetOrigin(self.pos, false);
+		if (fx) {
+			fx.SetOrigin(self.pos, false);
 		}
 
 		self.bounces++;

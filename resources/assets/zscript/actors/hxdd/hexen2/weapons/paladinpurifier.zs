@@ -153,7 +153,7 @@ class PWeapPurifier: PaladinWeapon {
 		}
 
 		double refire = 0.0;
-		vector2 recoil = (frandom(-1.75, -0.75), 0.0);	// modified from hx2's -3 recoil strength to -1.75 to -0.75 for GZDoom
+		vector2 recoil = (frandom(-1.75, -0.25), 0.0);	// modified from hx2's -3 recoil strength to -1.75 to -0.75 for GZDoom
 		String sfx = "hexen2/paladin/purfire";
 		Actor proj;
 		if (isPowered) {
