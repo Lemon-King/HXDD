@@ -23,6 +23,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="CWMI" frames="1" model="0" comment="Idle"/>
 

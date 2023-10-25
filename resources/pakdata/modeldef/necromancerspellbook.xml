@@ -37,6 +37,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="NBBF" frames="12" model="0" comment="Attack: Bone Shards"/>
 
@@ -62,6 +63,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="NBBF" frames="12" model="0" comment="Attack: Bone Shards"/>
 

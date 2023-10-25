@@ -23,6 +23,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="FSIB" frames="25" model="0" comment="Idle: Jelly"/>
         <Animation key="FSIA" frames="25" model="0" comment="Idle"/>

@@ -37,6 +37,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="SCYC" frames="10" model="0" comment="Fire Cycle"/>
 

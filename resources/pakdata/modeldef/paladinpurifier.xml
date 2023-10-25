@@ -37,6 +37,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="PROT" frames="1" model="0" comment="Root Pose"/>
 

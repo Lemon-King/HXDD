@@ -23,6 +23,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <!-- Axe has a fair amount of frame reuse -->
         <Animation key="PAXR" frames="1" model="0" comment="Root"/>

@@ -9,6 +9,7 @@
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
 
         <Animation key="CWCH" frames="12" model="0" comment="Chop"/>
         <Animation key="CWHA" frames="10" model="0" comment="Hack"/>
