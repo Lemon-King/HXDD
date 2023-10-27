@@ -1,76 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxWidth="740.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lemon.hxdd.gui.MainViewController">
+<BorderPane maxWidth="756.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lemon.hxdd.gui.MainViewController">
          <top>
-            <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="240.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER" maxHeight="140.0" maxWidth="756.0" BorderPane.alignment="CENTER">
                <children>
-                  <StackPane prefHeight="140.0" prefWidth="720.0">
+                  <StackPane maxHeight="126.0" maxWidth="756.0" prefHeight="126.0" prefWidth="756.0" HBox.hgrow="NEVER">
                      <children>
-                        <Label text="HXDD" textFill="#840000">
+                  <ImageView fitHeight="140.0" fitWidth="756.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
+                     <image>
+                        <Image url="@header.png" />
+                     </image>
+                  </ImageView>
+                        <Label alignment="CENTER" maxWidth="296.0" text="HXDD" textAlignment="CENTER" textFill="#840000" wrapText="true" StackPane.alignment="TOP_RIGHT">
                            <font>
-                              <Font name="Impact" size="78.0" />
+                              <Font name="Impact" size="36.0" />
                            </font>
+                     <StackPane.margin>
+                        <Insets right="8.0" top="8.0" />
+                     </StackPane.margin>
                         </Label>
-                  <StackPane maxHeight="140.0" maxWidth="108.0" minWidth="108.0" prefHeight="140.0" prefWidth="108.0" translateX="-170.0" translateY="20.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.96">
-                           <image>
-                              <Image url="@keystatue.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.396" translateY="-100.0">
-                           <image>
-                              <Image url="@keystatue_orb.png" />
-                           </image>
-                        </ImageView>
+                  <Label alignment="CENTER" layoutX="229.0" layoutY="18.0" text="A Heretic &amp; Hexen WAD Merger" textAlignment="RIGHT" textFill="#4c4c4c" wrapText="true" StackPane.alignment="TOP_RIGHT">
+                     <font>
+                        <Font name="Impact" size="24.0" />
+                     </font>
+                     <StackPane.margin>
+                        <Insets right="8.0" top="48.0" />
+                     </StackPane.margin>
+                  </Label>
+                  <Label fx:id="labelVersion" alignment="TOP_LEFT" text="VERSION" textAlignment="RIGHT" textFill="#ffffff80" translateX="-4.0" translateY="-4.0" StackPane.alignment="BOTTOM_RIGHT">
+                     <StackPane.margin>
+                        <Insets bottom="4.0" right="4.0" />
+                     </StackPane.margin></Label>
                      </children>
-                  </StackPane>
-                  <StackPane layoutX="256.0" layoutY="55.0" maxHeight="140.0" maxWidth="108.0" minWidth="108.0" prefHeight="140.0" prefWidth="108.0" translateX="170.0" translateY="20.0">
-                     <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.8" scaleY="0.96">
-                           <image>
-                              <Image url="@keystatue.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.396" translateY="-100.0">
-                           <image>
-                              <Image url="@keystatue_orb.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </StackPane>
-                  <Label fx:id="labelVersion" alignment="TOP_LEFT" text="VERSION" textAlignment="RIGHT" textFill="#00000080" translateX="-4.0" translateY="-4.0" StackPane.alignment="BOTTOM_RIGHT" />
-                     </children>
-               <padding>
-                  <Insets top="24.0" />
-               </padding>
+               <rotationAxis>
+                  <Point3D />
+               </rotationAxis>
                   </StackPane>
                </children>
             </HBox>
@@ -530,7 +502,7 @@
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="550.0" prefWidth="380.0" text="Options" textFill="#00000099">
+                              <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="550.0" prefWidth="370.0" text="Options" textFill="#00000099">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -553,7 +525,10 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0" />
+                                                <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin></ChoiceBox>
                                              </children>
                                           </HBox>
                                           <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="42.0" prefHeight="35.0" prefWidth="352.0">
@@ -576,7 +551,10 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0" />
+                                                <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin></ChoiceBox>
                                              </children>
                                           </HBox>
                                           <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="This setting will download Korax Voice files from TCRF in the selected language." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
@@ -591,7 +569,10 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0" />
+                                                <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0">
+                                                   <HBox.margin>
+                                                      <Insets right="8.0" />
+                                                   </HBox.margin></ChoiceBox>
                                              </children>
                                           </HBox>
                                           <Separator layoutX="9.0" layoutY="118.0" prefWidth="360.0" />
