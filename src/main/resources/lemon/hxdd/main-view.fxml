@@ -59,9 +59,6 @@
                         <Insets bottom="4.0" right="4.0" />
                      </StackPane.margin></Label>
                      </children>
-               <rotationAxis>
-                  <Point3D />
-               </rotationAxis>
                   </StackPane>
                </children>
             </HBox>
