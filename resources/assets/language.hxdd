@@ -27,9 +27,14 @@ MNU_FATEPTH = "Fate's Path";
 MNU_HEXEN = "Hexen - Beyond Heretic";
 MNU_HEXDD = "Deathkings of the Dark Citadel";
 
+HHUSTR_E6M1 = "Raven's Lair";
+HHUSTR_E6M2 = "The Water Shrine";
+HHUSTR_E6M3 = "American's Legacy";
+
 // Options
 MNU_HXDDOPTIONS = "HXDD Options";
 
+MNU_HEADER_EPISODE = "Episode";
 MNU_HEADER_SKILLSELECTION = "Skill";
 MNU_HEADER_GAMEMODE = "Game Detection";
 MNU_HEADER_ARMORMODE = "Armor Mode";
