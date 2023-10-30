@@ -153,7 +153,7 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 			//PLAY N -1;
 			Stop;		
 		XDeath:
-			PDDA A 2 A_SkullPop("HX2PaladinPlayer_Head");
+			PDDA A 2 A_SkullPop("HX2PaladinPlayerHead");
 			PDDA BCDEFGHIJKLMNOPQRSTUVWXYZ 2;
 			PDDB A 2;
 			PDDB B -1;
@@ -193,24 +193,4 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 	}
 }
 
-class HX2PaladinPlayer_Head : PlayerChunk {
-	Default {
-		Radius 4;
-		Height 4;
-		Gravity 0.125;
-		+NOBLOCKMAP
-		+DROPOFF
-		+CANNOTPUSH
-		+SKYEXPLODE
-		+NOBLOCKMONST
-		+NOSKIN
-	}
-	States {
-		Spawn:
-			PHED A 1 A_CheckFloor("Hit");
-			Loop;
-		Hit:
-			PHED A 16 A_CheckPlayerDone;
-			Stop;
-	}
-}
+class HX2PaladinPlayerHead : HX2PlayerHead {}

@@ -1,4 +1,4 @@
-
+// Paladin Weapon: Acid Rune
 // https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/acidorb.hc
 // lighting: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/code/CL_MAIN.C#L727
 

@@ -22,7 +22,68 @@ Lock 228
 //
 
 //
-// Heretic / Hexen KeyDefs
+// Heretic Key Defs
+//
+
+Lock 1001
+{
+	//$Title "Green key"
+	//KeyGreen
+	KeyGreen
+	Message "$TXT_NEEDGREENKEY"
+	Mapcolor 0 255 0
+}
+
+
+Lock 1002
+{
+	//$Title "Blue key"
+	//KeyBlue 
+	KeyBlue
+	Message "$TXT_NEEDBLUEKEY"
+	Mapcolor 0 0 255
+}
+
+
+Lock 1003
+{
+	//$Title "Yellow key"
+	//KeyYellow
+	KeyYellow
+	Message "$TXT_NEEDYELLOWKEY"
+	Mapcolor 255 255 0
+}
+
+//
+// Hexen Key Defs
+//
+
+Lock 2001
+{
+	//$Title "Steel key"
+	KeySteel
+	Message "$TXT_NEED_KEY_STEEL"
+	Mapcolor 150 150 150
+}
+
+Lock 2002
+{
+	//$Title "Cave key"
+	KeyCave
+	Message "$TXT_NEED_KEY_CAVE"
+	Mapcolor 255 218 0
+}
+
+Lock 2003
+{
+	//$Title "Axe key"
+	KeyAxe
+	Message "$TXT_NEED_KEY_AXE"
+	Mapcolor 64 64 255
+}
+
+//
+// Shared Key Defs
 //
 
 Lock 1
@@ -56,8 +117,6 @@ Lock 3
 	Message "$TXT_NEEDYELLOWKEY"
 	Mapcolor 255 255 0
 }
-
-
 
 Lock 4
 {

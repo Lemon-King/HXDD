@@ -1,3 +1,4 @@
+// Demoness Weapon: Blood Rain
 
 class SWeapBloodRain : SuccubusWeapon {
 	Default {
@@ -76,6 +77,8 @@ class SWeapBloodRain_Missile : Actor
 	   Vector3 start;
 
 	Default {
+		RenderStyle "Add";
+		
 		+HITTRACER;
 		+ZDOOMTRANS;
 		+SPAWNSOUNDSOURCE;

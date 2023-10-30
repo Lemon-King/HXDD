@@ -1,4 +1,4 @@
-
+// Demoness Weapon: Firestorm
 // https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/flameorb.hc
 
 class SWeapFireStorm: SuccubusWeapon {
