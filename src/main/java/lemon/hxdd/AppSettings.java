@@ -41,7 +41,7 @@ public class AppSettings {
 
         prop_defaults.put("USE_DEVELOPMENT_RESOURCES", "false");
 
-        prop_defaults.put("OPTION_TITLE_ARTWORK", "heretic");
+        prop_defaults.put("OPTION_TITLE_ARTWORK", "heretic.shadows");
         prop_defaults.put("OPTION_TITLE_MUSIC", "heretic");
         prop_defaults.put("OPTION_USE_STEAM_ARTWORK", "false");
         prop_defaults.put("OPTION_KORAX_LOCALIZATION", "en");

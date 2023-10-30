@@ -96,12 +96,16 @@ public class GameActorNums {
             CreateXGT(actorsJSON, type);
 
             try {
+                File pathTarget = new File(this.pathTemp + "/gameinfo/");
+                if (!pathTarget.exists()) {
+                    pathTarget.mkdirs();
+                }
+
                 Map<String, String> actorMap = (Map)p_hxdd;
                 SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
 
                 String mapInfoFileName = "mapinfo." + type;
-
-                PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/" + mapInfoFileName);
+                PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/gameinfo/" + mapInfoFileName);
 
                 AddGeneratedByTag(file_mapinfo);
                 if (Objects.equals(type, "doomednums")) {

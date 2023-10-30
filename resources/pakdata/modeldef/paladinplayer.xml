@@ -34,7 +34,7 @@
         <Animation key="PSST" frames="13" model="0" comment="Stand: Staff"/>
         <Animation key="PSSA" frames="13" model="0" comment="Stand: Sword/Axe"/>
     </Group>
-    <Group class="HX2PaladinPlayer_Head">
+    <Group class="HX2PaladinPlayerHead">
         <Path folder="models" />
         <Model file="h_pal.md3" model="0" />
         <Skin file="h_pal_skin0.png" model="0" />
@@ -44,6 +44,6 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="PHED" frames="1" model="0" comment="Decap Head"/>
+        <Animation key="HX2H" frames="1" model="0" comment="Decap Head"/>
     </Group>
 </XMLModelDef>

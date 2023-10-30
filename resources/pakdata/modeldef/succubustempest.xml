@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="SWeapTempestStaffPiece1">
+        <Path folder="models" />
+        <Model file="w_l41_c5.md3" model="0" />
+        <Skin file="w_l41_c5_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="SWeapTempestStaffPiece2">
+        <Path folder="models" />
+        <Model file="w_l42_c5.md3" model="0" />
+        <Skin file="w_l42_c5_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
+    </Group>
+    <Group class="SWeapTempestStaff">
+        <Path folder="models" />
+        <Model file="sucwp4.md3" model="0" />
+        <Skin file="sucwp4_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
+
+        <Animation key="000" frames="16" model="0" comment="Fire"/>
+        <Animation key="100" frames="16" model="0" comment="Ready Idle"/>
+        <Animation key="200" frames="16" model="0" comment="Ready"/>
+        <Animation key="300" frames="16" model="0" comment="Powered Idle"/>
+        <Animation key="400" frames="16" model="0" comment="Powered"/>
+        <Animation key="500" frames="12" model="0" comment="Selected / Deselect"/>
+    </Group>
+</XMLModelDef>
