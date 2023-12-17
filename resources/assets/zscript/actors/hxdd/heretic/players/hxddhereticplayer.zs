@@ -1,6 +1,7 @@
 class HXDDHereticPlayer : HereticPlayer {
 	Default {
 		Player.SpawnClass "Corvus";
+		Player.JumpZ 9;							// Match Hexen Jump
 		Player.HealRadiusType "Health";
 		Player.Hexenarmor 10, 10, 25, 5, 15;	// total 65, between mage and cleric
 		Player.Portrait "P_HWALK1";
@@ -14,4 +15,3 @@ class HXDDHereticPlayer : HereticPlayer {
 		Player.FlechetteType "ArtiPoisonBag2";
 	}
 }
-
