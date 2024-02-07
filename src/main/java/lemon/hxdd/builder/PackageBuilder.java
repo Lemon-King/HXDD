@@ -5,30 +5,25 @@ import lemon.hxdd.Application;
 import lemon.hxdd.shared.GITVersion;
 import lemon.hxdd.shared.PAKTest;
 import lemon.hxdd.shared.Util;
+import lemon.hxdd.shared.WADHash;
 import net.mtrop.doom.Wad;
 import net.mtrop.doom.WadBuffer;
 import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Palette;
-import net.mtrop.doom.util.GraphicUtils;
 import net.mtrop.doom.util.MapUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -39,6 +34,8 @@ public class PackageBuilder implements Runnable {
 
     private ArrayList<Pair<String, WadFile>> wads = new ArrayList<>();
     private ArrayList<Pair<Integer, File>> paks = new ArrayList<>();
+
+    private HashMap<String, String> sourceVersions = new HashMap<>();
 
     private AssetExtractor ae;
 
@@ -75,6 +72,8 @@ public class PackageBuilder implements Runnable {
                     paks.add(new Pair<>(i, new File(path)));
                 }
             }
+
+            ReadWADVersions();
 
             this.app.controller.SetCurrentLabel("Preparing");
             this.app.controller.SetCurrentProgress(-1);
@@ -119,6 +118,8 @@ public class PackageBuilder implements Runnable {
 
                     SoundInfo si = new SoundInfo(this.app);
                     si.Export();
+
+                    sourceVersions.put("hx2", owned.toUpperCase());
                 }
             }
 
@@ -149,6 +150,19 @@ public class PackageBuilder implements Runnable {
             throw new RuntimeException(e);
         }
     }
+
+    private void ReadWADVersions() {
+        this.wads.forEach((p) -> {
+            String name = p.getKey();
+            File fileWAD = new File(String.format("PATH_%s", name.toUpperCase()));
+            if (fileWAD.exists()) {
+                WADHash hf = new WADHash(name, this.app.settings.Get(String.format("PATH_%s", name.toUpperCase())));
+                Pair<Integer, String> result = hf.Compute();
+                sourceVersions.put(name, result.getValue());
+            }
+        });
+    }
+
 
     private void ParseAssets() {
         this.app.controller.SetStageLabel("Parsing Assets");
@@ -766,6 +780,11 @@ public class PackageBuilder implements Runnable {
             out.println(String.format("HXDD_BUILD_COMMIT_TIME = \"%s\";", p_gitversion.getProperty("git.commit.time")));
             out.println(String.format("HXDD_BUILD_VERSION_ID = \"%s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev")));
             out.println(String.format("HXDD_BUILD_VERSION_ID_DATE_OPT = \"Build: %s %s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev"), p_gitversion.getProperty("git.commit.time")));
+            out.println(String.format("HXDD_BUILD_HERETIC_VERSION = \"Heretic: %s\";", Optional.ofNullable(sourceVersions.get("heretic")).orElse("")));
+            out.println(String.format("HXDD_BUILD_HEXEN_VERSION = \"Hexen: %s\";", Optional.ofNullable(sourceVersions.get("hexen")).orElse("")));
+            out.println(String.format("HXDD_BUILD_HEXDD_VERSION = \"Hexen DeathKings: %s\";", Optional.ofNullable(sourceVersions.get("hexdd")).orElse("")));
+            out.println(String.format("HXDD_BUILD_HX2_VERSION = \"Hexen II: %s\";", Optional.ofNullable(sourceVersions.get("hx2")).orElse("")));
+            //out.println(String.format("HXDD_BUILD_H2_VERSION = \"Heretic 2: %s\";", ""));
             out.close();
 
             fw = new FileWriter(SettingPathTemp + "/language.owner", false);

@@ -57,6 +57,16 @@ public class WADHash {
         this.type = gameType;
         this.file = new File(path);
     }
+    public WADHash(String gameType, String path) {
+        if (gameType.equalsIgnoreCase("heretic")) {
+            this.type = GAME_TYPE.HERETIC;
+        } else if (gameType.equalsIgnoreCase("hexen")) {
+            this.type = GAME_TYPE.HEXEN;
+        } else if (gameType.equalsIgnoreCase("hexdd")) {
+            this.type = GAME_TYPE.HEXDD;
+        }
+        this.file = new File(path);
+    }
 
     public Pair Compute() {
         Map<String, Pair> versionMap = new HashMap<>();
