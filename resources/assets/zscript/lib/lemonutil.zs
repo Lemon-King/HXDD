@@ -153,6 +153,48 @@ class LemonUtil {
         return mode;
     }
 
+    static int GetLineLockNumber(Line l) {
+        if ( !l.locknumber ) {
+            // check the special
+            switch ( l.special ) {
+            case FS_Execute:
+                return l.Args[2];
+                break;
+            case Door_LockedRaise:
+            case Door_Animated:
+                return l.Args[3];
+                break;
+            case ACS_LockedExecute:
+            case ACS_LockedExecuteDoor:
+            case Generic_Door:
+                return l.Args[4];
+                break;
+            }
+        }
+        return l.locknumber;
+    }
+
+    static void ChangeLineLockNumber(Line l, int newLockNumber) {
+        if ( !l.locknumber ) {
+            // check the special
+            switch ( l.special ) {
+            case FS_Execute:
+                //l.Args[2] = newLockNumber;
+                break;
+            case Door_LockedRaise:
+            case Door_Animated:
+                //l.Args[3] = newLockNumber;
+                break;
+            case ACS_LockedExecute:
+            case ACS_LockedExecuteDoor:
+            case Generic_Door:
+                //l.Args[4] = newLockNumber;
+                break;
+            }
+        }
+        //l.locknumber = newLockNumber;
+    }
+
     // CVAR user / server null safe get/find
     static cvar GetCVAR(string name, PlayerInfo player = null) {
         return player ? CVar.GetCvar(name, player) : CVar.FindCVar(name);
