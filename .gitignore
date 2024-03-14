@@ -81,6 +81,7 @@ resources.zip
 /models/
 
 # build process files
+runPom.xml
 *.pk3
 *.ipk3
 /target/
