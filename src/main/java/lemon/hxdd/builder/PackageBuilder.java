@@ -607,7 +607,7 @@ public class PackageBuilder implements Runnable {
         String path = this.app.settings.GetPath("temp");
 
         try {
-            File fileInfo = new File(path + "/mapinfo.gameinfo");
+            File fileInfo = new File(path + "/mapinfo.hxdd");
             String info = new String(Files.readAllBytes(fileInfo.toPath()));
 
             // Title Artwork

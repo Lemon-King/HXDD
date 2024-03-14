@@ -1,3 +1,6 @@
+include gameinfo/doomednums.mapinfo
+include gameinfo/spawnnums.mapinfo
+
 include mapinfo/heretic.mapinfo
 include mapinfo/hexen.mapinfo
 include mapinfo/hexdd.mapinfo
@@ -255,7 +258,7 @@ episode MAP50
 episode heretest
 {
 	name = "HERETIC TEST"
-	key = "1"
+	key = "9"
 	//gametype = "heretic"
 	optional
 	//development
@@ -263,7 +266,7 @@ episode heretest
 episode hextest
 {
 	name = "HEXEN TEST"
-	key = "2"
+	key = "0"
 	//gametype = "hexen"
 	optional
 	//development

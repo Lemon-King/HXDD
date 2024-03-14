@@ -104,7 +104,7 @@ public class GameActorNums {
                 Map<String, String> actorMap = (Map)p_hxdd;
                 SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
 
-                String mapInfoFileName = "mapinfo." + type;
+                String mapInfoFileName = type + ".mapinfo";
                 PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/gameinfo/" + mapInfoFileName);
 
                 AddGeneratedByTag(file_mapinfo);
