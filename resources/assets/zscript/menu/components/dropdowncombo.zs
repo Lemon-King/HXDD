@@ -8,6 +8,11 @@ class DropDownCombo ui {
         double labelWidth = dims.x * 0.45;
         double ddlWidth = dims.x * 0.55;
 
+        if (items.items.Size() == 0) {
+            console.printf("DropdownList: %s is empty!", text);
+            items.items.push("EMPTY");
+        }
+
         let btNormal = HXDD_ZF_BoxTextures.createTexturePixels(
             "assets/ui/zforms/CommonBackgroundNormal.png",
             (7, 7),
