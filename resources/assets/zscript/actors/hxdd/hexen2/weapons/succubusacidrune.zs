@@ -48,18 +48,18 @@ class SWeapAcidRune: SuccubusWeapon {
 			TNT1 A 0 A_Lower(100);
 			Loop;
 		Ready:
-			ARIA ABCDEFGHIJKLMNOPQRSTUVWX 2 A_AcidRuneReady;
-			ARIA Y 2 A_AcidRuneReady(true);
+			ARIA ABCDEFGHIJKLMNOPQRSTUVWX 2 A_FireReady;
+			ARIA Y 2 A_FireReady(true);
 			Loop;
 		Ready_Jelly:
-			ARIB ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_AcidRuneReady;
+			ARIB ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_FireReady;
 			Goto Ready;
 		Ready_Power:
-			ARIC ABCDEFGHIJKLMNOPQRSTUVWX 2 A_AcidRuneReady;
-			ARIC Y 2 A_AcidRuneReady(true);
+			ARIC ABCDEFGHIJKLMNOPQRSTUVWX 2 A_FireReady;
+			ARIC Y 2 A_FireReady(true);
 			Loop;
 		Ready_Power_Jelly:
-			ARID ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_AcidRuneReady;
+			ARID ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_FireReady;
 			Goto Ready_Power;
 		ToPoweredReady:
 			ARTP ABCDEFGHIJKLMNOPQRST 2;
@@ -120,11 +120,14 @@ class SWeapAcidRune: SuccubusWeapon {
 	}
 
 	action void A_Select() {
-        bool haveTome = Player.mo.FindInventory("PowerWeaponLevel2", true);
+        bool isPowered = Player.mo.FindInventory("PowerWeaponLevel2", true);
 
 		SWeapAcidRune weapon = SWeapAcidRune(Player.ReadyWeapon);
 		State nextState = weapon.FindState("Select_Normal");
-		if (haveTome) {
+		if (isPowered) {
+			if (weapon.lastPoweredState != isPowered) {
+				weapon.lastPoweredState = isPowered;
+			}
 			nextState = weapon.FindState("Select_Power");
 		}
 		Player.SetPsprite(PSP_WEAPON, nextState);
@@ -132,28 +135,28 @@ class SWeapAcidRune: SuccubusWeapon {
 	}
 
 	action void A_Deselect() {
-        bool haveTome = Player.mo.FindInventory("PowerWeaponLevel2", true);
+        bool isPowered = Player.mo.FindInventory("PowerWeaponLevel2", true);
 
 		SWeapAcidRune weapon = SWeapAcidRune(Player.ReadyWeapon);
 		State nextState = weapon.FindState("Deselect_Normal");
-		if (haveTome) {
+		if (isPowered) {
 			nextState = weapon.FindState("Deselect_Power");
 		}
 		Player.SetPsprite(PSP_WEAPON, nextState);
 	}
 
 	action void A_SelectFire() {
-        bool haveTome = Player.mo.FindInventory("PowerWeaponLevel2", true);
+        bool isPowered = Player.mo.FindInventory("PowerWeaponLevel2", true);
 
 		SWeapAcidRune weapon = SWeapAcidRune(Player.ReadyWeapon);
 		State nextState = weapon.FindState("Fire_Normal");
-		if (haveTome) {
+		if (isPowered) {
 			nextState = weapon.FindState("Fire_Power");
 		}
 		Player.SetPsprite(PSP_WEAPON, nextState);
 	}
 
-	action void A_AcidRuneReady(bool allowJellyState = false) {
+	action void A_FireReady(bool allowJellyState = false) {
 		if (Player == null) {
 			return;
 		}
@@ -194,8 +197,8 @@ class SWeapAcidRune: SuccubusWeapon {
 		double refire = 0.4;
         bool isPowered = Player.mo.FindInventory("PowerWeaponLevel2", true);
 		if (weapon.lastPoweredState != isPowered) {
-			// force change
-			A_AcidRuneReady();
+			// A_FireReady change
+			A_FireReady();
 			return;
 		}
 		String sfx = "hexen2/succubus/acidfire";
@@ -227,6 +230,7 @@ class SWeapAcidRune_Missile: Hexen2Projectile {
 	double nextTrail;
 
 	Vector3 avelocity;
+	Vector3 avelocityr;
 
 	Default {
 		+HITTRACER;
@@ -312,9 +316,21 @@ class SWeapAcidRune_Missile: Hexen2Projectile {
 		//	self.Destroy();
 		//}
 
-		self.angle += self.avelocity.x;
-		self.pitch += self.avelocity.y;
-		self.roll += self.avelocity.z;
+		// TODO: Fix Rotation
+		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+		self.angle = facing.x;
+		self.pitch = facing.y;
+		self.roll = facing.z;
+
+		//self.avelocityr += self.avelocity;
+		//self.avelocityr.x += self.avelocity.x;
+		//self.avelocityr.y += self.avelocity.y;
+		//self.avelocityr/z += self.avelocity.z;
+
+		//Vector3 facing = LemonUtil.GetEularFromVelocityAndAngularVelocity(self.vel, self.avelocityr);
+		//self.angle = facing.x + self.avelocityr.x;
+		//self.pitch = facing.y + self.avelocityr.y;
+		//self.roll = facing.z + self.avelocityr.z;
 
 		if (self.isPowered) {
 			if (self.nextTrail <= 0.0) {
@@ -582,9 +598,14 @@ class SWeapAcidRune_AcidDrop: Hexen2Projectile {
 		Super.Tick();
 
         if (self.Speed != 0) {
-            self.angle += avelocity.x;
-            self.pitch += avelocity.y;
-            self.roll += avelocity.z;
+			Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
+			self.angle = facing.x;
+			self.pitch = facing.y;
+			self.roll = facing.z;
+
+            //self.angle += avelocity.x;
+            //self.pitch += avelocity.y;
+            //self.roll += avelocity.z;
         }
 
         if (self.Speed != 0 && self.vel.z == 0) {

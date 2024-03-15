@@ -31,14 +31,14 @@ class HX2SuccubusPlayer : HXDDHexenIIPlayerPawn
 		Player.WeaponSlot 1, "SWeapBloodRain";
 		Player.WeaponSlot 2, "SWeapAcidRune";
 		Player.WeaponSlot 3, "SWeapFireStorm";
-		Player.WeaponSlot 4, "FWeapQuietus";
+		Player.WeaponSlot 4, "SWeapTempestStaff";
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
-		HXDDHexenIIPlayerPawn.Weapon1AnimationSet "SWeapBloodRain", 1;
-		HXDDHexenIIPlayerPawn.Weapon2AnimationSet "SWeapAcidRune", 2;
-		HXDDHexenIIPlayerPawn.Weapon3AnimationSet "SWeapFireStorm", 3;
-		HXDDHexenIIPlayerPawn.Weapon4AnimationSet "FWeapQuietus", 4;
+		HXDDHexenIIPlayerPawn.Weapon1AnimationSet 1, "SWeapBloodRain";
+		HXDDHexenIIPlayerPawn.Weapon2AnimationSet 2, "SWeapAcidRune";
+		HXDDHexenIIPlayerPawn.Weapon3AnimationSet 3, "SWeapFireStorm";
+		HXDDHexenIIPlayerPawn.Weapon4AnimationSet 4, "SWeapTempestStaff";
 		
 		
 		Player.ColorRange 0, 0;

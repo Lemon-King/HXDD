@@ -40,10 +40,10 @@ class HX2NecromancerPlayer : HXDDHexenIIPlayerPawn
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
-		HXDDHexenIIPlayerPawn.Weapon1AnimationSet "NWeapSickle", 1;
-		HXDDHexenIIPlayerPawn.Weapon2AnimationSet "NWeapMagicMissile", 2;
-		HXDDHexenIIPlayerPawn.Weapon3AnimationSet "NWeapBoneShards", 3;
-		HXDDHexenIIPlayerPawn.Weapon4AnimationSet "MWeapBloodscourge", 4;
+		HXDDHexenIIPlayerPawn.Weapon1AnimationSet 1, "NWeapSickle";
+		HXDDHexenIIPlayerPawn.Weapon2AnimationSet 2, "NWeapMagicMissile";
+		HXDDHexenIIPlayerPawn.Weapon3AnimationSet 3, "NWeapBoneShards";
+		HXDDHexenIIPlayerPawn.Weapon4AnimationSet 4, "MWeapBloodscourge";
 		HXDDHexenIIPlayerPawn.HasJumpAnimation false;
 
 		

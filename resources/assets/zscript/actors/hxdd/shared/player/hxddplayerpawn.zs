@@ -21,10 +21,10 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 
 	bool HasJumpAnimation;
 
-	property Weapon1AnimationSet: Weapon1AnimationSetClass, Weapon1AnimationSetIndex;
-	property Weapon2AnimationSet: Weapon2AnimationSetClass, Weapon2AnimationSetIndex;
-	property Weapon3AnimationSet: Weapon3AnimationSetClass, Weapon3AnimationSetIndex;
-	property Weapon4AnimationSet: Weapon4AnimationSetClass, Weapon4AnimationSetIndex;
+	property Weapon1AnimationSet: Weapon1AnimationSetIndex, Weapon1AnimationSetClass;
+	property Weapon2AnimationSet: Weapon2AnimationSetIndex, Weapon2AnimationSetClass;
+	property Weapon3AnimationSet: Weapon3AnimationSetIndex, Weapon3AnimationSetClass;
+	property Weapon4AnimationSet: Weapon4AnimationSetIndex, Weapon4AnimationSetClass;
 	property WeaponFallbackAnimations: WeaponFallbackAnimationIndex;
 
 	property HasJumpAnimation: HasJumpAnimation;
@@ -307,6 +307,50 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 			// Landing
 			isOnGround = true;
 			HandlePlayerIdleState();
+		}
+	}
+
+	override void CheckCrouch(bool totallyfrozen) {
+		Super.CheckCrouch(totallyfrozen);
+
+		// TODO: use player.zs -> checkcrouch implementation
+	}
+
+
+	void A_SkullPop(class<PlayerChunk> skulltype = "BloodySkull")
+	{
+		// [GRB] Parameterized version
+		if (skulltype == NULL || !(skulltype is "PlayerChunk"))
+		{
+			skulltype = "BloodySkull";
+			if (skulltype == NULL)
+				return;
+		}
+
+		bSolid = false;
+		let mo = PlayerPawn(Spawn (skulltype,  Pos + (0, 0, 48), NO_REPLACE));
+		//mo.target = self;
+		mo.Vel.X = Random2[SkullPop]() / 128.;
+		mo.Vel.Y = Random2[SkullPop]() / 128.;
+		mo.Vel.Z = 5 + (Random[SkullPop]() / 1024.);
+		// Attach player mobj to bloody skull
+		let player = self.player;
+		self.player = NULL;
+		mo.ObtainInventory (self);
+		mo.player = player;
+		mo.health = health;
+		mo.Angle = Angle;
+		if (player != NULL)
+		{
+			player.mo = mo;
+			player.damagecount = 32;
+		}
+		for (int i = 0; i < MAXPLAYERS; ++i)
+		{
+			if (playeringame[i] && players[i].camera == self)
+			{
+				players[i].camera = mo;
+			}
 		}
 	}
 }

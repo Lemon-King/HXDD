@@ -283,6 +283,13 @@ class Hexen2Weapon: Weapon {
 	** Dynamic Refire Block
 	**/
 
+    bool IsTomeOfPowerActive() {
+        if (!self.owner) {
+            return false;
+        }
+        return self.owner.FindInventory("PowerWeaponLevel2", true);
+    }
+
 
     void CreateRecoilController() {
 		if (!self.owner.FindInventory("RecoilController")) {

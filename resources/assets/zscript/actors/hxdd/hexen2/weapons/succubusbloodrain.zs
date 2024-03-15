@@ -1,4 +1,5 @@
 // Demoness Weapon: Blood Rain
+// ref: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/bldrain.hc
 
 class SWeapBloodRain : SuccubusWeapon {
 	Default {
@@ -14,11 +15,11 @@ class SWeapBloodRain : SuccubusWeapon {
 
 	States {
 		Select:
-			SWSE ABCDEFGHIJKLMNOPQRST 1 Offset(0, 32);
+			SWSE ABCDEFGHIJKLMNOPQRST 2 Offset(0, 32);
 			TNT1 A 0 A_Raise(100);
 			Loop;
 		Deselect:
-			SWSE TSRQPONMLKJIHGFEDCBA 1;
+			SWSE TSRQPONMLKJIHGFEDCBA 2;
 			TNT1 A 0 A_Lower(100);
 			Loop;
 		Ready:
@@ -29,9 +30,9 @@ class SWeapBloodRain : SuccubusWeapon {
 			SWIJ ABCDEFGHIJKLMNOPQRSTUVWX 2 A_WeaponReady;
 			Goto Ready;
 		Fire:
-			SWAA ABCDEF 2;
+			SWAA ABCDEF 1;
 			SWAA G 1 A_BloodRain;
-			SWAA HIJK 1;
+			SWAA HIJK 2;
 			SWAA L 1 A_ReFire("Fire");
 			Goto Ready;
 	}
@@ -44,10 +45,8 @@ class SWeapBloodRain : SuccubusWeapon {
 		}
 	}
 
-	action void A_BloodRain()
-	{
-		if (player == null)
-		{
+	action void A_BloodRain() {
+		if (player == null) {
 			return;
 		}
 

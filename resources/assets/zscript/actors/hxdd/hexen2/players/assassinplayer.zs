@@ -37,10 +37,10 @@ class HX2AssassinPlayer : HXDDHexenIIPlayerPawn
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
-		HXDDHexenIIPlayerPawn.Weapon1AnimationSet "AWeapPunchDagger", 1;
-		HXDDHexenIIPlayerPawn.Weapon2AnimationSet "AWeapCrossbow", 2;
-		HXDDHexenIIPlayerPawn.Weapon3AnimationSet "AWeapGrenades", 3;
-		HXDDHexenIIPlayerPawn.Weapon4AnimationSet "FWeapQuietus", 4;
+		HXDDHexenIIPlayerPawn.Weapon1AnimationSet 1, "AWeapPunchDagger";
+		HXDDHexenIIPlayerPawn.Weapon2AnimationSet 2, "AWeapCrossbow";
+		HXDDHexenIIPlayerPawn.Weapon3AnimationSet 3, "AWeapGrenades";
+		HXDDHexenIIPlayerPawn.Weapon4AnimationSet 4, "FWeapQuietus";
 		
 		Player.ColorRange 0, 0;
 		Player.Colorset		0, "$TXT_COLOR_GOLD",		246, 254,    253;

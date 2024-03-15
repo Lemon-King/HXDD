@@ -33,10 +33,10 @@ class HX2CrusaderPlayer : HXDDHexenIIPlayerPawn
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
-		HXDDHexenIIPlayerPawn.Weapon1AnimationSet "CWeapWarhammer", 1;
-		HXDDHexenIIPlayerPawn.Weapon2AnimationSet "CWeapIceMace", 2;
-		HXDDHexenIIPlayerPawn.Weapon3AnimationSet "CWeapMeteorStaff", 3;
-		HXDDHexenIIPlayerPawn.Weapon4AnimationSet "CWeapLightbringer", 4;
+		HXDDHexenIIPlayerPawn.Weapon1AnimationSet 1, "CWeapWarhammer";
+		HXDDHexenIIPlayerPawn.Weapon2AnimationSet 2, "CWeapIceMace";
+		HXDDHexenIIPlayerPawn.Weapon3AnimationSet 3, "CWeapMeteorStaff";
+		HXDDHexenIIPlayerPawn.Weapon4AnimationSet 4, "CWeapLightbringer";
 
 		
 		Player.ColorRange 0, 0;

@@ -31,10 +31,10 @@ class HX2PaladinPlayer : HXDDHexenIIPlayerPawn {
 
 		// Fallback if no matching animations
 		HXDDHexenIIPlayerPawn.WeaponFallbackAnimations 4;
-		HXDDHexenIIPlayerPawn.Weapon1AnimationSet "PWeapGauntlet", 1;
-		HXDDHexenIIPlayerPawn.Weapon2AnimationSet "PWeapVorpalSword", 2;
-		HXDDHexenIIPlayerPawn.Weapon3AnimationSet "PWeapAxe", 3;
-		HXDDHexenIIPlayerPawn.Weapon4AnimationSet "PWeapPurifier", 4;
+		HXDDHexenIIPlayerPawn.Weapon1AnimationSet 1, "PWeapGauntlet";
+		HXDDHexenIIPlayerPawn.Weapon2AnimationSet 2, "PWeapVorpalSword";
+		HXDDHexenIIPlayerPawn.Weapon3AnimationSet 3, "PWeapAxe";
+		HXDDHexenIIPlayerPawn.Weapon4AnimationSet 4, "PWeapPurifier";
 
 		
 		Player.ColorRange 0, 0;

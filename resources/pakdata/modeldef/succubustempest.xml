@@ -39,11 +39,30 @@
         <Flag name="USEACTORROLL" />
         <Flag name="SCALEWEAPONFOV" />
 
-        <Animation key="000" frames="16" model="0" comment="Fire"/>
-        <Animation key="100" frames="16" model="0" comment="Ready Idle"/>
-        <Animation key="200" frames="16" model="0" comment="Ready"/>
-        <Animation key="300" frames="16" model="0" comment="Powered Idle"/>
-        <Animation key="400" frames="16" model="0" comment="Powered"/>
-        <Animation key="500" frames="12" model="0" comment="Selected / Deselect"/>
+        <Animation key="000A" frames="16" model="0" comment="Launch"/>
+        <Animation key="100A" frames="16" model="0" comment="Flip"/>
+        <Animation key="200A" frames="16" model="0" comment="Charge: Normal"/>
+        <Frame skip="16" /> <!-- <Animation key="3000" frames="16" model="0" comment="Powered Idle"/> -->
+        <Animation key="400A" frames="16" model="0" comment="Fire: Powered"/>
+        <Animation key="500A" frames="12" model="0" comment="Selected / Deselect"/>
+    </Group>
+    <!--
+        SWeapTempestStaff is split into 2 parts due to lightning animations interpolating poorly
+    -->
+    <Group class="SWeapTempestStaff">
+        <Path folder="models" />
+        <Model file="sucwp4.md3" model="0" />
+        <Skin file="sucwp4_skin0.png" model="0" />
+
+        <Scale value="-1 1 1" />
+
+        <Flag name="NOINTERPOLATION" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="SCALEWEAPONFOV" />
+
+        <Frame skip="48" />
+        <Animation key="300A" frames="16" model="0" comment="Ready: Powered"/>
+        <Animation key="400A" frames="16" model="0" comment="Fire: Powered"/>
     </Group>
 </XMLModelDef>

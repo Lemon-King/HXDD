@@ -55,8 +55,10 @@ class SWeapFireStorm: SuccubusWeapon {
 			FSIB ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_FireStormReady;
 			Goto Ready;
 		Ready_Power:
-			FSIC ABCDEFGHIJKLMNOPQRSTUVWX 2 A_FireStormReady;
-			FSIC Y 2 A_FireStormReady(true);
+			//FSIC ABCDEFGHIJKLMNOPQRSTUVWX 2 A_FireStormReady;
+			//FSIC Y 2 A_FireStormReady(true);
+			FSIC ABCDEFGHIJKLMNOPQRSTUVW 2 A_FireStormReady;
+			FSIC X 2 A_FireStormReady(true);
 			Loop;
 		Ready_Power_Jelly:
 			FSID ABCDEFGHIJKLMNOPQRSTUVWXY 2 A_FireStormReady;
@@ -71,9 +73,9 @@ class SWeapFireStorm: SuccubusWeapon {
 			TNT1 A 0 A_SelectFire;
 			Goto Ready;	// Fallback
 		Fire_Normal:
-			FSFN ABCDEF 2;
-			FSFN H 2 A_TryFire;
-			FSFN GIJKLMN 2 A_FireStormReady;
+			FSFN ABCDEF 1;
+			FSFN H 1 A_TryFire;
+			FSFN GIJKLMN 1 A_FireStormReady;
 			Goto Ready;
 		Fire_Power:
 			FSFP ABCDEFG 2;
@@ -112,7 +114,7 @@ class SWeapFireStorm: SuccubusWeapon {
 		SWeapFireStorm weapon = SWeapFireStorm(Player.ReadyWeapon);
 		State nextState = weapon.FindState("Select_Normal");
 		if (isPowered) {
-			if (isPowered && weapon.lastPoweredState != isPowered) {
+			if (weapon.lastPoweredState != isPowered) {
 				weapon.lastPoweredState = isPowered;
 			}
 			nextState = weapon.FindState("Select_Power");
