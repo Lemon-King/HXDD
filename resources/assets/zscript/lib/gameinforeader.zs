@@ -150,7 +150,7 @@ class GameInfoReader {
                             epInfo.description = split[1];
                         } else if (line.IndexOf("gametype") != -1) {
                             epInfo.gametype = split[1];
-                        } else if (line.IndexOf("development")) {
+                        } else if (line.IndexOf("development") != -1) {
                             epInfo.development = true;
                         }
                     }
