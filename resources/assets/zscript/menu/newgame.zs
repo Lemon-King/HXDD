@@ -467,9 +467,9 @@ class ZFGameOptions ui {
         HXDD_ZF_DropdownItems listEpisodes = new("HXDD_ZF_DropdownItems");
         gameinfo = new("GameInfoReader");
         gameinfo.Find();
-        bool isdev = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+        bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
         for (let i = 0; i < gameinfo.episodes.Size(); i++) {
-            if (!gameinfo.episodes[i].development || (gameinfo.episodes[i].development && isdev)) {
+            if (!gameinfo.episodes[i].development || (gameinfo.episodes[i].development && cvar_isdev_environment)) {
                 listEpisodes.items.push(gameinfo.episodes[i].name);
             }
         }
