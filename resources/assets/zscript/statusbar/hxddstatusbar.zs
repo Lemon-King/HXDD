@@ -220,8 +220,6 @@ class HXDDStatusBar : BaseStatusBar {
 	}
 
 	protected void DrawFullScreenNew() {
-		vector2 pixelRatioScale = (1.0, 1.2);	// pixel ratio match
-
 		// Simulates motion on the status bar depending on player movement speed, direction, angle, pitch, and mouse movement.
 
 		double motionXWeight = self.vecMotion.x * 0.8;
@@ -263,24 +261,24 @@ class HXDDStatusBar : BaseStatusBar {
 		if (prog && prog.ArmorType == PSAT_ARMOR_AC) {
 			imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT_AC.png";
 		}
-		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
+		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 
 		if (prog && prog.ProgressionType == PSP_LEVELS) {
 			// draw xp bar
-			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 
-			DrawString(mIndexFont, FormatNumber(prog.currlevel), (anchorLeft - 46, anchorBottom - 15 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT, scale: pixelRatioScale);
-			DrawBarHXDD("assets/ui/FS_HERETIC_SBAR_LEFT_XP_BAR_FILL_SMALL.png", "", mXPInterpolator.GetValue(), 100, (anchorLeft - 57, anchorBottom - 5 * pixelRatioScale.y) + v2Left, 0, SHADER_HORZ, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM, scale: pixelRatioScale);
+			DrawString(mIndexFont, FormatNumber(prog.currlevel), (anchorLeft - 46, anchorBottom - 15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT);
+			DrawBarHXDD("assets/ui/FS_HERETIC_SBAR_LEFT_XP_BAR_FILL_SMALL.png", "", mXPInterpolator.GetValue(), 100, (anchorLeft - 57, anchorBottom - 5) + v2Left, 0, SHADER_HORZ, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 		}
 
-		DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_NOKEYS.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+		DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_NOKEYS.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 
 		if (LemonUtil.IsMapEpisodic()) {
 			// Heretic Keys
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (anchorRight - 94, anchorBottom - 20 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CPlayer.mo.CheckKeys(1, false, true)) DrawImage("GKEYICON", (anchorRight - 94, anchorBottom - 12 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CPlayer.mo.CheckKeys(2, false, true)) DrawImage("BKEYICON", (anchorRight - 94, anchorBottom - 4 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (anchorRight - 94, anchorBottom - 20) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CPlayer.mo.CheckKeys(1, false, true)) DrawImage("GKEYICON", (anchorRight - 94, anchorBottom - 12) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CPlayer.mo.CheckKeys(2, false, true)) DrawImage("BKEYICON", (anchorRight - 94, anchorBottom - 4) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		} else if (LemonUtil.IsMapLinear()) {
 			// Hexen Keys
 		}
@@ -289,7 +287,7 @@ class HXDDStatusBar : BaseStatusBar {
 		String strHealthValue = String.format("%d", mHealthInterpolator.GetValue());
 		int wStrHealthWidth = mHUDFontWidth * strHealthValue.Length();
 
-		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
+		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), ((anchorLeft + 81) - (wStrHealthWidth / strHealthValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
 
 		double armorValue = mArmorInterpolator.GetValue();
 		if (prog) {
@@ -297,55 +295,55 @@ class HXDDStatusBar : BaseStatusBar {
 		}
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
-		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17 * pixelRatioScale.y) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER, scale: pixelRatioScale);
+		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 30) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 17) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
 
 		Ammo ammo1, ammo2;
 		[ammo1, ammo2] = GetCurrentAmmo();
 		if (ammo1 != null && ammo2 == null) {
-			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
-			DrawTexture(ammo1.icon, (anchorRight - 63, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
+			DrawString(mHUDFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
+			DrawTexture(ammo1.icon, (anchorRight - 63, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
 		} else if (ammo2 != null) {
-			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
-			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (anchorRight - 50, anchorBottom - 14 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
-			DrawTexture(ammo1.icon, (anchorRight - 72, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
-			DrawTexture(ammo2.icon, (anchorRight - 72, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: pixelRatioScale);
+			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
+			DrawString(mIndexFont, FormatNumber(mAmmoInterpolator2.GetValue(), 3), (anchorRight - 50, anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
+			DrawTexture(ammo1.icon, (anchorRight - 72, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
+			DrawTexture(ammo2.icon, (anchorRight - 72, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
 		}
 
 		double posx = anchorRight + 67;
 		double posy = anchorBottom;
 		if (CPlayer.mo is "ClericPlayer") {
-			DrawImage("WPSLOT1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CheckInventory("CWeapWraithverge")) DrawImage("WPFULL1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("WPSLOT1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CheckInventory("CWeapWraithverge")) DrawImage("WPFULL1", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			else
 			{
 				int pieces = GetWeaponPieceMask("CWeapWraithverge");
-				if (pieces & 1) DrawImage("WPIECEC1", (posx - 34, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 2) DrawImage("WPIECEC2", (posx - 21, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 4) DrawImage("WPIECEC3", (posx + 1, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 1) DrawImage("WPIECEC1", (posx - 34, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 2) DrawImage("WPIECEC2", (posx - 21, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 4) DrawImage("WPIECEC3", (posx + 1, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		} else if (CPlayer.mo is "MagePlayer") {
-			DrawImage("WPSLOT2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CheckInventory("MWeapBloodscourge")) DrawImage("WPFULL2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("WPSLOT2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CheckInventory("MWeapBloodscourge")) DrawImage("WPFULL2", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			else
 			{
 				int pieces = GetWeaponPieceMask("MWeapBloodscourge");
-				if (pieces & 1) DrawImage("WPIECEM1", (posx - 43, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 2) DrawImage("WPIECEM2", (posx - 23, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 4) DrawImage("WPIECEM3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 1) DrawImage("WPIECEM1", (posx - 43, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 2) DrawImage("WPIECEM2", (posx - 23, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 4) DrawImage("WPIECEM3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		} else if (CPlayer.mo is "FighterPlayer") {
-			DrawImage("WPSLOT0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-			if (CheckInventory("FWeapQuietus")) DrawImage("WPFULL0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("WPSLOT0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			if (CheckInventory("FWeapQuietus")) DrawImage("WPFULL0", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			else
 			{
 				int pieces = GetWeaponPieceMask("FWeapQuietus");
-				if (pieces & 1) DrawImage("WPIECEF1", (posx - 22, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 2) DrawImage("WPIECEF2", (posx - 13, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
-				if (pieces & 4) DrawImage("WPIECEF3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+				if (pieces & 1) DrawImage("WPIECEF1", (posx - 22, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 2) DrawImage("WPIECEF2", (posx - 13, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				if (pieces & 4) DrawImage("WPIECEF3", (posx, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			}
-			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, scale: pixelRatioScale);
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_HX_WEAPON_PEICES_RIGHTSIDE.png", (posx + 2, posy) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		}
 		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
@@ -355,13 +353,13 @@ class HXDDStatusBar : BaseStatusBar {
 				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  invAnimationDuration);
 			}
 			if (invTime != 0.0) {
-				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration)) * pixelRatioScale.y;
-				DrawInventoryBarHXDD(diparms_sbar, (0, anchorBottom + posInventory) + v2Center, 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW, scale: pixelRatioScale);
+				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration));
+				DrawInventoryBarHXDD(diparms_sbar, (0, anchorBottom + posInventory) + v2Center, 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW);
 			}
-			DrawInventoryIcon(CPlayer.mo.InvSel, (anchorRight - 18.5, anchorBottom - 15.5 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28), scale: pixelRatioScale);
+			DrawInventoryIcon(CPlayer.mo.InvSel, (anchorRight - 18.5, anchorBottom - 15.5) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28));
 			if (CPlayer.mo.InvSel.Amount > 1)
 			{
-				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (anchorRight - 4, anchorBottom - 8 * pixelRatioScale.y) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT, scale: pixelRatioScale);
+				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (anchorRight - 4, anchorBottom - 8) + v2Right, DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_RIGHT);
 			}
 		}
 	}
