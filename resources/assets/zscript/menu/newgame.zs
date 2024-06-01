@@ -470,7 +470,7 @@ class ZFGameOptions ui {
         bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
         for (let i = 0; i < gameinfo.episodes.Size(); i++) {
             if (!gameinfo.episodes[i].development || (gameinfo.episodes[i].development && cvar_isdev_environment)) {
-                listEpisodes.items.push(gameinfo.episodes[i].name);
+                listEpisodes.items.push(gameinfo.episodes[i].name.MakeUpper());
             }
         }
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
