@@ -48,6 +48,7 @@ public class AppSettings {
         prop_defaults.put("OPTION_ENABLE_H2", "false");
         prop_defaults.put("OPTION_ENABLE_HX2", "false");
         prop_defaults.put("OPTION_USE_HX2_TITLE_MUSIC", "");
+        prop_defaults.put("OPTION_PWAD_MODE", "false");
 
         this.prop = new Properties();
         try {

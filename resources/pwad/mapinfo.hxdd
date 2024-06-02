@@ -1,0 +1,4 @@
+GameInfo {
+    PlayerClasses = "DoomPlayer", "HXDDHereticPlayer", "HXDDFighterPlayer", "HXDDClericPlayer", "HXDDMagePlayer", "HX2PaladinPlayer", "HX2CrusaderPlayer", "HX2NecromancerPlayer","HX2AssassinPlayer", "HX2SuccubusPlayer"
+	AddEventHandlers = "HXDDWorldEventHandler", "PlayerSheetEventHandler"
+}

@@ -14,7 +14,26 @@
         "dexterity": [15,18]
     },
     "xgame": {
+        "Fist": "Staff",
         "Chainsaw": "Gauntlets",
+        "Pistol": "GoldWand",
+        "Shotgun": "Crossbow",
+        "SuperShotgun": "Crossbow",
+        "Chaingun": "Blaster",
+        "RocketLauncher": "PhoenixRod",
+        "PlasmaRifle": "SkullRod",
+        "BFG9000": "Mace",
+
+        "Clip": "GoldWandAmmo,BlasterAmmo",
+        "ClipBox": "GoldWandHefty,BlasterHefty",
+        "Shell": "CrossbowAmmo",
+        "ShellBox": "CrossbowHefty",
+        "RocketAmmo": "PhoenixRodAmmo",
+        "RocketBox": "PhoenixRodHefty",
+        "Cell": "SkullRodAmmo,MaceAmmo",
+        "CellPack": "SkullRodHefty,MaceHefty",
+
+        "Backpack": "BagOfHolding",
 
         "FWeapAxe": "Gauntlets",
         "CWeapStaff": "Crossbow",

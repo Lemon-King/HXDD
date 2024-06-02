@@ -132,6 +132,8 @@ public class PackageBuilder implements Runnable {
             ExportHXDDFiles();
             ApplyUserOptions();
 
+            PWADModeSetup();
+
             WriteInstallLanguageLookup();
 
             CreateHexenPalettePK3();
@@ -291,13 +293,17 @@ public class PackageBuilder implements Runnable {
         System.out.println("Merging asset tables");
         this.app.controller.SetStageLabel("Merging Asset Tables");
 
+        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
+
         WadFileOrganizer merged = new WadFileOrganizer();
         this.wads.forEach((p) -> {
             WadFileOrganizer from = organized.get(p.getKey());
             merged.MergeFrom(from, "lumps");
-            merged.MergeFrom(from, "flats");
-            merged.MergeFrom(from, "graphics");
-            merged.MergeFrom(from, "patches");
+            if (OPTION_PWAD_MODE.equals("false")) {
+                merged.MergeFrom(from, "flats");
+                merged.MergeFrom(from, "graphics");
+                merged.MergeFrom(from, "patches");
+            }
             merged.MergeFrom(from, "sprites");
             merged.MergeFrom(from, "sounds");
             merged.MergeFrom(from, "music");
@@ -329,6 +335,10 @@ public class PackageBuilder implements Runnable {
     }
 
     public void ExportMaps() {
+        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
+        if (OPTION_PWAD_MODE.equals("true")) {
+            return;
+        }
         this.app.controller.SetCurrentProgress(0);
         this.wads.forEach((p) -> {
             Wad wad = p.getValue();
@@ -652,30 +662,27 @@ public class PackageBuilder implements Runnable {
 
         ZipAssets za = new ZipAssets(this.app);
         za.SetFile(this.app.settings.fileResources);
-        //ArrayList<String> listGameInfo = za.GetFolderContents("assets");
         za.ExtractFilesToFolder("assets", path);
+    }
 
-        /*
-        try {
-            ResourceWalker rwAssets = new ResourceWalker("assets");
+    private void PWADModeSetup() {
+        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
+        if (OPTION_PWAD_MODE.equals("true")) {
+            System.out.println("PWAD Mode Setup");
+            String path = this.app.settings.GetPath("temp");
 
-            int idx = 0;
-            for (Pair<String, File> p : rwAssets.files) {
-                File source = p.getValue();
-                File target = new File(path + "/" + p.getKey());
-                if (source.isDirectory()) {
-                    this.app.controller.SetCurrentLabel(String.format("Creating folder %s", p.getKey()));
-                    target.mkdirs();
-                } else {
-                    this.app.controller.SetCurrentLabel(String.format("Copying %s", p.getKey()));
-                    Files.copy(source.toPath(), target.toPath(), REPLACE_EXISTING);
+            final String[] fileDelete = new String[]{"fontdefs.hxdd", "mapinfo.hxdd", "iwadinfo.hxdd", "lockdefs.hxdd", "playpal.lmp", "colormap.lmp"};
+            for (String s : fileDelete) {
+                File f = new File(path + "/" + s);
+                if (f.exists() && !f.delete()) {
+                    System.out.printf("PWAD MODE: Failed to delete: %s", f.getName());
                 }
-                this.app.controller.SetCurrentProgress((double) ++idx / rwAssets.files.size());
             }
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(this.app.settings.fileResources);
+            za.ExtractFilesToFolder("pwad", path);
         }
-        */
     }
 
     private boolean HasPAKFiles(String[] paths) {
@@ -717,6 +724,10 @@ public class PackageBuilder implements Runnable {
 
     // Create Hexen focused palette PK3 for wads using palette textures
     private void CreateHexenPalettePK3() {
+        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
+        if(OPTION_PWAD_MODE.equals("true")) {
+            return;
+        }
         this.app.controller.SetCurrentLabel("Creating Hexen Palette PK3");
         this.app.controller.SetCurrentProgress(-1);
         try {
