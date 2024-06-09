@@ -133,6 +133,10 @@ class LemonUtil {
         }
     }
 
+    static bool IsGameType(int type) {
+        return gameinfo.gametype & type;
+    }
+
     static int GetOptionGameMode() {
         int cvarGameMode = LemonUtil.CVAR_GetInt("hxdd_gamemode", 0);
         int gameType = gameinfo.gametype;
