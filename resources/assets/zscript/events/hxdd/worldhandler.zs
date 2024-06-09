@@ -34,9 +34,6 @@ class HXDDWorldEventHandler : EventHandler {
     }
 
     void HexenFixes() {
-        if (LemonUtil.IsGameType(GAME_Doom)) {
-            return;
-        }
         // Hack for Hexen Maps
         if (LemonUtil.IsMapLinear()) {
             // https://github.com/ZDoom/gzdoom/blob/677b08406405693ab53c281c4d71c19b9b078030/src/gamedata/g_mapinfo.cpp#L1049
@@ -45,7 +42,7 @@ class HXDDWorldEventHandler : EventHandler {
 
             string infoSky[2] = {Level.Info.SkyPic1, Level.Info.SkyPic2};
             TextureID replacementSky[2] = {TexMan.CheckForTexture(Level.Info.SkyPic1,TexMan.Type_Any), TexMan.CheckForTexture(Level.Info.SkyPic2,TexMan.Type_Any)};
-            
+
             for (int i = 0; i < infoSky.Size(); i++) {
                 string pic = infoSky[i];
                 if (pic.Length() < 6 && pic.IndexOf("SKY") != -1 && pic != "SKY2A") {
@@ -64,7 +61,7 @@ class HXDDWorldEventHandler : EventHandler {
                 }
             }
             Level.ChangeSky(replacementSky[0], replacementSky[1]);
-            
+
             TextureID tidWALL501Any = TexMan.CheckForTexture("WALL501", TexMan.Type_Any, TexMan.ReturnFirst);
             TextureID tidWALL501Override = TexMan.CheckForTexture("WALL501", TexMan.Type_Override, TexMan.ReturnFirst);
 
@@ -75,10 +72,11 @@ class HXDDWorldEventHandler : EventHandler {
             }
         }
     }
-    
+
     override void WorldLoaded(WorldEvent e) {
-        int gameType = gameinfo.gametype;
-        if (gameType & Game_Raven) {
+        if (LemonUtil.IsGameType(Game_Doom)) {
+
+        } else if (LemonUtil.IsGameType(Game_Raven)) {
             Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
             HexenFixes();
         }

@@ -165,10 +165,8 @@ class PlayerSheetJSON {
 
 		Array<int> defaultHPTable = {60,70,2,6,5};
 		Array<int> defaultMPTable = {95,105,5,10,5};
-		Array<int> defaultHexenArmorTable = {10, 15, 15, 15, 15};
 		self.hitpointTable.Copy(defaultHPTable);
 		self.manaTable.Copy(defaultMPTable);
-		self.hexenArmorTable.copy(defaultHexenArmorTable);
 		self.hasHexenArmorTable = false;
 
         FileJSON fJSON = new ("FileJSON");
@@ -193,7 +191,7 @@ class PlayerSheetJSON {
 				let valHPTable = FileJSON.GetArray(jsonObject, "health");
 				let valManaTable = FileJSON.GetArray(jsonObject, "mana");
 				let valHexenArmorTable = FileJSON.GetArray(jsonObject, "ac");
-				
+
 				// Dynamic User Defined Stats
 				HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
 				if (objStats) {
@@ -277,7 +275,6 @@ class PlayerSheetJSON {
 					}
 				}
 				if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
-					self.hasHexenArmorTable = true;
 					self.hexenArmorTable.Resize(5);
 					for (let i = 0; i < 5; i++) {
 						self.hexenArmorTable[i] 	= HXDD_JsonInt(valHexenArmorTable.arr[i]).i;
@@ -441,8 +438,8 @@ class Progression: Inventory {
 
 		self.UseMaxHealthScaler = PlayerSheet.UseMaxHealthScaler;
 
-		if (PlayerSheet.hasHexenArmorTable) {
-			self.hexenArmorTable.copy(PlayerSheet.hexenArmorTable);
+		if (PlayerSheet.hexenArmorTable.Size() == 5) {
+			self.hexenArmorTable.Copy(PlayerSheet.hexenArmorTable);
 		}
 
 		if (self.ArmorType == PSAT_DEFAULT) {
@@ -485,7 +482,7 @@ class Progression: Inventory {
 
 			self.hitpointTable.Copy(PlayerSheet.hitpointTable);
 			self.manaTable.Copy(PlayerSheet.manaTable);
-			
+
 			self.stats.Copy(PlayerSheet.stats);
 			self.stats_lookup.Copy(PlayerSheet.stats_lookup);
 			self.xp_bonus_stat		= PlayerSheet.xp_bonus_stat;
@@ -626,9 +623,9 @@ class Progression: Inventory {
 		}
 		if (!hasHexenArmor || hexenArmorTable.Size() == 5) {
 			if (hexenArmorTable.Size() == 5) {
-				itemHexenArmor.SlotsIncrement[4] = hexenArmorTable[4];
+				itemHexenArmor.Slots[4] = hexenArmorTable[4];
 			} else {
-				itemHexenArmor.SlotsIncrement[4] = defaultHexenArmorTable[4];
+				itemHexenArmor.Slots[4] = defaultHexenArmorTable[4];
 			}
 			for (int i = 0; i < 4; i++) {
 				itemHexenArmor.SlotsIncrement[i] = hexenArmorTable.Size() == 5 ? hexenArmorTable[i] : defaultHexenArmorTable[i];

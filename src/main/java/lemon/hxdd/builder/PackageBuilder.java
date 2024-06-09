@@ -321,9 +321,14 @@ public class PackageBuilder implements Runnable {
             int total = mftype.size();
             AtomicInteger count = new AtomicInteger();
 
+
+            final Set<String> gameRavenFiles = new HashSet<String>(Arrays.asList(
+                    new String[] {"playpal", "colormap", "textures"}
+            ));
+
             mftype.forEach((key, mf) -> {
                 String path = this.app.settings.GetPath("temp");
-                if (mf.outputName.toLowerCase().equals("playpal") || mf.outputName.toLowerCase().equals("colormap")) {
+                if (gameRavenFiles.contains(mf.outputName.toLowerCase())) {
                     path = path + "/filter/game-raven";
                 }
                 mf.ExtractFile(path);
@@ -408,7 +413,7 @@ public class PackageBuilder implements Runnable {
             za.SetFile(zipFile);
             za.ExtractSingleFile("filter/game-heretic/sndinfo.txt", "sndinfo.hereticgz");
             za.ExtractSingleFile("filter/game-heretic/sndseq.txt", "sndseq.hereticgz");
-            za.ExtractSingleFile("filter/game-heretic/animated.lmp", "animated.heretic");
+            za.ExtractSingleFile("filter/game-heretic/animated.lmp", "filter/game-raven/animated.heretic");
             za.ExtractSingleFile("filter/game-hexen/sndinfo.txt", "sndinfo.hexengz");
         }
 
@@ -445,7 +450,7 @@ public class PackageBuilder implements Runnable {
             za.ExtractFilesFromFolderAndConvert("filter/heretic/sprites/", "sprites", null, null);
             za.ExtractFilesFromFolderAndConvert("filter/hexen/sprites/", "sprites", null, null);
 
-            za.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics",  new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
+            za.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "filter/heretic/graphics",  new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
             za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics",  new String[]{"h2bar.lmp", "h2top.lmp"}, null);
             za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
 
