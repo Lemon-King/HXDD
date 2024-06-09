@@ -7,6 +7,7 @@
     "experience": [945,2240,5250,10150,21000,39900,72800,120400,154000,210000,210000],
     "health": [70,85,8,13,4,150],
     "mana": [84,94,6,9,1,300],
+    "ac": [15, 25, 10, 20, 5],
     "stats": {
         "strength": [6,10],
         "intelligence": [6,10],
@@ -53,16 +54,16 @@
         "CWeapFlame": "none",
         "MWeapLightning": "none",
 
-        "FWeaponPiece1": "PWeapPurifierPiece1",
-        "FWeaponPiece2": "PWeapPurifierPiece2",
+        "FWeaponPiece1": "PWeapPurifierPiece2",
+        "FWeaponPiece2": "none",
         "FWeaponPiece3": "none",
 
         "CWeaponPiece1": "none",
         "CWeaponPiece2": "none",
-        "CWeaponPiece3": "none",
+        "CWeaponPiece3": "PWeapPurifierPiece1",
 
         "MWeaponPiece1": "none",
-        "MWeaponPiece2": "none",
+        "MWeaponPiece2": "Mana3",
         "MWeaponPiece3": "none",
     },
     "xp_bonus_stat": "wisdom",

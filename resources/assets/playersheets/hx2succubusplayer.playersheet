@@ -7,6 +7,7 @@
     "experience": [871,2060,4822,9319,19278,36626,66804,110494,141334,192700,192700],
     "health": [65,75,5,10,3,150],
     "mana": [90,100,8,11,3,300],
+    "ac": [0, 5, 15, 10, 25],
     "stats": {
         "strength": [11,14],
         "intelligence": [9,13],
@@ -32,13 +33,13 @@
         "MaceAmmo": "Mana3",
         "MaceHefty": "Mana3",
 
-        "Gauntlets": "Mana3",
+        "Gauntlets": "SWeapTempestStaffPiece2",
         "GoldWand": "Mana3",
         "Crossbow": "SWeapAcidRune",
         "Blaster": "Mana3",
         "SkullRod": "SWeapFireStorm",
         "PhoenixRod": "Mana3",
-        "Mace": "ArtiDarkServant",
+        "Mace": "SWeapTempestStaffPiece1",
 
         "BagOfHolding": "ArtiBoostMana",
         "ArtiTimeBomb": "ArtiPoisonBag",
@@ -54,16 +55,16 @@
         "MWeapLightning": "SWeapFireStorm",
 
         "FWeaponPiece1": "none",
-        "FWeaponPiece2": "none",
+        "FWeaponPiece2": "Mana3",
         "FWeaponPiece3": "none",
 
-        "CWeaponPiece1": "none",
+        "CWeaponPiece1": "SWeapTempestStaffPiece2",
         "CWeaponPiece2": "none",
         "CWeaponPiece3": "none",
 
         "MWeaponPiece1": "none",
         "MWeaponPiece2": "none",
-        "MWeaponPiece3": "none",
+        "MWeaponPiece3": "SWeapTempestStaffPiece1",
     },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
