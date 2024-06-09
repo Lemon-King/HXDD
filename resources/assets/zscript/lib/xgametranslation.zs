@@ -201,11 +201,6 @@ class XGameTranslation {
                             self.xclass[i].list.Resize(valClassItemList.Size());
                             for (int j = 0; j < valClassItemList.Size(); j++) {
                                 String value = HXDD_JsonString(valClassItemList.get(j)).s;
-                                Array<String> nClassItems;
-                                valClassItem.Split(nClassItems, ",");
-                                for (let n = 0; n < nClassItems.Size(); n++) {
-                                    nClassItems[n].Replace(" ", "");
-                                }
                                 self.xclass[i].list[j] = value;
                             }
                         }
