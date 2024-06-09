@@ -4,6 +4,8 @@
     Replacement for zscript_generated actors
     Should result in less bugs in the long term
 
+    TODO: Refactor to Map<string, XGT_GROUP>
+
 */
 
 class XGT_Group {
@@ -76,9 +78,7 @@ class XGameTranslation {
                     valDoom = FileJSON.GetString(jo, "Doom");
                     valHeretic = FileJSON.GetString(jo, "Heretic");
                     valHexen = FileJSON.GetString(jo, "Hexen");
-                    targetGroup.Doom.Push(valDoom);
-                    targetGroup.Heretic.Push(valHeretic);
-                    targetGroup.Hexen.Push(valHexen);
+                    Add(targetGroup, valDoom, valHeretic, valHexen);
                 }
             }
             targetGroup.size = targetGroup.Doom.Size();
@@ -87,7 +87,7 @@ class XGameTranslation {
         }
     }
 
-    void Push(XGT_Group group, String strDoom, String strHeretic, String strHexen) {
+    void Add(XGT_Group group, String strDoom, String strHeretic, String strHexen) {
         String actorDoom = strDoom;
         String actorHeretic = strHeretic;
         String actorHexen = strHexen;
@@ -125,12 +125,12 @@ class XGameTranslation {
         int optGameMode = LemonUtil.GetOptionGameMode();
         String newActor = source;
         int gameType = gameinfo.gametype;
-        if (gameType & GAME_Doom) {
+        if (LemonUtil.IsGameType(GAME_Doom)) {
             String nActor = group.Doom[index];
             if (nActor != "") {
                 newActor = nActor;
             }
-        } else if (gameType & GAME_Raven) {
+        } else if (LemonUtil.IsGameType(GAME_Raven)) {
             int optGameMode = LemonUtil.GetOptionGameMode();
             if (optGameMode == GAME_Heretic) {
                 String nActor = group.Heretic[index];
@@ -164,7 +164,7 @@ class XGameTranslation {
 
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
-		
+
         FileJSON fJSON = new ("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
         if (!success) {
@@ -184,7 +184,7 @@ class XGameTranslation {
                 for (let i = 0; i < keys.Size(); i++) {
                     String key = keys[i];
                     String valClassItem = FileJSON.GetString(objClassItems, key);
-                    if (valClassItem) {
+                    if (valClassItem != "") {
                         Array<String> nClassItems;
                         valClassItem.Split(nClassItems, ",");
                         for (let n = 0; n < nClassItems.Size(); n++) {
@@ -192,11 +192,23 @@ class XGameTranslation {
                         }
                         self.xclass[i] = new ("XTranslationActors");
                         self.xclass[i].list.Copy(nClassItems);
-                        //for (let j = 0; j < self.xclass[i].list.Size(); j++) {
-                        //    console.printf("XGameTranslation %s", self.xclass[i].list[j]);
-                        //}
                         self.xclass[i].key = key;
-                        //console.printf("XGameTranslation.XClass Lookup: %s, Class Item: %s", key, valClassItem);
+                    } else {
+                        HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
+                        if (valClassItemList) {
+                            self.xclass[i] = new ("XTranslationActors");
+                            self.xclass[i].key = key;
+                            self.xclass[i].list.Resize(valClassItemList.Size());
+                            for (int j = 0; j < valClassItemList.Size(); j++) {
+                                String value = HXDD_JsonString(valClassItemList.get(j)).s;
+                                Array<String> nClassItems;
+                                valClassItem.Split(nClassItems, ",");
+                                for (let n = 0; n < nClassItems.Size(); n++) {
+                                    nClassItems[n].Replace(" ", "");
+                                }
+                                self.xclass[i].list[j] = value;
+                            }
+                        }
                     }
                 }
             }
@@ -211,6 +223,7 @@ class XGameTranslation {
 					// choose randomly
 					int size = self.xclass[i].list.Size() - 1;
 					int choice = random[xclass](0, size);
+				    console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
 					replacement = self.xclass[i].list[choice];
 				} else {
 					replacement = self.xclass[i].list[0];
