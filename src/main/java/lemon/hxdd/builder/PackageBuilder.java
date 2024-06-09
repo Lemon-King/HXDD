@@ -93,20 +93,21 @@ public class PackageBuilder implements Runnable {
             // HEXEN II EXPORT
             //
             // If Hexen II PAKs are found then try to export data
+            String ownedHX2 = "";
             String OPTION_USE_HX2 = this.app.settings.Get("OPTION_ENABLE_HX2");
             if (OPTION_USE_HX2.equals("true") && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
                 // If Noesis zip or folder with exe is found, try Hexen 2 paks
                 if (new Noesis(this.app).CheckAndInstall()) {
-                    String owned = "base";
+                    ownedHX2 = "base";
                     if (HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK3")})) {
                         // Set World flag
-                        owned = String.format("%s,portals", owned);
+                        ownedHX2 = String.format("%s,portals", ownedHX2);
                     }
                     if (HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK4")})) {
                         // Set Portals flag
-                        owned = String.format("%s,world", owned);
+                        ownedHX2 = String.format("%s,world", ownedHX2);
                     }
-                    WriteHexen2InstallCVAR(owned);
+                    WriteHexen2InstallCVAR(ownedHX2);
                     Hexen2Assets h2a = new Hexen2Assets(this.app);
                     h2a.ExtractPakData();
                     h2a.ExportAssets();
@@ -119,7 +120,7 @@ public class PackageBuilder implements Runnable {
                     SoundInfo si = new SoundInfo(this.app);
                     si.Export();
 
-                    sourceVersions.put("hx2", owned.toUpperCase());
+                    sourceVersions.put("hx2", ownedHX2.toUpperCase());
                 }
             }
 
@@ -131,8 +132,6 @@ public class PackageBuilder implements Runnable {
 
             ExportHXDDFiles();
             ApplyUserOptions();
-
-            PWADModeSetup();
 
             WriteInstallLanguageLookup();
 
@@ -293,17 +292,13 @@ public class PackageBuilder implements Runnable {
         System.out.println("Merging asset tables");
         this.app.controller.SetStageLabel("Merging Asset Tables");
 
-        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
-
         WadFileOrganizer merged = new WadFileOrganizer();
         this.wads.forEach((p) -> {
             WadFileOrganizer from = organized.get(p.getKey());
             merged.MergeFrom(from, "lumps");
-            if (OPTION_PWAD_MODE.equals("false")) {
-                merged.MergeFrom(from, "flats");
-                merged.MergeFrom(from, "graphics");
-                merged.MergeFrom(from, "patches");
-            }
+            merged.MergeFrom(from, "flats");
+            merged.MergeFrom(from, "graphics");
+            merged.MergeFrom(from, "patches");
             merged.MergeFrom(from, "sprites");
             merged.MergeFrom(from, "sounds");
             merged.MergeFrom(from, "music");
@@ -327,7 +322,11 @@ public class PackageBuilder implements Runnable {
             AtomicInteger count = new AtomicInteger();
 
             mftype.forEach((key, mf) -> {
-                mf.ExtractFile(this.app.settings.GetPath("temp"));
+                String path = this.app.settings.GetPath("temp");
+                if (mf.outputName.toLowerCase().equals("playpal") || mf.outputName.toLowerCase().equals("colormap")) {
+                    path = path + "/filter/game-raven";
+                }
+                mf.ExtractFile(path);
                 this.app.controller.SetCurrentLabel(mf.decodeType.toUpperCase() + ": " + mf.outputName);
                 this.app.controller.SetCurrentProgress((float)count.incrementAndGet() / (float)total);
             });
@@ -335,17 +334,13 @@ public class PackageBuilder implements Runnable {
     }
 
     public void ExportMaps() {
-        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
-        if (OPTION_PWAD_MODE.equals("true")) {
-            return;
-        }
         this.app.controller.SetCurrentProgress(0);
         this.wads.forEach((p) -> {
             Wad wad = p.getValue();
             String name = p.getKey();
 
             System.out.println("Exporting Maps from " + name + ".wad");
-            String path = this.app.settings.GetPath("temp") + "/maps/";
+            String path = this.app.settings.GetPath("temp") + "/filter/game-raven/maps/";
             File dirFile = new File(path);
             if (!dirFile.exists()) {
                 dirFile.mkdirs();
@@ -617,7 +612,7 @@ public class PackageBuilder implements Runnable {
         String path = this.app.settings.GetPath("temp");
 
         try {
-            File fileInfo = new File(path + "/mapinfo.hxdd");
+            File fileInfo = new File(path + "/filter/game-raven/mapinfo.hxdd");
             String info = new String(Files.readAllBytes(fileInfo.toPath()));
 
             // Title Artwork
@@ -665,26 +660,6 @@ public class PackageBuilder implements Runnable {
         za.ExtractFilesToFolder("assets", path);
     }
 
-    private void PWADModeSetup() {
-        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
-        if (OPTION_PWAD_MODE.equals("true")) {
-            System.out.println("PWAD Mode Setup");
-            String path = this.app.settings.GetPath("temp");
-
-            final String[] fileDelete = new String[]{"fontdefs.hxdd", "mapinfo.hxdd", "iwadinfo.hxdd", "lockdefs.hxdd", "playpal.lmp", "colormap.lmp"};
-            for (String s : fileDelete) {
-                File f = new File(path + "/" + s);
-                if (f.exists() && !f.delete()) {
-                    System.out.printf("PWAD MODE: Failed to delete: %s", f.getName());
-                }
-            }
-
-            ZipAssets za = new ZipAssets(this.app);
-            za.SetFile(this.app.settings.fileResources);
-            za.ExtractFilesToFolder("pwad", path);
-        }
-    }
-
     private boolean HasPAKFiles(String[] paths) {
         PAKTest pak = new PAKTest();
         for (String path : paths) {
@@ -724,10 +699,6 @@ public class PackageBuilder implements Runnable {
 
     // Create Hexen focused palette PK3 for wads using palette textures
     private void CreateHexenPalettePK3() {
-        String OPTION_PWAD_MODE = this.app.settings.Get("OPTION_PWAD_MODE");
-        if(OPTION_PWAD_MODE.equals("true")) {
-            return;
-        }
         this.app.controller.SetCurrentLabel("Creating Hexen Palette PK3");
         this.app.controller.SetCurrentProgress(-1);
         try {

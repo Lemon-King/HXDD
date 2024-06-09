@@ -1,5 +1,5 @@
-include gameinfo/doomednums.mapinfo
-include gameinfo/spawnnums.mapinfo
+include gameinfo/game-raven/doomednums.mapinfo
+include gameinfo/game-raven/spawnnums.mapinfo
 
 include mapinfo/heretic.mapinfo
 include mapinfo/hexen.mapinfo

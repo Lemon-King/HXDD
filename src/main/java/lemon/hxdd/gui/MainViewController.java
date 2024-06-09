@@ -91,7 +91,6 @@ public class MainViewController {
     public ChoiceBox<ChoiceBoxItem> cbKoraxLocale;
     public CheckBox cxDownloadTitleSteam;
     public CheckBox cxEnableHexenII;
-    public CheckBox cxEnablePWADMode;
     @FXML
     public Button btnOpenFolder;
 
@@ -184,7 +183,6 @@ public class MainViewController {
 
         BindCheckBox("OPTION_USE_STEAM_ARTWORK",cxDownloadTitleSteam);
         BindCheckBox("OPTION_ENABLE_HX2", cxEnableHexenII);
-        BindCheckBox("OPTION_PWAD_MODE", cxEnablePWADMode);
 
         SetupChoiceBoxTitleScreen();
         SetupChoiceBoxTitleMusic();

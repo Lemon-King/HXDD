@@ -26,9 +26,9 @@ class GameModeCompat: Inventory {
 		Super.PostBeginPlay();
 
 		int cvarGameMode = LemonUtil.GetOptionGameMode();
-        if (cvarGameMode == GAME_Heretic) {
-            SetDamageScale_Heretic();
-            SetPlayerSize_Heretic();
+        if (LemonUtil.IsGameType(GAME_Doom) || cvarGameMode == GAME_Heretic) {
+            SetDamageScale_Standard();
+            SetPlayerSize_Standard();
         } else if (cvarGameMode == GAME_Hexen) {
             SetDamageScale_Hexen();
             SetPlayerSize_Hexen();
@@ -41,21 +41,17 @@ class GameModeCompat: Inventory {
         }
     }
 
-    void SetDamageScale_Heretic() {
-        if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
-            DamageMult = 1.0;
-        } else {
+    void SetDamageScale_Standard() {
+        if (!(owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn")) {
             DamageMult = 0.5;
         }
     }
     void SetDamageScale_Hexen() {
         if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
             DamageMult = 1.5;
-        } else {
-            DamageMult = 1.0;
         }
     }
-    void SetPlayerSize_Heretic() {
+    void SetPlayerSize_Standard() {
         PlayerPawn p = PlayerPawn(owner.player.mo);
         if (p.Height == 56) {
             return;

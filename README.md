@@ -73,7 +73,7 @@ HXDD has a minimum version requirement with [GZDOOM 4.11+](https://zdoom.org/dow
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
 
-## Usage
+## Setup
 
 HXDD will make use of data from GZDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.
 
@@ -89,7 +89,7 @@ HXDD will make use of data from GZDOOM, Heretic, Hexen, Hexen's expansion Deathk
 
 Your selections will be stored for the next time you run it.
 
-## Hexen II Usage
+## Hexen II PAK Support
 
 When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).
 
@@ -98,6 +98,9 @@ Download and place the Noesis zip file in the same folder as HXDD's exe.
 Select the PAK files in the application and ensure Enable Hexen II is checked.
 
 HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
+
+## DOOM Compatibility「PWAD Mode」
+You can also use hxdd.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https://jp.itch.io/wadsmoosh).
 
 ## Screenshots & Video
 <a href="https://i.imgur.com/8W0VM5p.png">

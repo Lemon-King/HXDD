@@ -7,6 +7,7 @@
     "experience": [945,2240,5250,10150,21000,39900,72800,120400,154000,210000,210000],
     "health": [70,85,8,13,4,150],
     "mana": [84,94,6,9,1,300],
+    "ac": [15, 25, 20, 15, 5],
     "stats": {
         "strength": [15,18],
         "intelligence": [6,10],
@@ -14,6 +15,44 @@
         "dexterity": [10,13],
     },
     "xgame": {
+        "Fist": "Mana1",
+        "Chainsaw": "FWeaponPiece3",
+        "Pistol": "Mana1",
+        "Shotgun": "FWeapAxe",
+        "SuperShotgun": "FWeapHammer",
+        "Chaingun": "FWeapAxe",
+        "RocketLauncher": "FWeaponPiece2",
+        "PlasmaRifle": "FWeapHammer",
+        "BFG9000": "FWeaponPiece1",
+
+        "Clip": "none",
+        "ClipBox": "Mana3",
+        "Shell": "Mana1",
+        "ShellBox": "Mana3",
+        "RocketAmmo": "Mana2",
+        "RocketBox": "Mana3",
+        "Cell": "Mana2",
+        "CellPack": "Mana3",
+
+        "HealthBonus": "none",
+        "Stimpack": "CrystalVial",
+        "Medikit": "ArtiHealth",
+
+        "ArmorBonus": "ArtiPoisonBag",
+        "GreenArmor": "AmuletOfWarding,PlatinumHelm",
+        "BlueArmor": "FalconShield,MeshArmor",
+
+        "InvulnerabilitySphere": "ArtiInvulnerability2",
+        "Soulsphere": "ArtiSuperHealth",
+        "Megasphere": "ArtiBoostArmor",
+        "BlurSphere": "ArtiPork,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
+        "RadSuit": "ArtiSpeedBoots",
+        "Infrared": "ArtiTorch",
+        "Allmap": "SuperMap",
+        "Berserk": "ArtiDarkServant",
+
+        "Backpack": "ArtiBoostMana",
+
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",
 

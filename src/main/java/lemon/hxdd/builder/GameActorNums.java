@@ -51,6 +51,7 @@ public class GameActorNums {
 
             // Merge Hexen keys with Heretic Keys, if missing add.
             Properties p_hxdd = new Properties();
+            Properties p_pwad = new Properties();  // if we don't do this, doom maps will break.
             Properties p_heretic = lists.get(0);
             Properties p_hexen = lists.get(1);
             Properties p_doom = lists.get(2);
@@ -82,50 +83,66 @@ public class GameActorNums {
                     actorsJSON.add(lutActors);
                 }
 
-                String newValue = valueHexen;
-                if (newValue == null) {
-                    newValue = valueHeretic;
+                String hxddValue = valueHexen;
+                if (hxddValue == null) {
+                    hxddValue = valueHeretic;
                 }
-                if (newValue == null) {
-                    newValue = valueDoom;
+                if (hxddValue == null) {
+                    hxddValue = valueDoom;
                 }
-                if (newValue != null) {
-                    p_hxdd.put(key, newValue);
+                if (hxddValue != null) {
+                    p_hxdd.put(key, hxddValue);
+                }
+
+                String pwadValue = valueDoom;
+                if (pwadValue == null) {
+                    pwadValue = valueHeretic;
+                }
+                if (pwadValue == null) {
+                    pwadValue = valueHexen;
+                }
+                if (pwadValue != null) {
+                    p_pwad.put(key, pwadValue);
                 }
             });
             CreateXGT(actorsJSON, type);
 
-            try {
-                File pathTarget = new File(this.pathTemp + "/gameinfo/");
-                if (!pathTarget.exists()) {
-                    pathTarget.mkdirs();
-                }
-
-                Map<String, String> actorMap = (Map)p_hxdd;
-                SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
-
-                String mapInfoFileName = type + ".mapinfo";
-                PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/gameinfo/" + mapInfoFileName);
-
-                AddGeneratedByTag(file_mapinfo);
-                if (Objects.equals(type, "doomednums")) {
-                    file_mapinfo.print("\nDoomEdNums\n");
-                } else if (Objects.equals(type, "spawnnums")) {
-                    file_mapinfo.print("\nSpawnNums\n");
-                }
-                file_mapinfo.print("{\n");
-                for (String key : keys) {
-                    String value = actorMap.get(key);
-                    file_mapinfo.print(key + " = " + value + "\n");
-                }
-                file_mapinfo.print("}\n");
-                file_mapinfo.close();
-
-            } catch (FileNotFoundException ex) {
-                // FileNotFoundException catch is optional and can be collapsed
-                System.out.println("GameActorNums: gameinfo files not found, skipping");
-            }
+            WriteGameInfo(p_hxdd, type, "game-raven");
+            WriteGameInfo(p_pwad, type, "game-doom");
         });
+    }
+
+    private void WriteGameInfo(Properties p, String type, String gameType) {
+        try {
+            File pathTarget = new File(this.pathTemp + "/gameinfo/" + gameType + "/");
+            if (!pathTarget.exists()) {
+                pathTarget.mkdirs();
+            }
+
+            Map<String, String> actorMap = (Map)p;
+            SortedSet<String> keys = new TreeSet<>(actorMap.keySet());
+
+            String mapInfoFileName = type + ".mapinfo";
+            PrintWriter file_mapinfo = new PrintWriter(this.pathTemp + "/gameinfo/" + gameType + "/" + mapInfoFileName);
+
+            AddGeneratedByTag(file_mapinfo);
+            if (Objects.equals(type, "doomednums")) {
+                file_mapinfo.print("\nDoomEdNums\n");
+            } else if (Objects.equals(type, "spawnnums")) {
+                file_mapinfo.print("\nSpawnNums\n");
+            }
+            file_mapinfo.print("{\n");
+            for (String key : keys) {
+                String value = actorMap.get(key);
+                file_mapinfo.print(key + " = " + value + "\n");
+            }
+            file_mapinfo.print("}\n");
+            file_mapinfo.close();
+
+        } catch (FileNotFoundException ex) {
+            // FileNotFoundException catch is optional and can be collapsed
+            System.out.println("GameActorNums: gameinfo files not found, skipping");
+        }
     }
 
     private void CreateXGT(JsonArray list, String type) {

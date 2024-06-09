@@ -89,7 +89,7 @@ public class MetaFile {
     }
 
     private void ExportData(byte[] data, Palette pal) {
-        if (this.decodeType == "lumps") {
+        if (this.decodeType.equals("lumps")) {
             LumpExport(data);
         } else if (Objects.equals(this.decodeType, "textlumps")) {
             TextLumpExport(data);

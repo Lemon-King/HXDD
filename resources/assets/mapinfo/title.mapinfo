@@ -1,0 +1,12 @@
+defaultmap
+{
+	enableskyboxao
+}
+
+// Episode 1
+
+map TITLEMAP lookup "HXDD: A Heretic & Hexen Wad Merger"
+{
+	sky1 = "SKY1"
+	music = "MUS_TITL"
+}

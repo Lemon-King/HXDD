@@ -113,20 +113,24 @@ class PlayerSheetJSON {
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
 	Array<int> manaTable;
+	Array<int> hexenArmorTable;
+	bool hasHexenArmorTable;
 
 	Array<PlayerSheetStat> stats;
 	Array<String> stats_lookup;
 	String xp_bonus_stat;
 
 	int GetEnumFromArmorType(String type) {
-		if (type == "ac" || type == "armor" || type == "armorclass" || type == "hexen" || type == "hx") {
+		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
+		if (keys.Find(type) != keys.Size()) {
 			return PSAT_ARMOR_AC;
 		} else {
 			return PSAT_ARMOR_SIMPLE;
 		}
 	}
 	int GetEnumFromProgressionType(String type) {
-		if (type == "levels" || type == "level" || type == "leveling" || type == "hexen2" || type == "hx2") {
+		Array<string> keys = {"levels", "level", "leveling", "hexen2", "hx2"};
+		if (keys.Find(type) != keys.Size()) {
 			return PSP_LEVELS;
 		} else {
 			return PSP_NONE;
@@ -136,8 +140,8 @@ class PlayerSheetJSON {
     void Load(String file) {
 		// Create defaults
 		self.alignment = "neutral";
-		self.ArmorType = 0;
-		self.ProgressionType = 0;
+		self.ArmorType = PSAT_DEFAULT;
+		self.ProgressionType = PSP_DEFAULT;
 
 		self.UseMaxHealthScaler = true;
 
@@ -161,8 +165,11 @@ class PlayerSheetJSON {
 
 		Array<int> defaultHPTable = {60,70,2,6,5};
 		Array<int> defaultMPTable = {95,105,5,10,5};
+		Array<int> defaultHexenArmorTable = {10, 15, 15, 15, 15};
 		self.hitpointTable.Copy(defaultHPTable);
 		self.manaTable.Copy(defaultMPTable);
+		self.hexenArmorTable.copy(defaultHexenArmorTable);
+		self.hasHexenArmorTable = false;
 
         FileJSON fJSON = new ("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", file));
@@ -185,6 +192,7 @@ class PlayerSheetJSON {
 				let valExperienceTable = FileJSON.GetArray(jsonObject, "experience");
 				let valHPTable = FileJSON.GetArray(jsonObject, "health");
 				let valManaTable = FileJSON.GetArray(jsonObject, "mana");
+				let valHexenArmorTable = FileJSON.GetArray(jsonObject, "ac");
 				
 				// Dynamic User Defined Stats
 				HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
@@ -268,6 +276,13 @@ class PlayerSheetJSON {
 						}
 					}
 				}
+				if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
+					self.hasHexenArmorTable = true;
+					self.hexenArmorTable.Resize(5);
+					for (let i = 0; i < 5; i++) {
+						self.hexenArmorTable[i] 	= HXDD_JsonInt(valHexenArmorTable.arr[i]).i;
+					}
+				}
             } else {
                 console.printf("PlayerSheetJSON: Failed to load data from file %s!", file);
             }
@@ -305,6 +320,7 @@ class Progression: Inventory {
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
 	Array<int> manaTable;
+	Array<int> hexenArmorTable;
 
 	Array<double> skillmodifier;
 
@@ -424,6 +440,10 @@ class Progression: Inventory {
 		self.Alignment = PlayerSheet.Alignment.MakeLower();
 
 		self.UseMaxHealthScaler = PlayerSheet.UseMaxHealthScaler;
+
+		if (PlayerSheet.hasHexenArmorTable) {
+			self.hexenArmorTable.copy(PlayerSheet.hexenArmorTable);
+		}
 
 		if (self.ArmorType == PSAT_DEFAULT) {
 			self.ArmorType = PSAT_ARMOR_SIMPLE;
@@ -596,10 +616,23 @@ class Progression: Inventory {
 	}
 
 	HexenArmor FindOrGivePlayerHexenArmor(PlayerPawn player) {
+		Array<int> defaultHexenArmorTable = {10, 15, 15, 15, 15};
+		let hasHexenArmor = true;
 		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
 		if (itemHexenArmor == null) {
 			owner.player.mo.GiveInventory("HexenArmor", 1);
 			itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
+			hasHexenArmor = false;
+		}
+		if (!hasHexenArmor || hexenArmorTable.Size() == 5) {
+			if (hexenArmorTable.Size() == 5) {
+				itemHexenArmor.SlotsIncrement[4] = hexenArmorTable[4];
+			} else {
+				itemHexenArmor.SlotsIncrement[4] = defaultHexenArmorTable[4];
+			}
+			for (int i = 0; i < 4; i++) {
+				itemHexenArmor.SlotsIncrement[i] = hexenArmorTable.Size() == 5 ? hexenArmorTable[i] : defaultHexenArmorTable[i];
+			}
 		}
 		return itemHexenArmor;
 	}

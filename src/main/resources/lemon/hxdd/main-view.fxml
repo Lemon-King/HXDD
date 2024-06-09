@@ -573,10 +573,6 @@
                                              </children>
                                           </HBox>
                                           <Separator layoutX="9.0" layoutY="118.0" prefWidth="360.0" />
-                                          <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="301.0" prefHeight="35.0" prefWidth="352.0">
-                                             <children>
-                                                <CheckBox fx:id="cxEnablePWADMode" mnemonicParsing="false" text="Build as DOOM PWAD [DEVELOPMENT]" />
-                                             </children></HBox>
                                        </children>
                                     </AnchorPane>
                                 </content>

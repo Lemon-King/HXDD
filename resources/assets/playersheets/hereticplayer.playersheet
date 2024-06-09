@@ -7,6 +7,7 @@
     "experience": [675,1600,3750,7250,15000,28500,52000,86000,110000,150000,150000],
     "health": [65,75,5,10,3,150],
     "mana": [80,90,5,10,3,200],
+    "ac": [10, 10, 25, 5, 15],
     "stats": {
         "strength": [6,10],
         "intelligence": [10,13],
@@ -33,7 +34,24 @@
         "Cell": "SkullRodAmmo,MaceAmmo",
         "CellPack": "SkullRodHefty,MaceHefty",
 
-        "Backpack": "BagOfHolding",
+        "HealthBonus": "none",
+        "Stimpack": "CrystalVial",
+        "Medikit": "ArtiHealth",
+
+        "ArmorBonus": "ArtiTimeBomb",
+        "GreenArmor": "SilverShield",
+        "BlueArmor": "EnchantedShield",
+
+        "InvulnerabilitySphere": "ArtiInvulnerability",
+        "Soulsphere": "ArtiSuperHealth",
+        "Megasphere": "ArtiTomeOfPower",
+        "BlurSphere": "ArtiEgg,ArtiInvisibility",
+        "RadSuit": "ArtiTeleport",
+        "Infrared": "ArtiTorch",
+        "Allmap": "SuperMap",
+        "Berserk": "ArtiTomeOfPower",
+
+        "Backpack": "ArtiBoostMana",
 
         "FWeapAxe": "Gauntlets",
         "CWeapStaff": "Crossbow",

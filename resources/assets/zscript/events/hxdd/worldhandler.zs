@@ -34,6 +34,9 @@ class HXDDWorldEventHandler : EventHandler {
     }
 
     void HexenFixes() {
+        if (LemonUtil.IsGameType(GAME_Doom)) {
+            return;
+        }
         // Hack for Hexen Maps
         if (LemonUtil.IsMapLinear()) {
             // https://github.com/ZDoom/gzdoom/blob/677b08406405693ab53c281c4d71c19b9b078030/src/gamedata/g_mapinfo.cpp#L1049
@@ -75,17 +78,30 @@ class HXDDWorldEventHandler : EventHandler {
     
     override void WorldLoaded(WorldEvent e) {
         int gameType = gameinfo.gametype;
-        if (gameType & GAME_Doom) {
-        } else if (gameType & Game_Raven) {
+        if (gameType & Game_Raven) {
             Level.ReplaceTextures("F_SKY1", "F_SKY", 0);
             HexenFixes();
         }
         UserOptions_TextureSwap();
     }
 
+    override void NewGame () {
+        //LemonUtil.TryOpenMapByName();
+    }
+
+    // real nasty hack
+    override void WorldThingSpawned (WorldEvent e) {
+        //if (LemonUtil.TryOpenMapByName()) {
+            //Console.printf("Thing: %s", e.thing.GetClassName());
+        //}
+    }
+
     override void WorldLinePreActivated(WorldEvent e) {
-        // map transfer
+        if (LemonUtil.IsGameType(GAME_Doom)) {
+            return;
+        }
         if (e.ActivatedLine.special == 74) {
+            // Hexen: Deathkings Map Transfer
             int mapNumber = LemonUtil.GetMapNumber();
             // Reserved Map Numbers > 41 for HexDD
             if (mapNumber != -1 && mapNumber > 41) {
