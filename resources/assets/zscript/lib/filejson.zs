@@ -9,6 +9,9 @@ class FileJSON {
             return "";
         }
 		HXDD_JsonString type_str = HXDD_JsonString(type_elem);
+        if (!type_str) {
+            return "";
+        }
 		return type_str.s;
     }
     static int GetInt(HXDD_JsonObject jo, String key) {
