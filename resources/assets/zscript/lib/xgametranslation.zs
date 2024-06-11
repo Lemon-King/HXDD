@@ -8,6 +8,18 @@
 
 */
 
+enum ECVARCompareMethod {
+	ECVARCompareMethod_NONE,
+    ECVARCompareMethod_EQUALS,
+    ECVARCompareMethod_LESSER,
+    ECVARCompareMethod_GREATER
+}
+enum ECVARCompareType {
+	ECVARCompareType_NONE,
+    ECVARCompareType_INT,
+    ECVARCompareType_STRING
+}
+
 class XGT_Group {
     int size;
     Array<String> Doom;
@@ -15,9 +27,23 @@ class XGT_Group {
     Array<String> Hexen;
 }
 
+class XCVARCompare {
+    String cvar;
+    int i_value;
+    String s_value;
+    ECVARCompareMethod method;
+    ECVARCompareType type;
+}
+
 class XTranslationActors {
 	String key;
-	Array<String> list;
+    XCVARCompare compare;
+	Array<String> defaults;
+    Array<String> alternates;
+
+    bool hasCVARCompare() {
+        return (self.compare != null);
+    }
 }
 
 class XGameResponse {
@@ -26,6 +52,9 @@ class XGameResponse {
 }
 
 class XGameTranslation {
+    
+
+
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
@@ -164,7 +193,7 @@ class XGameTranslation {
 
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
-
+		
         FileJSON fJSON = new ("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
         if (!success) {
@@ -185,44 +214,178 @@ class XGameTranslation {
                     String key = keys[i];
                     String valClassItem = FileJSON.GetString(objClassItems, key);
                     if (valClassItem != "") {
-                        Array<String> nClassItems;
-                        valClassItem.Split(nClassItems, ",");
-                        for (let n = 0; n < nClassItems.Size(); n++) {
-                            nClassItems[n].Replace(" ", "");
-                        }
-                        self.xclass[i] = new ("XTranslationActors");
-                        self.xclass[i].list.Copy(nClassItems);
-                        self.xclass[i].key = key;
-                    } else {
-                        HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
-                        if (valClassItemList) {
-                            self.xclass[i] = new ("XTranslationActors");
-                            self.xclass[i].key = key;
-                            self.xclass[i].list.Resize(valClassItemList.Size());
-                            for (int j = 0; j < valClassItemList.Size(); j++) {
-                                String value = HXDD_JsonString(valClassItemList.get(j)).s;
-                                self.xclass[i].list[j] = value;
-                            }
-                        }
+                        XTranslationActors xta = CreateXTAFromString(key, valClassItem);
+                        self.xclass.push(xta);
+                        continue;
+                    }
+                    HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
+                    if (valClassItemList) {
+                        XTranslationActors xta = CreateXTAFromArray(key, valClassItemList);
+                        self.xclass.push(xta);
+                        continue;
+                    }
+                    HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
+                    if (valClassItemObject) {
+                        XTranslationActors xta = CreateXTAFromObject(key, valClassItemObject);
+                        self.xclass.push(xta);
+                        continue;
                     }
                 }
             }
 		}
 	}
 
+    XTranslationActors CreateXTAFromString(String key, String js) {
+        XTranslationActors xta = new ("XTranslationActors");
+        Array<String> nClassItems;
+        js.Substitute(" ", "");
+        js.Split(xta.defaults, ",");
+        xta.key = key;
+        return xta;
+    }
+
+    XTranslationActors CreateXTAFromArray(String key, HXDD_JsonArray ja) {
+        XTranslationActors xta = new ("XTranslationActors"); 
+        xta.key = key;
+        xta.defaults.Resize(ja.Size());
+        for (int j = 0; j < ja.Size(); j++) {
+            String value = HXDD_JsonString(ja.get(j)).s;
+            if (value) {
+                xta.defaults.push(value);
+            }
+        }
+        return xta;
+    }
+
+    XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
+        XTranslationActors xta = new ("XTranslationActors"); 
+        xta.key = key;
+        xta.compare = new ("XCVARCompare");
+
+        String sCVAR = FileJSON.GetString(jo, "cvar");
+        if (sCVAR != "") {
+            xta.compare.cvar = sCVAR;
+        }
+
+        if (xta.compare.cvar) {
+            xta.compare.method = ECVARCompareMethod_NONE;
+            xta.compare.type = ECVARCompareType_NONE;
+
+            String sValue_Lesser = FileJSON.GetString(jo, "lesser");
+            if (sValue_Lesser != "") {
+                xta.compare.method = ECVARCompareMethod_LESSER;
+                xta.compare.type = ECVARCompareType_STRING;
+                xta.compare.s_value = sValue_Lesser;
+            } else {
+                int iValue_Lesser = FileJSON.GetInt(jo, "lesser");
+                if (iValue_Lesser) {
+                    xta.compare.method = ECVARCompareMethod_LESSER;
+                    xta.compare.type = ECVARCompareType_INT;
+                    xta.compare.i_value = iValue_Lesser;
+                }
+            }
+
+            String sValue_Greater = FileJSON.GetString(jo, "greater");
+            if (sValue_Greater != "") {
+                xta.compare.method = ECVARCompareMethod_GREATER;
+                xta.compare.type = ECVARCompareType_STRING;
+                xta.compare.s_value = sValue_Greater;
+            } else {
+                int iValue_Greater = FileJSON.GetInt(jo, "greater");
+                if (iValue_Greater) {
+                    xta.compare.method = ECVARCompareMethod_GREATER;
+                    xta.compare.type = ECVARCompareType_INT;
+                    xta.compare.i_value = iValue_Greater;
+                }
+            }
+            
+            String sValue_Equals = FileJSON.GetString(jo, "equals");
+            if (sValue_Equals != "") {
+                xta.compare.method = ECVARCompareMethod_EQUALS;
+                xta.compare.type = ECVARCompareType_STRING;
+                xta.compare.s_value = sValue_Equals;
+            } else {
+                int iValue_Equals = FileJSON.GetInt(jo, "equals");
+                if (iValue_Equals) {
+                    xta.compare.method = ECVARCompareMethod_EQUALS;
+                    xta.compare.type = ECVARCompareType_INT;
+                    xta.compare.i_value = iValue_Equals;
+                }
+            }
+
+            HXDD_JsonArray arrAlternates = FileJSON.GetArray(jo, "true");
+            if (arrAlternates) {
+                for (int j = 0; j < arrAlternates.Size(); j++) {
+                    String entry = HXDD_JsonString(arrAlternates.get(j)).s;
+                    if (entry) {
+                        xta.alternates.push(entry);
+                    }
+                }
+            } else {
+                String val = FileJSON.GetString(jo, "true");
+                if (val) {
+                    val.Substitute(" ", "");
+                    val.Split(xta.defaults, ",");
+                }
+            }
+            HXDD_JsonArray arrDefaults = FileJSON.GetArray(jo, "false");
+            if (arrDefaults) {
+                for (int j = 0; j < arrDefaults.Size(); j++) {
+                    String entry = HXDD_JsonString(arrAlternates.get(j)).s;
+                    if (entry) {
+                        xta.defaults.push(entry);
+                    }
+                }
+            } else {
+                String val = FileJSON.GetString(jo, "false");
+                if (val) {
+                    val.Substitute(" ", "");
+                    val.Split(xta.defaults, ",");
+                }
+            }
+        }
+
+        return xta;
+    }
+
 	String TryXClass(String replacee) {
 		for (let i = 0; i < self.xclass.Size(); i++) {
-			if (self.xclass[i].key.MakeLower() == replacee.MakeLower()) {
+            XTranslationActors xta = self.xclass[i];
+			if (xta && xta.key.MakeLower() == replacee.MakeLower()) {
+                Array<string> list;
+                list.copy(xta.defaults);
 				String replacement;
-				if (self.xclass[i].list.Size() > 1) {
-					// choose randomly
-					int size = self.xclass[i].list.Size() - 1;
-					int choice = random[xclass](0, size);
-				    console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
-					replacement = self.xclass[i].list[choice];
-				} else {
-					replacement = self.xclass[i].list[0];
-				}
+                if (xta.hasCVARCompare()) {
+                    bool useAlts = false;
+                    XCVARCompare xcvar = xta.compare;
+                    if (xcvar.method == ECVARCompareType_INT) {
+                        int cval = LemonUtil.CVAR_GetInt(xcvar.cvar, 2147483647);
+                        if (ECVARCompareMethod_EQUALS) {
+                            useAlts = (cval == xcvar.i_value);
+                        } else if (ECVARCompareMethod_LESSER) {
+                            useAlts = (cval < xcvar.i_value);
+                        } else if (ECVARCompareMethod_GREATER) {
+                            useAlts = (cval > xcvar.i_value);
+                        }
+                    } else if (xcvar.method == ECVARCompareType_STRING) {
+                        String cval = LemonUtil.CVAR_GetString(xcvar.cvar, "");
+                        if (cval != "") {
+                            useAlts = (cval == xcvar.s_value);
+                        }
+                    }
+                    if (useAlts) {
+                        list.copy(xta.alternates);
+                    }
+                }
+
+                replacement = list[0];
+                if (list.Size() > 1) {
+                    // choose randomly
+                    int size = list.Size() - 1;
+                    int choice = random[xclass](0, size);
+                    console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
+                    replacement = list[choice];
+                }
 				//console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
 
 				return replacement;
@@ -257,9 +420,9 @@ class XGameTranslation {
                         if (valKey && valActors) {
                             let newXSwap = new ("XTranslationActors"); 
                             newXSwap.key = valKey;
-                            newXSwap.list.Resize(valActors.Size());
+                            newXSwap.defaults.Resize(valActors.Size());
                             for (int j = 0; j < valActors.Size(); j++) {
-                                newXSwap.list[j] = HXDD_JsonString(valActors.get(j)).s;
+                                newXSwap.defaults[j] = HXDD_JsonString(valActors.get(j)).s;
                             }
                             self.xswap[i] = newXSwap;
                         }
@@ -282,14 +445,14 @@ class XGameTranslation {
                 String cvarKey = String.format("hxdd_xswap_%s", key);
                 int option = LemonUtil.CVAR_GetInt(cvarKey, 0);
                 option = 1;
-                if (option == 0 || option > xtaSwap.list.Size() + 2) {
+                if (option == 0 || option > xtaSwap.defaults.Size() + 2) {
                     return replacee;
                 }
                 int select = option - 1;
                 if (option == 1) {
-                    select = random[xswap](0, xtaSwap.list.Size() - 1);
+                    select = random[xswap](0, xtaSwap.defaults.Size() - 1);
                 }
-                String replacement = xtaSwap.list[select];
+                String replacement = xtaSwap.defaults[select];
 				//console.printf("XGameTranslation.XSwap.TryXSwap %s %d Found: %s, Replacement: %s", cvarKey, i, replacee, replacement);
                 return replacement;
             }

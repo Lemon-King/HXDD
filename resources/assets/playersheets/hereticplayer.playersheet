@@ -15,6 +15,19 @@
         "dexterity": [15,18]
     },
     "xgame": {
+        "SilverShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["MeshArmor", "PlatinumHelm"],
+            "false": "SilverShield"
+        },
+        "EnchantedShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["AmuletOfWarding", "FalconShield"],
+            "false": "EnchantedShield"
+        },
+
         "Fist": "Staff",
         "Chainsaw": "Gauntlets",
         "Pistol": "GoldWand",
@@ -39,8 +52,18 @@
         "Medikit": "ArtiHealth",
 
         "ArmorBonus": "ArtiTimeBomb",
-        "GreenArmor": "SilverShield",
-        "BlueArmor": "EnchantedShield",
+        "GreenArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["MeshArmor", "PlatinumHelm"],
+            "false": "SilverShield"
+        },
+        "BlueArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["AmuletOfWarding", "FalconShield"],
+            "false": "EnchantedShield"
+        },
 
         "InvulnerabilitySphere": "ArtiInvulnerability",
         "Soulsphere": "ArtiSuperHealth",
@@ -51,7 +74,7 @@
         "Allmap": "SuperMap",
         "Berserk": "ArtiTomeOfPower",
 
-        "Backpack": "ArtiBoostMana",
+        "Backpack": "BagOfHolding",
 
         "FWeapAxe": "Gauntlets",
         "CWeapStaff": "Crossbow",
@@ -85,6 +108,11 @@
         "ArtiPoisonBag": "ArtiTimeBomb",
         "ArtiInvulnerability2": "ArtiInvulnerability",
         "ArtiPork": "ArtiEgg"
+    },
+    "game_type_damage_scale": {
+        "doom": 1.0,
+        "heretic": 1.0,
+        "hexen": 1.5
     },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
