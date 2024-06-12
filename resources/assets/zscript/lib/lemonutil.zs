@@ -335,6 +335,20 @@ class LemonUtil {
     }
 
 
+    // https://chat.openai.com/c/feee51cd-b3fc-4415-89d4-d32b50336225
+    static vector3 GetEularFromVelocityAndAngularVelocity(Vector3 v, Vector3 av) {
+        HXDD_GM_Matrix mVel = HXDD_GM_Matrix.fromEulerAngles(v.x, v.y, v.z);
+        mVel = mVel.multiplyVector3((1, -1, 0));
+        HXDD_GM_Matrix mAngVel = HXDD_GM_Matrix.fromEulerAngles(av.x, av.y, av.z);
+        mAngVel = mAngVel.multiplyVector3((1, -1, 0));
+
+        //HXDD_GM_Matrix comb = mVel.multiplyMatrix(mAngVel);
+
+        double angle, pitch, roll = mVel.rotationToEulerAngles();
+        return (angle, pitch, roll);
+    }
+
+
     // Easings
     static double Easing_Quadradic_In(double val) {
         return val*val;

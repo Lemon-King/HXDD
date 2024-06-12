@@ -240,6 +240,7 @@ public class PackageBuilder implements Runnable {
         this.organized.get("hexen").BatchRename("graphics", "M_HTIC", "M_HTICX", "equals");
 
         // Player sprite conflict fixes
+        this.organized.get("heretic").BatchRename("sprites", "PLAY", "CORV", "startsWith");    // Heretic PLAY to CORV
         this.organized.get("hexen").BatchRename("sprites", "PLAY", "FIGH", "startsWith");      // Fighter Sprites
         this.organized.get("hexen").BatchRename("sprites", "FDTH", "FDHX", "startsWith");      // Fire Death Sprites
         this.organized.get("hexen").BatchRename("sprites", "CLER[0", "CLRFA0", "equals");      // cleric fix?
