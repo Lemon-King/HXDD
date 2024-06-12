@@ -59,6 +59,7 @@ class XGameTranslation {
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
 	Array<XTranslationActors> xclass;  // player class actor swaps
+    Map<String, XTranslationActors> xcls;
     Array<XTranslationActors> xswap;
 
     void Init() {
@@ -215,19 +216,22 @@ class XGameTranslation {
                     String valClassItem = FileJSON.GetString(objClassItems, key);
                     if (valClassItem != "") {
                         XTranslationActors xta = CreateXTAFromString(key, valClassItem);
-                        self.xclass.push(xta);
+                        self.xcls.Insert(key, xta);
+                        //self.xclass.push(xta);
                         continue;
                     }
                     HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
                     if (valClassItemList) {
                         XTranslationActors xta = CreateXTAFromArray(key, valClassItemList);
-                        self.xclass.push(xta);
+                        self.xcls.Insert(key, xta);
+                        //self.xclass.push(xta);
                         continue;
                     }
                     HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
                     if (valClassItemObject) {
                         XTranslationActors xta = CreateXTAFromObject(key, valClassItemObject);
-                        self.xclass.push(xta);
+                        self.xcls.Insert(key, xta);
+                        //self.xclass.push(xta);
                         continue;
                     }
                 }
@@ -349,48 +353,46 @@ class XGameTranslation {
     }
 
 	String TryXClass(String replacee) {
-		for (let i = 0; i < self.xclass.Size(); i++) {
-            XTranslationActors xta = self.xclass[i];
-			if (xta && xta.key.MakeLower() == replacee.MakeLower()) {
-                Array<string> list;
-                list.copy(xta.defaults);
-				String replacement;
-                if (xta.hasCVARCompare()) {
-                    bool useAlts = false;
-                    XCVARCompare xcvar = xta.compare;
-                    if (xcvar.method == ECVARCompareType_INT) {
-                        int cval = LemonUtil.CVAR_GetInt(xcvar.cvar, 2147483647);
-                        if (ECVARCompareMethod_EQUALS) {
-                            useAlts = (cval == xcvar.i_value);
-                        } else if (ECVARCompareMethod_LESSER) {
-                            useAlts = (cval < xcvar.i_value);
-                        } else if (ECVARCompareMethod_GREATER) {
-                            useAlts = (cval > xcvar.i_value);
-                        }
-                    } else if (xcvar.method == ECVARCompareType_STRING) {
-                        String cval = LemonUtil.CVAR_GetString(xcvar.cvar, "");
-                        if (cval != "") {
-                            useAlts = (cval == xcvar.s_value);
-                        }
+        XTranslationActors xta = self.xcls.GetIfExists(replacee);
+        if (xta && xta.key.MakeLower() == replacee.MakeLower()) {
+            Array<string> list;
+            list.copy(xta.defaults);
+            String replacement;
+            if (xta.hasCVARCompare()) {
+                bool useAlts = false;
+                XCVARCompare xcvar = xta.compare;
+                if (xcvar.method == ECVARCompareType_INT) {
+                    int cval = LemonUtil.CVAR_GetInt(xcvar.cvar, 2147483647);
+                    if (ECVARCompareMethod_EQUALS) {
+                        useAlts = (cval == xcvar.i_value);
+                    } else if (ECVARCompareMethod_LESSER) {
+                        useAlts = (cval < xcvar.i_value);
+                    } else if (ECVARCompareMethod_GREATER) {
+                        useAlts = (cval > xcvar.i_value);
                     }
-                    if (useAlts) {
-                        list.copy(xta.alternates);
+                } else if (xcvar.method == ECVARCompareType_STRING) {
+                    String cval = LemonUtil.CVAR_GetString(xcvar.cvar, "");
+                    if (cval != "") {
+                        useAlts = (cval == xcvar.s_value);
                     }
                 }
-
-                replacement = list[0];
-                if (list.Size() > 1) {
-                    // choose randomly
-                    int size = list.Size() - 1;
-                    int choice = random[xclass](0, size);
-                    console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
-                    replacement = list[choice];
+                if (useAlts) {
+                    list.copy(xta.alternates);
                 }
-				//console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
+            }
 
-				return replacement;
-			}
-		}
+            replacement = list[0];
+            if (list.Size() > 1) {
+                // choose randomly
+                int size = list.Size() - 1;
+                int choice = random[xclass](0, size);
+                console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
+                replacement = list[choice];
+            }
+            //console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
+
+            return replacement;
+        }
 		return replacee;
 	}
 

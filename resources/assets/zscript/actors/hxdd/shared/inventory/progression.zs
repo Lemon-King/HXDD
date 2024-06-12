@@ -92,6 +92,11 @@ class PlayerSheetStat {
 	}
 }
 
+class PlayerSheetResource {
+	Array<int> resourceTable;
+	bool useScale;
+}
+
 class PlayerSheetJSON {
 	bool IsLoaded;
 
@@ -112,13 +117,14 @@ class PlayerSheetJSON {
 
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
-	Array<int> manaTable;
+	Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 	bool hasHexenArmorTable;
-
-	Array<PlayerSheetStat> stats;
-	Array<String> stats_lookup;
+	
 	String xp_bonus_stat;
+
+	Map<String, PlayerSheetResource> resources;		// per resource
+	Map<String, PlayerSheetStat> stats;
 
 	int GetEnumFromArmorType(String type) {
 		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
@@ -164,126 +170,157 @@ class PlayerSheetJSON {
 		self.skillmodifier.Copy(defaultSkillMod);
 
 		Array<int> defaultHPTable = {60,70,2,6,5};
-		Array<int> defaultMPTable = {95,105,5,10,5};
+		Array<int> defaultRPTable = {95,105,5,10,5};
 		self.hitpointTable.Copy(defaultHPTable);
-		self.manaTable.Copy(defaultMPTable);
+		self.resourceTable.Copy(defaultRPTable);
 		self.hasHexenArmorTable = false;
 
         FileJSON fJSON = new ("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", file));
-        console.printf("PlayerSheetJSON: Load %d", fJSON.index);
-        if (success) {
-			HXDD_JsonObject jsonObject = HXDD_JsonObject(fJSON.json);
-			if (jsonObject) {
-				console.printf("PlayerSheetJSON: Loaded %s!", file);
+        //console.printf("PlayerSheetJSON: Load %d", fJSON.index);
+        if (!success) {
+            //console.printf("PlayerSheetJSON: Failed to load data from file %s!", file);
+			return;
+		}
+		HXDD_JsonObject jsonObject = HXDD_JsonObject(fJSON.json);
+		if (jsonObject) {
+			console.printf("PlayerSheetJSON: Loaded %s!", file);
 
-				String valPlayerClass = FileJSON.GetString(jsonObject, "class");
-				String valArmorType = FileJSON.GetString(jsonObject, "armor_type");
-				String valProgressionType = FileJSON.GetString(jsonObject, "progression_type");
-				int valMaxLevel = FileJSON.GetInt(jsonObject, "max_level");
-				String valAlignment = FileJSON.GetString(jsonObject, "alignment");
-				bool valUseMaxHealthScaler = FileJSON.GetBool(jsonObject, "use_max_health_scaler");
-				let valSkillModifier = FileJSON.GetArray(jsonObject, "skill_modifier");
-				double valXPModifier = FileJSON.GetDouble(jsonObject, "xp_modifier");
-				bool valHalveXPBeforeLevel4 = FileJSON.GetBool(jsonObject, "halve_xp_before_level_4");
+			String valClassName			= FileJSON.GetString(jsonObject, "name");
+			String valPlayerClass		= FileJSON.GetString(jsonObject, "class");
+			String valArmorType			= FileJSON.GetString(jsonObject, "armor_type");
+			String valProgressionType	= FileJSON.GetString(jsonObject, "progression_type");
+			int valMaxLevel				= FileJSON.GetInt(jsonObject, "max_level");
+			String valAlignment			= FileJSON.GetString(jsonObject, "alignment");
+			bool valUseMaxHealthScaler	= FileJSON.GetBool(jsonObject, "use_max_health_scaler");
+			let valSkillModifier		= FileJSON.GetArray(jsonObject, "skill_modifier");
+			double valXPModifier		= FileJSON.GetDouble(jsonObject, "xp_modifier");
+			bool valHalveXPBeforeLevel4 = FileJSON.GetBool(jsonObject, "halve_xp_before_level_4");
+			let valExperienceTable		= FileJSON.GetArray(jsonObject, "experience");
+			let valHPTable				= FileJSON.GetArray(jsonObject, "health");
+			if (!valHPTable) {
+				valHPTable				= FileJSON.GetArray(jsonObject, "hp");			// alt
+			}
+			let valResourceTable		= FileJSON.GetArray(jsonObject, "resource");
+			if (!valResourceTable) {
+				valResourceTable		= FileJSON.GetArray(jsonObject, "rp");			// alt
+			}
+			if (!valResourceTable) {
+				valResourceTable		= FileJSON.GetArray(jsonObject, "mp");			// alt
+			}
+			if (!valResourceTable) {
+				valResourceTable		= FileJSON.GetArray(jsonObject, "mana");		// alt
+			}
+			if (!valResourceTable) {
+				valResourceTable		= FileJSON.GetArray(jsonObject, "ammo");		// alt
+			}
 
-				let valExperienceTable = FileJSON.GetArray(jsonObject, "experience");
-				let valHPTable = FileJSON.GetArray(jsonObject, "health");
-				let valManaTable = FileJSON.GetArray(jsonObject, "mana");
-				let valHexenArmorTable = FileJSON.GetArray(jsonObject, "ac");
+			let valHexenArmorTable		= FileJSON.GetArray(jsonObject, "ac");
+			if (!valHexenArmorTable) {
+				valHexenArmorTable		= FileJSON.GetArray(jsonObject, "armor");		// alt
+			}
+			if (!valHexenArmorTable) {
+				valHexenArmorTable		= FileJSON.GetArray(jsonObject, "armorclass");	// alt
+			}
+			if (!valHexenArmorTable) {
+				valHexenArmorTable		= FileJSON.GetArray(jsonObject, "hexenarmor");	// alt
+			}
+			if (!valHexenArmorTable) {
+				valHexenArmorTable		= FileJSON.GetArray(jsonObject, "hxarmor");		// alt
+			}
 
-				// Dynamic User Defined Stats
-				HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
-				if (objStats) {
-					Array<String> keys;
-					objStats.GetKeysInto(keys);
+			// Dynamic User Defined Stats
+			HXDD_JsonObject objStats = HXDD_JsonObject(jsonObject.get("stats"));
+			if (objStats) {
+				Array<String> keys;
+				objStats.GetKeysInto(keys);
 
-					self.stats.Resize(keys.Size());
-					self.stats_lookup.Resize(keys.Size());
-					for (let i = 0; i < keys.Size(); i++) {
-						String key = keys[i];
-						HXDD_JsonArray stat = FileJSON.GetArray(objStats, key);
-						if (stat) {
-							if (stat.arr.size() >= 2) {
-								PlayerSheetStat nStat = new ("PlayerSheetStat");
-								nStat.name = key.MakeLower();
-								nStat.table.Resize(stat.arr.Size());
-								for (let i = 0; i < stat.arr.Size(); i++) {
-									nStat.table[i] = HXDD_JsonInt(stat.arr[i]).i;
-								}
-								//nStat.value = 0;
-								nStat.Roll();
-
-								self.stats[i] = nStat;
-								self.stats_lookup[i] = nStat.name;
-							} else {
-								console.printf("PlayerSheetJSON: Stat %s array must be 2 or higher. [start_low, start_high] or [start_low, start_high, level_low, level_high, level_max, stat_cap]", key);
+				//self.stats.Resize(keys.Size());
+				//self.stats_lookup.Resize(keys.Size());
+				for (let i = 0; i < keys.Size(); i++) {
+					String key = keys[i];
+					HXDD_JsonArray stat = FileJSON.GetArray(objStats, key);
+					if (stat) {
+						if (stat.arr.size() >= 2) {
+							PlayerSheetStat nStat = new ("PlayerSheetStat");
+							nStat.name = key.MakeLower();
+							nStat.table.Resize(stat.arr.Size());
+							for (let i = 0; i < stat.arr.Size(); i++) {
+								nStat.table[i] = HXDD_JsonInt(stat.arr[i]).i;
 							}
+							//nStat.value = 0;
+							nStat.Roll();
+
+							self.stats.Insert(nStat.name, nStat);
+							//self.stats[i] = nStat;
+							//self.stats_lookup[i] = nStat.name;
 						} else {
-							console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
+							console.printf("PlayerSheetJSON: Stat %s array must be 2 or higher. [start_low, start_high] or [start_low, start_high, level_low, level_high, level_max, stat_cap]", key);
 						}
+					} else {
+						console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
 					}
 				}
-				String valXPStat = FileJSON.GetString(jsonObject, "xp_bonus_stat");
-				if (self.stats_lookup.Find(valXPStat) != self.stats.Size()) {
-					self.xp_bonus_stat = valXPStat;
+			}
+			String valXPStat = FileJSON.GetString(jsonObject, "xp_bonus_stat");
+			if (self.stats.CheckKey(valXPStat)) {
+				self.xp_bonus_stat = valXPStat;
+			}
+
+			let valUsesEventHandler = FileJSON.GetBool(jsonObject, "event_handler");
+
+			// TODO: Setup Item Class Table Here for MultiClassItem Refactor
+
+			self.PlayerClass 				= valPlayerClass.MakeLower();
+			self.Alignment 					= valAlignment.MakeLower();
+			self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
+			self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
+
+			self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
+			self.HalveXPBeforeLevel4 		= valHalveXPBeforeLevel4;
+			self.maxlevel 					= valMaxLevel;
+			self.experienceModifier			= valXPModifier;
+
+			self.UsesEventHandler			= valUsesEventHandler;
+
+			if (valSkillModifier) {
+				if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
+					self.skillmodifier.Resize(valSkillModifier.arr.Size());
 				}
-
-				let valUsesEventHandler = FileJSON.GetBool(jsonObject, "event_handler");
-
-				// TODO: Setup Item Class Table Here for MultiClassItem Refactor
-
-				self.PlayerClass 				= valPlayerClass.MakeLower();
-				self.Alignment 					= valAlignment.MakeLower();
-				self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
-				self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
-
-				self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
-				self.HalveXPBeforeLevel4 		= valHalveXPBeforeLevel4;
-				self.maxlevel 					= valMaxLevel;
-				self.experienceModifier			= valXPModifier;
-
-				self.UsesEventHandler			= valUsesEventHandler;
-
-				if (valSkillModifier) {
-					if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
-						self.skillmodifier.Resize(valSkillModifier.arr.Size());
-					}
-					for (let i = 0; i < valSkillModifier.arr.Size(); i++) {
-						if (valSkillModifier.arr[i]) {
-							self.skillmodifier[i]		= HXDD_JsonDouble(valSkillModifier.arr[i]).d;
-						}
-					}
-				}
-				self.experienceTable.Resize(valExperienceTable.arr.Size());
-				for (let i = 0; i < valExperienceTable.arr.Size(); i++) {
-					self.experienceTable[i] 	= HXDD_JsonInt(valExperienceTable.arr[i]).i;
-				}
-
-				if (valHPTable && valManaTable) {
-					self.hitpointTable.Resize(clamp(5, valHPTable.arr.Size(), 6));
-					for (let i = 0; i < valHPTable.arr.Size(); i++) {
-						if (valHPTable.arr[i]) {
-							self.hitpointTable[i] 		= HXDD_JsonInt(valHPTable.arr[i]).i;
-						}
-					}
-					self.manaTable.Resize(clamp(5, valManaTable.arr.Size(), 6));
-					for (let i = 0; i < valManaTable.arr.Size(); i++) {
-						if (valManaTable.arr[i]) {
-							self.manaTable[i] 			= HXDD_JsonInt(valManaTable.arr[i]).i;
-						}
+				for (let i = 0; i < valSkillModifier.arr.Size(); i++) {
+					if (valSkillModifier.arr[i]) {
+						self.skillmodifier[i]	= HXDD_JsonDouble(valSkillModifier.arr[i]).d;
 					}
 				}
-				if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
-					self.hexenArmorTable.Resize(5);
-					for (let i = 0; i < 5; i++) {
-						self.hexenArmorTable[i] 	= HXDD_JsonInt(valHexenArmorTable.arr[i]).i;
+			}
+			self.experienceTable.Resize(valExperienceTable.arr.Size());
+			for (let i = 0; i < valExperienceTable.arr.Size(); i++) {
+				self.experienceTable[i]			= HXDD_JsonInt(valExperienceTable.arr[i]).i;
+			}
+
+			if (valHPTable) {
+				self.hitpointTable.Resize(clamp(5, valHPTable.arr.Size(), 6));
+				for (let i = 0; i < valHPTable.arr.Size(); i++) {
+					if (valHPTable.arr[i]) {
+						self.hitpointTable[i]	= HXDD_JsonInt(valHPTable.arr[i]).i;
 					}
 				}
-            } else {
-                console.printf("PlayerSheetJSON: Failed to load data from file %s!", file);
-            }
-        }
+			}
+			if (valResourceTable) {
+				self.resourceTable.Resize(clamp(5, valResourceTable.arr.Size(), 6));
+				for (let i = 0; i < valResourceTable.arr.Size(); i++) {
+					if (valResourceTable.arr[i]) {
+						self.resourceTable[i]	= HXDD_JsonInt(valResourceTable.arr[i]).i;
+					}
+				}
+			}
+			if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
+				self.hexenArmorTable.Resize(5);
+				for (let i = 0; i < 5; i++) {
+					self.hexenArmorTable[i] 	= HXDD_JsonInt(valHexenArmorTable.arr[i]).i;
+				}
+			}
+		}
     }
 
 	String GetPlayerClassName(PlayerPawn pp) {
@@ -316,7 +353,7 @@ class Progression: Inventory {
 	// Class Tables
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
-	Array<int> manaTable;
+	Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 
 	Array<double> skillmodifier;
@@ -328,17 +365,20 @@ class Progression: Inventory {
 	double experienceModifier;
 
 	int maxHealth;
-	int maxMana;
+	int maxResource;
 	int strength;
 	int intelligence;
 	int wisdom;
 	int dexterity;
 
-	Array<PlayerSheetStat> stats;
-	Array<String> stats_lookup;
+	//Array<PlayerSheetStat> stats;
+	//Array<String> stats_lookup;
 	String xp_bonus_stat;
 
 	ProgressionEventHandler handler;
+
+	Map<String, PlayerSheetResource> resources;		// per resource
+	Map<String, PlayerSheetStat> stats;
 
     Default {
 		+INVENTORY.KEEPDEPLETED
@@ -378,7 +418,7 @@ class Progression: Inventory {
 		self.Experience = 0;
 
 		self.MaxHealth = 100;
-		self.MaxMana = 0;
+		self.MaxResource = 0;
 		//self.Strength = 10;
 		//self.Intelligence = 10;
 		//self.Wisdom = 10;
@@ -481,10 +521,10 @@ class Progression: Inventory {
 			self.experienceTable.Copy(PlayerSheet.experienceTable);
 
 			self.hitpointTable.Copy(PlayerSheet.hitpointTable);
-			self.manaTable.Copy(PlayerSheet.manaTable);
+			self.resourceTable.Copy(PlayerSheet.resourceTable);
 
-			self.stats.Copy(PlayerSheet.stats);
-			self.stats_lookup.Copy(PlayerSheet.stats_lookup);
+			self.stats.Move(PlayerSheet.stats);
+			//self.stats_lookup.Copy(PlayerSheet.stats_lookup);
 			self.xp_bonus_stat		= PlayerSheet.xp_bonus_stat;
 
 		} else if (cvarProgression == PSP_LEVELS_USER) {
@@ -505,12 +545,12 @@ class Progression: Inventory {
 			self.hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
 			self.hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
 
-			self.manaTable.Resize(5);
-			self.manaTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
-			self.manaTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
-			self.manaTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
-			self.manaTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
-			self.manaTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
+			self.resourceTable.Resize(5);
+			self.resourceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
+			self.resourceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
+			self.resourceTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
+			self.resourceTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
+			self.resourceTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
 
 			/*
 			self.strengthTable.Resize(2);
@@ -549,25 +589,29 @@ class Progression: Inventory {
 			self.hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
 			self.hitpointTable[4] = self.hitpointTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
-			self.manaTable.Resize(5);
-			self.manaTable[0] = 70.0f;
-			self.manaTable[1] = 80.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
-			self.manaTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
-			self.manaTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
-			self.manaTable[4] = self.manaTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
+			self.resourceTable.Resize(5);
+			self.resourceTable[0] = 70.0f;
+			self.resourceTable[1] = 80.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
+			self.resourceTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
+			self.resourceTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
+			self.resourceTable[4] = self.resourceTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
-			self.stats.Copy(PlayerSheet.stats);
-			self.stats_lookup.Copy(PlayerSheet.stats_lookup);
-			for (let i = 0; i < self.stats.Size(); i++) {
-				self.stats[i].table.Resize(5);
+			//self.stats.Copy(PlayerSheet.stats);
+			//self.stats_lookup.Copy(PlayerSheet.stats_lookup);
+
+			self.stats.Move(PlayerSheet.stats);
+
+			foreach (k, v : self.stats) {
+				v.table.Resize(5);
 				for (let j = 0; j < 2; j++) {
 					double mult = ((j+1) * 10.0f);
-					self.stats[i].table[j] = frandom[exprnd](0.5f, 1.0f) * mult;
-					self.stats[i].table[j + 2] = random[exprnd](2, 5);
+					v.table[j] = frandom[exprnd](0.5f, 1.0f) * mult;
+					v.table[j + 2] = random[exprnd](2, 5);
 				}
-				self.stats[i].table[4] = self.stats[i].table[1] * 4.0;
-				self.stats[i].Roll();
+				v.table[4] = v.table[1] * 4.0;
+				v.Roll();
 			}
+			
 			self.maxlevel = 20;
 		}
 
@@ -576,13 +620,7 @@ class Progression: Inventory {
 	}
 
 	PlayerSheetStat GetStat(String key) {
-		int index = self.stats_lookup.Find(key);
-		if (index != self.stats_lookup.Size()) {
-			return self.Stats[index];
-		} else {
-			console.printf("Progression.GetStat: Could not find stat %s!", key);
-			return null;
-		}
+		return self.stats.GetIfExists(key);
 	}
 
 	void ArmorModeSelection() {
@@ -623,12 +661,12 @@ class Progression: Inventory {
 		}
 		if (!hasHexenArmor || hexenArmorTable.Size() == 5) {
 			if (hexenArmorTable.Size() == 5) {
-				itemHexenArmor.Slots[4] = hexenArmorTable[4];
+				itemHexenArmor.Slots[4] = hexenArmorTable[0];
 			} else {
-				itemHexenArmor.Slots[4] = defaultHexenArmorTable[4];
+				itemHexenArmor.Slots[4] = defaultHexenArmorTable[0];
 			}
 			for (int i = 0; i < 4; i++) {
-				itemHexenArmor.SlotsIncrement[i] = hexenArmorTable.Size() == 5 ? hexenArmorTable[i] : defaultHexenArmorTable[i];
+				itemHexenArmor.SlotsIncrement[i] = hexenArmorTable.Size() == 5 ? hexenArmorTable[i+1] : defaultHexenArmorTable[i+1];
 			}
 		}
 		return itemHexenArmor;
@@ -696,22 +734,22 @@ class Progression: Inventory {
 		if (self.currlevel != 0) {
 			return;
 		}
-		
+
 		bool cvarAllowBackpackUse = LemonUtil.CVAR_GetBool("hxdd_allow_backpack_use", false);
 
 		let player = owner.player.mo;
 		self.SpawnHealth = player.Health;
 
 		if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
-        	MaxHealth = self.SpawnHealth * (stats_compute(hitpointTable[0], hitpointTable[1]) / 100.0);
+        	self.MaxHealth = self.SpawnHealth * (stats_compute(hitpointTable[0], hitpointTable[1]) / 100.0);
 		} else {
-			MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
+			self.MaxHealth = stats_compute(hitpointTable[0], hitpointTable[1]);
 		}
-		player.MaxHealth = MaxHealth;
-        player.A_SetHealth(MaxHealth, AAPTR_DEFAULT);
+		player.MaxHealth = self.MaxHealth;
+        player.A_SetHealth(self.MaxHealth, AAPTR_DEFAULT);
 
 		// Alt Ammo Handler
-		maxMana = stats_compute(manaTable[0], manaTable[1]);
+		maxResource = stats_compute(resourceTable[0], resourceTable[1]);
 
 		// Calc initial ammo
 		// Add ammo dummies to player
@@ -726,9 +764,9 @@ class Progression: Inventory {
 				}
 				if (ammoItem) {
 					if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
-						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
+						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (maxResource / 100.0);
 					} else {
-						ammoItem.MaxAmount = MaxMana;
+						ammoItem.MaxAmount = maxResource;
 						ammoItem.Amount = 0;
 					}
 					//ammoItem.Amount = 0;
@@ -749,7 +787,12 @@ class Progression: Inventory {
 		console.printf("");
 		console.printf("----- Stats -----");
 		console.printf("Health: %0.2f", MaxHealth);
-		console.printf("Mana: %0.2f", maxMana);
+		console.printf("Resource: %0.2f", maxResource);
+		foreach (k, v : self.stats) {
+			String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
+			console.printf("%s: %0.2f", nameCap, v.value);
+		}
+		/*
 		for (let i = 0; i < self.stats.Size(); i++) {
 			if (self.stats[i]) {
 				String name = self.stats[i].name;
@@ -759,6 +802,7 @@ class Progression: Inventory {
 				console.printf("Progression.InitLevel_PostBeginPlay: Failed to read stat %d.", i);
 			}
 		}
+		*/
 	}
 
 	void AdvanceLevel(int advanceLevel) {
@@ -775,32 +819,32 @@ class Progression: Inventory {
 			int lastLevel = self.currlevel++;
 
 			double healthInc = 0;
-			double manaInc = 0;
+			double resourceInc = 0;
 			if (lastLevel < self.MaxLevel) {
 				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
 					healthInc = self.SpawnHealth * (stats_compute(self.hitpointTable[2],self.hitpointTable[3]) / 100.0);
 				} else {
 					healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
 				}
-				manaInc = stats_compute(self.manaTable[2],self.manaTable[3]);
+				resourceInc = stats_compute(self.resourceTable[2],self.resourceTable[3]);
 			} else {
 				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
 					healthInc = (double)(self.SpawnHealth) * (self.hitpointTable[4] / 100.0);
 				} else {
 					healthInc = self.hitpointTable[4];
 				}
-				manaInc = self.manaTable[4];
+				resourceInc = self.resourceTable[4];
 			}
-			MaxHealth += HealthInc;
-			self.MaxMana += ManaInc;
+			self.MaxHealth += healthInc;
+			self.MaxResource += resourceInc;
 
 			int limitMaxHealth = self.SpawnHealth * 1.5;
 			if (self.hitpointTable.Size() == 6) {
 				limitMaxHealth = self.hitpointTable[5];
 			}
-			int limitMaxMana = 300;
-			if (self.manaTable.Size() == 6) {
-				limitMaxMana = self.manaTable[5];
+			int limitMaxResource = 300;
+			if (self.resourceTable.Size() == 6) {
+				limitMaxResource = self.resourceTable[5];
 			}
 			if (self.Health > limitMaxHealth) {
 				self.Health = limitMaxHealth;
@@ -808,14 +852,14 @@ class Progression: Inventory {
 			if (self.MaxHealth > limitMaxHealth) {
 				self.MaxHealth = limitMaxHealth;
 			}
-			if (self.MaxMana > limitMaxMana) {
-				self.MaxMana = limitMaxMana;
+			if (self.MaxResource > limitMaxResource) {
+				self.MaxResource = limitMaxResource;
 			}
 
 			// Hacky solution to increase player health when leveling
 			// TODO: Add an options toggle
 			player.MaxHealth = self.MaxHealth;
-			int levelHealth = Clamp(self.Health + HealthInc, self.Health, self.MaxHealth);
+			int levelHealth = Clamp(self.Health + healthInc, self.Health, self.MaxHealth);
 			HealThing(levelHealth, self.MaxHealth);
 
 			Inventory next;
@@ -827,9 +871,9 @@ class Progression: Inventory {
 					Ammo ammoItem = Ammo(invItem);
 					if (ammoItem) {
 						if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
-							ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxMana / 100.0);
+							ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (MaxResource / 100.0);
 						} else {
-							ammoItem.MaxAmount = MaxMana;
+							ammoItem.MaxAmount = MaxResource;
 						}
 						ammoItem.Amount = clamp(ammoItem.Amount, 0.0, ammoItem.MaxAmount);
 						if (cvarAllowBackpackUse) {
@@ -841,19 +885,28 @@ class Progression: Inventory {
 				}
 			}
 
-			for (let i = 0; i < self.stats.Size(); i++) {
-				self.stats[i].ProcessLevelIncrease(self.currlevel == self.maxlevel);
+			foreach (k, v : self.stats) {
+				v.ProcessLevelIncrease(self.currlevel == self.maxlevel);
 			}
+			//for (let i = 0; i < self.stats.Size(); i++) {
+			//	self.stats[i].ProcessLevelIncrease(self.currlevel == self.maxlevel);
+			//}
 
 			console.printf("");
 			console.printf("-----Stats-----");
 			console.printf("Health: %0.2f", MaxHealth);
-			console.printf("Mana: %0.2f", MaxMana);
+			console.printf("Resource: %0.2f", MaxResource);
+			foreach (k, v : self.stats) {
+				String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
+				console.printf("%s: %0.2f", nameCap, v.value);
+			}
+			/*
 			for (let i = 0; i < self.stats.Size(); i++) {
 				String name = self.stats[i].name;
 				String nameCap = String.format("%s%s", name.Left(1).MakeUpper(), name.Mid(1, name.Length() - 1));
 				console.printf("%s: %0.2f", nameCap, self.stats[i].value);
 			}
+			*/
 			console.printf("");
 			console.printf("You are now level %d!", self.currlevel);
 			console.printf("");
