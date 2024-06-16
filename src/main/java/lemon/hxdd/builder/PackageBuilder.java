@@ -10,6 +10,7 @@ import net.mtrop.doom.Wad;
 import net.mtrop.doom.WadBuffer;
 import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Palette;
+import net.mtrop.doom.util.GraphicUtils;
 import net.mtrop.doom.util.MapUtils;
 
 import javax.imageio.ImageIO;
@@ -129,9 +130,11 @@ public class PackageBuilder implements Runnable {
 
             DownloadSteamArtwork();
             DownloadKoraxLocalization();
+            ExportRealm667();
 
             ExportHXDDFiles();
             ApplyUserOptions();
+
 
             WriteInstallLanguageLookup();
 
@@ -664,6 +667,45 @@ public class PackageBuilder implements Runnable {
         ZipAssets za = new ZipAssets(this.app);
         za.SetFile(this.app.settings.fileResources);
         za.ExtractFilesToFolder("assets", path);
+    }
+
+    private void ExportRealm667() {
+        // DOOM Support files (Hexen Armor)
+        String pathTemp = this.app.settings.GetPath("temp");
+        String path = pathTemp + "/realm667/";
+        File dirFile = new File(path);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.SetFile(this.app.settings.fileResources);
+        za.ExtractFilesToFolder("realm667", path);
+
+        String pathMarineStuff = path + "MarineStuff.wad";
+        try {
+            MetaFile f = new MetaFile();
+            f.SetPalette(GraphicUtils.DOOM);
+            f.SetWad(new WadFile(pathMarineStuff));
+            f.Define("AHLMA0", "sprites", pathMarineStuff);
+            f.folder = "sprites/realm667";
+            f.ExtractFile(pathTemp);
+            f.inputName = "BOOTA0";
+            f.outputName = "BOOTA0";
+            f.ExtractFile(pathTemp);
+            f.inputName = "UNIFA0";
+            f.outputName = "UNIFA0";
+            f.ExtractFile(pathTemp);
+
+            f.Define("CREDITS", "textlumps", pathMarineStuff);
+            f.outputName =  "realm667/marinestuff/CREDITS.txt";
+            f.ExtractFile(pathTemp);
+            f.Define("INFO", "textlumps", pathMarineStuff);
+            f.outputName =  "realm667/marinestuff/INFO.txt";
+            f.ExtractFile(pathTemp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean HasPAKFiles(String[] paths) {

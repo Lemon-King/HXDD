@@ -1,0 +1,66 @@
+// Main Menu
+DEFAULTLISTMENU
+{
+	Font "BigFontX", "DarkGray"
+	LineSpacing 20
+
+	Selector "M_SLCTR1", -28, -1
+}
+
+LISTMENU "MainMenu" {
+    StaticPatch 88, 2, "assets/ui/M_HXDD.png"
+    StaticPatch 68, 68, "KGZ1A0"
+    StaticPatch 250, 68, "KGZ1A0"
+    StaticPatch 58, 2, "assets/ui/M_UI_ORB.png"
+    StaticPatch 240, 2, "assets/ui/M_UI_ORB.png"
+    Position 110, 66
+
+    TextItem "$MNU_NEWGAME", "n", "HXDDNewGameConfig"
+    TextItem "$MNU_OPTIONS", "o", "OptionsMenu"
+    TextItem "$MNU_GAMEFILES", "g", "GameFilesMenu"
+    TextItem "$MNU_INFO", "i", "ReadThisMenu"
+    TextItem "$MNU_QUITGAME", "q", "QuitMenu"
+
+    font "SMALLFONT", "DarkGray"
+	StaticText -52, 190, "$HXDD_BUILD_VERSION"
+}
+
+
+
+OptionValue "HXDD_Playstyle_Progression_DOOM_PH"
+{
+    0, "Default"
+    1, "None (Heretic & Hexen)"
+    2, "Levels (Hexen II)"
+}
+
+OptionValue "HXDD_Playstyle_ArmorMode_DOOM_PH"
+{
+    0, "Default"
+    1, "Heretic (Simple)"
+    2, "Hexen & Hexen II (Class Defined)"
+}
+
+OptionMenu "HXDDNewGameConfig"
+{
+    StaticText ""
+    Title "New Game"
+    Caption "Game Options"
+    StaticText ""
+    StaticText ""
+    StaticText "-Armor Mode-", "Tan"
+    StaticText "Default: Class Based", "Grey"
+    StaticText "Heretic: Traditional Armor System from Heretic", "Grey"
+    StaticText "Hexen & Hexen II: Uses the Armor Class system found in Hexen and Hexen II", "Grey"
+    Option "Armor Type", "hxdd_armor_mode", "HXDD_Playstyle_ArmorMode_DOOM_PH"
+    StaticText ""
+    StaticText ""
+    StaticText "-Progression-", "Tan"
+    StaticText "Default: Uses whichever system the Class originated with.", "Grey"
+    StaticText "None: No Leveling", "Grey"
+    StaticText "Leveling: Hexen II leveling system", "Grey"
+    Option "Progression", "hxdd_progression", "HXDD_Playstyle_Progression_DOOM_PH"
+    StaticText ""
+    StaticText ""
+    Submenu "Select Class", "PlayerclassMenu"
+}

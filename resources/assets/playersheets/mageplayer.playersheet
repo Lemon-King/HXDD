@@ -15,6 +15,11 @@
         "dexterity": [8,12]
     },
     "xgame": {
+        "GreenArmor": "PlatinumHelm,MeshArmor",
+        "BlueArmor": "AmuletOfWarding,FalconShield",
+        "SilverShield": "PlatinumHelm,MeshArmor",
+        "EnchantedShield": "AmuletOfWarding,FalconShield",
+
         "Fist": "Mana1",
         "Chainsaw": "MWeaponPiece3",
         "Pistol": "Mana1",
@@ -39,8 +44,6 @@
         "Medikit": "ArtiHealth",
 
         "ArmorBonus": "ArtiPoisonBag",
-        "GreenArmor": "MeshArmor,PlatinumHelm",
-        "BlueArmor": "FalconShield,AmuletOfWarding",
 
         "InvulnerabilitySphere": "ArtiInvulnerability2",
         "Soulsphere": "ArtiSuperHealth",

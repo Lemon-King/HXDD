@@ -15,6 +15,30 @@
         "dexterity": [10,13]
     },
     "xgame": {
+        "GreenArmor": "PlatinumHelm,MeshArmor",
+        "BlueArmor": "AmuletOfWarding,FalconShield",
+        "SilverShield": "PlatinumHelm,MeshArmor",
+        "EnchantedShield": "AmuletOfWarding,FalconShield",
+
+        "Fist": "Mana1",
+        "Chainsaw": "PWeapPurifierPiece2",
+        "Pistol": "Mana1",
+        "Shotgun": "PWeapVorpalSword",
+        "SuperShotgun": "PWeapAxe",
+        "Chaingun": "PWeapVorpalSword",
+        "RocketLauncher": "Mana3",
+        "PlasmaRifle": "PWeapAxe",
+        "BFG9000": "PWeapPurifierPiece1",
+
+        "Clip": "none",
+        "ClipBox": "Mana3",
+        "Shell": "Mana1",
+        "ShellBox": "Mana3",
+        "RocketAmmo": "Mana2",
+        "RocketBox": "Mana3",
+        "Cell": "Mana2",
+        "CellPack": "Mana3",
+
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",
 

@@ -32,6 +32,8 @@ public class MetaFile {
     String decodeType;
     int[] dimensions;
 
+    Palette pal;
+
     Wad wad;
 
     ZipAssets za;
@@ -49,6 +51,10 @@ public class MetaFile {
         this.folder = folder;       // export folder
         this.decodeType = folder;   // decode method
         this.dimensions = null;     // used by fullscreen images
+    }
+
+    public void SetPalette(Palette p) {
+        this.pal = p;
     }
 
     public void ExtractFile(String path) {
@@ -69,8 +75,10 @@ public class MetaFile {
         this.wad = new WadFile(this.source);
         byte[] data = this.wad.getData(this.inputName);
 
-        Palette pal = GetPlaypal();
-        ExportData(data, pal);
+        if (this.pal == null) {
+            this.pal = GetPlaypal();
+        }
+        ExportData(data);
 
         this.wad.close();
     }
@@ -88,6 +96,9 @@ public class MetaFile {
         this.wad = wf;
     }
 
+    private void ExportData(byte[] data) {
+        ExportData(data, this.pal);
+    }
     private void ExportData(byte[] data, Palette pal) {
         if (this.decodeType.equals("lumps")) {
             LumpExport(data);
@@ -144,9 +155,10 @@ public class MetaFile {
     private void TextLumpExport(byte[] data) {
         String path = this.pathTemp;
         //String path = (String) Settings.getInstance().Get("PathTemporary");
-        this.CreateFolder(path);
 
         path = path + "/" + this.outputName;
+
+        this.CreateFolder(new File(path).getParent());
         try {
             String lumpString = new String(data, Charset.defaultCharset());
             PrintWriter out = new PrintWriter(path);

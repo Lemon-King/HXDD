@@ -203,7 +203,7 @@ class ZFPlayerClassSelection ui {
         double classLineX = (1080 * 0.25) + (56 * 2.5) + 50;
         double hereticPosY = 450 + ((142 * 2.5 * 0.5) - (112 * 1.5 * 0.5));
 
-        Array<String> imagesCorvus = {"sprites/PLAYA1.png", "sprites/PLAYB1.png", "sprites/PLAYC1.png", "sprites/PLAYD1.png"};
+        Array<String> imagesCorvus = {"sprites/CORVA1.png", "sprites/CORVB1.png", "sprites/CORVC1.png", "sprites/CORVD1.png"};
         btnClassCorvus = new("ButtonPlayerClass");
         btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", "HXDDHereticPlayer", "graphics/M_HBOX.png", imagesCorvus);
 

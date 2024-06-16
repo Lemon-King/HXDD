@@ -1,0 +1,172 @@
+{
+    "class": "DoomPlayer",
+    "armor_type": "simple",
+    "progression_type": "none",
+    "alignment": "good",
+    "max_level": 20,
+    "experience": [675,1600,3750,7250,15000,28500,52000,86000,110000,150000,150000],
+    "health": [65,75,5,10,3,150],
+    "resource": [80,90,5,10,3,200],
+    "ac": [0, 15, 15, 15, 15],
+    "hx2armor": {
+        "static": 0,
+        "items": {
+            "pickup_class_name": 5
+        }
+    },
+    "stats": {
+        "strength": [15,18],
+        "intelligence": [12,15],
+        "wisdom": [10,13],
+        "dexterity": [12,15],
+        "rage": [15, 18],
+    },
+    "xgame": {
+        "SilverShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["HXDDHeavyBoots", "HXDDUnderArmor"],
+            "false": "GreenArmor"
+        },
+        "EnchantedShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["HXDDCombatHelm", "HXDDBodyArmor"],
+            "false": "BlueArmor"
+        },
+        "GreenArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["HXDDHeavyBoots", "HXDDUnderArmor"],
+            "false": "GreenArmor"
+        },
+        "BlueArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["HXDDCombatHelm", "HXDDBodyArmor"],
+            "false": "BlueArmor"
+        },
+        "MeshArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "GreenArmor",
+            "false": "HXDDBodyArmor"
+        },
+        "PlatinumHelm": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "GreenArmor",
+            "false": "HXDDCombatHelm"
+        },
+        "AmuletOfWarding": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "BlueArmor",
+            "false": "HXDDUnderArmor"
+        },
+        "FalconShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "BlueArmor",
+            "false": "HXDDHeavyBoots"
+        },
+        "ArmorBonus": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": "none",
+            "false": "ArmorBonus"
+        },
+
+        "CrystalVial": "Stimpack",
+        "ArtiHealth": "Medikit",
+
+        "ArtiTimeBomb": "ArmorBonus,HealthBonus",
+
+        "ArtiInvulnerability": "InvulnerabilitySphere",
+        "ArtiSuperHealth": "Soulsphere",
+        "ArtiTomeOfPower": "Megasphere",
+        "ArtiEgg": "BlurSphere",
+        "ArtiInvisibility": "BlurSphere",
+        "ArtiTeleport": "RadSuit",
+        "ArtiTorch": "Infrared",
+        "SuperMap": "Allmap",
+        "ArtiTomeOfPower": "Berserk",
+
+        "BagOfHolding": "Backpack",
+
+        "Staff": "Fist",
+        "Gauntlets": "Chainsaw",
+        "GoldWand": "Pistol",
+        "Crossbow": "Shotgun,SuperShotgun",
+        "Blaster": "Chaingun",
+        "PhoenixRod": "RocketLauncher",
+        "SkullRod": "PlasmaRifle",
+        "Mace": "BFG9000",
+
+        "GoldWandAmmo": "Clip",
+        "BlasterAmmo": "Clip",
+        "GoldWandHefty": "ClipBox",
+        "BlasterHefty": "ClipBox",
+        "CrossbowAmmo": "Shell",
+        "CrossbowHefty": "ShellBox",
+        "PhoenixRodAmmo": "RocketAmmo",
+        "PhoenixRodHefty": "RocketBox",
+        "SkullRodAmmo": "Cell",
+        "SkullRodHefty": "CellPack",
+        "MaceAmmo": "Cell",
+        "MaceHefty": "CellPack",
+
+        "FWeapAxe": "Shotgun,SuperShotgun",
+        "CWeapStaff": "Crossbow",
+        "MWeapFrost": "CrossbowHefty",
+
+        "FWeapHammer": "Chaingun",
+        "CWeapFlame": "SkullRod",
+        "MWeapLightning": "PhoenixRod",
+
+        "FWeaponPiece1": "RocketLauncher",
+        "FWeaponPiece2": "none",
+        "FWeaponPiece3": "none",
+
+        "CWeaponPiece1": "none",
+        "CWeaponPiece2": "PlasmaRifle",
+        "CWeaponPiece3": "none",
+
+        "MWeaponPiece1": "BFG9000",
+        "MWeaponPiece2": "none",
+        "MWeaponPiece3": "none",
+
+        "ArtiHealth": "Soulsphere",
+        "ArtiBoostMana": "Backpack",
+        "ArtiBoostArmor": {
+          "cvar": "hxdd_armor_mode",
+          "equals": 2,
+          "true": "ArtiBoostArmor",
+          "false": "Berserk"
+        },
+        "Mana1": "Clip,ClipBox,Shell,ShellBox",
+        "Mana2": "Cell,RocketAmmo",
+        "Mana3": "CellPack,RocketBox",
+
+        "ArtiDarkServant": "Berserk",
+        "ArtiPoisonBag": "ArmorBonus,HealthBonus",
+        "ArtiInvulnerability2": "InvulnerabilitySphere",
+        "ArtiPork": "ArmorBonus,HealthBonus",
+        "ArtiFly": "BlurSphere",
+        "ArtiTeleport": "ArmorBonus,HealthBonus",
+        "ArtiTeleportOther": "ArmorBonus,HealthBonus",
+        "ArtiSpeedBoots": "ArmorBonus,HealthBonus",
+        "ArtiBlastRadius": "ArmorBonus,HealthBonus"
+    },
+    "game_type_damage_scale": {
+        "doom": 1.0,
+        "heretic": 1.0,
+        "hexen": 1.5
+    },
+    "xp_bonus_stat": "rage",
+    "use_max_health_scaler": false,
+    "skill_modifier": [],
+    "xp_modifier": 1.0,
+    "halve_xp_before_level_4": true,
+    "event_handler": false
+}

@@ -27,6 +27,18 @@
             "true": ["AmuletOfWarding", "FalconShield"],
             "false": "EnchantedShield"
         },
+        "GreenArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["MeshArmor", "PlatinumHelm"],
+            "false": "SilverShield"
+        },
+        "BlueArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["AmuletOfWarding", "FalconShield"],
+            "false": "EnchantedShield"
+        },
 
         "Fist": "Staff",
         "Chainsaw": "Gauntlets",
@@ -52,18 +64,6 @@
         "Medikit": "ArtiHealth",
 
         "ArmorBonus": "ArtiTimeBomb",
-        "GreenArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 2,
-            "true": ["MeshArmor", "PlatinumHelm"],
-            "false": "SilverShield"
-        },
-        "BlueArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 2,
-            "true": ["AmuletOfWarding", "FalconShield"],
-            "false": "EnchantedShield"
-        },
 
         "InvulnerabilitySphere": "ArtiInvulnerability",
         "Soulsphere": "ArtiSuperHealth",

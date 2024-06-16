@@ -1,0 +1,5 @@
+HXDD_ArmorMode_HX_Doom_Helm_Placeholder = "112:127=176:191", "152:159=160:167"
+HXDD_ArmorMode_HX_Doom_Helm_Frame1 = "80:108=112:127"
+HXDD_ArmorMode_HX_Doom_Helm_Frame2 = "80:108=119:127"
+HXDD_ArmorMode_HX_Doom_UnderArmor_Frame2 = "112:127=119:127"
+HXDD_ArmorMode_HX_Doom_Boots_Frame2 = "152:159=153:159", "144:151=146:151", "128:143=131:143"

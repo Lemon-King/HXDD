@@ -329,7 +329,7 @@ class XGameTranslation {
                 String val = FileJSON.GetString(jo, "true");
                 if (val) {
                     val.Substitute(" ", "");
-                    val.Split(xta.defaults, ",");
+                    val.Split(xta.alternates, ",");
                 }
             }
             HXDD_JsonArray arrDefaults = FileJSON.GetArray(jo, "false");
@@ -346,6 +346,9 @@ class XGameTranslation {
                     val.Substitute(" ", "");
                     val.Split(xta.defaults, ",");
                 }
+            }
+            if (!xta.defaults.Size() == 0) {
+                xta.defaults.push(key);
             }
         }
 
@@ -381,14 +384,15 @@ class XGameTranslation {
                 }
             }
 
-            replacement = list[0];
-            if (list.Size() > 1) {
-                // choose randomly
-                int size = list.Size() - 1;
-                int choice = random[xclass](0, size);
-                console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
-                replacement = list[choice];
+            if (list.Size() == 0) {
+                return replacee;
             }
+
+            // select random
+            int size = list.Size() - 1;
+            int choice = random[xclass](0, size);
+            //console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
+            replacement = list[choice];
             //console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
 
             return replacement;
@@ -420,7 +424,7 @@ class XGameTranslation {
                         //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
                         HXDD_JsonArray valActors = FileJSON.GetArray(objListItem, "actors");
                         if (valKey && valActors) {
-                            let newXSwap = new ("XTranslationActors"); 
+                            let newXSwap = new ("XTranslationActors");
                             newXSwap.key = valKey;
                             newXSwap.defaults.Resize(valActors.Size());
                             for (int j = 0; j < valActors.Size(); j++) {

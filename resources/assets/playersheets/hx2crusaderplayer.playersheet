@@ -15,6 +15,11 @@
         "dexterity": [6,10]
     },
     "xgame": {
+        "GreenArmor": "FalconShield,AmuletOfWarding",
+        "BlueArmor": "PlatinumHelm,MeshArmor",
+        "SilverShield": "FalconShield,AmuletOfWarding",
+        "EnchantedShield": "PlatinumHelm,MeshArmor",
+
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",
 
