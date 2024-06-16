@@ -374,12 +374,18 @@ public class MainViewController {
     }
 
     protected void BindOpenFolderButton() {
+        String storedPath = this.mainApp.GetSettings().Get("PATH_GZDOOM");
+        if (storedPath.equals("")) {
+            storedPath = "./";
+        }
+
+        String finalStoredPath = storedPath;
         btnOpenFolder.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 Desktop desktop = Desktop.getDesktop();
                 try {
-                    desktop.open(new File("./"));
+                    desktop.open(new File(finalStoredPath));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -560,11 +566,16 @@ public class MainViewController {
         FileChooser.ExtensionFilter ext = new FileChooser.ExtensionFilter(fileTypeDescription, targetExtension);
         FileChooser chooser = new FileChooser();
 
-        File targetPath;
-        if (path.exists() && path.isFile()) {
-            targetPath = new File(path.getParent());
-        } else {
-            targetPath = path;
+        File targetPath = path;
+        if (path.equals(new File("./")) || path.getPath().equals(new File(""))) {
+            String storedPath = this.mainApp.GetSettings().Get("PATH_GZDOOM");
+            if (storedPath.equals("")) {
+                storedPath = "./";
+            }
+            targetPath = new File(storedPath);
+        }
+        if (targetPath.exists() && targetPath.isFile()) {
+            targetPath = new File(targetPath.getParent());
         }
 
         chooser.setTitle(title);
