@@ -550,7 +550,8 @@ class ZFGameOptions ui {
 
         HXDD_ZF_DropdownItems skList = new("HXDD_ZF_DropdownItems");
         for (int i = 0; i < gameinfo.skills.Size(); i++) {
-            skList.items.push(gameinfo.skills[i].Get(parent.selectedClass));
+            String value = Stringtable.Localize(gameinfo.skills[i].Get(parent.selectedClass));
+            skList.items.push(value);
         }
 
         self.ddl_Difficulty.GetDropDownElement().setItems(skList);
