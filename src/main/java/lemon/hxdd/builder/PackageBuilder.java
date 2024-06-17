@@ -632,11 +632,11 @@ public class PackageBuilder implements Runnable {
         }
         String advisoryTime = hideAdvisory ? "0" : "6";
 
-        String classes = "\"HXDDHereticPlayer\",\"HXDDHereticPlayer\",\"HXDDFighterPlayer\",\"HXDDClericPlayer\",\"HXDDMagePlayer\"";
+        String classes = "\"HXDDHereticPlayer\",\"HXDDFighterPlayer\",\"HXDDClericPlayer\",\"HXDDMagePlayer\"";
         if (sourceVersions.containsKey("BASE")) {
-            classes = String.format(classes + ",%s", "\"HX2PaladinPlayer\",\"HX2CrusaderPlayer\",\"HX2NecromancerPlayer\",\"HX2AssassinPlayer\"");
+            classes += String.format(",%s", "\"HX2PaladinPlayer\",\"HX2CrusaderPlayer\",\"HX2NecromancerPlayer\",\"HX2AssassinPlayer\"");
             if (sourceVersions.containsKey("PORTALS")) {
-                classes = String.format(classes + ",%s", "\"HX2SuccubusPlayer\"");
+                classes += String.format(",%s", "\"HX2SuccubusPlayer\"");
             }
         }
 
