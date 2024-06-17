@@ -2,6 +2,6 @@ include gameinfo/game-doom/doomednums.mapinfo
 include gameinfo/game-doom/spawnnums.mapinfo
 
 GameInfo {
-    AddPlayerClasses = "HXDDHereticPlayer", "HXDDFighterPlayer", "HXDDClericPlayer", "HXDDMagePlayer", "HX2PaladinPlayer", "HX2CrusaderPlayer", "HX2NecromancerPlayer","HX2AssassinPlayer", "HX2SuccubusPlayer"
+    AddPlayerClasses = %s
 	AddEventHandlers = "HXDDWorldEventHandler", "PlayerSheetEventHandler"
 }

@@ -42,7 +42,7 @@ class HXDDBodyArmor : HexenArmor {
 		+NOGRAVITY
 		Health 0;	// Armor class
 		Inventory.Amount 0;
-		Inventory.PickupMessage "[PH] Body Armor";
+		Inventory.PickupMessage "$TXT_HXDD_DOOM_HX_ARMOR_BODYARMOR";
 	}
 	States {
         Spawn:
@@ -57,7 +57,7 @@ class HXDDHeavyBoots : HexenArmor {
 		+NOGRAVITY
 		Health 1;	// Armor class
 		Inventory.Amount 0;
-		Inventory.PickupMessage "[PH] Heavy Boots";
+		Inventory.PickupMessage "$TXT_HXDD_DOOM_HX_ARMOR_HEAVYBOOTS";
 	}
 	States {
         Spawn:
@@ -72,7 +72,7 @@ class HXDDCombatHelm : HexenArmor {
 		+NOGRAVITY
 		Health 2;	// Armor class
 		Inventory.Amount 0;
-		Inventory.PickupMessage "[PH] Combat Helm";
+		Inventory.PickupMessage "$TXT_HXDD_DOOM_HX_ARMOR_COMBATHELM";
 	}
 	States {
         Spawn:
@@ -87,7 +87,7 @@ class HXDDUnderArmor : HexenArmor {
 		+NOGRAVITY
 		Health 3;	// Armor class
 		Inventory.Amount 0;
-		Inventory.PickupMessage "[PH] Underarmor";
+		Inventory.PickupMessage "$TXT_HXDD_DOOM_HX_ARMOR_UNDERARMOR";
 	}
 	States {
         Spawn:

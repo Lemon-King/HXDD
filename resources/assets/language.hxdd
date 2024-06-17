@@ -121,6 +121,11 @@ MNU_ARCHDEVIL_ALT = "ARCH DEVIL";       // Alt for MNU_BROODMOTHER
  *  ITEMS
  */
 
+TXT_HXDD_DOOM_HX_ARMOR_BODYARMOR = "Picked up Combat Armor";
+TXT_HXDD_DOOM_HX_ARMOR_HEAVYBOOTS = "Picked up Combat Boots";
+TXT_HXDD_DOOM_HX_ARMOR_COMBATHELM = "Picked up Combat Helm";
+TXT_HXDD_DOOM_HX_ARMOR_UNDERARMOR = "Picked up Under Armor";
+
 /*
  *  MESSAGES
  */

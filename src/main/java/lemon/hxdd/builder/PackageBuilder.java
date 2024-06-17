@@ -130,10 +130,10 @@ public class PackageBuilder implements Runnable {
 
             DownloadSteamArtwork();
             DownloadKoraxLocalization();
-            ExportRealm667();
 
             ExportHXDDFiles();
-            ApplyUserOptions();
+            ExportRealm667();
+            AddMapInfoConfiguaration();
 
 
             WriteInstallLanguageLookup();
@@ -534,7 +534,7 @@ public class PackageBuilder implements Runnable {
                 Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 hideAdvisory = true;
             } catch (URISyntaxException | IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -612,36 +612,51 @@ public class PackageBuilder implements Runnable {
                 soundLMP.delete();
                 this.app.controller.SetCurrentProgress((float)count.incrementAndGet() / locale.size());
             } catch (URISyntaxException | IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         });
     }
 
-    private void ApplyUserOptions() {
+    private void AddMapInfoConfiguaration() {
         String path = this.app.settings.GetPath("temp");
 
+        // Title Artwork
+        String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
+        HashMap<String, String> TitleMusic = new HashMap<String, String>();
+        TitleMusic.put("heretic", "\"MUS_TITL\"");
+        TitleMusic.put("hexen", "\"HEXEN\"");
+        TitleMusic.put("hexen2", "\"casa1\"");
+        String music = TitleMusic.get(OPTION_TITLE_MUSIC);
+        if (music == null) {
+            music = TitleMusic.get("heretic");
+        }
+        String advisoryTime = hideAdvisory ? "0" : "6";
+
+        String classes = "\"HXDDHereticPlayer\",\"HXDDHereticPlayer\",\"HXDDFighterPlayer\",\"HXDDClericPlayer\",\"HXDDMagePlayer\"";
+        if (sourceVersions.containsKey("BASE")) {
+            classes = String.format(classes + ",%s", "\"HX2PaladinPlayer\",\"HX2CrusaderPlayer\",\"HX2NecromancerPlayer\",\"HX2AssassinPlayer\"");
+            if (sourceVersions.containsKey("PORTALS")) {
+                classes = String.format(classes + ",%s", "\"HX2SuccubusPlayer\"");
+            }
+        }
+
+        formatFileContent(path + "/filter/game-raven/mapinfo.hxdd", music, advisoryTime, classes);
+        formatFileContent(path + "/filter/game-doom/mapinfo.hxdd", classes);
+    }
+
+    public void formatFileContent(String path, Object... formatArgs) {
+        File f = new File(path);
+
+        String content;
         try {
-            File fileInfo = new File(path + "/filter/game-raven/mapinfo.hxdd");
-            String info = new String(Files.readAllBytes(fileInfo.toPath()));
+            content = new String(Files.readAllBytes(f.toPath()));
+            content = String.format(content, formatArgs);
 
-            // Title Artwork
-            String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
-            HashMap<String, String> TitleMusic = new HashMap<String, String>();
-            //TitleMusic.put("heretic", "MUS_TITL");
-            TitleMusic.put("hexen", "HEXEN");
-            TitleMusic.put("hexen2", "casa1");
-            if (TitleMusic.containsKey(OPTION_TITLE_MUSIC)) {
-                info = info.replace("titlemusic = \"MUS_TITL\"", String.format("titlemusic = \"%s\"", TitleMusic.get(OPTION_TITLE_MUSIC)));
-            }
-            if (hideAdvisory) {
-                info = info.replace("advisorytime = 6", "advisorytime = 0");
-            }
-
-            PrintWriter pw = new PrintWriter(fileInfo.getPath());
-            pw.print(info);
+            PrintWriter pw = new PrintWriter(f);
+            pw.print(content);
             pw.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -652,7 +667,7 @@ public class PackageBuilder implements Runnable {
             out.println(String.format("server noarchive string hxdd_installed_hexen2 = \"%s\";", value));
             out.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -738,10 +753,8 @@ public class PackageBuilder implements Runnable {
             } else {
                 Files.copy(Paths.get(uri), out, REPLACE_EXISTING);
             }
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
         }
     }
 

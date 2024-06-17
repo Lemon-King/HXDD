@@ -78,7 +78,7 @@ class HXDDStatusBar : BaseStatusBar {
 
 	bool IsPlayerArmorAC() {
 		if (prog) {
-			return prog.ArmorType == PSAT_ARMOR_AC;
+			return prog.ArmorType == PSAT_ARMOR_HXAC;
 		}
 		return false;
 	}
@@ -107,7 +107,7 @@ class HXDDStatusBar : BaseStatusBar {
 
 		useHereticKeys = LemonUtil.IsMapEpisodic();
 	}
-	
+
 	override void NewGame () {
 		Super.NewGame();
 		mHealthInterpolator.Reset(0);
@@ -135,12 +135,12 @@ class HXDDStatusBar : BaseStatusBar {
 		mHealthInterpolator2.Update(CPlayer.health);
 
 		UpdateProgression();
-		
+
 		if (prog) {
 			if (prog.ProgressionType == PSP_LEVELS) {
 				mXPInterpolator.Update(prog.levelpct);
 			}
-			if (prog.ArmorType == PSAT_ARMOR_AC) {
+			if (prog.ArmorType == PSAT_ARMOR_HXAC) {
 				mACInterpolator.Update(GetArmorSavePercent());
 			} else {
 				mArmorInterpolator.Update(GetArmorAmount());
@@ -258,7 +258,7 @@ class HXDDStatusBar : BaseStatusBar {
 
 
 		String imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT.png";
-		if (prog && prog.ArmorType == PSAT_ARMOR_AC) {
+		if (prog && prog.ArmorType == PSAT_ARMOR_HXAC) {
 			imgFrameLeft = "assets/ui/FS_HERETIC_SBAR_LEFT_AC.png";
 		}
 		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
@@ -291,7 +291,7 @@ class HXDDStatusBar : BaseStatusBar {
 
 		double armorValue = mArmorInterpolator.GetValue();
 		if (prog) {
-			armorValue = prog.ArmorType == PSAT_ARMOR_AC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
+			armorValue = prog.ArmorType == PSAT_ARMOR_HXAC ? mACInterpolator.GetValue() / 5.0 : mArmorInterpolator.GetValue();
 		}
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();

@@ -10,9 +10,9 @@ include mapinfo/hxdd.mapinfo
 GameInfo {
 	titlepage = "TITLE"
 	creditpage = "CREDIT"
-	titlemusic = "MUS_TITL"
+	titlemusic = %s
 	titletime = 8
-	advisorytime = 6
+	advisorytime = %s
 	pagetime = 5
 	chatsound = "Chat"
 	finalemusic = "MUS_CPTD"
@@ -62,7 +62,7 @@ GameInfo {
 	menufontcolor_highlight = "YELLOW"
 	menufontcolor_selection = "BRICK"
 	menubackbutton = "M_BACK_X"
-	PlayerClasses = "HXDDHereticPlayer", "HXDDFighterPlayer", "HXDDClericPlayer", "HXDDMagePlayer", "HX2PaladinPlayer", "HX2CrusaderPlayer", "HX2NecromancerPlayer","HX2AssassinPlayer", "HX2SuccubusPlayer"
+	PlayerClasses = %s
 	nightmarefast = true
 	pausesign = "PAUSED"
 	gibfactor = 0.5

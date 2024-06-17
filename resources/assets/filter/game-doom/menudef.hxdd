@@ -32,6 +32,7 @@ OptionValue "HXDD_Playstyle_Progression_DOOM_PH"
     0, "Default"
     1, "None (Heretic & Hexen)"
     2, "Levels (Hexen II)"
+    3, "Levels (Random)"
 }
 
 OptionValue "HXDD_Playstyle_ArmorMode_DOOM_PH"
@@ -39,13 +40,13 @@ OptionValue "HXDD_Playstyle_ArmorMode_DOOM_PH"
     0, "Default"
     1, "Heretic (Simple)"
     2, "Hexen & Hexen II (Class Defined)"
+    3, "Hexen (Random)"
 }
 
 OptionMenu "HXDDNewGameConfig"
 {
     StaticText ""
     Title "New Game"
-    Caption "Game Options"
     StaticText ""
     StaticText ""
     StaticText "-Armor Mode-", "Tan"

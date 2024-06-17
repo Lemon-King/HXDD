@@ -8,9 +8,11 @@
 enum EPlaystyleArmorType {
 	PSAT_DEFAULT = 0,
 	PSAT_ARMOR_SIMPLE = 1,
-	PSAT_ARMOR_AC = 2,
-	PSAT_ARMOR_RANDOM = 3,
-	PSAT_ARMOR_USER = 4
+	PSAT_ARMOR_HXAC = 2,
+	//PSAT_ARMOR_HX2AC = 3,
+	PSAT_ARMOR_HXAC_RANDOM = 3,
+	PSAT_ARMOR_HX2AC_RANDOM = 4,
+	PSAT_ARMOR_USER = 5
 };
 
 enum EPlaystyleProgressionType {
@@ -48,7 +50,7 @@ class PlayerSheetEventHandler: EventHandler {
                     if (prog != NULL) {
                         exp = prog.AwardExperience(e.thing);
                     }
-                    
+
                     if (prog.handler) {
                         prog.handler.OnKill(pt, e.thing, exp);
                     }
@@ -91,15 +93,16 @@ class PlayerSheetStat {
 	void ProcessLevelIncrease(bool levelCap) {
 		// stat uses a leveling table
 		if (self.table.Size() >= 5) {
-			int max = self.table[1];
-			if (self.table[5]) {
-				max = self.table[5];
-			}
+			int nextValue = self.value;
 			if (levelCap) {
-				self.value += clamp(self.table[0], self.table[4], max);
+				nextValue = self.value + self.table[4];
 			} else {
-				self.value += clamp(self.table[0], self.stat_compute(self.table[2], self.table[3]), max);
+				nextValue = self.value + self.stat_compute(self.table[2], self.table[3]);
 			}
+			if (self.table.Size() >= 6) {
+				nextValue = min(nextValue, self.table[5]);
+			}
+			self.value = nextValue;
 		}
 	}
 }
@@ -145,7 +148,7 @@ class PlayerSheetJSON {
 	int GetEnumFromArmorType(String type) {
 		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
 		if (keys.Find(type) != keys.Size()) {
-			return PSAT_ARMOR_AC;
+			return PSAT_ARMOR_HXAC;
 		} else {
 			return PSAT_ARMOR_SIMPLE;
 		}
@@ -492,7 +495,7 @@ class Progression: Inventory {
 		int cvarArmorType = PSAT_ARMOR_SIMPLE;
 		let itemHexenArmor = HexenArmor(owner.player.mo.FindInventory("HexenArmor"));
 		if (itemHexenArmor) {
-			cvarArmorType = PSAT_ARMOR_AC;
+			cvarArmorType = PSAT_ARMOR_HXAC;
 		}
 
 		let PlayerSheet = new("PlayerSheetJSON");
@@ -544,26 +547,26 @@ class Progression: Inventory {
 			}
 		}
 
-		self.soundLevelUp = PlayerSheet.soundLevelUp;
+		self.soundLevelUp			= PlayerSheet.soundLevelUp;
 
-		if (cvarProgression == PSP_LEVELS) {
-			self.HalveXPBeforeLevel4 = PlayerSheet.HalveXPBeforeLevel4;
+		self.HalveXPBeforeLevel4	= PlayerSheet.HalveXPBeforeLevel4;
 
-			self.maxlevel 			= PlayerSheet.maxLevel;
-			self.experienceModifier	= PlayerSheet.experienceModifier;
+		self.maxlevel				= PlayerSheet.maxLevel;
+		self.experienceModifier		= PlayerSheet.experienceModifier;
 
-			self.skillmodifier.Copy(PlayerSheet.skillmodifier);
+		self.xp_bonus_stat			= PlayerSheet.xp_bonus_stat;
 
-			self.experienceTable.Copy(PlayerSheet.experienceTable);
+		self.skillmodifier.Copy(PlayerSheet.skillmodifier);
 
-			self.hitpointTable.Copy(PlayerSheet.hitpointTable);
-			self.resourceTable.Copy(PlayerSheet.resourceTable);
+		self.experienceTable.Copy(PlayerSheet.experienceTable);
 
-			self.stats.Move(PlayerSheet.stats);
-			//self.stats_lookup.Copy(PlayerSheet.stats_lookup);
-			self.xp_bonus_stat		= PlayerSheet.xp_bonus_stat;
+		self.hitpointTable.Copy(PlayerSheet.hitpointTable);
+		self.resourceTable.Copy(PlayerSheet.resourceTable);
 
-		} else if (cvarProgression == PSP_LEVELS_USER) {
+		self.stats.Move(PlayerSheet.stats);
+
+		if (cvarProgression == PSP_LEVELS_USER) {
+
 			// User Defined Stats
 			int lastExpDefault = 800;
 			self.experienceTable.Resize(11);
@@ -646,9 +649,10 @@ class Progression: Inventory {
 				}
 				v.table[4] = v.table[1] * 4.0;
 				v.Roll();
+
 			}
 
-			self.maxlevel = 20;
+			self.maxlevel = 10 + (random[RNGLEVEL](0,4) * 5);
 		}
 
 		// After assignment, set final type
@@ -671,18 +675,18 @@ class Progression: Inventory {
 		if (optionArmorMode == PSAT_DEFAULT) {
 			optionArmorMode = self.ArmorType;
 		}
+
 		if (optionArmorMode == PSAT_ARMOR_SIMPLE) {
 			ArmorModeSelection_Simple(player);
-		} else if (optionArmorMode == PSAT_ARMOR_AC) {
-			ArmorModeSelection_AC(player);
-		} else if (optionArmorMode == PSAT_ARMOR_RANDOM) {
-			ArmorModeSelection_Random(player);
+		} else if (optionArmorMode == PSAT_ARMOR_HXAC) {
+			ArmorModeSelection_HXAC(player);
+		//} else if (optionArmorMode == PSAT_ARMOR_HX2AC) {
+		//	ArmorModeSelection_HX2AC(player);
+		} else if (optionArmorMode == PSAT_ARMOR_HXAC_RANDOM) {
+			ArmorModeSelection_HXAC_Random(player);
 		} else if (optionArmorMode == PSAT_ARMOR_USER) {
 			ArmorModeSelection_User(player);
 		}
-
-		// After assignment, set final type
-		self.ArmorType = optionArmorMode == PSAT_ARMOR_SIMPLE ? PSAT_ARMOR_SIMPLE : PSAT_ARMOR_AC;
 		ArmorSelected = true;
 	}
 
@@ -691,7 +695,6 @@ class Progression: Inventory {
 		let hasHexenArmor = true;
 		let itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
 		if (itemHexenArmor == null) {
-			owner.player.mo.GiveInventory("HXDDArmor", 1);
 			owner.player.mo.GiveInventory("HexenArmor", 1);
 			itemHexenArmor = HexenArmor(player.FindInventory("HexenArmor"));
 			hasHexenArmor = false;
@@ -719,9 +722,10 @@ class Progression: Inventory {
 			for (int i = 0; i < 4; i++) {
 				itemHexenArmor.SlotsIncrement[i] = 0;
 			}
+			self.ArmorType = PSAT_ARMOR_SIMPLE;
 		}
 	}
-	void ArmorModeSelection_AC(PlayerPawn player) {
+	void ArmorModeSelection_HXAC(PlayerPawn player) {
 		// ensure the class has hexen armor values, if not fill with defaults
 		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
@@ -731,25 +735,21 @@ class Progression: Inventory {
 			}
 			if (totalArmor == 0) {
 				// no armor, use random instead
-				ArmorModeSelection_Random(player);
+				ArmorModeSelection_HXAC_Random(player);
 			}
+			self.ArmorType = PSAT_ARMOR_HXAC;
 		}
 	}
-	void ArmorModeSelection_Random(PlayerPawn player) {
+	void ArmorModeSelection_HXAC_Random(PlayerPawn player) {
 		// ensure the class has hexen armor values, if not fill with defaults
 		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
-			int totalArmor = itemHexenArmor.Slots[4];
+			itemHexenArmor.Slots[4] = random(0,3) * 5;
 			for (int i = 0; i < 4; i++) {
-				totalArmor += itemHexenArmor.SlotsIncrement[i];
+				int amount = random(1,4) * 5;
+				itemHexenArmor.SlotsIncrement[i] = amount;
 			}
-			if (totalArmor == 0) {
-				// no armor, fill with basic armor values
-				itemHexenArmor.Slots[4] = 10;
-				for (int i = 0; i < 4; i++) {
-					itemHexenArmor.SlotsIncrement[i] = i * 5;
-				}
-			}
+			self.ArmorType = PSAT_ARMOR_HXAC;
 		}
 	}
 	void ArmorModeSelection_User(PlayerPawn player) {
@@ -765,6 +765,7 @@ class Progression: Inventory {
 				itemHexenArmor.SlotsIncrement[i] = LemonUtil.CVAR_GetInt(cvarHexenArmorSlot, 20);
 			}
 		}
+		self.ArmorType = PSAT_ARMOR_HXAC;
 	}
 
 	int GetMaxResource(String className) {
@@ -819,21 +820,7 @@ class Progression: Inventory {
 					isUnowned = true;
 				}
 				ammoItem.AttachToOwner(Owner.player.mo);
-				if (ammoItem) {
-					int statMaxResource = GetMaxResource(ammoItem.GetClassName());
-
-					double nextAmount = statMaxResource;
-					if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
-						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (statMaxResource / 100.0);
-					}
-					if (self.HasBackpack()) {
-						ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-						ammoItem.MaxAmount = ammoItem.BackpackMaxAmount;
-					} else {
-						ammoItem.MaxAmount = nextAmount;
-						ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-					}
-				}
+				AmmoItem_RefreshAmount(ammoItem);
 				if (isUnowned) {
 					// Clear any unowned ammo
 					ammoItem.Amount = 0;
@@ -848,23 +835,7 @@ class Progression: Inventory {
 			let invItem = player.FindInventory(item.GetClass());
 			if (invItem != NULL && invItem is "Ammo") {
 				Ammo ammoItem = Ammo(invItem);
-				if (ammoItem) {
-					int statMaxResource = GetMaxResource(ammoItem.GetClassName());
-
-					double nextAmount = statMaxResource;
-					if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
-						ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (statMaxResource / 100.0);
-					}
-					if (self.HasBackpack()) {
-						ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-						ammoItem.MaxAmount = ammoItem.BackpackMaxAmount;
-						ammoItem.Amount = clamp(ammoItem.Amount, 0.0, ammoItem.BackpackMaxAmount);
-					} else {
-						ammoItem.MaxAmount = nextAmount;
-						ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-						ammoItem.Amount = clamp(ammoItem.Amount, 0.0, nextAmount);
-					}
-				}
+				AmmoItem_RefreshAmount(ammoItem);
 			}
 		}
 
@@ -961,28 +932,9 @@ class Progression: Inventory {
 				let invItem = player.FindInventory(item.GetClass());
 				if (invItem != NULL && invItem is "Ammo") {
 					Ammo ammoItem = Ammo(invItem);
-					if (ammoItem) {
-						int statMaxResource = GetMaxResource(ammoItem.GetClassName());
-
-						double nextAmount = statMaxResource;
-						if (!(ammoItem is "mana1" || ammoItem is "mana2")) {
-							ammoItem.MaxAmount = (double)(ammoItem.Default.MaxAmount) * (statMaxResource / 100.0);
-						}
-						if (self.HasBackpack()) {
-							ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-							ammoItem.MaxAmount = ammoItem.BackpackMaxAmount;
-							ammoItem.Amount = clamp(ammoItem.Amount, 0.0, ammoItem.BackpackMaxAmount);
-						} else {
-							ammoItem.MaxAmount = nextAmount;
-							ammoItem.BackpackMaxAmount = nextAmount * (ammoItem.Default.BackpackMaxAmount / ammoItem.Default.MaxAmount);
-							ammoItem.Amount = clamp(ammoItem.Amount, 0.0, nextAmount);
-						}
-					}
+					AmmoItem_RefreshAmount(ammoItem);
 				}
 			}
-			//for (let i = 0; i < self.stats.Size(); i++) {
-			//	self.stats[i].ProcessLevelIncrease(self.currlevel == self.maxlevel);
-			//}
 
 			console.printf("");
 			console.printf("-----Stats-----");
@@ -998,6 +950,17 @@ class Progression: Inventory {
 		}
 	}
 
+	void AmmoItem_RefreshAmount(Ammo item) {
+		if (!item) {
+			return;
+		}
+		int statMaxResource = GetMaxResource(item.GetClassName());
+		double scaler = ((double)(statMaxResource) / 100.0);
+		item.MaxAmount = (self.HasBackpack() ? (double)(item.Default.BackpackMaxAmount) : item.Default.MaxAmount) * scaler;
+		item.BackpackMaxAmount = (double)(item.Default.BackpackMaxAmount) * scaler;
+		item.Amount = clamp(item.Amount, 0.0, self.HasBackpack() ? item.BackpackMaxAmount: item.MaxAmount);
+	}
+
 	bool HasBackpack() {
 		PlayerPawn player = PlayerPawn(owner.player.mo);
 		Inventory next;
@@ -1008,7 +971,6 @@ class Progression: Inventory {
 			if (invItem != NULL && invItem is "BackpackItem") {
 				BackpackItem backpackItem = BackpackItem(invItem);
 				if (backpackItem && backpackItem.Amount > 0) {
-					console.printf("backpackItem: %s %d", backpackItem.GetClassName(), backpackItem.Amount);
 					return true;
 				}
 			}
@@ -1090,8 +1052,8 @@ class Progression: Inventory {
 
 	double AwardExperience(Actor target) {
 		double exp = 0;
-		if (self.experienceTable.Size() == 0 || !target) {
-			// Experience Table is not setup or no target
+		if (self.ProgressionType != PSP_LEVELS || self.experienceTable.Size() == 0 || !target) {
+			// Progression is not set to leveling, or Experience Table is not setup, or no target
 			return exp;
 		}
 		if (target.health <= 0) {
