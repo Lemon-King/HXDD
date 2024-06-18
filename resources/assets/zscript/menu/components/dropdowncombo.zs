@@ -3,14 +3,19 @@ class DropDownCombo ui {
     HXDD_ZF_Frame frame;
     HXDD_ZF_Label label;
     HXDD_ZF_DropdownList ddl;
-    void Create(HXDD_ZF_Frame parent, vector2 position, vector2 dims, String text, HXDD_ZF_DropdownItems items, int defaultSelection, String command, HXDD_ZF_Handler handler) {
+    void Create(HXDD_ZF_Frame parent, vector2 position, vector2 dims, String label, HXDD_ZF_DropdownItems items, int defaultSelection, String command, HXDD_ZF_Handler handler) {
         int indent = 25;
         double labelWidth = dims.x * 0.45;
         double ddlWidth = dims.x * 0.55;
 
         if (items.items.Size() == 0) {
-            console.printf("DropdownList: %s is empty!", text);
+            console.printf("DropdownList: %s is empty!", label);
             items.items.push("EMPTY");
+        }
+        for (int i = 0; i < items.items.Size(); i++) {
+            if (items.items[i].Mid(0,1) == "$") {
+                items.items[i] = Stringtable.Localize(items.items[i]);
+            }
         }
 
         let btNormal = HXDD_ZF_BoxTextures.createTexturePixels(
@@ -46,7 +51,7 @@ class DropDownCombo ui {
         self.label = HXDD_ZF_Label.create(
             (indent,   0),
             (labelWidth, dims.y),
-            text: text,
+            text: label.Mid(0,1) == "$" ? Stringtable.Localize(label) : label,
             alignment: 2 << 4,
             textScale: 3.5
             //cmdHandler: handler,

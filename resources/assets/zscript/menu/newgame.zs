@@ -474,14 +474,14 @@ class ZFGameOptions ui {
             }
         }
         DropDownCombo ddl_Episodes = new ("DropDownCombo");
-        ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_EPISODE"), listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
+        ddl_Episodes.Create(optionArea, (0, 25), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_EPISODE", listEpisodes, parent.selectedEpisode, "episode", cmdHandler);
 
         HXDD_ZF_DropdownItems skList = new("HXDD_ZF_DropdownItems");
         for (int i = 0; i < gameinfo.skills.Size(); i++) {
             skList.items.push(gameinfo.skills[i].Get(parent.selectedClass));
         }
         self.ddl_Difficulty = new ("DropDownCombo");
-        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_SKILLSELECTION"), skList, parent.selectedSkill, "skill", cmdHandler);
+        self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_SKILLSELECTION", skList, parent.selectedSkill, "skill", cmdHandler);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("$OPT_CLASS_DEFAULT");
@@ -490,7 +490,7 @@ class ZFGameOptions ui {
         listArmorMode.items.push("$OPT_RANDOM");
         //listArmorMode.items.push("Custom");
         DropDownCombo ddl_ArmorMode = new ("DropDownCombo");
-        ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_ARMORMODE"), listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
+        ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_ARMORMODE", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
         listProgression.items.push("$OPT_CLASS_DEFAULT");
@@ -499,16 +499,16 @@ class ZFGameOptions ui {
         listProgression.items.push("$OPT_RANDOM");
         //listProgression.items.push("Custom");
         DropDownCombo ddl_Progression = new ("DropDownCombo");
-        ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_PROGRESSIONMODE"), listProgression, 0, "hxdd_progression", cmdHandler);
+        ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_PROGRESSIONMODE", listProgression, 0, "hxdd_progression", cmdHandler);
 
         HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
         listMapSet.items.push("$OPT_AUTO_DETECT");
         listMapSet.items.push("$OPT_HERETIC");
         listMapSet.items.push("$OPT_HEXEN");
         DropDownCombo ddl_GameMode = new ("DropDownCombo");
-        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_HEADER_GAMEMODE"), listMapSet, 0, "hxdd_gamemode", cmdHandler);
+        ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_GAMEMODE", listMapSet, 0, "hxdd_gamemode", cmdHandler);
 
-        
+
         let labelTex = HXDD_ZF_Label.create(
             (0, 25 + 450),
             (optionArea.GetWidth(), 50),
@@ -523,16 +523,16 @@ class ZFGameOptions ui {
         listMapSetTex.items.push("Heretic");
         listMapSetTex.items.push("Hexen");
         DropDownCombo ddl_LavaStyle = new ("DropDownCombo");
-        ddl_LavaStyle.Create(optionArea, (0, 25 + 525), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_LAVA_STYLE"), listMapSetTex, 0, "hxdd_lavastyle", cmdHandler);
+        ddl_LavaStyle.Create(optionArea, (0, 25 + 525), (optionArea.GetWidth() - 32, 50), "$MNU_TEXTURE_LAVA_STYLE", listMapSetTex, 0, "hxdd_lavastyle", cmdHandler);
 
         DropDownCombo ddl_WaterStyle = new ("DropDownCombo");
-        ddl_WaterStyle.Create(optionArea, (0, 25 + 600), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_WATER_STYLE"), listMapSetTex, 0, "hxdd_waterstyle", cmdHandler);
+        ddl_WaterStyle.Create(optionArea, (0, 25 + 600), (optionArea.GetWidth() - 32, 50), "$MNU_TEXTURE_WATER_STYLE", listMapSetTex, 0, "hxdd_waterstyle", cmdHandler);
 
         DropDownCombo ddl_SludgeStyle = new ("DropDownCombo");
-        ddl_SludgeStyle.Create(optionArea, (0, 25 + 675), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_SLUDGE_STYLE"), listMapSetTex, 0, "hxdd_sludgestyle", cmdHandler);
+        ddl_SludgeStyle.Create(optionArea, (0, 25 + 675), (optionArea.GetWidth() - 32, 50), "$MNU_TEXTURE_SLUDGE_STYLE", listMapSetTex, 0, "hxdd_sludgestyle", cmdHandler);
 
         DropDownCombo ddl_IceStyle = new ("DropDownCombo");
-        ddl_IceStyle.Create(optionArea, (0, 25 + 750), (optionArea.GetWidth() - 32, 50), Stringtable.Localize("$MNU_TEXTURE_ICE_STYLE"), listMapSetTex, 0, "hxdd_icestyle", cmdHandler);
+        ddl_IceStyle.Create(optionArea, (0, 25 + 750), (optionArea.GetWidth() - 32, 50), "$MNU_TEXTURE_ICE_STYLE", listMapSetTex, 0, "hxdd_icestyle", cmdHandler);
 
         //self.CreateXSwapsOptions(optionArea, 25 + 300 + 150, cmdHandler);
     }
