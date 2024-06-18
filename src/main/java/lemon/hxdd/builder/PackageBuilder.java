@@ -158,10 +158,11 @@ public class PackageBuilder implements Runnable {
     private void ReadWADVersions() {
         this.wads.forEach((p) -> {
             String name = p.getKey();
-            File fileWAD = new File(String.format("PATH_%s", name.toUpperCase()));
+            String path = this.app.settings.Get(String.format("PATH_%s", name).toUpperCase());
+            File fileWAD = new File(path);
             if (fileWAD.exists()) {
                 WADHash hf = new WADHash(name, this.app.settings.Get(String.format("PATH_%s", name.toUpperCase())));
-                Pair<Integer, String> result = hf.Compute();
+                Pair<String, String> result = hf.Compute();
                 sourceVersions.put(name, result.getValue());
             }
         });
@@ -620,6 +621,7 @@ public class PackageBuilder implements Runnable {
     private void AddMapInfoConfiguaration() {
         String path = this.app.settings.GetPath("temp");
 
+
         // Title Artwork
         String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
         HashMap<String, String> TitleMusic = new HashMap<String, String>();
@@ -633,9 +635,11 @@ public class PackageBuilder implements Runnable {
         String advisoryTime = hideAdvisory ? "0" : "6";
 
         String classes = "\"HXDDHereticPlayer\",\"HXDDFighterPlayer\",\"HXDDClericPlayer\",\"HXDDMagePlayer\"";
-        if (sourceVersions.containsKey("BASE")) {
+
+        String hx2Version = sourceVersions.get("hx2");
+        if (hx2Version != null && hx2Version.contains("BASE")) {
             classes += String.format(",%s", "\"HX2PaladinPlayer\",\"HX2CrusaderPlayer\",\"HX2NecromancerPlayer\",\"HX2AssassinPlayer\"");
-            if (sourceVersions.containsKey("PORTALS")) {
+            if (hx2Version.contains("PORTALS")) {
                 classes += String.format(",%s", "\"HX2SuccubusPlayer\"");
             }
         }
@@ -810,29 +814,47 @@ public class PackageBuilder implements Runnable {
                 version = p_gitversion.getProperty("git.build.version");
             }
 
+            String sBuildBranch = p_gitversion.getProperty("git.branch");
+            String sBuildVersion = version;
+            String sBuildTagDistance = p_gitversion.getProperty("git.closest.tag.commit.count");
+            String sBuildTime = p_gitversion.getProperty("git.build.time");
+            String sBuildCommitID = p_gitversion.getProperty("git.commit.id.abbrev");
+            String sBuildCommitIDFull = p_gitversion.getProperty("git.commit.id.full");
+            String sBuildCommitTime = p_gitversion.getProperty("git.commit.time");
+            String sBuildVersionID = String.format("%s %s", sBuildVersion, sBuildCommitID);
+            String sBuildVersionIDDateOpt = String.format("%s %s %s", version, p_gitversion.getProperty("git.commit.id.abbrev"), p_gitversion.getProperty("git.commit.time"));
+            String sBuildHereticVersion = Optional.ofNullable(sourceVersions.get("heretic")).orElse("");
+            String sBuildHexenVersion = Optional.ofNullable(sourceVersions.get("hexen")).orElse("");
+            String sBuildHexDDVersion = Optional.ofNullable(sourceVersions.get("hexdd")).orElse("");
+            String sBuildHX2Version = "";
+            if (sourceVersions.containsKey("hx2")) {
+                sBuildHX2Version = Optional.ofNullable(sourceVersions.get("hx2")).orElse("");
+                sBuildHX2Version = String.format("Hexen II: %s", sBuildHX2Version);
+            }
+
             String SettingPathTemp = this.app.settings.GetPath("temp");
             FileWriter fw = new FileWriter(SettingPathTemp + "/language.build", false);
             PrintWriter out = new PrintWriter(fw);
-            out.println("[en default]");
-            out.println(String.format("HXDD_BUILD_BRANCH = \"%s\";", p_gitversion.getProperty("git.branch")));
-            out.println(String.format("HXDD_BUILD_VERSION = \"%s\";", version));
-            out.println(String.format("HXDD_BUILD_TAG_DISTANCE = \"%s\";", p_gitversion.getProperty("git.closest.tag.commit.count")));
-            out.println(String.format("HXDD_BUILD_TIME = \"%s\";", p_gitversion.getProperty("git.build.time")));
-            out.println(String.format("HXDD_BUILD_COMMIT_ID = \"%s\";", p_gitversion.getProperty("git.commit.id.abbrev")));
-            out.println(String.format("HXDD_BUILD_COMMIT_ID_FULL = \"%s\";", p_gitversion.getProperty("git.commit.id.full")));
-            out.println(String.format("HXDD_BUILD_COMMIT_TIME = \"%s\";", p_gitversion.getProperty("git.commit.time")));
-            out.println(String.format("HXDD_BUILD_VERSION_ID = \"%s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev")));
-            out.println(String.format("HXDD_BUILD_VERSION_ID_DATE_OPT = \"Build: %s %s %s\";", version, p_gitversion.getProperty("git.commit.id.abbrev"), p_gitversion.getProperty("git.commit.time")));
-            out.println(String.format("HXDD_BUILD_HERETIC_VERSION = \"Heretic: %s\";", Optional.ofNullable(sourceVersions.get("heretic")).orElse("")));
-            out.println(String.format("HXDD_BUILD_HEXEN_VERSION = \"Hexen: %s\";", Optional.ofNullable(sourceVersions.get("hexen")).orElse("")));
-            out.println(String.format("HXDD_BUILD_HEXDD_VERSION = \"Hexen DeathKings: %s\";", Optional.ofNullable(sourceVersions.get("hexdd")).orElse("")));
-            out.println(String.format("HXDD_BUILD_HX2_VERSION = \"Hexen II: %s\";", Optional.ofNullable(sourceVersions.get("hx2")).orElse("")));
+            out.println("[default]");
+            out.println(String.format("HXDD_BUILD_BRANCH = \"%s\";", sBuildBranch));
+            out.println(String.format("HXDD_BUILD_VERSION = \"%s\";", sBuildVersion));
+            out.println(String.format("HXDD_BUILD_TAG_DISTANCE = \"%s\";", sBuildTagDistance));
+            out.println(String.format("HXDD_BUILD_TIME = \"%s\";", sBuildTime));
+            out.println(String.format("HXDD_BUILD_COMMIT_ID = \"%s\";", sBuildCommitID));
+            out.println(String.format("HXDD_BUILD_COMMIT_ID_FULL = \"%s\";", sBuildCommitIDFull));
+            out.println(String.format("HXDD_BUILD_COMMIT_TIME = \"%s\";", sBuildCommitTime));
+            out.println(String.format("HXDD_BUILD_VERSION_ID = \"%s\";", sBuildVersionID));
+            out.println(String.format("HXDD_BUILD_VERSION_ID_DATE_OPT = \"Build: %s\";", sBuildVersionIDDateOpt));
+            out.println(String.format("HXDD_BUILD_HERETIC_VERSION = \"Heretic: %s\";", sBuildHereticVersion));
+            out.println(String.format("HXDD_BUILD_HEXEN_VERSION = \"Hexen: %s\";", sBuildHexenVersion));
+            out.println(String.format("HXDD_BUILD_HEXDD_VERSION = \"Hexen DeathKings: %s\";", sBuildHexDDVersion));
+            out.println(String.format("HXDD_BUILD_HX2_VERSION = \"%s\";", sBuildHX2Version));
             //out.println(String.format("HXDD_BUILD_H2_VERSION = \"Heretic 2: %s\";", ""));
             out.close();
 
             fw = new FileWriter(SettingPathTemp + "/language.owner", false);
             out = new PrintWriter(fw);
-            out.println("[en default]");
+            out.println("[default]");
             out.println(String.format("HXDD_INSTALL_USER = \"%s\";", System.getProperty("user.name")));
             out.println(String.format("HXDD_INSTALL_OS = \"%s\";", System.getProperty("os.name")));
             out.println(String.format("HXDD_INSTALL_OS_ARCH = \"%s\";", System.getProperty("os.arch")));
