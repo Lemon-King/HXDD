@@ -60,17 +60,153 @@ class PlayerSheetEventHandler: EventHandler {
     }
 }
 
-/*
-class PlayerSheetStatParams {
-	int start_min;		// Starting Min
-	int start_max;		// Starting Max
-	int inc_min;		// Compute Min
-	int inc_max;		// Compute Max
-	int inc;			// Compute Max Level
-	int maximum;		// Maximum Stat Value
+class PlayerSheetStatBase {
+	int min;				// Starting Min
+	int max;				// Starting Max
 }
-*/
+class PlayerSheetStatGain {
+	int min;				// Compute Min
+	int max;				// Compute Max
+	int cap;				// Compute Max Level
+}
 
+class PlayerSheetStatParams {
+	int maximum;			// Maximum Stat Value
+	PlayerSheetStatBase base;
+	PlayerSheetStatGain gain;
+}
+
+class PlayerSheetStat {
+	String name;
+	double value;
+	bool isActual;			// Do not use percentages when scaling (default: false)
+	double bonusScale;		// Backpack scale (default: based off of AmmoItem value)
+	PlayerSheetStatParams params;
+
+	PlayerSheetStat Init() {
+		self.params = new ("PlayerSheetStatParams");
+		self.params.base = new ("PlayerSheetStatBase");
+		self.params.gain = new ("PlayerSheetStatGain");
+
+		return self;
+	}
+
+	double stat_compute(double min, double max) {
+		double value = (max-min+1) * frandom(0.0, 1.0) + min;
+		if (value > max) {
+			return max;
+		}
+		value = ceil(value);
+		return value;
+	}
+
+	PlayerSheetStat Roll(bool levelCap = false) {
+		if (self.value == 0) {
+			self.value = self.stat_compute(self.params.base.min, self.params.base.max);
+		} else {
+			self.ProcessLevelIncrease(levelCap);
+		}
+
+		return self;
+	}
+
+	PlayerSheetStat ProcessLevelIncrease(bool levelCap) {
+		if (self.params) {
+			int nextValue = self.value;
+			if (levelCap && self.params.gain.cap) {
+				nextValue += self.params.gain.cap;
+			} else if (self.params.gain.min && self.params.gain.max) {
+				nextValue += self.stat_compute(self.params.gain.min, self.params.gain.max);
+			}
+			if (self.params.maximum) {
+				nextValue = min(nextValue, self.params.maximum);
+			}
+			self.value = nextValue;
+		}
+
+		return self;
+	}
+
+	PlayerSheetStat SetFromObject(String name, HXDD_JsonObject o) {
+		if (!self.params) {
+			self.Init();
+		}
+
+		int valStartMin;
+		int valStartMax;
+		let oStatBase		= HXDD_JsonObject(o.get("base"));
+		if (oStatBase) {
+			valStartMin		= FileJSON.GetInt(oStatBase, "min");
+			valStartMax		= FileJSON.GetInt(oStatBase, "max");
+		}
+
+		int valGainMin;
+		int valGainMax;
+		int valGainCap;
+		let oStatGain		= HXDD_JsonObject(o.Get("gain"));
+		if (oStatGain) {
+			valGainMin		= FileJSON.GetInt(o, "min");
+			valGainMax		= FileJSON.GetInt(o, "max");
+			valGainCap		= FileJSON.GetInt(o, "cap");
+		}
+
+		let valMaximum		= FileJSON.GetInt(o, "maximum");
+		let valIsActual		= FileJSON.GetBool(o, "actual");
+		let valBonusScale	= FileJSON.GetDouble(o, "bonus");
+
+		self.params.base.min = valStartMin;
+		self.params.base.max = valStartMax;
+		if (valGainMin != -1 && valGainMax != -1) {
+			self.params.gain.min = valGainMin;
+			self.params.gain.max = valGainMax;
+		}
+		if (valGainCap != -1) {
+			self.params.gain.cap = valGainCap;
+		}
+		if (valMaximum != -1) {
+			self.params.maximum = valMaximum;
+		}
+		self.bonusScale = valBonusScale;
+		self.isActual = valIsActual;
+
+		return self;
+	}
+
+	PlayerSheetStat SetFromArray(String name, HXDD_JsonArray raw) {
+		if (!self.params) {
+			self.Init();
+		}
+
+		Array<int> result;
+		result.Resize(raw.arr.Size());
+		for (let i = 0; i < raw.arr.Size(); i++) {
+			result[i] = HXDD_JsonInt(raw.arr[i]).i;
+		}
+
+		int size = result.Size();
+		if (size < 2) {
+			// error?
+			return self;
+		}
+
+		self.params.base.min = result[0];
+		self.params.base.max = result[1];
+		if (size > 3) {
+			self.params.gain.min = result[2];
+			self.params.gain.max = result[3];
+		}
+		if (size > 4) {
+			self.params.gain.cap = result[4];
+		}
+		if (size > 5) {
+			self.params.maximum = result[5];
+		}
+
+		return self;
+	}
+}
+
+/*
 class PlayerSheetStat {
 	String name;
 	Array<int> table;
@@ -106,12 +242,6 @@ class PlayerSheetStat {
 		}
 	}
 }
-
-/*
-class PlayerSheetResource {
-	Array<int> resourceTable;
-	bool useScale;
-}
 */
 
 class PlayerSheetJSON {
@@ -134,13 +264,13 @@ class PlayerSheetJSON {
 
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
-	Array<int> resourceTable;
+	//Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 	bool hasHexenArmorTable;
 
 	String xp_bonus_stat;
 
-	//Map<String, PlayerSheetResource> resources;		// per resource
+	Map<String, PlayerSheetStat> resources;
 	Map<String, PlayerSheetStat> stats;
 
 	String soundLevelUp;
@@ -191,7 +321,7 @@ class PlayerSheetJSON {
 		Array<int> defaultHPTable = {60,70,2,6,5};
 		Array<int> defaultRPTable = {95,105,5,10,5};
 		self.hitpointTable.Copy(defaultHPTable);
-		self.resourceTable.Copy(defaultRPTable);
+		//self.resourceTable.Copy(defaultRPTable);
 		self.hasHexenArmorTable = false;
 
         FileJSON fJSON = new ("FileJSON");
@@ -234,6 +364,23 @@ class PlayerSheetJSON {
 				valResourceTable		= FileJSON.GetArray(jsonObject, "ammo");		// alt
 			}
 
+			HXDD_JsonObject objResources;
+			if (!valResourceTable) {
+				objResources 			= HXDD_JsonObject(jsonObject.get("resource"));
+				if (!objResources) {
+					objResources		= HXDD_JsonObject(jsonObject.get("rp"));			// alt
+				}
+				if (!objResources) {
+					objResources		= HXDD_JsonObject(jsonObject.get("mp"));			// alt
+				}
+				if (!objResources) {
+					objResources		= HXDD_JsonObject(jsonObject.get("mana"));		// alt
+				}
+				if (!objResources) {
+					objResources		= HXDD_JsonObject(jsonObject.get("ammo"));		// alt
+				}
+			}
+
 			let valHexenArmorTable		= FileJSON.GetArray(jsonObject, "ac");
 			if (!valHexenArmorTable) {
 				valHexenArmorTable		= FileJSON.GetArray(jsonObject, "armor");		// alt
@@ -265,12 +412,15 @@ class PlayerSheetJSON {
 				Array<String> keys;
 				objStats.GetKeysInto(keys);
 
-				//self.stats.Resize(keys.Size());
-				//self.stats_lookup.Resize(keys.Size());
 				for (let i = 0; i < keys.Size(); i++) {
 					String key = keys[i];
 					HXDD_JsonArray stat = FileJSON.GetArray(objStats, key);
 					if (stat) {
+						PlayerSheetStat rt = new ("PlayerSheetStat");
+						rt.SetFromArray(key, stat).Roll();
+						self.stats.Insert(key, rt);
+
+						/*
 						if (stat.arr.size() >= 2) {
 							PlayerSheetStat nStat = new ("PlayerSheetStat");
 							nStat.name = key.MakeLower();
@@ -287,11 +437,40 @@ class PlayerSheetJSON {
 						} else {
 							console.printf("PlayerSheetJSON: Stat %s array must be 2 or higher. [start_low, start_high] or [start_low, start_high, level_low, level_high, level_max, stat_cap]", key);
 						}
+						*/
 					} else {
 						console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
 					}
 				}
 			}
+
+			if (objResources) {
+				Array<String> keys;
+				objResources.GetKeysInto(keys);
+
+				for (let i = 0; i < keys.Size(); i++) {
+					String key = keys[i];
+					HXDD_JsonArray aRes = FileJSON.GetArray(objResources, key);
+
+					PlayerSheetStat rt = new ("PlayerSheetStat");
+					if (aRes) {
+						rt.SetFromArray(key, aRes).Roll();
+						self.resources.Insert(key, rt);
+						continue;
+					}
+
+					HXDD_JsonObject oRes = HXDD_JsonObject(jsonObject.get(key));
+					if (oRes) {
+						rt.SetFromObject(key, oRes).Roll();
+						self.resources.Insert(key, rt);
+						continue;
+					}
+					console.printf("PlayerSheetJSON: Failed to read stat %s at %d.", key, i);
+				}
+			}
+
+
+
 			String valXPStat = FileJSON.GetString(jsonObject, "xp_bonus_stat");
 			if (self.stats.CheckKey(valXPStat)) {
 				self.xp_bonus_stat = valXPStat;
@@ -342,12 +521,11 @@ class PlayerSheetJSON {
 				}
 			}
 			if (valResourceTable) {
-				self.resourceTable.Resize(clamp(5, valResourceTable.arr.Size(), 6));
-				for (let i = 0; i < valResourceTable.arr.Size(); i++) {
-					if (valResourceTable.arr[i]) {
-						self.resourceTable[i]	= HXDD_JsonInt(valResourceTable.arr[i]).i;
-					}
-				}
+				PlayerSheetStat rt = new ("PlayerSheetStat");
+				rt.SetFromArray("default", valResourceTable).Roll();
+				self.resources.insert("default", rt);
+			} else if (objResources) {
+
 			}
 			if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
 				self.hexenArmorTable.Resize(5);
@@ -388,7 +566,7 @@ class Progression: Inventory {
 	// Class Tables
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
-	Array<int> resourceTable;
+	//Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 
 	Array<double> skillmodifier;
@@ -400,7 +578,7 @@ class Progression: Inventory {
 	double experienceModifier;
 
 	int maxHealth;
-	int maxResource;
+	//int maxResource;
 	int strength;
 	int intelligence;
 	int wisdom;
@@ -412,7 +590,7 @@ class Progression: Inventory {
 
 	ProgressionEventHandler handler;
 
-	//Map<String, PlayerSheetResource> resources;		// per resource
+	Map<String, PlayerSheetStat> resources;		// per resource
 	Map<String, PlayerSheetStat> stats;
 
 	String soundLevelUp;
@@ -455,7 +633,7 @@ class Progression: Inventory {
 		self.Experience = 0;
 
 		self.MaxHealth = 100;
-		self.MaxResource = 0;
+		//self.MaxResource = 0;
 		//self.Strength = 10;
 		//self.Intelligence = 10;
 		//self.Wisdom = 10;
@@ -561,8 +739,9 @@ class Progression: Inventory {
 		self.experienceTable.Copy(PlayerSheet.experienceTable);
 
 		self.hitpointTable.Copy(PlayerSheet.hitpointTable);
-		self.resourceTable.Copy(PlayerSheet.resourceTable);
+		//self.resourceTable.Copy(PlayerSheet.resourceTable);
 
+		self.resources.Move(PlayerSheet.resources);
 		self.stats.Move(PlayerSheet.stats);
 
 		if (cvarProgression == PSP_LEVELS_USER) {
@@ -584,12 +763,14 @@ class Progression: Inventory {
 			self.hitpointTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_max", 5);
 			self.hitpointTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_health_inc_cap", 5);
 
+			/*
 			self.resourceTable.Resize(5);
 			self.resourceTable[0] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_max", 100);
 			self.resourceTable[1] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_base_min", 100);
 			self.resourceTable[2] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_min", 5);
 			self.resourceTable[3] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_max", 10);
 			self.resourceTable[4] = LemonUtil.CVAR_GetInt("hxdd_progression_user_mana_inc_cap", 5);
+			*/
 
 			/*
 			self.strengthTable.Resize(2);
@@ -628,18 +809,21 @@ class Progression: Inventory {
 			self.hitpointTable[3] = frandom[exprnd](0.75f, 1.0f) * 10.0f;
 			self.hitpointTable[4] = self.hitpointTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 
+			/*
 			self.resourceTable.Resize(5);
 			self.resourceTable[0] = 70.0f;
 			self.resourceTable[1] = 80.0f + (frandom[exprnd](0.0f, 1.0f) * 25.0f);
 			self.resourceTable[2] = frandom[exprnd](0.5f, 1.0f) * 5.0f;
 			self.resourceTable[3] = frandom[exprnd](0.75f, 1.0f) * 15.0f;
 			self.resourceTable[4] = self.resourceTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
+			*/
 
 			//self.stats.Copy(PlayerSheet.stats);
 			//self.stats_lookup.Copy(PlayerSheet.stats_lookup);
 
 			self.stats.Move(PlayerSheet.stats);
 
+			/*
 			foreach (k, v : self.stats) {
 				v.table.Resize(5);
 				for (let j = 0; j < 2; j++) {
@@ -651,12 +835,17 @@ class Progression: Inventory {
 				v.Roll();
 
 			}
+			*/
 
 			self.maxlevel = 10 + (random[RNGLEVEL](0,4) * 5);
 		}
 
 		// After assignment, set final type
 		self.ProgressionType = cvarProgression == PSP_NONE ? PSP_NONE : PSP_LEVELS;
+	}
+
+	PlayerSheetStat GetResource(String key) {
+		return self.resources.GetIfExists(key);
 	}
 
 	PlayerSheetStat GetStat(String key) {
@@ -768,21 +957,24 @@ class Progression: Inventory {
 		self.ArmorType = PSAT_ARMOR_HXAC;
 	}
 
-	int GetMaxResource(String className) {
-		int value = self.maxResource;
-		PlayerSheetStat stat = self.GetStat(className.MakeLower());
-		if (stat) {
-			value = stat.value;
+	PlayerSheetStat GetSheetResource(String className) {
+		PlayerSheetStat res = self.GetResource(className.MakeLower());
+		int value = 0;
+		if (res) {
+			return res;
 		}
-		stat = self.GetStat("ammo");
-		if (stat) {
-			value = stat.value;
+		res = self.GetResource("all");
+		if (res) {
+			return res;
 		}
-		stat = self.GetStat("resources");
-		if (stat) {
-			value = stat.value;
+		res = self.GetResource("default");
+		if (res) {
+			return res;
 		}
-		return value;
+		if (!value) {
+			//value = self.maxResource;
+		}
+		return res;
 	}
 
 	void InitLevel_PostBeginPlay() {
@@ -804,7 +996,7 @@ class Progression: Inventory {
         player.A_SetHealth(self.MaxHealth, AAPTR_DEFAULT);
 
 		// Alt Ammo Handler
-		self.maxResource = stats_compute(resourceTable[0], resourceTable[1]);
+		//self.maxResource = stats_compute(resourceTable[0], resourceTable[1]);
 
 		// Calc initial ammo
 		// Add ammo dummies to player
@@ -839,18 +1031,27 @@ class Progression: Inventory {
 			}
 		}
 
-		currlevel = 1;
-		experience = 0;
+		self.currlevel = 1;
+		self.experience = 0;
 		self.leveldiffxp = self.experienceTable[0];
 
 		console.printf("");
+		console.printf("Level: %d", self.currlevel);
 		console.printf("----- Stats -----");
-		console.printf("Health: %0.2f", MaxHealth);
-		console.printf("Resource: %0.2f", maxResource);
+		console.printf("Health: %0.2f", self.MaxHealth);
+		//console.printf("Resource: %0.2f", maxResource);
 		foreach (k, v : self.stats) {
 			String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
 			console.printf("%s: %0.2f", nameCap, v.value);
 		}
+        bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+		if (cvar_isdev_environment) {
+			foreach (k, v : self.resources) {
+				String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
+				console.printf("Ammo - %s: %0.2f", nameCap, v.value);
+			}
+		}
+		console.printf("");
 		/*
 		for (let i = 0; i < self.stats.Size(); i++) {
 			if (self.stats[i]) {
@@ -880,6 +1081,9 @@ class Progression: Inventory {
 			foreach (k, v : self.stats) {
 				v.ProcessLevelIncrease(self.currlevel == self.maxlevel);
 			}
+			foreach (k, v : self.resources) {
+				v.ProcessLevelIncrease(self.currlevel == self.maxlevel);
+			}
 
 			double healthInc = 0;
 			double resourceInc = 0;
@@ -889,35 +1093,35 @@ class Progression: Inventory {
 				} else {
 					healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
 				}
-				resourceInc = stats_compute(self.resourceTable[2],self.resourceTable[3]);
+				//resourceInc = stats_compute(self.resourceTable[2],self.resourceTable[3]);
 			} else {
 				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
 					healthInc = (double)(self.SpawnHealth) * (self.hitpointTable[4] / 100.0);
 				} else {
 					healthInc = self.hitpointTable[4];
 				}
-				resourceInc = self.resourceTable[4];
+				//resourceInc = self.resourceTable[4];
 			}
 			self.MaxHealth += healthInc;
-			self.MaxResource += resourceInc;
+			//self.MaxResource += resourceInc;
 
 			int limitMaxHealth = self.SpawnHealth * 1.5;
 			if (self.hitpointTable.Size() == 6) {
 				limitMaxHealth = self.hitpointTable[5];
 			}
-			int limitMaxResource = 300;
-			if (self.resourceTable.Size() == 6) {
-				limitMaxResource = self.resourceTable[5];
-			}
+			//int limitMaxResource = 300;
+			//if (self.resourceTable.Size() == 6) {
+			//	limitMaxResource = self.resourceTable[5];
+			//}
 			if (self.Health > limitMaxHealth) {
 				self.Health = limitMaxHealth;
 			}
 			if (self.MaxHealth > limitMaxHealth) {
 				self.MaxHealth = limitMaxHealth;
 			}
-			if (self.MaxResource > limitMaxResource) {
-				self.MaxResource = limitMaxResource;
-			}
+			//if (self.MaxResource > limitMaxResource) {
+			//	self.MaxResource = limitMaxResource;
+			//}
 
 			// Hacky solution to increase player health when leveling
 			// TODO: Add an options toggle
@@ -937,15 +1141,21 @@ class Progression: Inventory {
 			}
 
 			console.printf("");
+			console.printf("You are now level %d!", self.currlevel);
 			console.printf("-----Stats-----");
-			console.printf("Health: %0.2f", MaxHealth);
-			console.printf("Resource: %0.2f", MaxResource);
+			console.printf("Health: %0.2f", self.MaxHealth);
+			//console.printf("Resource: %0.2f", self.MaxResource);
 			foreach (k, v : self.stats) {
 				String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
 				console.printf("%s: %0.2f", nameCap, v.value);
 			}
-			console.printf("");
-			console.printf("You are now level %d!", self.currlevel);
+			bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+			if (cvar_isdev_environment) {
+				foreach (k, v : self.resources) {
+					String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
+					console.printf("Ammo - %s: %d", nameCap, v.value);
+				}
+			}
 			console.printf("");
 		}
 	}
@@ -954,11 +1164,18 @@ class Progression: Inventory {
 		if (!item) {
 			return;
 		}
-		int statMaxResource = GetMaxResource(item.GetClassName());
-		double scaler = ((double)(statMaxResource) / 100.0);
-		item.MaxAmount = (self.HasBackpack() ? (double)(item.Default.BackpackMaxAmount) : item.Default.MaxAmount) * scaler;
-		item.BackpackMaxAmount = (double)(item.Default.BackpackMaxAmount) * scaler;
-		item.Amount = clamp(item.Amount, 0.0, self.HasBackpack() ? item.BackpackMaxAmount: item.MaxAmount);
+		PlayerSheetStat res = self.GetSheetResource(item.GetClassName());
+		if (res.isActual) {
+			item.MaxAmount = self.HasBackpack() ? (double)(res.value) * res.bonusScale : res.value ;
+			item.BackpackMaxAmount = (double)(res.value) * res.bonusScale;
+			item.Amount = clamp(item.Amount, 0.0, self.HasBackpack() ? item.BackpackMaxAmount: res.value);
+		} else {
+			double scaler = ((double)(res.value) / 100.0);
+			double backpackAmount = res.bonusScale ? item.Default.MaxAmount * res.bonusScale :item.Default.BackpackMaxAmount;
+			item.MaxAmount = (self.HasBackpack() ? backpackAmount : item.Default.MaxAmount) * scaler;
+			item.BackpackMaxAmount = backpackAmount * scaler;
+			item.Amount = clamp(item.Amount, 0.0, self.HasBackpack() ? item.BackpackMaxAmount: item.MaxAmount);
+		}
 	}
 
 	bool HasBackpack() {
