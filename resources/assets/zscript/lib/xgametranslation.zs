@@ -83,7 +83,7 @@ class XGameTranslation {
     }
 
     void LoadFromJSON(String group) {
-        FileJSON fJSON = new ("FileJSON");
+        FileJSON fJSON = new("FileJSON");
         let success = fJSON.Open(String.format("xgt/%s.xgt", group));
         if (!success) {
             success = fJSON.Open(String.format("xgt/%s.json", group));
@@ -149,7 +149,7 @@ class XGameTranslation {
         if (index == group.size) {
             String swapActor = self.TryXClass(source);
             swapActor = self.TryXSwap(swapActor);
-            XGameResponse resp = new ("XGameResponse");
+            XGameResponse resp = new("XGameResponse");
             if (swapActor != source) {
                 resp.isFinal = true;
             }
@@ -180,7 +180,7 @@ class XGameTranslation {
         }
         String swapActor = self.TryXClass(newActor);
         swapActor = self.TryXSwap(swapActor);
-        XGameResponse resp = new ("XGameResponse");
+        XGameResponse resp = new("XGameResponse");
         if (swapActor != newActor) {
             resp.IsFinal = true;
         }
@@ -199,7 +199,7 @@ class XGameTranslation {
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
 
-        FileJSON fJSON = new ("FileJSON");
+        FileJSON fJSON = new("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
         if (!success) {
             success = fJSON.Open(String.format("playersheets/%s.json", playerClassName));
@@ -250,14 +250,14 @@ class XGameTranslation {
 	}
 
     XGameArrayStringResult GetKeysFromCombinedKey(String combined) {
-        XGameArrayStringResult result = new ("XGameArrayStringResult");
+        XGameArrayStringResult result = new("XGameArrayStringResult");
         combined.Substitute(" ", "");
         combined.Split(result.list, ",");
         return result;
     }
 
     XTranslationActors CreateXTAFromString(String key, String js) {
-        XTranslationActors xta = new ("XTranslationActors");
+        XTranslationActors xta = new("XTranslationActors");
         Array<String> nClassItems;
         js.Substitute(" ", "");
         js.Split(xta.defaults, ",");
@@ -266,7 +266,7 @@ class XGameTranslation {
     }
 
     XTranslationActors CreateXTAFromArray(String key, HXDD_JsonArray ja) {
-        XTranslationActors xta = new ("XTranslationActors");
+        XTranslationActors xta = new("XTranslationActors");
         xta.key = key;
         xta.defaults.Resize(ja.Size());
         for (int j = 0; j < ja.Size(); j++) {
@@ -279,9 +279,9 @@ class XGameTranslation {
     }
 
     XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
-        XTranslationActors xta = new ("XTranslationActors");
+        XTranslationActors xta = new("XTranslationActors");
         xta.key = key;
-        xta.compare = new ("XCVARCompare");
+        xta.compare = new("XCVARCompare");
 
         String sCVAR = FileJSON.GetString(jo, "cvar");
         if (sCVAR != "") {
@@ -418,7 +418,7 @@ class XGameTranslation {
 	}
 
     void CreateXSwapTranslation() {
-        FileJSON fJSON = new ("FileJSON");
+        FileJSON fJSON = new("FileJSON");
         let success = fJSON.Open("xgt/xswap.xgt");
         if (!success) {
             success = fJSON.Open("xgt/xswap.json");
@@ -441,7 +441,7 @@ class XGameTranslation {
                         //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
                         HXDD_JsonArray valActors = FileJSON.GetArray(objListItem, "actors");
                         if (valKey && valActors) {
-                            let newXSwap = new ("XTranslationActors");
+                            let newXSwap = new("XTranslationActors");
                             newXSwap.key = valKey;
                             newXSwap.defaults.Resize(valActors.Size());
                             for (int j = 0; j < valActors.Size(); j++) {

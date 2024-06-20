@@ -84,9 +84,9 @@ class PlayerSheetStat {
 	PlayerSheetStatParams params;
 
 	PlayerSheetStat Init(String name) {
-		self.params = new ("PlayerSheetStatParams");
-		self.params.base = new ("PlayerSheetStatBase");
-		self.params.gain = new ("PlayerSheetStatGain");
+		self.params = new("PlayerSheetStatParams");
+		self.params.base = new("PlayerSheetStatBase");
+		self.params.gain = new("PlayerSheetStatGain");
 
 		self.name = name;
 		self.value = 0;
@@ -293,7 +293,7 @@ class PlayerSheetJSON {
 		//self.resourceTable.Copy(defaultRPTable);
 		self.hasHexenArmorTable = false;
 
-        FileJSON fJSON = new ("FileJSON");
+        FileJSON fJSON = new("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", file));
         //console.printf("PlayerSheetJSON: Load %d", fJSON.index);
         if (!success) {
@@ -387,7 +387,7 @@ class PlayerSheetJSON {
 					HXDD_JsonArray stat = FileJSON.GetArray(objStats, key);
 					if (stat) {
 						String name = key.MakeLower();
-						PlayerSheetStat rt = new ("PlayerSheetStat");
+						PlayerSheetStat rt = new("PlayerSheetStat");
 						rt.Init(name).SetFromArray(stat).Roll();
 						self.stats.Insert(name, rt);
 					} else {
@@ -402,14 +402,14 @@ class PlayerSheetJSON {
 
 				if (keys.Find("base") || keys.Find("gain")) {
 					// single object
-					PlayerSheetStat rt = new ("PlayerSheetStat").Init("_default").SetFromObject(objResources).Roll();
+					PlayerSheetStat rt = new("PlayerSheetStat").Init("_default").SetFromObject(objResources).Roll();
 					self.resources.Insert("_default", rt);
 				} else {
 					for (let i = 0; i < keys.Size(); i++) {
 						String key = keys[i];
 						String name = key.MakeLower();
 
-						PlayerSheetStat rt = new ("PlayerSheetStat");
+						PlayerSheetStat rt = new("PlayerSheetStat");
 						HXDD_JsonArray aRes = FileJSON.GetArray(objResources, key);
 						if (aRes) {
 							rt.Init(name).SetFromArray(aRes).Roll();
@@ -481,7 +481,7 @@ class PlayerSheetJSON {
 				}
 			}
 			if (valResourceTable) {
-				PlayerSheetStat rt = new ("PlayerSheetStat");
+				PlayerSheetStat rt = new("PlayerSheetStat");
 				rt.Init("_default").SetFromArray(valResourceTable).Roll();
 				self.resources.insert("_default", rt);
 			} else if (objResources) {
@@ -959,9 +959,6 @@ class Progression: Inventory {
 		player.MaxHealth = self.MaxHealth;
         player.A_SetHealth(self.MaxHealth, AAPTR_DEFAULT);
 
-		// Alt Ammo Handler
-		//self.maxResource = stats_compute(resourceTable[0], resourceTable[1]);
-
 		// Calc initial ammo
 		// Add ammo dummies to player
 		uint end = AllActorClasses.Size();
@@ -1003,7 +1000,6 @@ class Progression: Inventory {
 		console.printf("Level: %d", self.currlevel);
 		console.printf("----- Stats -----");
 		console.printf("Health: %0.2f", self.MaxHealth);
-		//console.printf("Resource: %0.2f", maxResource);
 		foreach (k, v : self.stats) {
 			String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
 			console.printf("%s: %0.2f", nameCap, v.value);
@@ -1016,17 +1012,6 @@ class Progression: Inventory {
 			}
 		}
 		console.printf("");
-		/*
-		for (let i = 0; i < self.stats.Size(); i++) {
-			if (self.stats[i]) {
-				String name = self.stats[i].name;
-				String nameCap = String.format("%s%s", name.Left(1).MakeUpper(), name.Mid(1, name.Length() - 1));
-				console.printf("%s: %0.2f", nameCap, self.stats[i].value);
-			} else {
-				console.printf("Progression.InitLevel_PostBeginPlay: Failed to read stat %d.", i);
-			}
-		}
-		*/
 	}
 
 	void AdvanceLevel(int advanceLevel) {
@@ -1050,42 +1035,31 @@ class Progression: Inventory {
 			}
 
 			double healthInc = 0;
-			double resourceInc = 0;
 			if (lastLevel < self.MaxLevel) {
 				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
 					healthInc = self.SpawnHealth * (stats_compute(self.hitpointTable[2],self.hitpointTable[3]) / 100.0);
 				} else {
 					healthInc = stats_compute(self.hitpointTable[2],self.hitpointTable[3]);
 				}
-				//resourceInc = stats_compute(self.resourceTable[2],self.resourceTable[3]);
 			} else {
 				if (self.UseMaxHealthScaler && self.SpawnHealth != 100) {
 					healthInc = (double)(self.SpawnHealth) * (self.hitpointTable[4] / 100.0);
 				} else {
 					healthInc = self.hitpointTable[4];
 				}
-				//resourceInc = self.resourceTable[4];
 			}
 			self.MaxHealth += healthInc;
-			//self.MaxResource += resourceInc;
 
 			int limitMaxHealth = self.SpawnHealth * 1.5;
 			if (self.hitpointTable.Size() == 6) {
 				limitMaxHealth = self.hitpointTable[5];
 			}
-			//int limitMaxResource = 300;
-			//if (self.resourceTable.Size() == 6) {
-			//	limitMaxResource = self.resourceTable[5];
-			//}
 			if (self.Health > limitMaxHealth) {
 				self.Health = limitMaxHealth;
 			}
 			if (self.MaxHealth > limitMaxHealth) {
 				self.MaxHealth = limitMaxHealth;
 			}
-			//if (self.MaxResource > limitMaxResource) {
-			//	self.MaxResource = limitMaxResource;
-			//}
 
 			// Hacky solution to increase player health when leveling
 			// TODO: Add an options toggle
@@ -1108,7 +1082,6 @@ class Progression: Inventory {
 			console.printf("You are now level %d!", self.currlevel);
 			console.printf("-----Stats-----");
 			console.printf("Health: %0.2f", self.MaxHealth);
-			//console.printf("Resource: %0.2f", self.MaxResource);
 			foreach (k, v : self.stats) {
 				String nameCap = String.format("%s%s", k.Left(1).MakeUpper(), k.Mid(1, k.Length() - 1));
 				console.printf("%s: %0.2f", nameCap, v.value);
