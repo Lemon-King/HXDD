@@ -28,10 +28,43 @@
         "dexterity": [15,18]
     },
     "xgame": {
-        "GreenArmor": "PlatinumHelm,MeshArmor",
-        "BlueArmor": "AmuletOfWarding,FalconShield",
-        "SilverShield": "PlatinumHelm,MeshArmor",
-        "EnchantedShield": "AmuletOfWarding,FalconShield",
+        "GreenArmor,SilverShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["MeshArmor","PlatinumHelm"],
+            "false": "SilverShield"
+        },
+        "BlueArmor,EnchantedShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["FalconShield","AmuletOfWarding"],
+            "false": "EnchantedShield"
+        },
+        "MeshArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "MeshArmor"
+        },
+        "PlatinumHelm": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "PlatinumHelm"
+        },
+        "AmuletOfWarding": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "AmuletOfWarding"
+        },
+        "FalconShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "FalconShield"
+        },
+
 
         "Fist": "Mana1",
         "Chainsaw": "Mana3",

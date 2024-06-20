@@ -28,10 +28,42 @@
         "dexterity": [6,10]
     },
     "xgame": {
-        "GreenArmor": "FalconShield,AmuletOfWarding",
-        "BlueArmor": "PlatinumHelm,MeshArmor",
-        "SilverShield": "FalconShield,AmuletOfWarding",
-        "EnchantedShield": "PlatinumHelm,MeshArmor",
+        "GreenArmor,SilverShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["FalconShield","AmuletOfWarding"],
+            "false": "SilverShield"
+        },
+        "BlueArmor,EnchantedShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["PlatinumHelm","MeshArmor"],
+            "false": "EnchantedShield"
+        },
+        "MeshArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "MeshArmor"
+        },
+        "PlatinumHelm": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "PlatinumHelm"
+        },
+        "AmuletOfWarding": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "AmuletOfWarding"
+        },
+        "FalconShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "FalconShield"
+        },
 
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",

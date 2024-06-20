@@ -46,13 +46,17 @@ class XTranslationActors {
     }
 }
 
+class XGameArrayStringResult {
+    Array<String> list;
+}
+
 class XGameResponse {
     bool IsFinal;
     String newActor;
 }
 
 class XGameTranslation {
-    
+
 
 
     XGT_Group DoomEdNums;     // For everything
@@ -194,7 +198,7 @@ class XGameTranslation {
 
 	void CreateXClassTranslation() {
         String playerClassName = LemonUtil.GetPlayerClassName();
-		
+
         FileJSON fJSON = new ("FileJSON");
         let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
         if (!success) {
@@ -215,29 +219,42 @@ class XGameTranslation {
                     String key = keys[i];
                     String valClassItem = FileJSON.GetString(objClassItems, key);
                     if (valClassItem != "") {
-                        XTranslationActors xta = CreateXTAFromString(key, valClassItem);
-                        self.xcls.Insert(key, xta);
-                        //self.xclass.push(xta);
+                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        for (let i = 0; i < result.list.Size(); i++) {
+                            XTranslationActors xta = CreateXTAFromString(result.list[i], valClassItem);
+                            self.xcls.Insert(result.list[i], xta);
+                        }
                         continue;
                     }
                     HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
                     if (valClassItemList) {
-                        XTranslationActors xta = CreateXTAFromArray(key, valClassItemList);
-                        self.xcls.Insert(key, xta);
-                        //self.xclass.push(xta);
+                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        for (let i = 0; i < result.list.Size(); i++) {
+                            XTranslationActors xta = CreateXTAFromArray(result.list[i], valClassItemList);
+                            self.xcls.Insert(result.list[i], xta);
+                        }
                         continue;
                     }
                     HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
                     if (valClassItemObject) {
-                        XTranslationActors xta = CreateXTAFromObject(key, valClassItemObject);
-                        self.xcls.Insert(key, xta);
-                        //self.xclass.push(xta);
+                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        for (let i = 0; i < result.list.Size(); i++) {
+                            XTranslationActors xta = CreateXTAFromObject(result.list[i], valClassItemObject);
+                            self.xcls.Insert(result.list[i], xta);
+                        }
                         continue;
                     }
                 }
             }
 		}
 	}
+
+    XGameArrayStringResult GetKeysFromCombinedKey(String combined) {
+        XGameArrayStringResult result = new ("XGameArrayStringResult");
+        combined.Substitute(" ", "");
+        combined.Split(result.list, ",");
+        return result;
+    }
 
     XTranslationActors CreateXTAFromString(String key, String js) {
         XTranslationActors xta = new ("XTranslationActors");
@@ -249,7 +266,7 @@ class XGameTranslation {
     }
 
     XTranslationActors CreateXTAFromArray(String key, HXDD_JsonArray ja) {
-        XTranslationActors xta = new ("XTranslationActors"); 
+        XTranslationActors xta = new ("XTranslationActors");
         xta.key = key;
         xta.defaults.Resize(ja.Size());
         for (int j = 0; j < ja.Size(); j++) {
@@ -262,7 +279,7 @@ class XGameTranslation {
     }
 
     XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
-        XTranslationActors xta = new ("XTranslationActors"); 
+        XTranslationActors xta = new ("XTranslationActors");
         xta.key = key;
         xta.compare = new ("XCVARCompare");
 
@@ -302,7 +319,7 @@ class XGameTranslation {
                     xta.compare.i_value = iValue_Greater;
                 }
             }
-            
+
             String sValue_Equals = FileJSON.GetString(jo, "equals");
             if (sValue_Equals != "") {
                 xta.compare.method = ECVARCompareMethod_EQUALS;

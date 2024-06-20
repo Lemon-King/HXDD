@@ -28,6 +28,62 @@
         "dexterity": [8,12]
     },
     "xgame": {
+        "GreenArmor,SilverShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["MeshArmor","PlatinumHelm"],
+            "false": "SilverShield"
+        },
+        "BlueArmor,EnchantedShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 2,
+            "true": ["FalconShield","AmuletOfWarding"],
+            "false": "EnchantedShield"
+        },
+        "MeshArmor": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "MeshArmor"
+        },
+        "PlatinumHelm": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "PlatinumHelm"
+        },
+        "AmuletOfWarding": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "AmuletOfWarding"
+        },
+        "FalconShield": {
+            "cvar": "hxdd_armor_mode",
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "FalconShield"
+        },
+
+        "Fist": "Mana1",
+        "Chainsaw": "none",
+        "Pistol": "Mana1",
+        "Shotgun": "NWeapMagicMissile",
+        "SuperShotgun": "NWeapBoneShards",
+        "Chaingun": "NWeapMagicMissile",
+        "RocketLauncher": "Mana3",
+        "PlasmaRifle": "NWeapBoneShards",
+        "BFG9000": "none",
+
+        "Clip": "none",
+        "ClipBox": "Mana3",
+        "Shell": "Mana1",
+        "ShellBox": "Mana3",
+        "RocketAmmo": "Mana2",
+        "RocketBox": "Mana3",
+        "Cell": "Mana2",
+        "CellPack": "Mana3",
+
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",
 
