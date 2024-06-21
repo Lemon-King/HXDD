@@ -2,6 +2,7 @@ include gameinfo/game-doom/doomednums.mapinfo
 include gameinfo/game-doom/spawnnums.mapinfo
 
 GameInfo {
+	statusbarclass = "HXDDStatusBar"
     AddPlayerClasses = %s
 	AddEventHandlers = "HXDDWorldEventHandler", "PlayerSheetEventHandler"
 }
