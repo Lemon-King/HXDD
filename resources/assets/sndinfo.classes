@@ -1,0 +1,14 @@
+corvus/misc/i_pkup          itemup
+corvus/misc/k_pkup          keyup
+corvus/misc/p_pkup          artiup
+corvus/misc/w_pkup          wpnup
+
+hexen/misc/i_pkup           picup5
+hexen/misc/k_pkup           keys2a
+hexen/misc/p_pkup           art1
+hexen/misc/w_pkup           sample11
+
+doom/misc/i_pkup            dsitemup
+doom/misc/k_pkup            dsitemup
+doom/misc/p_pkup            dsgetpow
+doom/misc/w_pkup            dswpnup

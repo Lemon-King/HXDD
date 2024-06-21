@@ -1,0 +1,53 @@
+:Platform
+	playuntildone   plats/pt1_strt
+	playrepeat      plats/pt1_mid
+	stopsound       plats/pt1_stop
+end
+
+:CeilingNormal
+	playrepeat	plats/pt1_mid
+end
+
+:CeilingSemiSilent
+	stopsound	plats/pt1_stop
+end
+
+:Floor
+	playrepeat	plats/pt1_mid
+	stopsound	plats/pt1_stop
+end
+
+:Platform
+	playuntildone   plats/pt1_strt
+	stopsound	plats/pt1_stop
+end
+
+:Silence
+end
+
+:DoorOpenNormal
+	play		doors/dr1_open
+	nostopcutoff
+end
+
+:DoorCloseNormal
+	play		doors/dr1_clos
+	nostopcutoff
+end
+
+:DoorOpenBlazing
+	play		doors/dr2_open
+	nostopcutoff
+end
+
+:DoorCloseBlazing
+	play		doors/dr2_clos
+	nostopcutoff
+end
+
+[DoorNormal
+	0		DoorOpenNormal
+	1		DoorCloseNormal
+	2		DoorOpenBlazing
+	3		DoorCloseBlazing
+]

@@ -133,6 +133,15 @@
         "ArtiInvulnerability": "ArtiInvulnerability2",
         "ArtiEgg": "ArtiPork"
     },
+    "sound_set": {
+        "misc/health_pkup":	"hexen/misc/i_pkup",
+        "misc/armor_pkup": "hexen/misc/i_pkup",
+        "misc/ammo_pkup": "hexen/misc/i_pkup",
+        "misc/i_pkup": "hexen/misc/i_pkup",
+        "misc/k_pkup": "hexen/misc/k_pkup",
+        "misc/p_pkup": "hexen/misc/p_pkup",
+        "misc/w_pkup": "hexen/misc/w_pkup"
+    },
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],

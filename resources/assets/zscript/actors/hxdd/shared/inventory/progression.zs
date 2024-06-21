@@ -73,7 +73,7 @@ class PlayerSheetStatGain {
 class PlayerSheetStatParams {
 	int maximum;			// Maximum Stat Value
 	PlayerSheetStatBase base;
-	PlayerSheetStatGain gain;
+	PlayerSheetStatGain gain;			
 }
 
 class PlayerSheetStat {
@@ -243,6 +243,7 @@ class PlayerSheetJSON {
 	String soundLevelUp;
 
 	String soundClass;
+	Map<String, String> soundSet;
 
 	int GetEnumFromArmorType(String type) {
 		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
@@ -428,6 +429,18 @@ class PlayerSheetJSON {
 				}
 			}
 
+			HXDD_JsonObject objSoundSet	= HXDD_JsonObject(jsonObject.get("sound_set"));
+			if (objSoundSet) {
+				Array<String> keys;
+				objSoundSet.GetKeysInto(keys);
+
+				for (let i = 0; i < keys.Size(); i++) {
+					String key = keys[i];
+					let value = FileJSON.GetString(objSoundSet, key);
+
+					self.soundSet.insert(key, value);
+				}
+			}
 
 
 			String valXPStat = FileJSON.GetString(jsonObject, "xp_bonus_stat");
@@ -555,6 +568,7 @@ class Progression: Inventory {
 
 	String soundLevelUp;
 	String soundClass;
+	Map<String, String> soundSet;
 
     Default {
 		+INVENTORY.KEEPDEPLETED
@@ -613,6 +627,7 @@ class Progression: Inventory {
 			ProgressionSelected = true;
 		}
 		ArmorModeSelection();
+		RescanAllActors();
 	}
 
 	override void Tick() {
@@ -707,6 +722,7 @@ class Progression: Inventory {
 
 		self.resources.Move(PlayerSheet.resources);
 		self.stats.Move(PlayerSheet.stats);
+		self.soundSet.Move(PlayerSheet.soundSet);
 
 		if (cvarProgression == PSP_LEVELS_USER) {
 
@@ -835,7 +851,7 @@ class Progression: Inventory {
 		if (optionArmorMode == PSAT_DEFAULT) {
 			optionArmorMode = self.ArmorType;
 		}
-
+		
 		if (optionArmorMode == PSAT_ARMOR_SIMPLE) {
 			ArmorModeSelection_Simple(player);
 		} else if (optionArmorMode == PSAT_ARMOR_HXAC) {
@@ -1281,5 +1297,26 @@ class Progression: Inventory {
 
 			self.GiveExperience(xp);
 		}
+	}
+
+	String FindSoundReplacement(String key) {
+		if (self.soundSet.CheckKey(key)) {
+			return self.soundSet.Get(key);
+		}
+		return key;
+	}
+
+	void RescanAllActors() {
+        ThinkerIterator it = ThinkerIterator.Create("Actor");
+        Actor actor;
+
+        while ((actor = Actor(it.Next())) != null) {
+			if (actor is "Inventory") {
+				Inventory item = Inventory(actor);
+				String pkupSound = item.PickupSound;
+				String replacement = self.FindSoundReplacement(pkupSound);
+				item.PickupSound = replacement;
+			}
+        }
 	}
 }

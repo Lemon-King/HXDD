@@ -1,0 +1,23 @@
+plats/pt1_strt          dspstart
+plats/pt1_stop          dspstop
+plats/pt1_mid           dsstnmov
+
+doors/dr1_open			dsdoropn
+doors/dr1_clos			dsdorcls
+doors/dr2_open			dsbdopn
+doors/dr2_clos			dsbdcls
+
+switches/normbutn		dsswtchn
+switches/exitbutn		dsswtchx
+
+misc/teleport			dstelept
+
+$random menu/quit1 { player/male/death1 demon/pain grunt/pain misc/gibbed misc/teleport grunt/sight1 grunt/sight3 demon/melee }
+$random menu/quit2 { vile/active misc/p_pkup brain/cube misc/gibbed skeleton/swing knight/death baby/active demon/melee  }
+
+$alias				intermission/tick			weapons/pistol
+$alias				intermission/cooptotal		*death
+$alias				intermission/nextstage		weapons/rocklx
+$alias				intermission/paststats		weapons/shotgr
+$alias				intermission/pastcoopstats	weapons/shotgr
+$alias				intermission/pastdmstats	*gibbed

@@ -178,6 +178,16 @@
         "heretic": 1.0,
         "hexen": 1.5
     },
+    "sound_set": {
+        "misc/health_pkup":	"corvus/misc/i_pkup",
+        "misc/armor_pkup": "corvus/misc/i_pkup",
+        "misc/ammo_pkup": "corvus/misc/i_pkup",
+        "misc/i_pkup": "corvus/misc/i_pkup",
+        "misc/k_pkup": "corvus/misc/k_pkup",
+        "misc/p_pkup": "corvus/misc/p_pkup",
+        "misc/w_pkup": "corvus/misc/w_pkup"
+    },
+    "soundclass": "corvus",
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],
