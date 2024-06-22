@@ -500,6 +500,9 @@ public class PackageBuilder implements Runnable {
             GameToID.put("hexen", 2360);
             GameToID.put("hexen.deathkings", 2370);
             GameToID.put("hexen2", 9060);
+            GameToID.put("doom", 2280);
+            GameToID.put("doom2", 2300);
+            GameToID.put("masterlevels", 9160);     // used with wadsmoosh
 
             // uses widescreen ids
             if (!GameToID.containsKey(OPTION_ARTWORK)) {
@@ -510,33 +513,55 @@ public class PackageBuilder implements Runnable {
                 int rng = new Random().nextInt(list.length - 1);
                 OPTION_ARTWORK = list[rng];
             }
-            try {
-                // Download once and cache
-                String path = this.app.settings.GetPath("temp");
-                String path_cache = this.app.settings.GetPath("cache");
+            DownloadArtwork(GameToID.get(OPTION_ARTWORK), "title", OPTION_ARTWORK);
+            hideAdvisory = true;
 
-                File titlePNG = new File(path + "/graphics/title.png");
-                File steamPNG = new File(path_cache + String.format("/steam_hero_artwork/%s.png", OPTION_ARTWORK));
-                Util.CreateDirectory(steamPNG.getAbsoluteFile().getParent());
+            // PWAD Mode Titles
+            int STEAM_DOOM_ID = GameToID.get("doom");
+            DownloadArtwork(STEAM_DOOM_ID, "titlepic", "doom.id.doom1", "/filter/doom.id.doom1");
+
+            int STEAM_DOOM2_ID = GameToID.get("doom2");
+            DownloadArtwork(STEAM_DOOM2_ID, "titlepic", "doom.id.doom2", "/filter/doom.id.doom2");
+
+            int STEAM_DOOM_ML_ID = GameToID.get("masterlevels");
+            DownloadArtwork(STEAM_DOOM_ML_ID, "titlepic", "doom.masterlevels", "/filter/doom.id.wadsmoosh");
+        }
+    }
+
+    private void DownloadArtwork(int id, String name, String gamePath) {
+        DownloadArtwork(id, name, gamePath, "");
+    }
+    private void DownloadArtwork(int id, String name, String source, String filter) {
+        try {
+            // Download once and cache
+            String path = this.app.settings.GetPath("temp");
+            String path_cache = this.app.settings.GetPath("cache");
+
+            File titlePNG = new File(path + filter + "/graphics/" + name + ".png");
+            File steamPNG = new File(path_cache + String.format("/steam_hero_artwork/%s.png", source));
+            Util.CreateDirectory(steamPNG.getAbsoluteFile().getParent());
 
 
-                if (!steamPNG.exists()) {
-                    this.app.controller.SetCurrentLabel("Downloading");
-                    int id = GameToID.get(OPTION_ARTWORK);
+            if (!steamPNG.exists()) {
+                this.app.controller.SetCurrentLabel("Downloading");
+                //int id = GameToID.get(OPTION_ARTWORK);
 
-                    String uriHero = "https://cdn.cloudflare.steamstatic.com/steam/apps/%d/library_hero.jpg";
-                    URL dl = new URI(String.format(uriHero, id)).toURL();
-                    InputStream in = dl.openStream();
-                    Files.copy(in, Path.of(steamPNG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
-                    in.close();
+                String uriHero = "https://cdn.cloudflare.steamstatic.com/steam/apps/%d/library_hero.jpg";
+                URL dl = new URI(String.format(uriHero, id)).toURL();
+                InputStream in = dl.openStream();
+                Files.copy(in, Path.of(steamPNG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+                in.close();
 
-                    Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                }
                 Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                hideAdvisory = true;
-            } catch (URISyntaxException | IOException e) {
-                e.printStackTrace();
             }
+
+            File dirFile = new File(titlePNG.getParent());
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -620,7 +645,6 @@ public class PackageBuilder implements Runnable {
 
     private void AddMapInfoConfiguaration() {
         String path = this.app.settings.GetPath("temp");
-
 
         // Title Artwork
         String OPTION_TITLE_MUSIC = this.app.settings.Get("OPTION_TITLE_MUSIC");
