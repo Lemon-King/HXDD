@@ -273,7 +273,29 @@ class HXDDStatusBar : BaseStatusBar {
 
 		DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_NOKEYS.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 
-		if (LemonUtil.IsMapEpisodic()) {
+		if (LemonUtil.IsGameType(GAME_Doom)) {
+			// DOOM Keys
+			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS_EMPTY.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);		bool locks[6];
+			String image;
+			for(int i = 0; i < 6; i++) locks[i] = CPlayer.mo.CheckKeys(i + 1, false, true);
+			// key 1
+			if (locks[1] && locks[4]) image = "STKEYS6";
+			else if (locks[1]) image = "STKEYS0";
+			else if (locks[4]) image = "STKEYS3";
+			DrawImage(image, (anchorRight - 94, anchorBottom - 20) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			// key 2
+			if (locks[2] && locks[5]) image = "STKEYS7";
+			else if (locks[2]) image = "STKEYS1";
+			else if (locks[5]) image = "STKEYS4";
+			else image = "";
+			DrawImage(image, (anchorRight - 94, anchorBottom - 12) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			// key 3
+			if (locks[0] && locks[3]) image = "STKEYS8";
+			else if (locks[0]) image = "STKEYS2";
+			else if (locks[3]) image = "STKEYS5";
+			else image = "";
+			DrawImage(image, (anchorRight - 94, anchorBottom - 4) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+		} else if (LemonUtil.IsMapEpisodic()) {
 			// Heretic Keys
 			DrawImage("assets/ui/FS_HERETIC_SBAR_RIGHT_KEYS.png", (anchorRight - 79, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 			if (CPlayer.mo.CheckKeys(3, false, true)) DrawImage("YKEYICON", (anchorRight - 94, anchorBottom - 20) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
