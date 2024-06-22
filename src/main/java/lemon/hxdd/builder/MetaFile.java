@@ -43,13 +43,13 @@ public class MetaFile {
     MetaFile() {
     }
 
-    public void Define(String name, String folder, String sourceName) {
+    public void Define(String name, String decodeType, String folder, String sourceName) {
         this.source = sourceName;   // check if pk3 from filename
         this.sourcePK3 = null;      // PK3 file, overrides wad extract
         this.inputName = name;      // input filename
         this.outputName = name;     // output filename
         this.folder = folder;       // export folder
-        this.decodeType = folder;   // decode method
+        this.decodeType = decodeType;   // decode method
         this.dimensions = null;     // used by fullscreen images
     }
 
@@ -100,15 +100,15 @@ public class MetaFile {
         ExportData(data, this.pal);
     }
     private void ExportData(byte[] data, Palette pal) {
-        if (this.decodeType.equals("lumps")) {
+        if (this.decodeType.equals("lump")) {
             LumpExport(data);
-        } else if (Objects.equals(this.decodeType, "textlumps")) {
+        } else if (Objects.equals(this.decodeType, "textlump")) {
             TextLumpExport(data);
-        } else if (Objects.equals(this.decodeType, "graphics") || Objects.equals(this.decodeType, "patches") || Objects.equals(this.decodeType, "sprites")) {
+        } else if (Objects.equals(this.decodeType, "graphic") || Objects.equals(this.decodeType, "patch") || Objects.equals(this.decodeType, "sprite")) {
             GraphicsExport(data, pal);
-        } else if (Objects.equals(this.decodeType, "flats")) {
+        } else if (Objects.equals(this.decodeType, "flat")) {
             FlatExport(data, pal);
-        } else if (Objects.equals(this.decodeType, "sounds")) {
+        } else if (Objects.equals(this.decodeType, "sound")) {
             SoundExport();
         } else if (Objects.equals(this.decodeType, "music")) {
             boolean lowerVolume = this.source.contains("heretic");
@@ -173,7 +173,7 @@ public class MetaFile {
 
     // Sprites, Patches, and UI Graphics
     private void GraphicsExport(byte[] data, Palette pal) {
-        String path = this.pathTemp + "/" + this.folder + "/";
+        String path = this.pathTemp + String.format("/%s/", this.folder);
         //String path = Settings.getInstance().Get("PathTemporary") + "/" + this.mf.folder + "/";
         String imagePath = path + this.outputName + ".png";
         this.CreateFolder(path);
@@ -201,7 +201,7 @@ public class MetaFile {
     }
 
     private void FlatExport(byte[] data, Palette pal) {
-        String path = this.pathTemp + "/flats/";
+        String path = this.pathTemp + String.format("/%s/", this.folder);
         //String path = Settings.getInstance().Get("PathTemporary") + "/flats/";
         String imagePath = path + this.outputName + ".png";
         this.CreateFolder(path);
@@ -225,7 +225,7 @@ public class MetaFile {
     }
 
     private void SoundExport() {
-        String path = this.pathTemp + "/sounds/";
+        String path = this.pathTemp + String.format("/%s/", this.folder);
         //String path = Settings.getInstance().Get("PathTemporary") + "/sounds/";
         this.CreateFolder(path);
 
