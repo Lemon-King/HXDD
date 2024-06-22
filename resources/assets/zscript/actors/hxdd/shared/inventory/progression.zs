@@ -906,7 +906,7 @@ class Progression: Inventory {
 		if (optionArmorMode == PSAT_DEFAULT) {
 			optionArmorMode = self.ArmorType;
 		}
-		
+
 		if (optionArmorMode == PSAT_ARMOR_SIMPLE) {
 			ArmorModeSelection_Simple(player);
 		} else if (optionArmorMode == PSAT_ARMOR_HXAC) {
@@ -1337,7 +1337,7 @@ class Progression: Inventory {
 			self.levelName = level.MapName;
 			self.foundSecrets = level.Found_Secrets;
 		}
-		
+
 		if (self.foundSecrets != level.Found_Secrets) {
 			self.foundSecrets = level.Found_Secrets;
 
@@ -1362,12 +1362,33 @@ class Progression: Inventory {
 	}
 
 	void RescanAllActors() {
+		// Fixes any actors spawned in before the Player.
+
         ThinkerIterator it = ThinkerIterator.Create("Actor");
         Actor actor;
 
+		HXDDWorldEventHandler eHXDD = HXDDWorldEventHandler(EventHandler.Find("HXDDWorldEventHandler"));
         while ((actor = Actor(it.Next())) != null) {
 			if (actor is "Inventory") {
 				Inventory item = Inventory(actor);
+
+				if (eHXDD && eHXDD.xgame) {
+					let itemClassName = item.GetClassName();
+					let swapped = eHXDD.xgame.TryXClass(itemClassName);
+					if (itemClassName != swapped) {
+						let newActorClassName = eHXDD.xgame.ActorNoneFix(swapped);
+						let invNew = Inventory(actor.Spawn(newActorClassName, actor.pos));
+						if (invNew) {
+							invNew.angle = actor.angle;
+							invNew.vel = actor.vel;
+
+							actor.Destroy();
+
+							item = invNew;
+						}
+					}
+				}
+
 				String pkupSound = item.PickupSound;
 				String replacement = self.FindSoundReplacement(pkupSound);
 				item.PickupSound = replacement;
