@@ -32,8 +32,8 @@
 37 = BlasterAmmo
 38 = BlasterHefty
 40 = EggFX
-68 = MultiClassSilverShield
-69 = MultiClassEnchantedShield
+68 = SilverShield
+69 = EnchantedShield
 72 = ArtiTimeBomb
 73 = ArtiTorch
 85 = KeyBlue
