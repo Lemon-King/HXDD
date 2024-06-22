@@ -23,7 +23,7 @@ Class HXDDLevelCompatibility : LevelPostProcessor {
 
     protected void Apply(Name checksum, String mapname) {
         // HXDD Mode only modifies 6 keys, so we should be looking for those keys in lines
-        if (!LemonUtil.IsGameType(GAME_Doom) || LemonUtil.CVAR_GetBool("HXDD_USE_KEYDEF_MODE", true)) {
+        if (!LemonUtil.IsGameType(GAME_Doom) && LemonUtil.CVAR_GetBool("HXDD_USE_KEYDEF_MODE", true)) {
             int gameMode = LemonUtil.GetOptionGameMode();
             int offset = 0;
             if  (gameMode == GAME_Heretic) {
