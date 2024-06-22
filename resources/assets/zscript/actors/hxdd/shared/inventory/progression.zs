@@ -7,7 +7,7 @@
 
 enum EPlaystyleArmorType {
 	PSAT_DEFAULT = 0,
-	PSAT_ARMOR_SIMPLE = 1,
+	PSAT_ARMOR_BASIC = 1,
 	PSAT_ARMOR_HXAC = 2,
 	//PSAT_ARMOR_HX2AC = 3,
 	PSAT_ARMOR_HXAC_RANDOM = 3,
@@ -50,7 +50,7 @@ class PlayerSheetEventHandler: EventHandler {
                     if (prog != NULL) {
                         exp = prog.AwardExperience(e.thing);
                     }
-                    
+
                     if (prog.handler) {
                         prog.handler.OnKill(pt, e.thing, exp);
                     }
@@ -298,7 +298,7 @@ class PlayerSheetJSON {
 		if (keys.Find(type) != keys.Size()) {
 			return PSAT_ARMOR_HXAC;
 		} else {
-			return PSAT_ARMOR_SIMPLE;
+			return PSAT_ARMOR_BASIC;
 		}
 	}
 	int GetEnumFromProgressionType(String type) {
@@ -700,7 +700,7 @@ class Progression: Inventory {
 
 		String playerClassName = GetPlayerClassName();
 
-		int cvarArmorType = PSAT_ARMOR_SIMPLE;
+		int cvarArmorType = PSAT_ARMOR_BASIC;
 		let itemHexenArmor = HexenArmor(owner.player.mo.FindInventory("HexenArmor"));
 		if (itemHexenArmor) {
 			cvarArmorType = PSAT_ARMOR_HXAC;
@@ -728,8 +728,8 @@ class Progression: Inventory {
 		}
 
 		if (self.ArmorType == PSAT_DEFAULT) {
-			self.ArmorType = PSAT_ARMOR_SIMPLE;
-			console.printf("Incorrect Class Armor Mode, PSAT_DEFAULT or 0 should not be used! Using PSAT_SIMPLE as Default.");
+			self.ArmorType = PSAT_ARMOR_BASIC;
+			console.printf("Incorrect Class Armor Mode, PSAT_DEFAULT or 0 should not be used! Using PSAT_ARMOR_BASIC as Default.");
 		}
 		if (self.ProgressionType == PSP_DEFAULT) {
 			self.ProgressionType = PSP_NONE;
@@ -907,8 +907,8 @@ class Progression: Inventory {
 			optionArmorMode = self.ArmorType;
 		}
 
-		if (optionArmorMode == PSAT_ARMOR_SIMPLE) {
-			ArmorModeSelection_Simple(player);
+		if (optionArmorMode == PSAT_ARMOR_BASIC) {
+			ArmorModeSelection_Basic(player);
 		} else if (optionArmorMode == PSAT_ARMOR_HXAC) {
 			ArmorModeSelection_HXAC(player);
 		//} else if (optionArmorMode == PSAT_ARMOR_HX2AC) {
@@ -943,8 +943,8 @@ class Progression: Inventory {
 		return itemHexenArmor;
 	}
 
-	void ArmorModeSelection_Simple(PlayerPawn player) {
-		// Remove Hexen AC armor Values to force simple armor mechanics
+	void ArmorModeSelection_Basic(PlayerPawn player) {
+		// Remove Hexen AC armor Values to force basic armor mechanics
 		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
 			for (int i = 0; i < 5; i++) {
@@ -953,7 +953,7 @@ class Progression: Inventory {
 			for (int i = 0; i < 4; i++) {
 				itemHexenArmor.SlotsIncrement[i] = 0;
 			}
-			self.ArmorType = PSAT_ARMOR_SIMPLE;
+			self.ArmorType = PSAT_ARMOR_BASIC;
 		}
 	}
 	void ArmorModeSelection_HXAC(PlayerPawn player) {

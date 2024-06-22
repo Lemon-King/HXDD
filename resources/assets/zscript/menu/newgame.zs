@@ -485,7 +485,7 @@ class ZFGameOptions ui {
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
         listArmorMode.items.push("$OPT_CLASS_DEFAULT");
-        listArmorMode.items.push("$OPT_ARMOR_SIMPLE");
+        listArmorMode.items.push("$OPT_ARMOR_BASIC");
         listArmorMode.items.push("$OPT_ARMOR_AC");
         listArmorMode.items.push("$OPT_RANDOM");
         //listArmorMode.items.push("Custom");
