@@ -1,6 +1,6 @@
 {
     "class": "TemplatePlayer",
-    "armor_type": "simple",
+    "armor_type": "basic",
     "progression_type": "none",
     "alignment": "neutral",
     "max_level": 20,

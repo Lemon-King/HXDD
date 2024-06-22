@@ -32,13 +32,13 @@
             "cvar": "hxdd_armor_mode",
             "equals": 2,
             "true": ["MeshArmor","PlatinumHelm"],
-            "false": "SilverShield"
+            "false": ["MeshArmor","PlatinumHelm"]
         },
         "BlueArmor,EnchantedShield": {
             "cvar": "hxdd_armor_mode",
             "equals": 2,
             "true": ["FalconShield","AmuletOfWarding"],
-            "false": "EnchantedShield"
+            "false": ["FalconShield","AmuletOfWarding"]
         },
         "MeshArmor": {
             "cvar": "hxdd_armor_mode",
@@ -83,6 +83,21 @@
         "RocketBox": "Mana3",
         "Cell": "Mana2",
         "CellPack": "Mana3",
+
+        "HealthBonus": "none",
+        "Stimpack": "CrystalVial",
+        "Medikit": "ArtiHealth",
+
+        "ArmorBonus": "ArtiPoisonBag",
+
+        "InvulnerabilitySphere": "ArtiInvulnerability2",
+        "Soulsphere": "ArtiSuperHealth",
+        "Megasphere": "ArtiBoostArmor",
+        "BlurSphere": "ArtiPork,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
+        "RadSuit": "ArtiSpeedBoots",
+        "Infrared": "ArtiTorch",
+        "Allmap": "SuperMap",
+        "Berserk": "ArtiDarkServant",
 
         "GoldWandAmmo": "none",
         "GoldWandHefty": "Mana1",
@@ -136,13 +151,13 @@
         "MWeaponPiece3": "none",
     },
     "sound_set": {
-        "misc/health_pkup":	"hexen/misc/i_pkup",
-        "misc/armor_pkup": "hexen/misc/i_pkup",
-        "misc/ammo_pkup": "hexen/misc/i_pkup",
-        "misc/i_pkup": "hexen/misc/i_pkup",
+        "misc/health_pkup":	"hexen2/items/itempkup",
+        "misc/armor_pkup": "hexen2/items/armrpkup",
+        "misc/ammo_pkup": "hexen2/weapons/ammopkup",
+        "misc/i_pkup": "hexen2/items/itempkup",
         "misc/k_pkup": "hexen/misc/k_pkup",
-        "misc/p_pkup": "hexen/misc/p_pkup",
-        "misc/w_pkup": "hexen/misc/w_pkup"
+        "misc/p_pkup": "hexen2/items/artpkup",
+        "misc/w_pkup": "hexen2/weapons/weappkup"
     },
     "only_drop_unowned_weapons": true,
     "xp_bonus_stat": "wisdom",

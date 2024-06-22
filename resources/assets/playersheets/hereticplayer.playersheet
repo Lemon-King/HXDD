@@ -1,7 +1,7 @@
 {
     "name": "Corvus",
     "class": "HereticPlayer",
-    "armor_type": "simple",
+    "armor_type": "basic",
     "progression_type": "none",
     "alignment": "good",
     "max_level": 20,
@@ -90,18 +90,6 @@
         "Medikit": "ArtiHealth",
 
         "ArmorBonus": "ArtiTimeBomb",
-        "GreenArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 2,
-            "true": ["MeshArmor", "PlatinumHelm"],
-            "false": "SilverShield"
-        },
-        "BlueArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 2,
-            "true": ["AmuletOfWarding", "FalconShield"],
-            "false": "EnchantedShield"
-        },
 
         "InvulnerabilitySphere": "ArtiInvulnerability",
         "Soulsphere": "ArtiSuperHealth",
@@ -113,32 +101,6 @@
         "Berserk": "ArtiTomeOfPower",
 
         "Backpack": "BagOfHolding",
-
-
-        "MeshArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "MeshArmor"
-        },
-        "PlatinumHelm": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "PlatinumHelm"
-        },
-        "AmuletOfWarding": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "AmuletOfWarding"
-        },
-        "FalconShield": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "FalconShield"
-        },
 
         "FWeapAxe": "Gauntlets",
         "CWeapStaff": "Crossbow",

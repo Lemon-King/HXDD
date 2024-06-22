@@ -364,7 +364,7 @@ class XGameTranslation {
                     val.Split(xta.defaults, ",");
                 }
             }
-            if (!xta.defaults.Size() == 0) {
+            if (xta.defaults.Size() == 0) {
                 xta.defaults.push(key);
             }
         }
@@ -396,7 +396,7 @@ class XGameTranslation {
                         useAlts = (cval == xcvar.s_value);
                     }
                 }
-                if (useAlts) {
+                if (useAlts && xta.alternates.Size() > 0) {
                     list.copy(xta.alternates);
                 }
             }
@@ -461,6 +461,7 @@ class XGameTranslation {
             // not ready for general use
             return replacee;
         }
+        /*
 		for (let i = 0; i < self.xswap.Size(); i++) {
             XTranslationActors xtaSwap = self.xswap[i];
 			if (xtaSwap.key.MakeLower().IndexOf(replacee.MakeLower()) != -1) {
@@ -480,6 +481,7 @@ class XGameTranslation {
                 return replacement;
             }
         }
+        */
         return replacee;
     }
 }

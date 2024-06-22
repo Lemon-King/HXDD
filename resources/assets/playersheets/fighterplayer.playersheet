@@ -32,13 +32,13 @@
             "cvar": "hxdd_armor_mode",
             "equals": 2,
             "true": ["AmuletOfWarding","PlatinumHelm"],
-            "false": "SilverShield"
+            "false": ["AmuletOfWarding","PlatinumHelm"]
         },
         "BlueArmor,EnchantedShield": {
             "cvar": "hxdd_armor_mode",
             "equals": 2,
             "true": ["FalconShield","MeshArmor"],
-            "false": "EnchantedShield"
+            "false": ["FalconShield","MeshArmor"]
         },
         "MeshArmor": {
             "cvar": "hxdd_armor_mode",

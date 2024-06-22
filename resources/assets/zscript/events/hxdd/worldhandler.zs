@@ -89,17 +89,17 @@ class HXDDWorldEventHandler : EventHandler {
 
     // real nasty hack
     override void WorldThingSpawned (WorldEvent e) {
-        //if (LemonUtil.TryOpenMapByName()) {
-            //Console.printf("Thing: %s", e.thing.GetClassName());
-        //}
-        if (e.Thing is "Inventory") {
+        if (e.Thing) {
             PlayerPawn  p = PlayerPawn(players[0].mo);
             Progression prog = Progression(p.FindInventory("Progression"));
             if (prog) {
                 Inventory item = Inventory(e.Thing);
-                String pkupSound = item.PickupSound;
-                String replacement = prog.FindSoundReplacement(pkupSound);
-                item.PickupSound = replacement;
+                if (item is "Inventory" || item is "CustomInventory") {
+                    String pkupSound = item.PickupSound;
+                    console.printf("%s", pkupSound);
+                    String replacement = prog.FindSoundReplacement(pkupSound);
+                    item.PickupSound = replacement;
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 {
     "class": "DoomPlayer",
-    "armor_type": "simple",
+    "armor_type": "basic",
     "progression_type": "none",
     "alignment": "good",
     "max_level": 20,
