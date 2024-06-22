@@ -6,7 +6,7 @@
 
   <groupId>lemon.hxdd</groupId>
   <artifactId>hxdd</artifactId>
-  <version>0.7.2-BETA</version>
+  <version>0.8.0-BETA</version>
   <name>hxdd</name>
 
   <properties>
@@ -109,6 +109,7 @@
           <configuration>
             <finalName>${application.resources}</finalName>
             <appendAssemblyId>false</appendAssemblyId>
+            <outputDirectory>${project.basedir}/</outputDirectory>
             <descriptors>
               <descriptor>src/assembly/resources.xml</descriptor>
             </descriptors>
