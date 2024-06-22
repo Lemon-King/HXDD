@@ -125,6 +125,7 @@
         "misc/p_pkup": "hexen/misc/p_pkup",
         "misc/w_pkup": "hexen/misc/w_pkup"
     },
+    "only_drop_unowned_weapons": true,
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,
     "skill_modifier": [],

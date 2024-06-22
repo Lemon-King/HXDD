@@ -184,6 +184,7 @@
         "misc/p_pkup": "doom/misc/p_pkup",
         "misc/w_pkup": "doom/misc/w_pkup"
     },
+    "soundclass": "marine",
     "xp_bonus_stat": "rage",
     "use_max_health_scaler": false,
     "skill_modifier": [],

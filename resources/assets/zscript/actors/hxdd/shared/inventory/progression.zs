@@ -50,13 +50,60 @@ class PlayerSheetEventHandler: EventHandler {
                     if (prog != NULL) {
                         exp = prog.AwardExperience(e.thing);
                     }
-
+                    
                     if (prog.handler) {
                         prog.handler.OnKill(pt, e.thing, exp);
                     }
                 }
             }
         }
+    }
+
+    override void WorldThingSpawned(WorldEvent e) {
+        if (e.thing is "Weapon" && level.MapTime > 0) {
+			let onlyDropUnownedWeapons = false;
+			PlayerPawn pp = PlayerPawn(players[0].mo);
+            if (pp.FindInventory("Progression")) {
+                Progression prog = Progression(pp.FindInventory("Progression"));
+				onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
+			}
+
+			if (onlyDropUnownedWeapons) {
+				Weapon weap = Weapon(e.thing);
+				if (weap.Owner || (weap.SisterWeapon && (Weapon)(pp.FindInventory(weap.SisterWeapon.GetClassName())).Owner)) {
+					// Player owns these weapons, skip, and allow it to drop.
+					return;
+				}
+
+				if (pp.CountInv(weap.GetClassName()) > 0) {
+					let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
+					let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+
+					let selectedAmmo = ammo1;
+					if (ammo1 && ammo2) {
+						int select = random[rngWeapDrop](0,1);
+						if (select == 0) {
+							selectedAmmo = ammo1;
+						} else if (select == 1) {
+							selectedAmmo = ammo2;
+						}
+					} else if (ammo2) {
+						selectedAmmo = ammo2;
+					} else if (!ammo1 && !ammo2) {
+						weap.Destroy();
+						return;
+					}
+
+					Ammo newAmmo = Ammo(weap.Spawn(selectedAmmo, weap.pos));
+					if (newAmmo) {
+						newAmmo.angle = weap.angle;
+						newAmmo.vel = weap.vel;
+
+						weap.Destroy();
+					}
+				}
+			}
+		}
     }
 }
 
@@ -73,7 +120,7 @@ class PlayerSheetStatGain {
 class PlayerSheetStatParams {
 	int maximum;			// Maximum Stat Value
 	PlayerSheetStatBase base;
-	PlayerSheetStatGain gain;			
+	PlayerSheetStatGain gain;
 }
 
 class PlayerSheetStat {
@@ -222,6 +269,7 @@ class PlayerSheetJSON {
 	bool UseMaxHealthScaler;
 	bool HalveXPBeforeLevel4;
 	bool UsesEventHandler;
+	bool OnlyDropUnownedWeapons;
 
 	double experienceModifier;
 
@@ -316,6 +364,7 @@ class PlayerSheetJSON {
 			let valSkillModifier		= FileJSON.GetArray(jsonObject, "skill_modifier");
 			double valXPModifier		= FileJSON.GetDouble(jsonObject, "xp_modifier");
 			bool valHalveXPBeforeLevel4 = FileJSON.GetBool(jsonObject, "halve_xp_before_level_4");
+			bool valOnlyDropUnownedWeapons	= FileJSON.GetBool(jsonObject, "only_drop_unowned_weapons");
 			let valExperienceTable		= FileJSON.GetArray(jsonObject, "experience");
 			let valHPTable				= FileJSON.GetArray(jsonObject, "health");
 			if (!valHPTable) {
@@ -470,6 +519,8 @@ class PlayerSheetJSON {
 			self.soundLevelUp				= valSoundLevelUp;
 			self.soundClass					= valSoundClass;
 
+			self.OnlyDropUnownedWeapons		= valOnlyDropUnownedWeapons;
+
 			if (valSkillModifier) {
 				if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
 					self.skillmodifier.Resize(valSkillModifier.arr.Size());
@@ -535,6 +586,8 @@ class Progression: Inventory {
 
 	bool HalveXPBeforeLevel4;
 	bool UsesEventHandler;
+
+	bool OnlyDropUnownedWeapons;
 
 	// Class Tables
 	Array<int> experienceTable;
@@ -702,6 +755,8 @@ class Progression: Inventory {
 			}
 		}
 
+		self.OnlyDropUnownedWeapons	= PlayerSheet.OnlyDropUnownedWeapons;
+
 		self.soundLevelUp			= PlayerSheet.soundLevelUp;
 
 		self.HalveXPBeforeLevel4	= PlayerSheet.HalveXPBeforeLevel4;
@@ -711,7 +766,7 @@ class Progression: Inventory {
 
 		self.xp_bonus_stat			= PlayerSheet.xp_bonus_stat;
 
-		self.soundClass				= PLayerSheet.soundClass;
+		self.soundClass				= PlayerSheet.soundClass;
 
 		self.skillmodifier.Copy(PlayerSheet.skillmodifier);
 
