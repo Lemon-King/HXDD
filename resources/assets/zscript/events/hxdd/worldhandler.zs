@@ -96,7 +96,6 @@ class HXDDWorldEventHandler : EventHandler {
                 Inventory item = Inventory(e.Thing);
                 if (item is "Inventory" || item is "CustomInventory") {
                     String pkupSound = item.PickupSound;
-                    console.printf("%s", pkupSound);
                     String replacement = prog.FindSoundReplacement(pkupSound);
                     item.PickupSound = replacement;
                 }
