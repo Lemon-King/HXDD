@@ -171,6 +171,7 @@ class GameInfoReader {
         line.Substitute(" , ", ",");
         line.Substitute(", ", ",");
         line.Substitute(" ,", ",");
+        line.Substitute("\r", "");  // only shows in ci/cd
 
         return line;
     }
