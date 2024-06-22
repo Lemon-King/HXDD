@@ -420,6 +420,7 @@ public class PackageBuilder implements Runnable {
             za.ExtractSingleFile("filter/game-heretic/sndseq.txt", "sndseq.hereticgz");
             za.ExtractSingleFile("filter/game-heretic/animated.lmp", "filter/game-raven/animated.heretic");
             za.ExtractSingleFile("filter/game-hexen/sndinfo.txt", "sndinfo.hexengz");
+            za.ExtractSingleFile("filter/game-doomchex/animated.lmp", "filter/game-doomchex/animated.lmp");
         }
 
         zipFile = new File(pathSources + "/game_support.pk3");
