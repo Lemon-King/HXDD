@@ -706,7 +706,7 @@ public class PackageBuilder implements Runnable {
             MetaFile f = new MetaFile();
             f.SetPalette(GraphicUtils.DOOM);
             f.SetWad(new WadFile(pathMarineStuff));
-            f.Define("AHLMA0", "sprites", pathMarineStuff);
+            f.Define("AHLMA0", "sprite", "sprites", pathMarineStuff);
             f.folder = "sprites/realm667";
             f.ExtractFile(pathTemp);
             f.inputName = "BOOTA0";
@@ -716,10 +716,10 @@ public class PackageBuilder implements Runnable {
             f.outputName = "UNIFA0";
             f.ExtractFile(pathTemp);
 
-            f.Define("CREDITS", "textlumps", pathMarineStuff);
+            f.Define("CREDITS", "textlump","", pathMarineStuff);
             f.outputName =  "realm667/marinestuff/CREDITS.txt";
             f.ExtractFile(pathTemp);
-            f.Define("INFO", "textlumps", pathMarineStuff);
+            f.Define("INFO", "textlump","", pathMarineStuff);
             f.outputName =  "realm667/marinestuff/INFO.txt";
             f.ExtractFile(pathTemp);
         } catch (IOException e) {

@@ -65,64 +65,67 @@ public class WadFileOrganizer {
     public void Parse(String path) throws IOException {
         String source = this.wad.getFileAbsolutePath();
 
-        String type = "";
+        String decodeType = "";
+        String folder = "";
         for (WadEntry entry : this.wad) {
             String entryName = entry.getName();
             MetaFile mf = new MetaFile();
             mf.SetWad(this.wad);
             if (Arrays.asList(EngineLumps).contains(entryName)) {
-                mf.Define(entryName, "lumps", source);
+                mf.Define(entryName, "lump","lumps", source);
                 mf.SetWad(this.wad);
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(GameLumps).contains(entryName.toLowerCase())) {
                 // Will let files be unique and not fight over a single entry.
-                mf.Define(entryName, "lumps", source);
+                mf.Define(entryName, "lump","lumps", source);
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(TextLumps).contains(entryName.toLowerCase())) {
                 // TextLumps should be renamed per game as to prevent conflicts
-                mf.Define(entryName, "lumps", source);
-                mf.decodeType = "textlumps";
+                mf.Define(entryName, "textlump","lumps", source);
                 mf.outputName = entryName;
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (!Arrays.asList(EntryIgnoreList).contains(entryName)) {
                 if (entry.isMarker()) {
                     if (entryName.contains("_START")) {
                         if (entryName.startsWith("S_")) {
-                            type = "sprites";
+                            decodeType = "sprite";
+                            folder = "sprites";
                         } else if (entryName.startsWith("P")) {
-                            type = "patches";
+                            decodeType = "patch";
+                            folder = "patches";
                         } else if (entryName.startsWith("F")) {
-                            type = "flats";
+                            decodeType = "flat";
+                            folder = "flats";
                         }
-                    } else if (!type.equals("") && entryName.contains("_END")) {
-                        type = "";
+                    } else if (!folder.equals("") && entryName.contains("_END")) {
+                        decodeType = "";
+                        folder = "";
                     }
                 } else if (entryName.startsWith("FONT")) {
-                    mf.Define(entryName, "graphics", source);
+                    mf.Define(entryName, "graphic","graphics", source);
                     this.entryMaps.get("graphics").put(entryName, mf);
                 } else if (entryName.equals("ADVISOR")) {
                     // Heretic / Hexen only advisory
-                    String advisorType = "graphics";
-                    mf.Define(entryName, advisorType, source);
-                    mf.decodeType = "sprites";
-                    this.entryMaps.get(advisorType).put(entryName, mf);
-                } else if (Arrays.asList(GraphicLumps).contains(entryName) || type.equals("graphics")) {
-                    type = "graphics";
-                    mf.Define(entryName, type, source);
-                    this.entryMaps.get(type).put(entryName, mf);
-                } else if (type.equals("sprites") || type.equals("patches") || type.equals("flats")) {
-                    mf.Define(entryName, type, source);
-                    this.entryMaps.get(type).put(entryName, mf);
+                    mf.Define(entryName, "sprite", "graphics", source);
+                    this.entryMaps.get("graphics").put(entryName, mf);
+                } else if (Arrays.asList(GraphicLumps).contains(entryName) || folder.equals("graphics")) {
+                    decodeType = "graphic";
+                    folder = "graphics";
+                    mf.Define(entryName, decodeType, folder, source);
+                    this.entryMaps.get(folder).put(entryName, mf);
+                } else if (folder.equals("sprites") || folder.equals("patches") || folder.equals("flats")) {
+                    mf.Define(entryName, decodeType, folder, source);
+                    this.entryMaps.get(folder).put(entryName, mf);
                 } else {
                     try {
                         byte[] data = this.wad.getData(entry);
                         if (data.length > 4) {
                             // startswith is hacky, but it works
                             if ((data[0] + "" + data[1] + "" + data[2] + "" + data[3]).startsWith("778583")) {
-                                mf.Define(entryName, "music", source);
+                                mf.Define(entryName, "music","music", source);
                                 this.entryMaps.get("music").put(entryName, mf);
                             } else if ((data[0] + "" + data[1] + "" + data[2] + "" + data[3]).startsWith("301743")) {
-                                mf.Define(entryName, "sounds", source);
+                                mf.Define(entryName, "sound","sounds", source);
                                 this.entryMaps.get("sounds").put(entryName, mf);
                             }
                         }
@@ -160,18 +163,21 @@ public class WadFileOrganizer {
         });
     }
 
-    public void CopyFile(String type, String source, String target) {
-        MetaFile mfFrom = this.entryMaps.get(type).get(source);
+    public MetaFile CopyFile(String folder, String source, String target) {
+        MetaFile mfFrom = this.entryMaps.get(folder).get(source);
         if (mfFrom != null) {
             MetaFile mfCopy = new MetaFile();
-            mfCopy.Define(target, type, mfFrom.source);
+            mfCopy.Define(target, mfFrom.decodeType, folder, mfFrom.source);
             mfCopy.SetWad(mfFrom.wad);
             mfCopy.sourcePK3 = mfFrom.sourcePK3;
             mfCopy.inputName = mfFrom.inputName;
             mfCopy.folder = mfFrom.folder;
             mfCopy.decodeType = mfFrom.decodeType;
-            this.entryMaps.get(type).put(target, mfCopy);
+            this.entryMaps.get(folder).put(target, mfCopy);
+
+            return mfCopy;
         }
+        return null;
     }
 
     public void BatchRename(String type, String from, String to, String method) {
@@ -199,6 +205,21 @@ public class WadFileOrganizer {
         });
         removalKeys.forEach((key) -> {
             this.entryMaps.get(type).remove(key);
+        });
+    }
+
+    public void BatchSetTargetFolder(String type, String name, String target, String method) {
+        HashMap<String, MetaFile> MetaFileChange = new HashMap<>();
+        this.entryMaps.get(type).forEach((key, entry) -> {
+            if ((method.equals("startsWith") && entry.inputName.startsWith(name)) ||
+                    (method.equals("equals") && entry.inputName.equals(name))) {
+                entry.folder = target;
+                MetaFileChange.put(entry.inputName, entry);
+            }
+        });
+        MetaFileChange.forEach((key, entry) -> {
+            this.entryMaps.get(type).remove(entry.inputName);
+            this.entryMaps.get(type).put(key, entry);
         });
     }
 }
