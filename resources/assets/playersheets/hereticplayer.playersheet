@@ -30,39 +30,39 @@
     "xgame": {
         "GreenArmor,SilverShield": {
             "command": "armortype",
-            "equals": 2,
+            "equals": 1,
             "true": ["MeshArmor", "PlatinumHelm"],
             "false": "SilverShield"
         },
         "BlueArmor,EnchantedShield": {
             "command": "armortype",
-            "equals": 2,
+            "equals": 1,
             "true": ["AmuletOfWarding", "FalconShield"],
             "false": "EnchantedShield"
         },
         "MeshArmor": {
             "command": "armortype",
-            "equals": 2,
-            "true": "MeshArmor",
-            "false": "SilverShield"
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "MeshArmor"
         },
         "PlatinumHelm": {
             "command": "armortype",
-            "equals": 2,
-            "true": "PlatinumHelm",
-            "false": "SilverShield"
+            "equals": 1,
+            "true": "SilverShield",
+            "false": "PlatinumHelm"
         },
         "AmuletOfWarding": {
             "command": "armortype",
-            "equals": 2,
-            "true": "AmuletOfWarding",
-            "false": "EnchantedShield"
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "AmuletOfWarding"
         },
         "FalconShield": {
             "command": "armortype",
-            "equals": 2,
-            "true": "FalconShield",
-            "false": "EnchantedShield"
+            "equals": 1,
+            "true": "EnchantedShield",
+            "false": "FalconShield"
         },
 
 
