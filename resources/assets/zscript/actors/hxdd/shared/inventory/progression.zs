@@ -686,6 +686,10 @@ class Progression: Inventory {
 		RescanAllActors();
 	}
 
+	override void Travelled() {
+		RescanAllActors();
+	}
+
 	override void Tick() {
 		self.SecretWatcher();
 	}

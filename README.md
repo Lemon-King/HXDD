@@ -37,6 +37,15 @@
 
 </div>
 
+<div align="center">
+
+<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/HERETIC-000000?style=for-the-badge&logoColor=white)</a>
+<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/HEXEN-CC7700?style=for-the-badge&logoColor=white)</a>
+<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DEATHKINGS-CC7700?style=for-the-badge&logoColor=white)</a>
+<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DOOM-990000?style=for-the-badge&logoColor=white)</a>
+
+</div>
+
 <br/>
 
 **HXDD** takes everything from Heretic, Hexen and other games. Then arranges and converts them into a new GZDOOM compatible format, allowing you play them as if they were a single game.
