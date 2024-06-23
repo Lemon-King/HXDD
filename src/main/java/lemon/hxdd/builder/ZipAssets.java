@@ -120,6 +120,10 @@ public class ZipAssets {
             ZipEntry entry;
             while ((entry = this.zis.getNextEntry()) != null) {
                 if (input.equals(entry.getName())) {
+                    File dirFile = new File(new File(path + "/" + output).getParent());
+                    if (!dirFile.exists()) {
+                        dirFile.mkdirs();
+                    }
                     OutputStream os = new FileOutputStream(path + "/" + output);
                     os.write(this.zis.readAllBytes());
                     os.close();

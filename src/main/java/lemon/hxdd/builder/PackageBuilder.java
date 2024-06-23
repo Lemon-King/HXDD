@@ -552,15 +552,13 @@ public class PackageBuilder implements Runnable {
                 InputStream in = dl.openStream();
                 Files.copy(in, Path.of(steamPNG.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
                 in.close();
-
-                Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
 
             File dirFile = new File(titlePNG.getParent());
             if (!dirFile.exists()) {
                 dirFile.mkdirs();
             }
-            Files.copy(steamPNG.toPath(), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Path.of(steamPNG.getAbsolutePath()), titlePNG.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
