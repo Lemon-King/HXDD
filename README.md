@@ -55,8 +55,8 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 
 
 <div align="center">
-  <a href=".github/readme/hxdd_beta_072.png">
-    <img src=".github/readme/hxdd_beta_072.png" alt="Logo" width="250" height="auto">
+  <a href=".github/readme/hxdd_beta_080.png">
+    <img src=".github/readme/hxdd_beta_080.png" alt="Logo" width="250" height="auto">
   </a>
 </div>
 
@@ -124,6 +124,7 @@ You can also use hxdd.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https:/
 <img src="https://i.imgur.com/HY5b2YZm.jpg" alt="Logo" width="475" height="auto">
 </a>
 
+[![Release 0.8.1a Video](https://img.youtube.com/vi/leqi5NL_JoE/0.jpg)](https://www.youtube.com/watch?v=leqi5NL_JoE)
 [![YOUTUBE DEMO VIDEO](https://img.youtube.com/vi/PTh_TbOPyPc/0.jpg)](https://www.youtube.com/watch?v=PTh_TbOPyPc)
 
 ## License
