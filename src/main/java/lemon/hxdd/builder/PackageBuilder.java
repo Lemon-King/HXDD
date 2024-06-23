@@ -402,6 +402,26 @@ public class PackageBuilder implements Runnable {
             PostProcessImageData(path, set.getValue()[0], set.getValue()[1]);
             this.app.controller.SetCurrentProgress(++count / (float)colorSwap.size());
         }
+
+        // Move conflicting patches to filter
+        File SKY1 = new File(pathTemporary + "/patches/SKY1.png");
+        File SKY2 = new File(pathTemporary + "/patches/SKY2.png");
+        File SKY3 = new File(pathTemporary + "/patches/SKY3.png");
+        try {
+            File dirFile = new File(pathTemporary + "/filter/game-raven/patches");
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            Path target = new File(pathTemporary + "/filter/game-raven/patches/SKY1.png").toPath();
+            Files.move(SKY1.toPath(), target, REPLACE_EXISTING);
+            target = new File(pathTemporary + "/filter/game-raven/patches/SKY2.png").toPath();
+            Files.move(SKY2.toPath(), target, REPLACE_EXISTING);
+            target = new File(pathTemporary + "/filter/game-raven/patches/SKY3.png").toPath();
+            Files.move(SKY3.toPath(), target, REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void ExtractFilesFromGZDoom() {
