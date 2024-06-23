@@ -29,40 +29,40 @@
     },
     "xgame": {
         "GreenArmor,SilverShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["MeshArmor", "PlatinumHelm"],
             "false": "SilverShield"
         },
         "BlueArmor,EnchantedShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["AmuletOfWarding", "FalconShield"],
             "false": "EnchantedShield"
         },
         "MeshArmor": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "MeshArmor"
+            "command": "armortype",
+            "equals": 2,
+            "true": "MeshArmor",
+            "false": "SilverShield"
         },
         "PlatinumHelm": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "PlatinumHelm"
+            "command": "armortype",
+            "equals": 2,
+            "true": "PlatinumHelm",
+            "false": "SilverShield"
         },
         "AmuletOfWarding": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "AmuletOfWarding"
+            "command": "armortype",
+            "equals": 2,
+            "true": "AmuletOfWarding",
+            "false": "EnchantedShield"
         },
         "FalconShield": {
-            "cvar": "hxdd_armor_mode",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "FalconShield"
+            "command": "armortype",
+            "equals": 2,
+            "true": "FalconShield",
+            "false": "EnchantedShield"
         },
 
 
@@ -122,16 +122,14 @@
         "MWeaponPiece2": "ArtiTomeOfPower, none",
         "MWeaponPiece3": "ArtiTomeOfPower, none",
 
-        "ArtiBoostMana": "BagOfHolding",
-        "ArtiBoostArmor": "ArtiTomeOfPower",
-        "ArtiPoisonBag": "ArtiTimeBomb",
         "Mana1": "GoldWandAmmo,GoldWandHefty,CrossbowAmmo,CrossbowHefty",
         "Mana2": "BlasterAmmo,BlasterHefty,SkullRodAmmo,SkullRodHefty",
         "Mana3": "PhoenixRodAmmo,PhoenixRodHefty,MaceAmmo,MaceHefty",
 
         "ArtiBoostMana": "BagOfHolding",
-        "ArtiDarkServant": "ArtiTomeOfPower",
+        "ArtiBoostArmor": "ArtiTomeOfPower",
         "ArtiPoisonBag": "ArtiTimeBomb",
+        "ArtiDarkServant": "ArtiTomeOfPower",
         "ArtiInvulnerability2": "ArtiInvulnerability",
         "ArtiPork": "ArtiEgg"
     },

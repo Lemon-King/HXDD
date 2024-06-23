@@ -27,7 +27,8 @@ class XGT_Group {
     Array<String> Hexen;
 }
 
-class XCVARCompare {
+class XTACompare {
+    String command;
     String cvar;
     int i_value;
     String s_value;
@@ -37,12 +38,17 @@ class XCVARCompare {
 
 class XTranslationActors {
 	String key;
-    XCVARCompare compare;
+    XTACompare compare;
 	Array<String> defaults;
     Array<String> alternates;
 
     bool hasCVARCompare() {
         return (self.compare != null);
+    }
+
+    bool canReadCommand() {
+        let probe = new("XGTPlayerProbe");
+        return probe.GetPlayer().CanReadPlayer();
     }
 }
 
@@ -56,9 +62,6 @@ class XGameResponse {
 }
 
 class XGameTranslation {
-
-
-
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
@@ -148,7 +151,7 @@ class XGameTranslation {
         }
         if (index == group.size) {
             String swapActor = self.TryXClass(source);
-            swapActor = self.TryXSwap(swapActor);
+            //swapActor = self.TryXSwap(swapActor);
             XGameResponse resp = new("XGameResponse");
             if (swapActor != source) {
                 resp.isFinal = true;
@@ -179,7 +182,7 @@ class XGameTranslation {
             }
         }
         String swapActor = self.TryXClass(newActor);
-        swapActor = self.TryXSwap(swapActor);
+        //swapActor = self.TryXSwap(swapActor);
         XGameResponse resp = new("XGameResponse");
         if (swapActor != newActor) {
             resp.IsFinal = true;
@@ -205,7 +208,10 @@ class XGameTranslation {
             success = fJSON.Open(String.format("playersheets/%s.json", playerClassName));
         }
         if (success) {
-            console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, fJSON.index);
+        	bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+            if (cvar_isdev_environment) {
+                console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, fJSON.index);
+            }
             // Class Item Swap List Generation
             HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
             String ver = FileJSON.GetString(json, "version");
@@ -281,14 +287,20 @@ class XGameTranslation {
     XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
         XTranslationActors xta = new("XTranslationActors");
         xta.key = key;
-        xta.compare = new("XCVARCompare");
+        xta.compare = new("XTACompare");
 
         String sCVAR = FileJSON.GetString(jo, "cvar");
         if (sCVAR != "") {
             xta.compare.cvar = sCVAR;
         }
 
-        if (xta.compare.cvar) {
+        // Probe Progression Values from the Player
+        String sCommand = FileJSON.GetString(jo, "command");
+        if (sCommand != "") {
+            xta.compare.command = sCommand;
+        }
+
+        if (xta.compare.cvar || xta.compare.command) {
             xta.compare.method = ECVARCompareMethod_NONE;
             xta.compare.type = ECVARCompareType_NONE;
 
@@ -352,7 +364,7 @@ class XGameTranslation {
             HXDD_JsonArray arrDefaults = FileJSON.GetArray(jo, "false");
             if (arrDefaults) {
                 for (int j = 0; j < arrDefaults.Size(); j++) {
-                    String entry = HXDD_JsonString(arrAlternates.get(j)).s;
+                    String entry = HXDD_JsonString(arrDefaults.get(j)).s;
                     if (entry) {
                         xta.defaults.push(entry);
                     }
@@ -380,20 +392,38 @@ class XGameTranslation {
             String replacement;
             if (xta.hasCVARCompare()) {
                 bool useAlts = false;
-                XCVARCompare xcvar = xta.compare;
-                if (xcvar.method == ECVARCompareType_INT) {
-                    int cval = LemonUtil.CVAR_GetInt(xcvar.cvar, 2147483647);
-                    if (ECVARCompareMethod_EQUALS) {
-                        useAlts = (cval == xcvar.i_value);
-                    } else if (ECVARCompareMethod_LESSER) {
-                        useAlts = (cval < xcvar.i_value);
-                    } else if (ECVARCompareMethod_GREATER) {
-                        useAlts = (cval > xcvar.i_value);
+                XTACompare xcvar = xta.compare;
+                if (xcvar.type == ECVARCompareType_INT) {
+                    int val;
+                    if (xcvar.cvar) {
+                        val = LemonUtil.CVAR_GetInt(xcvar.cvar, -1);
+                    } else if (xcvar.command) {
+                        XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer();
+                        if (probe.Command(xcvar.command)) {
+                            val = probe.i_result;
+                        }
                     }
-                } else if (xcvar.method == ECVARCompareType_STRING) {
-                    String cval = LemonUtil.CVAR_GetString(xcvar.cvar, "");
-                    if (cval != "") {
-                        useAlts = (cval == xcvar.s_value);
+                    if (val) {
+                        if (xcvar.method == ECVARCompareMethod_EQUALS) {
+                            useAlts = (val == xcvar.i_value);
+                        } else if (xcvar.method == ECVARCompareMethod_LESSER) {
+                            useAlts = (val < xcvar.i_value);
+                        } else if (xcvar.method == ECVARCompareMethod_GREATER) {
+                            useAlts = (val > xcvar.i_value);
+                        }
+                    }
+                } else if (xcvar.type == ECVARCompareType_STRING) {
+                    String val;
+                    if (xcvar.cvar) {
+                        val = LemonUtil.CVAR_GetString(xcvar.cvar, "");
+                    } else if (xcvar.command) {
+                        XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer();
+                        if (probe.Command(xcvar.command)) {
+                            val = probe.s_result;
+                        }
+                    }
+                    if (val != "") {
+                        useAlts = (val == xcvar.s_value);
                     }
                 }
                 if (useAlts && xta.alternates.Size() > 0) {
@@ -408,9 +438,7 @@ class XGameTranslation {
             // select random
             int size = list.Size() - 1;
             int choice = random[xclass](0, size);
-            //console.printf("XGameTranslation.XClass.TrySwap Found: %s %d", replacee, choice);
             replacement = list[choice];
-            //console.printf("XGameTranslation.XClass.TrySwap Found: %s, Replacement: %s", replacee, replacement);
 
             return replacement;
         }
@@ -483,5 +511,43 @@ class XGameTranslation {
         }
         */
         return replacee;
+    }
+}
+
+// Grabs Player stats in real time
+// TODO: Move into Progression for command responses
+class XGTPlayerProbe {
+    Progression invProgression;
+    int i_result;
+    String s_result;
+    XGTPlayerProbe GetPlayer() {
+        PlayerPawn player = PlayerPawn(players[0].mo);
+        if (player) {
+            let invProg = player.FindInventory("Progression");
+            if (invProg) {
+                self.invProgression = Progression(invProg);
+            }
+        }
+        return self;
+    }
+
+    bool CanReadPlayer() {
+        return self.invProgression != null;
+    }
+
+    bool Command(String cmd) {
+        if (!CanReadPlayer()) {
+            return false;
+        }
+        let sCmd = cmd.MakeLower();
+        if (sCmd == "armortype") {
+            self.i_result = self.GetArmorType();
+            return true;
+        }
+        return false;
+    }
+
+    int GetArmorType() {
+        return self.invProgression.ArmorType;
     }
 }

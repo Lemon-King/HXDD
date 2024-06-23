@@ -25,41 +25,41 @@
         "strength": [15,18],
         "intelligence": [6,10],
         "wisdom": [6,10],
-        "dexterity": [10,13],
+        "dexterity": [10,13]
     },
     "xgame": {
         "GreenArmor,SilverShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["AmuletOfWarding","PlatinumHelm"],
-            "false": ["AmuletOfWarding","PlatinumHelm"]
+            "false": "SilverShield"
         },
         "BlueArmor,EnchantedShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["FalconShield","MeshArmor"],
-            "false": ["FalconShield","MeshArmor"]
+            "false": "EnchantedShield"
         },
         "MeshArmor": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "EnchantedShield",
             "false": "MeshArmor"
         },
         "PlatinumHelm": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "SilverShield",
             "false": "PlatinumHelm"
         },
         "AmuletOfWarding": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "SilverShield",
             "false": "AmuletOfWarding"
         },
         "FalconShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "EnchantedShield",
             "false": "FalconShield"

@@ -29,37 +29,37 @@
     },
     "xgame": {
         "GreenArmor,SilverShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["FalconShield","AmuletOfWarding"],
-            "false": ["FalconShield","AmuletOfWarding"]
+            "false": "SilverShield"
         },
         "BlueArmor,EnchantedShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["PlatinumHelm","MeshArmor"],
-            "false": ["PlatinumHelm","MeshArmor"]
+            "false": "EnchantedShield"
         },
         "MeshArmor": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "EnchantedShield",
             "false": "MeshArmor"
         },
         "PlatinumHelm": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "EnchantedShield",
             "false": "PlatinumHelm"
         },
         "AmuletOfWarding": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "SilverShield",
             "false": "AmuletOfWarding"
         },
         "FalconShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "SilverShield",
             "false": "FalconShield"
@@ -129,7 +129,7 @@
 
         "MWeaponPiece1": "none",
         "MWeaponPiece2": "none",
-        "MWeaponPiece3": "none",
+        "MWeaponPiece3": "none"
     },
     "sound_set": {
         "misc/health_pkup":	"hexen2/items/itempkup",

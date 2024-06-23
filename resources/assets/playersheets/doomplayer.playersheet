@@ -31,59 +31,59 @@
         "intelligence": [12,15],
         "wisdom": [10,13],
         "dexterity": [12,15],
-        "rage": [1, 2, 1, 3, 1],
+        "rage": [4, 5, 1, 3, 1]
     },
     "xgame": {
         "SilverShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["HXDDHeavyBoots", "HXDDUnderArmor"],
             "false": "GreenArmor"
         },
         "EnchantedShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["HXDDCombatHelm", "HXDDBodyArmor"],
             "false": "BlueArmor"
         },
         "GreenArmor": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["HXDDHeavyBoots", "HXDDUnderArmor"],
             "false": "GreenArmor"
         },
         "BlueArmor": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": ["HXDDCombatHelm", "HXDDBodyArmor"],
             "false": "BlueArmor"
         },
         "MeshArmor": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "GreenArmor",
             "false": "HXDDBodyArmor"
         },
         "PlatinumHelm": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "GreenArmor",
             "false": "HXDDCombatHelm"
         },
         "AmuletOfWarding": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "BlueArmor",
             "false": "HXDDUnderArmor"
         },
         "FalconShield": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 1,
             "true": "BlueArmor",
             "false": "HXDDHeavyBoots"
         },
         "ArmorBonus": {
-            "cvar": "hxdd_armor_mode",
+            "command": "armortype",
             "equals": 2,
             "true": "none",
             "false": "ArmorBonus"
@@ -102,7 +102,6 @@
         "ArtiTeleport": "RadSuit",
         "ArtiTorch": "Infrared",
         "SuperMap": "Allmap",
-        "ArtiTomeOfPower": "Berserk",
 
         "BagOfHolding": "Backpack",
 
@@ -148,10 +147,9 @@
         "MWeaponPiece2": "none",
         "MWeaponPiece3": "none",
 
-        "ArtiHealth": "Soulsphere",
         "ArtiBoostMana": "Backpack",
         "ArtiBoostArmor": {
-          "cvar": "hxdd_armor_mode",
+          "command": "armortype",
           "equals": 2,
           "true": "ArtiBoostArmor",
           "false": "Berserk"
@@ -165,7 +163,6 @@
         "ArtiInvulnerability2": "InvulnerabilitySphere",
         "ArtiPork": "ArmorBonus,HealthBonus",
         "ArtiFly": "BlurSphere",
-        "ArtiTeleport": "ArmorBonus,HealthBonus",
         "ArtiTeleportOther": "ArmorBonus,HealthBonus",
         "ArtiSpeedBoots": "ArmorBonus,HealthBonus",
         "ArtiBlastRadius": "ArmorBonus,HealthBonus"

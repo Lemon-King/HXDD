@@ -351,7 +351,10 @@ class PlayerSheetJSON {
 		}
 		HXDD_JsonObject jsonObject = HXDD_JsonObject(fJSON.json);
 		if (jsonObject) {
-			console.printf("PlayerSheetJSON: Loaded %s!", file);
+        	bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
+			if (cvar_isdev_environment) {
+				console.printf("PlayerSheetJSON: Loaded %s!", file);
+			}
 
 			String valClassName			= FileJSON.GetString(jsonObject, "name");
 			String valPlayerClass		= FileJSON.GetString(jsonObject, "class");
@@ -918,6 +921,7 @@ class Progression: Inventory {
 		} else if (optionArmorMode == PSAT_ARMOR_USER) {
 			ArmorModeSelection_User(player);
 		}
+
 		ArmorSelected = true;
 	}
 
@@ -1041,6 +1045,7 @@ class Progression: Inventory {
 				if (ammoItem == null) {
 					// The player did not have the ammoitem. Add it.
 					ammoItem = Ammo(Spawn(ammotype));
+					ammoItem.UseSound = "TAG_HXDD_IGNORE_SPAWN";
 					isUnowned = true;
 				}
 				ammoItem.AttachToOwner(Owner.player.mo);
@@ -1226,7 +1231,7 @@ class Progression: Inventory {
 		self.experience += amount;
 
 		int MAX_LEVELS = experienceTable.Size() - 1;
-		console.printf("Gained %d Experience! (%d/%d)", amount, self.experience, self.experienceTable[clamp(0, self.currlevel - 1, MAX_LEVELS)]);
+		//console.printf("Gained %d Experience! (%d/%d)", amount, self.experience, self.experienceTable[clamp(0, self.currlevel - 1, MAX_LEVELS)]);
 
 		double afterLevel = FindLevel();
 
@@ -1369,7 +1374,7 @@ class Progression: Inventory {
 
 		HXDDWorldEventHandler eHXDD = HXDDWorldEventHandler(EventHandler.Find("HXDDWorldEventHandler"));
         while ((actor = Actor(it.Next())) != null) {
-			if (actor is "Inventory") {
+			if (actor is "Inventory" || actor is "CustomInventory") {
 				Inventory item = Inventory(actor);
 
 				if (eHXDD && eHXDD.xgame) {
@@ -1377,6 +1382,12 @@ class Progression: Inventory {
 					let swapped = eHXDD.xgame.TryXClass(itemClassName);
 					if (itemClassName != swapped) {
 						let newActorClassName = eHXDD.xgame.ActorNoneFix(swapped);
+
+						// Ignore spawned ammo at map start
+						if (level.MapTime == 0 && Inventory(actor).UseSound == "TAG_HXDD_IGNORE_SPAWN") {
+							continue;
+						}
+
 						let invNew = Inventory(actor.Spawn(newActorClassName, actor.pos));
 						if (invNew) {
 							invNew.angle = actor.angle;
