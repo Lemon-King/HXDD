@@ -30,13 +30,13 @@
     "xgame": {
         "GreenArmor,SilverShield": {
             "command": "armortype",
-            "equals": 1,
+            "equals": 2,
             "true": ["MeshArmor", "PlatinumHelm"],
             "false": "SilverShield"
         },
         "BlueArmor,EnchantedShield": {
             "command": "armortype",
-            "equals": 1,
+            "equals": 2,
             "true": ["AmuletOfWarding", "FalconShield"],
             "false": "EnchantedShield"
         },
