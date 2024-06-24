@@ -49,13 +49,13 @@
                <children>
             <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <VBox fx:id="fpSetup" prefWidth="740.0">
+                  <VBox fx:id="fpSetup" prefWidth="740.0" visible="false">
                      <children>
-                        <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="550.0">
+                        <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL">
                            <children>
-                              <AnchorPane prefHeight="550.0" prefWidth="324.0">
+                              <AnchorPane prefWidth="324.0">
                                  <children>
-                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" prefHeight="600.0" prefWidth="324.0" text="Source Files" textFill="#00000099" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" prefWidth="324.0" text="Source Files" textFill="#00000099" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane>
                                              <children>
@@ -502,9 +502,9 @@
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                              <AnchorPane prefWidth="200.0">
                                  <children>
-                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="490.0" prefWidth="370.0" text="Options" textFill="#00000099">
+                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="465.0" prefWidth="370.0" text="Options" textFill="#00000099">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
@@ -591,7 +591,7 @@
                                           <Insets left="8.0" />
                                        </padding>
                                     </TitledPane>
-                                    <AnchorPane layoutY="505.0" minHeight="40.0" prefWidth="368.0">
+                                    <AnchorPane layoutY="475.0" minHeight="40.0" prefWidth="368.0">
                                        <children>
                                           <VBox alignment="CENTER" maxHeight="80.0" minHeight="40.0">
                                              <children>
@@ -616,6 +616,9 @@
                            </children>
                         </FlowPane>
                      </children>
+                     <padding>
+                        <Insets bottom="8.0" />
+                     </padding>
                   </VBox>
                   <FlowPane fx:id="fpProgress" alignment="TOP_CENTER" prefWidth="740.0" prefWrapLength="740.0" visible="false">
                      <children>
@@ -654,9 +657,9 @@
                            </children>
                         </VBox>
                      </children></FlowPane>
-                  <VBox fx:id="fpComplete" alignment="CENTER" prefWidth="740.0" visible="false">
+                  <VBox fx:id="fpComplete" alignment="CENTER" prefWidth="740.0">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="740.0">
+                        <HBox alignment="CENTER" prefWidth="740.0">
                            <children>
                               <VBox alignment="CENTER" prefWidth="740.0">
                                  <children>
@@ -678,7 +681,7 @@
                                           <Insets bottom="8.0" />
                                        </padding>
                                     </Label>
-                                    <Button fx:id="btnOpenFolder" mnemonicParsing="false" prefHeight="50.0" prefWidth="350.0" text="OPEN FOLDER">
+                                    <Button fx:id="btnOpenFolder" alignment="CENTER" mnemonicParsing="false" prefHeight="50.0" prefWidth="350.0" text="OPEN FOLDER">
                                        <font>
                                           <Font name="System Bold" size="22.0" />
                                        </font>
@@ -687,6 +690,9 @@
                                        </VBox.margin>
                                     </Button>
                                  </children>
+                                 <padding>
+                                    <Insets bottom="64.0" />
+                                 </padding>
                               </VBox>
                            </children>
                         </HBox>
@@ -694,7 +700,7 @@
                   </VBox>
                   <VBox fx:id="fpInformation" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefWidth="740.0" visible="false">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="500.0" prefWidth="740.0">
+                        <HBox alignment="CENTER" prefHeight="400.0" prefWidth="740.0">
                            <children>
                               <VBox alignment="CENTER" prefWidth="740.0">
                                  <children>
