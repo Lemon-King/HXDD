@@ -146,7 +146,7 @@ public class PackageBuilder implements Runnable {
                 try {
                     p.getValue().close();
                 } catch (IOException e) {
-                    //
+                    e.printStackTrace();
                 }
             });
 
@@ -746,10 +746,12 @@ public class PackageBuilder implements Runnable {
 
         String pathMarineStuff = path + "MarineStuff.wad";
         try {
+            Wad wadMarineStuff = new WadFile(pathMarineStuff);
+
             MetaFile f = new MetaFile();
             f.SetPalette(GraphicUtils.DOOM);
             f.SetWad(new WadFile(pathMarineStuff));
-            f.Define("AHLMA0", "sprite", "sprites", pathMarineStuff);
+            f.Define("AHLMA0", "sprite", "sprites", wadMarineStuff);
             f.folder = "sprites/realm667";
             f.ExtractFile(pathTemp);
             f.inputName = "BOOTA0";
@@ -759,12 +761,14 @@ public class PackageBuilder implements Runnable {
             f.outputName = "UNIFA0";
             f.ExtractFile(pathTemp);
 
-            f.Define("CREDITS", "textlump","", pathMarineStuff);
+            f.Define("CREDITS", "textlump","", wadMarineStuff);
             f.outputName =  "realm667/marinestuff/CREDITS.txt";
             f.ExtractFile(pathTemp);
-            f.Define("INFO", "textlump","", pathMarineStuff);
+            f.Define("INFO", "textlump","", wadMarineStuff);
             f.outputName =  "realm667/marinestuff/INFO.txt";
             f.ExtractFile(pathTemp);
+
+            wadMarineStuff.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

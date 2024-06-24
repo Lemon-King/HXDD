@@ -1,7 +1,6 @@
 package lemon.hxdd.builder;
 
 import net.mtrop.doom.Wad;
-import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
@@ -23,8 +22,7 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 
 public class MetaFile {
-    String source;
-    String sourcePK3;
+    //String source;
     String inputName;
     String outputName;
     String type;
@@ -43,9 +41,8 @@ public class MetaFile {
     MetaFile() {
     }
 
-    public void Define(String name, String decodeType, String folder, String sourceName) {
-        this.source = sourceName;   // check if pk3 from filename
-        this.sourcePK3 = null;      // PK3 file, overrides wad extract
+    public void Define(String name, String decodeType, String folder, Wad sourceWad) {
+        this.wad = sourceWad;
         this.inputName = name;      // input filename
         this.outputName = name;     // output filename
         this.folder = folder;       // export folder
@@ -61,18 +58,18 @@ public class MetaFile {
         this.pathTemp = path;
         // Get data from WAD or PK3 ZIP.
         try {
-            if (this.sourcePK3 != null) {
-                this.ExtractFromPK3();
-            } else {
+            //if (this.sourcePK3 != null) {
+            //    this.ExtractFromPK3();
+            //} else {
                 this.ExtractFromWad();
-            }
+            //}
         } catch (IOException e) {
             // log error
         }
     }
 
     public void ExtractFromWad() throws IOException {
-        this.wad = new WadFile(this.source);
+        //this.wad = new WadFile(this.source);
         byte[] data = this.wad.getData(this.inputName);
 
         if (this.pal == null) {
@@ -80,16 +77,7 @@ public class MetaFile {
         }
         ExportData(data);
 
-        this.wad.close();
-    }
-
-    public void ExtractFromPK3() {
-        // Extract from ZIP
-        //ZipAssets pk3 = new ZipAssets(this.mf.sourcePK3 + ".pk3");
-        this.za.SetFile(new File(this.sourcePK3));
-        byte[] data = this.za.ExtractFileAsData(this.inputName);
-        Palette pal = GetPlaypal();
-        ExportData(data, pal);
+        //this.wad.close();
     }
 
     public void SetWad(Wad wf) {
@@ -167,7 +155,7 @@ public class MetaFile {
 
             //System.out.println("Exported " + path);
         } catch (IOException e) {
-            System.out.println("Failed to export lump " + path + " from " + this.source);
+            System.out.println("Failed to export lump " + path);
         }
     }
 
@@ -195,7 +183,7 @@ public class MetaFile {
 
             //System.out.println("Exported " + imagePath);
         } catch (IOException e) {
-            System.out.println("Failed to export graphics " + imagePath + " from " + this.source);
+            System.out.println("Failed to export graphics " + imagePath);
             //e.printStackTrace();
         }
     }
@@ -220,7 +208,7 @@ public class MetaFile {
             File newFile = new File(imagePath);
             ImageIO.write(image, "PNG", newFile);
         } catch (IOException e) {
-            System.out.println("Failed to export flat " + imagePath + " from " + this.source);
+            System.out.println("Failed to export flat " + imagePath);
         }
     }
 
@@ -263,7 +251,7 @@ public class MetaFile {
                 //System.out.println("Exported " + filePath + ".lmp");
             }
         } catch (IOException | UnsupportedAudioFileException e) {
-            System.out.println("Failed to export flat " + filePath + " from " + this.source);
+            System.out.println("Failed to export flat " + filePath);
             e.printStackTrace();
         }
     }
@@ -294,7 +282,7 @@ public class MetaFile {
             music.writeBytes(new FileOutputStream(target, false));
             //System.out.println("Exported " + filePath + ".mus");
         } catch (IOException e) {
-            System.out.println("Failed to export " + filePath + ".mus" + " from " + this.source);
+            System.out.println("Failed to export " + filePath + ".mus");
             //e.printStackTrace();
         }
     }

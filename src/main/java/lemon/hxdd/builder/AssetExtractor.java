@@ -56,15 +56,6 @@ public class AssetExtractor {
         ExportData(data, pal);
     }
 
-    public void ExtractFromPK3() {
-        // Extract from ZIP
-        //ZipAssets pk3 = new ZipAssets(this.mf.sourcePK3 + ".pk3");
-        this.za.SetFile(new File(this.mf.sourcePK3));
-        byte[] data = this.za.ExtractFileAsData(this.mf.inputName);
-        Palette pal = GetPlaypal();
-        ExportData(data, pal);
-    }
-
     private void ExportData(byte[] data, Palette pal) {
         if (mf.decodeType == "lumps") {
             LumpExport(data);
@@ -132,7 +123,7 @@ public class AssetExtractor {
 
             //System.out.println("Exported " + path);
         } catch (IOException e) {
-            System.out.println("Failed to export lump " + path + " from " + mf.source);
+            System.out.println("Failed to export lump " + path);
         }
     }
 
@@ -160,7 +151,7 @@ public class AssetExtractor {
 
             //System.out.println("Exported " + imagePath);
         } catch (IOException e) {
-            System.out.println("Failed to export graphics " + imagePath + " from " + mf.source);
+            System.out.println("Failed to export graphics " + imagePath);
             //e.printStackTrace();
         }
     }
@@ -185,7 +176,7 @@ public class AssetExtractor {
             File newFile = new File(imagePath);
             ImageIO.write(image, "PNG", newFile);
         } catch (IOException e) {
-            System.out.println("Failed to export flat " + imagePath + " from " + mf.source);
+            System.out.println("Failed to export flat " + imagePath);
         }
     }
 
@@ -228,7 +219,7 @@ public class AssetExtractor {
                 //System.out.println("Exported " + filePath + ".lmp");
             }
         } catch (IOException | UnsupportedAudioFileException e) {
-            System.out.println("Failed to export flat " + filePath + " from " + mf.source);
+            System.out.println("Failed to export flat " + filePath);
             e.printStackTrace();
         }
     }
@@ -259,7 +250,7 @@ public class AssetExtractor {
             music.writeBytes(new FileOutputStream(target, false));
             //System.out.println("Exported " + filePath + ".mus");
         } catch (IOException e) {
-            System.out.println("Failed to export " + filePath + ".mus" + " from " + mf.source);
+            System.out.println("Failed to export " + filePath + ".mus");
             //e.printStackTrace();
         }
     }

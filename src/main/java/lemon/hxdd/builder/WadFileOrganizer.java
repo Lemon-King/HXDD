@@ -72,16 +72,16 @@ public class WadFileOrganizer {
             MetaFile mf = new MetaFile();
             mf.SetWad(this.wad);
             if (Arrays.asList(EngineLumps).contains(entryName)) {
-                mf.Define(entryName, "lump","lumps", source);
+                mf.Define(entryName, "lump","lumps", this.wad);
                 mf.SetWad(this.wad);
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(GameLumps).contains(entryName.toLowerCase())) {
                 // Will let files be unique and not fight over a single entry.
-                mf.Define(entryName, "lump","lumps", source);
+                mf.Define(entryName, "lump","lumps", this.wad);
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(TextLumps).contains(entryName.toLowerCase())) {
                 // TextLumps should be renamed per game as to prevent conflicts
-                mf.Define(entryName, "textlump","lumps", source);
+                mf.Define(entryName, "textlump","lumps", this.wad);
                 mf.outputName = entryName;
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (!Arrays.asList(EntryIgnoreList).contains(entryName)) {
@@ -102,19 +102,19 @@ public class WadFileOrganizer {
                         folder = "";
                     }
                 } else if (entryName.startsWith("FONT")) {
-                    mf.Define(entryName, "graphic","graphics", source);
+                    mf.Define(entryName, "graphic","graphics", this.wad);
                     this.entryMaps.get("graphics").put(entryName, mf);
                 } else if (entryName.equals("ADVISOR")) {
                     // Heretic / Hexen only advisory
-                    mf.Define(entryName, "sprite", "graphics", source);
+                    mf.Define(entryName, "sprite", "graphics", this.wad);
                     this.entryMaps.get("graphics").put(entryName, mf);
                 } else if (Arrays.asList(GraphicLumps).contains(entryName) || folder.equals("graphics")) {
                     decodeType = "graphic";
                     folder = "graphics";
-                    mf.Define(entryName, decodeType, folder, source);
+                    mf.Define(entryName, decodeType, folder, this.wad);
                     this.entryMaps.get(folder).put(entryName, mf);
                 } else if (folder.equals("sprites") || folder.equals("patches") || folder.equals("flats")) {
-                    mf.Define(entryName, decodeType, folder, source);
+                    mf.Define(entryName, decodeType, folder, this.wad);
                     this.entryMaps.get(folder).put(entryName, mf);
                 } else {
                     try {
@@ -122,10 +122,10 @@ public class WadFileOrganizer {
                         if (data.length > 4) {
                             // startswith is hacky, but it works
                             if ((data[0] + "" + data[1] + "" + data[2] + "" + data[3]).startsWith("778583")) {
-                                mf.Define(entryName, "music","music", source);
+                                mf.Define(entryName, "music","music", this.wad);
                                 this.entryMaps.get("music").put(entryName, mf);
                             } else if ((data[0] + "" + data[1] + "" + data[2] + "" + data[3]).startsWith("301743")) {
-                                mf.Define(entryName, "sound","sounds", source);
+                                mf.Define(entryName, "sound","sounds", this.wad);
                                 this.entryMaps.get("sounds").put(entryName, mf);
                             }
                         }
@@ -167,9 +167,9 @@ public class WadFileOrganizer {
         MetaFile mfFrom = this.entryMaps.get(folder).get(source);
         if (mfFrom != null) {
             MetaFile mfCopy = new MetaFile();
-            mfCopy.Define(target, mfFrom.decodeType, folder, mfFrom.source);
+            mfCopy.Define(target, mfFrom.decodeType, folder, mfFrom.wad);
             mfCopy.SetWad(mfFrom.wad);
-            mfCopy.sourcePK3 = mfFrom.sourcePK3;
+            //mfCopy.sourcePK3 = mfFrom.sourcePK3;
             mfCopy.inputName = mfFrom.inputName;
             mfCopy.folder = mfFrom.folder;
             mfCopy.decodeType = mfFrom.decodeType;
