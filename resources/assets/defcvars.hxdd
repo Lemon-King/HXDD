@@ -1,3 +1,4 @@
+version 225
 set hud_althud "false"
 set hud_aspectscale "true"
 set hud_scale 0
