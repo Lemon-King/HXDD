@@ -496,109 +496,125 @@
                                        <font>
                                           <Font name="System Bold" size="14.0" />
                                        </font>
+                                       <padding>
+                                          <Insets right="8.0" />
+                                       </padding>
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="550.0" prefWidth="370.0" text="Options" textFill="#00000099">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                 <children>
+                                    <TitledPane alignment="CENTER" animated="false" collapsible="false" prefHeight="490.0" prefWidth="370.0" text="Options" textFill="#00000099">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="225.0" prefHeight="35.0" prefWidth="352.0">
+                                                   <children>
+                                                      <CheckBox fx:id="cxEnableHexenII" mnemonicParsing="false" text="Enable HEXEN II (WIP)">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                      </CheckBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="14.0" prefHeight="28.0" prefWidth="352.0">
+                                                   <children>
+                                                      <Label prefHeight="17.0" prefWidth="147.0" text="Title Screen">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                      </ChoiceBox>
+                                                   </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="42.0" prefHeight="35.0" prefWidth="352.0">
+                                                   <children>
+                                                      <CheckBox fx:id="cxDownloadTitleSteam" mnemonicParsing="false" text="Download Steam Header as Title Screen">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                      </CheckBox>
+                                                   </children>
+                                                </HBox>
+                                                <Separator layoutX="9.0" layoutY="212.0" prefWidth="360.0" />
+                                                <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="132.0" prefHeight="28.0" prefWidth="352.0">
+                                                   <children>
+                                                      <Label prefHeight="17.0" prefWidth="147.0" text="Korax Localization">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                      </ChoiceBox>
+                                                   </children>
+                                                </HBox>
+                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="This setting will download Korax Voice files from TCRF in the selected language." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
+                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="260.0" prefHeight="41.0" prefWidth="293.0" text="WARNING: Hexen II functionality is a work in progress, has classes which are being developed, and may crash." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
+                                                <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="77.0" prefHeight="28.0" prefWidth="352.0">
+                                                   <children>
+                                                      <Label prefHeight="17.0" prefWidth="147.0" text="Title Music">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                         <font>
+                                                            <Font size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0">
+                                                         <HBox.margin>
+                                                            <Insets right="8.0" />
+                                                         </HBox.margin>
+                                                      </ChoiceBox>
+                                                   </children>
+                                                </HBox>
+                                                <Separator layoutX="9.0" layoutY="118.0" prefWidth="360.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="8.0" />
+                                       </padding>
+                                    </TitledPane>
+                                    <AnchorPane layoutY="505.0" minHeight="40.0" prefWidth="368.0">
                                        <children>
-                                          <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="225.0" prefHeight="35.0" prefWidth="352.0">
+                                          <VBox alignment="CENTER" maxHeight="80.0" minHeight="40.0">
                                              <children>
-                                                <CheckBox fx:id="cxEnableHexenII" mnemonicParsing="false" text="Enable HEXEN II (WIP)">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin>
-                                                </CheckBox>
+                                                <StackPane prefWidth="368.0">
+                                                   <children>
+                                                           <Button alignment="CENTER" maxHeight="-Infinity" minHeight="30.0" onAction="#onButtonClick_Start" prefHeight="30.0" prefWidth="200.0" text="BUILD HXDD" StackPane.alignment="CENTER_LEFT">
+                                                         <StackPane.margin>
+                                                            <Insets left="16.0" />
+                                                         </StackPane.margin>
+                                                      </Button>
+                                                      <Button minHeight="30.0" mnemonicParsing="false" onAction="#onButtonClick_About" prefHeight="30.0" prefWidth="72.0" text="ABOUT" StackPane.alignment="CENTER_RIGHT">
+                                                         <StackPane.margin>
+                                                            <Insets right="16.0" />
+                                                         </StackPane.margin>
+                                                      </Button>
+                                                   </children>
+                                                </StackPane>
                                              </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="14.0" prefHeight="28.0" prefWidth="352.0">
-                                             <children>
-                                                <Label prefHeight="17.0" prefWidth="147.0" text="Title Screen">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin>
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <ChoiceBox fx:id="cbTitleScreen" prefHeight="27.0" prefWidth="196.0">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin></ChoiceBox>
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="42.0" prefHeight="35.0" prefWidth="352.0">
-                                             <children>
-                                                <CheckBox fx:id="cxDownloadTitleSteam" mnemonicParsing="false" text="Download Steam Header as Title Screen">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin>
-                                                </CheckBox>
-                                             </children>
-                                          </HBox>
-                                          <Separator layoutX="9.0" layoutY="212.0" prefWidth="360.0" />
-                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="132.0" prefHeight="28.0" prefWidth="352.0">
-                                             <children>
-                                                <Label prefHeight="17.0" prefWidth="147.0" text="Korax Localization">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin>
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <ChoiceBox fx:id="cbKoraxLocale" prefHeight="27.0" prefWidth="196.0">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin></ChoiceBox>
-                                             </children>
-                                          </HBox>
-                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="This setting will download Korax Voice files from TCRF in the selected language." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
-                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="260.0" prefHeight="41.0" prefWidth="293.0" text="WARNING: Hexen II functionality is a work in progress, has classes which are being developed, and may crash." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
-                                          <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="77.0" prefHeight="28.0" prefWidth="352.0">
-                                             <children>
-                                                <Label prefHeight="17.0" prefWidth="147.0" text="Title Music">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin>
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
-                                                </Label>
-                                                <ChoiceBox fx:id="cbTitleMusic" prefHeight="27.0" prefWidth="196.0">
-                                                   <HBox.margin>
-                                                      <Insets right="8.0" />
-                                                   </HBox.margin></ChoiceBox>
-                                             </children>
-                                          </HBox>
-                                          <Separator layoutX="9.0" layoutY="118.0" prefWidth="360.0" />
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                                 <FlowPane.margin>
-                                    <Insets left="16.0" />
-                                 </FlowPane.margin>
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </TitledPane>
+                                          </VBox>
+                                       </children></AnchorPane>
+                                 </children></AnchorPane>
                            </children>
                         </FlowPane>
-                        <HBox alignment="CENTER" prefHeight="60.0">
-                           <children>
-                              <StackPane prefHeight="150.0" prefWidth="740.0">
-                                 <children>
-                                         <Button alignment="CENTER" maxHeight="-Infinity" minHeight="30.0" onAction="#onButtonClick_Start" prefHeight="30.0" prefWidth="200.0" text="BUILD HXDD" />
-                                    <Button minHeight="30.0" mnemonicParsing="false" onAction="#onButtonClick_About" prefHeight="30.0" prefWidth="72.0" text="ABOUT" StackPane.alignment="CENTER_RIGHT">
-                                       <StackPane.margin>
-                                          <Insets right="2.0" />
-                                       </StackPane.margin>
-                                    </Button>
-                                 </children>
-                              </StackPane>
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
                   <FlowPane fx:id="fpProgress" alignment="TOP_CENTER" prefWidth="740.0" prefWrapLength="740.0" visible="false">
@@ -802,7 +818,10 @@
                         </HBox>
                      </children>
                   </VBox>
-               </children></StackPane>
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding></StackPane>
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
