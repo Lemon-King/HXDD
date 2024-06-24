@@ -328,7 +328,7 @@ public class PackageBuilder implements Runnable {
 
 
             final Set<String> gameRavenFiles = new HashSet<String>(Arrays.asList(
-                    new String[] {"playpal", "colormap", "textures"}
+                    new String[] {"animated", "playpal", "colormap", "textures"}
             ));
 
             mftype.forEach((key, mf) -> {
