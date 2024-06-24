@@ -432,7 +432,11 @@ public class PackageBuilder implements Runnable {
         this.app.controller.SetCurrentLabel("Exporting GZDOOM Assets");
         this.app.controller.SetCurrentProgress(-1);
 
+        // Try gzdoom, if not, try vkdoom
         File zipFile = new File(pathSources + "/gzdoom.pk3");
+        if (!zipFile.exists()) {
+            zipFile = new File(pathSources + "/vkdoom.pk3");
+        }
         if (zipFile.exists()) {
             ZipAssets za = new ZipAssets(this.app);
             za.SetFile(zipFile);

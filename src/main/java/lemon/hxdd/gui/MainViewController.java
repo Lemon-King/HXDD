@@ -409,19 +409,22 @@ public class MainViewController {
         if (selected != null) {
             String path = selected.getAbsolutePath();
 
+
             boolean hasBrightmaps = new File(path + "/brightmaps.pk3").isFile();
             boolean hasGamesupport = new File(path + "/game_support.pk3").isFile();
             boolean hasGameWSGFX = new File(path + "/game_widescreen_gfx.pk3").isFile();
             boolean hasGZDoom = new File(path + "/gzdoom.pk3").isFile();
+            boolean hasVKDoom = new File(path + "/vkdoom.pk3").isFile();
             boolean hasLights = new File(path + "/lights.pk3").isFile();
-            if (hasBrightmaps && hasGamesupport && hasGameWSGFX && hasGZDoom && hasLights) {
+            boolean hasGZVKFiles = hasGZDoom || hasVKDoom;
+            if (hasBrightmaps && hasGamesupport && hasGameWSGFX && hasGZVKFiles && hasLights) {
                 this.mainApp.GetSettings().Set("PATH_GZDOOM", path);
                 labelPathGZDOOM.setText(path);
                 System.out.println("GZDOOM Path: " + path);
             } else {
-                String missingFiles = "Selected GZDOOM directory is missing the following files:\n";
-                if (!hasGZDoom) {
-                    missingFiles += " ● gzdoom.pk3,\n";
+                String missingFiles = "Selected GZDOOM or VKDOOM directory is missing the following files:\n";
+                if (!hasGZVKFiles) {
+                    missingFiles += " ● gzdoom.pk3 or vkdoom.pk3,\n";
                 }
                 if (!hasBrightmaps) {
                     missingFiles += " ● brightmaps.pk3,\n";
