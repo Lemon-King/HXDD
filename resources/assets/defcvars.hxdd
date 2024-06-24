@@ -1,4 +1,6 @@
 version 225
 set hud_althud "false"
 set hud_aspectscale "true"
-set hud_scale 0
+set hud_scale 3
+set hud_scalefactor 1
+set screenblocks 11
