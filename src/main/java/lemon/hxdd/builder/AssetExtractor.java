@@ -77,7 +77,7 @@ public class AssetExtractor {
         } else if (Objects.equals(mf.decodeType, "sounds")) {
             SoundExport();
         } else if (Objects.equals(mf.decodeType, "music")) {
-            boolean lowerVolume = mf.source.contains("heretic");
+            boolean lowerVolume = false; //mf.source.contains("heretic");
             MusicExport(lowerVolume);
         } else {
             // lump

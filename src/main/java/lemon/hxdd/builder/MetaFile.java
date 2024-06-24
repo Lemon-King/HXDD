@@ -111,7 +111,7 @@ public class MetaFile {
         } else if (Objects.equals(this.decodeType, "sound")) {
             SoundExport();
         } else if (Objects.equals(this.decodeType, "music")) {
-            boolean lowerVolume = this.source.contains("heretic");
+            boolean lowerVolume = false; //this.source.contains("heretic");
             MusicExport(lowerVolume);
         } else {
             // lump
