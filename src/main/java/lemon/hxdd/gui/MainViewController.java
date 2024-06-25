@@ -541,7 +541,29 @@ public class MainViewController {
 
     @FXML
     protected void onButtonClick_Start() {
-        this.mainApp.BuildPK3();
+        String path = this.mainApp.GetSettings().Get("PATH_GZDOOM");
+        boolean hasBrightmaps = new File(path + "/brightmaps.pk3").isFile();
+        boolean hasGamesupport = new File(path + "/game_support.pk3").isFile();
+        boolean hasGameWSGFX = new File(path + "/game_widescreen_gfx.pk3").isFile();
+        boolean hasGZDoom = new File(path + "/gzdoom.pk3").isFile();
+        boolean hasVKDoom = new File(path + "/vkdoom.pk3").isFile();
+        boolean hasLights = new File(path + "/lights.pk3").isFile();
+
+
+        boolean hasCore = true;
+        String[] required = {"HERETIC", "HEXEN", "HEXDD"};
+        for (String key : required) {
+            File f = new File(this.mainApp.GetSettings().Get(String.format("PATH_%s", key)));
+            hasCore = hasCore && (f.isFile() && f.exists());
+        }
+
+        boolean hasGZVKDoom = (hasGZDoom || hasVKDoom) && hasBrightmaps && hasGamesupport && hasGameWSGFX && hasLights;
+
+        if (hasGZVKDoom && hasCore) {
+            this.mainApp.BuildPK3();
+        } else {
+            DisplayAlertBuild();
+        }
     }
     @FXML
     protected void onButtonClick_About() {
@@ -640,6 +662,12 @@ public class MainViewController {
     protected Pair<Integer, String> CheckWAD(WADHash.GAME_TYPE gameType, String path) {
         WADHash hf = new WADHash(gameType, path);
         return hf.Compute();
+    }
+
+    protected void DisplayAlertBuild() {
+        String title = "File Error!";
+        String message = "GZDoom's folder and Heretic, Hexen, and Deathking wads are required to build HXDD.";
+        this.mainApp.DisplayAlert(title, message);
     }
 
     protected void DisplayAlertGZDOOM(String message) {
