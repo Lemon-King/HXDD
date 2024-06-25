@@ -49,7 +49,7 @@
                <children>
             <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <VBox fx:id="fpSetup" prefWidth="740.0" visible="false">
+                  <VBox fx:id="fpSetup" prefWidth="740.0">
                      <children>
                         <FlowPane alignment="TOP_CENTER" columnHalignment="CENTER" orientation="VERTICAL">
                            <children>
@@ -599,7 +599,7 @@
                                                    <children>
                                                            <Button alignment="CENTER" maxHeight="-Infinity" minHeight="30.0" onAction="#onButtonClick_Start" prefHeight="30.0" prefWidth="200.0" text="BUILD HXDD" StackPane.alignment="CENTER_LEFT">
                                                          <StackPane.margin>
-                                                            <Insets left="16.0" />
+                                                            <Insets />
                                                          </StackPane.margin>
                                                       </Button>
                                                       <Button minHeight="30.0" mnemonicParsing="false" onAction="#onButtonClick_About" prefHeight="30.0" prefWidth="72.0" text="ABOUT" StackPane.alignment="CENTER_RIGHT">
@@ -608,6 +608,9 @@
                                                          </StackPane.margin>
                                                       </Button>
                                                    </children>
+                                                   <padding>
+                                                      <Insets left="24.0" />
+                                                   </padding>
                                                 </StackPane>
                                              </children>
                                           </VBox>
@@ -657,7 +660,7 @@
                            </children>
                         </VBox>
                      </children></FlowPane>
-                  <VBox fx:id="fpComplete" alignment="CENTER" prefWidth="740.0">
+                  <VBox fx:id="fpComplete" alignment="CENTER" prefWidth="740.0" visible="false">
                      <children>
                         <HBox alignment="CENTER" prefWidth="740.0">
                            <children>
