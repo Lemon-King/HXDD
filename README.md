@@ -25,7 +25,7 @@
 <a href="https://github.com/Lemon-King/HXDD/issues">![Issues](https://img.shields.io/github/issues/Lemon-King/HXDD.svg)</a>
 <a href="https://github.com/Lemon-King/HXDD/blob/master/LICENSE.md">![MIT License](https://img.shields.io/github/license/Lemon-King/HXDD.svg)</a>
 
-<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DoomStruct-000063?style=for-the-badge&logoColor=white)</a>
+<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DoomStruct-000063?style=for-the-badge)</a>
 <a href="https://github.com/google/gson">![Gson](https://img.shields.io/badge/Gson-000?style=for-the-badge&logo=google&logoColor=61DAFB)</a>
 <br/>
 <a href="https://openjdk.org/">![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)</a>
@@ -33,16 +33,19 @@
 <br/>
 <a href="https://gluonhq.com/">![Gluon](https://img.shields.io/badge/gluon-0A6DB0?style=for-the-badge&logo=gluon&logoColor=white)</a>
 <a href="https://www.graalvm.org/">![GRAALVM](https://img.shields.io/badge/GRAALVM-192229?style=for-the-badge&logo=graalvm&logoColor=61DAFB)</a><br/>
-<a href="https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91">![NOESIS](https://img.shields.io/badge/NOESIS-ff6600?style=for-the-badge&logoColor=#ff6600)</a>
+<a href="https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91">![NOESIS](https://img.shields.io/badge/NOESIS-ff6600?style=for-the-badge)</a>
 
 </div>
 
 <div align="center">
 
-<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/HERETIC-000000?style=for-the-badge&logoColor=white)</a>
-<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/HEXEN-CC7700?style=for-the-badge&logoColor=white)</a>
-<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DEATHKINGS-CC7700?style=for-the-badge&logoColor=white)</a>
-<a href="https://mtrop.github.io/DoomStruct/">![DoomStruct](https://img.shields.io/badge/DOOM-990000?style=for-the-badge&logoColor=white)</a>
+<a href="https://zdoom.org/index">![GZDOOM](https://img.shields.io/badge/GZDOOM-1E3E8C?style=for-the-badge)</a>
+<a href="https://vkdoom.org/">![VKDOOM](https://img.shields.io/badge/VKDOOM-E04006?style=for-the-badge)</a></br>
+<a href="https://store.steampowered.com/sub/439/">![Heretic](https://img.shields.io/badge/HERETIC-DAC06B?style=for-the-badge)</a>
+<a href="https://store.steampowered.com/sub/439/">![Hexen](https://img.shields.io/badge/HEXEN-704330?style=for-the-badge)</a>
+<a href="https://store.steampowered.com/sub/439/">![Deathkings](https://img.shields.io/badge/DEATHKINGS-704330?style=for-the-badge)</a>
+<a href="https://store.steampowered.com/bundle/15366/DOOM_Franchise_Bundle/">![Doom](https://img.shields.io/badge/DOOM-990000?style=for-the-badge)</a>
+
 
 </div>
 
@@ -63,49 +66,49 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 ## Features
 
 * **Unified Game & Episode Structure**<br/>Play Heretic, Hexen and Deathkings from one menu with any class from either game!
-* **Hexen II Leveling**<br/>A highly expanded version of the leveling system found in Hexen II.
-* **Selectable Armor Modes**<br/>Choose between Simple and AC, compatible with all characters from both games!
-* **Mod Support via PlayerSheets**<br/>Allows for cross game pickups and actors and expanded PlayerClass definitions. PlayerSheets will allow your mod to support HXDD only features without needing to expand actors or make another version of your mod. Just create a new json under playersheets/<classname>.json and you're ready to start!
+* **PWAD Mode**</br>Why stop with Heretic and Hexen. Bring all the features into DOOM and your existing wads for more content!
+* **Hexen II Classes**<br/>Starting with the Paladin, Hexen II classes are considered playable!
+* **Hexen II Leveling**<br/>A vastly expanded version of the leveling system found in Hexen II.
+* **Selectable Armor Modes**<br/>Choose between Basic and AC, compatible with all characters from all games!
+* **Mod Support via PlayerSheets**<br/>Allows for cross game pickups and actors and expanded PlayerClass definitions. PlayerSheets will allow your mod to support HXDD only features without needing to expand actors or make another version of your mod. Just create a new json under playersheets/.json and you're ready to start!
 * **Korax Localization**<br/>Select between English, French, German, and Japanese for languages used by Hexen 64 Localizations.
 * **Title Screen Customization**<br/>Change the Artwork and Music to any of the games in the series, also has support for using Steam's Hero Artwork as Titles.
 
 ## Current Upcoming & Planned Features
+* **Multiplayer Support**<br/>No longer locked to single player, multiplayer expansion.
 * **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are next for the major gameplay updates.
-* **PWAD Mode**<br/>HXDD will build out to a slimmed DOOM compatible pwad, sometime during beta or post 1.0 release.
 * **Heretic II Corvus**<br/>Currently in an [prototyping phase](https://www.youtube.com/watch?v=RV1bI9vbNs8), due to the amount of work required.
 
 ## Getting Started
 
 A modern version of Windows or Wine on MacOS and Linux.
 
-HXDD has a minimum version requirement with [GZDOOM 4.11+](https://zdoom.org/downloads), if you do not have it please download and update to it.
+HXDD has a minimum requirement with [GZDOOM 4.11+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
+
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
 
 ## Setup
 
-HXDD will make use of data from GZDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.
+HXDD will make use of data from GZDOOM/VKDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.<br/>
 
 1. Launch HXDD.exe
-2. Select your GZDOOM Folder
-3. Select your Heretic wad File (heretic.wad)
-4. Select your Hexen wad File (hexen.wad)
-5. Select your Hexen DeathKings wad file (hexdd.wad)
+2. Select your GZDOOM or VKDOOM Folder
+3. Select your Heretic wad File (**heretic.wad**)
+4. Select your Hexen wad File (**hexen.wad**)
+5. Select your Hexen DeathKings wad file (**hexdd.wad**)
 6. Choose the options you want to utilize - if any.
 7. Click on **Build HXDD** to start building hxdd.ipk3 - this may take more than a few minutes.
-8. When complete, copy hxdd.ipk3 to where you keep your wads for GZDOOM.
-9. Run GZDOOM and select HXDD.
+8. When complete, copy hxdd.ipk3 to where you keep your wads for GZDOOM or VKDOOM.
+9. Run GZDOOM or VKDOOM and select HXDD.
 
 Your selections will be stored for the next time you run it.
 
 ## Hexen II PAK Support
 
-When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).
-
-Download and place the Noesis zip file in the same folder as HXDD's exe.
-
-Select the PAK files in the application and ensure Enable Hexen II is checked.
-
+When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).<br/>
+Download and place the Noesis zip file in the same folder as HXDD's exe.<br/>
+Select the PAK files in the application and ensure Enable Hexen II is checked.<br/>
 HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
 
 ## DOOM Compatibility「PWAD Mode」
