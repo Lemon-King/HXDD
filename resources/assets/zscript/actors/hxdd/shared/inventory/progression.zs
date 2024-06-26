@@ -25,81 +25,148 @@ enum EPlaystyleProgressionType {
 
 class PlayerSheetEventHandler: EventHandler {
     override void PlayerSpawned(PlayerEvent e) {
-        PlayerPawn pp = PlayerPawn(players[e.PlayerNumber].mo);
-        if (pp) {
-            Progression prog = Progression(pp.FindInventory("Progression"));
-            if (prog == null) {
-                pp.GiveInventory("Progression", 1);
-                prog = Progression(pp.FindInventory("Progression"));
-            }
-
-            GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
-            if (gmcompat == null) {
-                pp.GiveInventory("GameModeCompat", 1);
-            }
-        }
-    }
-
-    override void WorldThingDied(WorldEvent e) {
-        if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
-            if (e.thing.target.player.mo is "PlayerPawn") {
-                PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
-                if (pt.FindInventory("Progression")) {
-                    Progression prog = Progression(pt.FindInventory("Progression"));
-                    double exp = 0;
-                    if (prog != NULL) {
-                        exp = prog.AwardExperience(e.thing);
-                    }
-
-                    if (prog.handler) {
-                        prog.handler.OnKill(pt, e.thing, exp);
-                    }
-                }
-            }
-        }
-    }
-
-    override void WorldThingSpawned(WorldEvent e) {
-        if (e.thing is "Weapon" && level.MapTime > 0) {
-			let onlyDropUnownedWeapons = false;
-			PlayerPawn pp = PlayerPawn(players[0].mo);
-            if (pp.FindInventory("Progression")) {
-                Progression prog = Progression(pp.FindInventory("Progression"));
-				onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
+		int num = e.PlayerNumber;
+		PlayerPawn pp = PlayerPawn(players[num].mo);
+		if (pp) {
+			Progression prog = Progression(pp.FindInventory("Progression"));
+			if (prog == null) {
+				pp.GiveInventory("Progression", 1);
+				prog = Progression(pp.FindInventory("Progression"));
 			}
 
-			if (onlyDropUnownedWeapons) {
-				Weapon weap = Weapon(e.thing);
-				if (weap.Owner || (weap.SisterWeapon && (Weapon)(pp.FindInventory(weap.SisterWeapon.GetClassName())).Owner)) {
-					// Player owns these weapons, skip, and allow it to drop.
-					return;
-				}
+			GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+			if (gmcompat == null) {
+				pp.GiveInventory("GameModeCompat", 1);
+			}
+		}
+	}
 
-				if (pp.CountInv(weap.GetClassName()) > 0) {
-					let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
-					let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
-
-					let selectedAmmo = ammo1;
-					if (ammo1 && ammo2) {
-						int select = random[rngWeapDrop](0,1);
-						if (select == 0) {
-							selectedAmmo = ammo1;
-						} else if (select == 1) {
-							selectedAmmo = ammo2;
-						}
-					} else if (ammo2) {
-						selectedAmmo = ammo2;
-					} else if (!ammo1 && !ammo2) {
-						weap.Destroy();
-						return;
+	override void WorldThingDied(WorldEvent e) {
+		if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
+			if (e.thing.target.player.mo is "PlayerPawn") {
+				PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
+				if (pt.FindInventory("Progression")) {
+					Progression prog = Progression(pt.FindInventory("Progression"));
+					double exp = 0;
+					if (prog != NULL) {
+						exp = prog.AwardExperience(e.thing);
 					}
 
-					Ammo newAmmo = Ammo(weap.Spawn(selectedAmmo, weap.pos));
-					if (newAmmo) {
-						newAmmo.angle = weap.angle;
-						newAmmo.vel = weap.vel;
+					if (prog.handler) {
+						prog.handler.OnKill(pt, e.thing, exp);
+					}
+				}
+			}
+		}
+	}
 
-						weap.Destroy();
+	override void PlayerEntered(PlayerEvent e) {
+		int num = e.PlayerNumber;
+
+		PlayerPawn pp = players[num].mo;
+		if (pp) {
+			uint end = AllActorClasses.Size();
+			for (uint i = 0; i < end; ++i) {
+				let node = (class<HXDDPickupNode>)(AllActorClasses[i]);
+				if (node) {
+
+				}
+			}
+		}
+	}
+
+	override void PlayerDisconnected(PlayerEvent e) {
+		// remove slots in nodes
+
+		int num = e.PlayerNumber;
+		PlayerPawn pp = players[num].mo;
+		if (pp) {
+			uint end = AllActorClasses.Size();
+			for (uint i = 0; i < end; ++i) {
+				let node = (class<HXDDPickupNode>)(AllActorClasses[i]);
+				if (node) {
+
+				}
+			}
+		}
+	}
+
+
+
+	override void WorldThingSpawned(WorldEvent e) {
+		// Pickup Nodes
+		Actor original = e.thing;
+		if (original is "Inventory" && !(original is "Key") && !(Inventory(original).owner) && !(Inventory(original).target) && !(original is "HXDDPickupNode")) {
+			bool isMapSpawn = level.MapTime == 0;
+
+			// Fixes combined mana dropping things at 0,0,0 before PickupNode catches it
+			if (Inventory(original).bDropped && original.pos == (0,0,0) && original.vel == (0,0,0)) {
+				return;
+			}
+
+			// Ignore spawned ammo at map start
+			if (level.MapTime == 0 && Inventory(original).UseSound == "TAG_HXDD_IGNORE_SPAWN") {
+				return;
+			}
+
+			HXDDPickupNode node = HXDDPickupNode(original.Spawn("HXDDPickupNode", original.pos));
+			node.Setup(Inventory(original));
+
+			let count = 0;
+			for (int i = 0; i < players.Size(); i++) {
+				PlayerPawn pp = players[i].mo;
+				if (pp) {
+					if (pp.FindInventory("Progression")) {
+						Progression prog = Progression(pp.FindInventory("Progression"));
+						bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
+
+						if (prog && prog.xclass) {
+							let itemClassName = original.GetClassName();
+							let swapped = prog.xclass.TryXClass(i, itemClassName);
+
+							if (original is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
+								Weapon weap = Weapon(pp.FindInventory(swapped));
+								if (weap) {
+									if (pp.CountInv(swapped) > 0) {
+										let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
+										let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+										String clsAmmo1;
+										if (ammo1) {
+											clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
+										}
+										String clsAmmo2;
+										if (ammo2) {
+											clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
+										}
+
+										if (ammo1 && ammo2) {
+											int select = random[rngWeapDrop](0,1);
+											if (select == 0) {
+												swapped = clsAmmo1;
+											} else if (select == 1) {
+												swapped = clsAmmo2;
+											}
+										} else if (ammo1) {
+											swapped = clsAmmo1;
+										} else if (ammo2) {
+											swapped = clsAmmo2;
+										}
+									}
+								}
+							}
+
+							Class<Inventory> cls = swapped;
+							String sfx = "";
+							if (swapped != "none" && swapped != "") {
+								sfx = GetDefaultByType(cls).PickupSound;
+								sfx = prog.FindSoundReplacement(sfx);
+							}
+							node.SwapOriginal().AssignPickup(i, swapped, sfx);
+
+							if (!isMapSpawn) {
+								node.SetDropped();
+							}
+						}
 					}
 				}
 			}
@@ -293,6 +360,8 @@ class PlayerSheetJSON {
 	String soundClass;
 	Map<String, String> soundSet;
 
+	XClassTranslation xclass;
+
 	int GetEnumFromArmorType(String type) {
 		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
 		if (keys.Find(type) != keys.Size()) {
@@ -355,6 +424,9 @@ class PlayerSheetJSON {
 			if (cvar_isdev_environment) {
 				console.printf("PlayerSheetJSON: Loaded %s!", file);
 			}
+
+			self.xclass = new("XClassTranslation");
+			self.xclass.CreateXClassTranslation(jsonObject);
 
 			String valClassName			= FileJSON.GetString(jsonObject, "name");
 			String valPlayerClass		= FileJSON.GetString(jsonObject, "class");
@@ -626,6 +698,8 @@ class Progression: Inventory {
 	String soundClass;
 	Map<String, String> soundSet;
 
+	XClassTranslation xclass;
+
     Default {
 		+INVENTORY.KEEPDEPLETED
         +INVENTORY.HUBPOWER
@@ -715,6 +789,8 @@ class Progression: Inventory {
 
 		let PlayerSheet = new("PlayerSheetJSON");
 		PlayerSheet.Load(playerClassName);
+
+		self.xclass = PlayerSheet.xclass;
 
 		if (PlayerSheet.ArmorType == PSAT_DEFAULT) {
 			self.ArmorType = cvarArmorType;
@@ -1049,7 +1125,7 @@ class Progression: Inventory {
 				if (ammoItem == null) {
 					// The player did not have the ammoitem. Add it.
 					ammoItem = Ammo(Spawn(ammotype));
-					ammoItem.UseSound = "TAG_HXDD_IGNORE_SPAWN";
+					ammoItem.UseSound = "TAG_HXDD_IGNORE_SPAWN";	// HACK
 					isUnowned = true;
 				}
 				ammoItem.AttachToOwner(Owner.player.mo);
@@ -1371,8 +1447,61 @@ class Progression: Inventory {
 	}
 
 	void RescanAllActors() {
+		bool isMapSpawn = level.MapTime == 0;
+		int num = self.owner.player.mo.PlayerNumber();
+		ThinkerIterator it = ThinkerIterator.Create("Actor");
+		Actor actor;
+		int count = 0;
+		while (actor = Actor(it.Next())) {
+			HXDDPickupNode node = HXDDPickupNode(actor);
+			if (node) {
+				if (self.xclass) {
+					String swapped = self.xclass.TryXClass(num, node.parentClass);
+
+					if (GetDefaultByType(node.parent) is "Weapon" && self.onlyDropUnownedWeapons && node.isDropped) {
+						Weapon weap = Weapon(self.owner.player.mo.FindInventory(swapped));
+						if (weap) {
+							if (self.owner.player.mo.CountInv(swapped) > 0) {
+								let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
+								let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+								String clsAmmo1;
+								if (ammo1) {
+									clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
+								}
+								String clsAmmo2;
+								if (ammo2) {
+									clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
+								}
+
+								if (ammo1 && ammo2) {
+									int select = random[rngWeapDrop](0,1);
+									if (select == 0) {
+										swapped = clsAmmo1;
+									} else if (select == 1) {
+										swapped = clsAmmo2;
+									}
+								} else if (ammo1) {
+									swapped = clsAmmo1;
+								} else if (ammo2) {
+									swapped = clsAmmo2;
+								}
+							}
+						}
+					}
+
+					Class<Inventory> cls = swapped;
+					String sfx = "";
+					if (swapped != "none" && swapped != "") {
+						sfx = GetDefaultByType(cls).PickupSound;
+						sfx = self.FindSoundReplacement(sfx);
+					}
+					node.SwapOriginal().AssignPickup(num, swapped, sfx);
+				}
+			}
+		}
 		// Fixes any actors spawned in before the Player.
 
+		/*
         ThinkerIterator it = ThinkerIterator.Create("Actor");
         Actor actor;
 
@@ -1409,5 +1538,6 @@ class Progression: Inventory {
 				item.PickupSound = replacement;
 			}
         }
+		*/
 	}
 }

@@ -8,54 +8,6 @@
 
 */
 
-enum ECVARCompareMethod {
-	ECVARCompareMethod_NONE,
-    ECVARCompareMethod_EQUALS,
-    ECVARCompareMethod_LESSER,
-    ECVARCompareMethod_GREATER
-}
-enum ECVARCompareType {
-	ECVARCompareType_NONE,
-    ECVARCompareType_INT,
-    ECVARCompareType_STRING
-}
-
-class XGT_Group {
-    int size;
-    Array<String> Doom;
-    Array<String> Heretic;
-    Array<String> Hexen;
-}
-
-class XTACompare {
-    String command;
-    String cvar;
-    int i_value;
-    String s_value;
-    ECVARCompareMethod method;
-    ECVARCompareType type;
-}
-
-class XTranslationActors {
-	String key;
-    XTACompare compare;
-	Array<String> defaults;
-    Array<String> alternates;
-
-    bool hasCVARCompare() {
-        return (self.compare != null);
-    }
-
-    bool canReadCommand() {
-        let probe = new("XGTPlayerProbe");
-        return probe.GetPlayer().CanReadPlayer();
-    }
-}
-
-class XGameArrayStringResult {
-    Array<String> list;
-}
-
 class XGameResponse {
     bool IsFinal;
     String newActor;
@@ -65,16 +17,9 @@ class XGameTranslation {
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
-	Array<XTranslationActors> xclass;  // player class actor swaps
-    Map<String, XTranslationActors> xcls;
-    Array<XTranslationActors> xswap;
-
     void Init() {
         self.CreateDoomEdNums();
         self.CreateSpawnNums();
-
-        self.CreateXClassTranslation();
-        self.CreateXSwapTranslation();
     }
 
     void CreateDoomEdNums() {
@@ -149,6 +94,7 @@ class XGameTranslation {
                 index = newIndex;
             }
         }
+        /*
         if (index == group.size) {
             String swapActor = self.TryXClass(source);
             //swapActor = self.TryXSwap(swapActor);
@@ -159,6 +105,14 @@ class XGameTranslation {
             resp.newActor = ActorNoneFix(swapActor);
             return resp;
         }
+        */
+        // TESTING
+        if (index == group.size) {
+            XGameResponse resp = new("XGameResponse");
+            resp.newActor = ActorNoneFix(source);
+            return resp;
+        }
+        // TESTING
         int optGameMode = LemonUtil.GetOptionGameMode();
         String newActor = source;
         int gameType = gameinfo.gametype;
@@ -181,6 +135,7 @@ class XGameTranslation {
                 }
             }
         }
+        /*
         String swapActor = self.TryXClass(newActor);
         //swapActor = self.TryXSwap(swapActor);
         XGameResponse resp = new("XGameResponse");
@@ -188,6 +143,11 @@ class XGameTranslation {
             resp.IsFinal = true;
         }
         resp.newActor = ActorNoneFix(swapActor);
+        */
+        // TESTING
+        XGameResponse resp = new("XGameResponse");
+        resp.newActor = ActorNoneFix(newActor);
+        // TESTING
         return resp;
     }
 
@@ -197,357 +157,5 @@ class XGameTranslation {
             return "RandomSpawner";
         }
         return source;
-    }
-
-	void CreateXClassTranslation() {
-        String playerClassName = LemonUtil.GetPlayerClassName();
-
-        FileJSON fJSON = new("FileJSON");
-        let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
-        if (!success) {
-            success = fJSON.Open(String.format("playersheets/%s.json", playerClassName));
-        }
-        if (success) {
-        	bool cvar_isdev_environment = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
-            if (cvar_isdev_environment) {
-                console.printf("XGameTranslation.XClass: Load playersheets/%s.playersheet %d", playerClassName, fJSON.index);
-            }
-            // Class Item Swap List Generation
-            HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
-            String ver = FileJSON.GetString(json, "version");
-            HXDD_JsonObject objClassItems = HXDD_JsonObject(json.get("xgame"));
-            if (objClassItems) {
-                Array<String> keys;
-                objClassItems.GetKeysInto(keys);
-
-                self.xclass.Resize(keys.Size());
-                for (let i = 0; i < keys.Size(); i++) {
-                    String key = keys[i];
-                    String valClassItem = FileJSON.GetString(objClassItems, key);
-                    if (valClassItem != "") {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromString(result.list[i], valClassItem);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
-                    }
-                    HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
-                    if (valClassItemList) {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromArray(result.list[i], valClassItemList);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
-                    }
-                    HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
-                    if (valClassItemObject) {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromObject(result.list[i], valClassItemObject);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
-                    }
-                }
-            }
-		}
-	}
-
-    XGameArrayStringResult GetKeysFromCombinedKey(String combined) {
-        XGameArrayStringResult result = new("XGameArrayStringResult");
-        combined.Substitute(" ", "");
-        combined.Split(result.list, ",");
-        return result;
-    }
-
-    XTranslationActors CreateXTAFromString(String key, String js) {
-        XTranslationActors xta = new("XTranslationActors");
-        Array<String> nClassItems;
-        js.Substitute(" ", "");
-        js.Split(xta.defaults, ",");
-        xta.key = key;
-        return xta;
-    }
-
-    XTranslationActors CreateXTAFromArray(String key, HXDD_JsonArray ja) {
-        XTranslationActors xta = new("XTranslationActors");
-        xta.key = key;
-        xta.defaults.Resize(ja.Size());
-        for (int j = 0; j < ja.Size(); j++) {
-            String value = HXDD_JsonString(ja.get(j)).s;
-            if (value) {
-                xta.defaults.push(value);
-            }
-        }
-        return xta;
-    }
-
-    XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
-        XTranslationActors xta = new("XTranslationActors");
-        xta.key = key;
-        xta.compare = new("XTACompare");
-
-        String sCVAR = FileJSON.GetString(jo, "cvar");
-        if (sCVAR != "") {
-            xta.compare.cvar = sCVAR;
-        }
-
-        // Probe Progression Values from the Player
-        String sCommand = FileJSON.GetString(jo, "command");
-        if (sCommand != "") {
-            xta.compare.command = sCommand;
-        }
-
-        if (xta.compare.cvar || xta.compare.command) {
-            xta.compare.method = ECVARCompareMethod_NONE;
-            xta.compare.type = ECVARCompareType_NONE;
-
-            String sValue_Lesser = FileJSON.GetString(jo, "lesser");
-            if (sValue_Lesser != "") {
-                xta.compare.method = ECVARCompareMethod_LESSER;
-                xta.compare.type = ECVARCompareType_STRING;
-                xta.compare.s_value = sValue_Lesser;
-            } else {
-                int iValue_Lesser = FileJSON.GetInt(jo, "lesser");
-                if (iValue_Lesser) {
-                    xta.compare.method = ECVARCompareMethod_LESSER;
-                    xta.compare.type = ECVARCompareType_INT;
-                    xta.compare.i_value = iValue_Lesser;
-                }
-            }
-
-            String sValue_Greater = FileJSON.GetString(jo, "greater");
-            if (sValue_Greater != "") {
-                xta.compare.method = ECVARCompareMethod_GREATER;
-                xta.compare.type = ECVARCompareType_STRING;
-                xta.compare.s_value = sValue_Greater;
-            } else {
-                int iValue_Greater = FileJSON.GetInt(jo, "greater");
-                if (iValue_Greater) {
-                    xta.compare.method = ECVARCompareMethod_GREATER;
-                    xta.compare.type = ECVARCompareType_INT;
-                    xta.compare.i_value = iValue_Greater;
-                }
-            }
-
-            String sValue_Equals = FileJSON.GetString(jo, "equals");
-            if (sValue_Equals != "") {
-                xta.compare.method = ECVARCompareMethod_EQUALS;
-                xta.compare.type = ECVARCompareType_STRING;
-                xta.compare.s_value = sValue_Equals;
-            } else {
-                int iValue_Equals = FileJSON.GetInt(jo, "equals");
-                if (iValue_Equals) {
-                    xta.compare.method = ECVARCompareMethod_EQUALS;
-                    xta.compare.type = ECVARCompareType_INT;
-                    xta.compare.i_value = iValue_Equals;
-                }
-            }
-
-            HXDD_JsonArray arrAlternates = FileJSON.GetArray(jo, "true");
-            if (arrAlternates) {
-                for (int j = 0; j < arrAlternates.Size(); j++) {
-                    String entry = HXDD_JsonString(arrAlternates.get(j)).s;
-                    if (entry) {
-                        xta.alternates.push(entry);
-                    }
-                }
-            } else {
-                String val = FileJSON.GetString(jo, "true");
-                if (val) {
-                    val.Substitute(" ", "");
-                    val.Split(xta.alternates, ",");
-                }
-            }
-            HXDD_JsonArray arrDefaults = FileJSON.GetArray(jo, "false");
-            if (arrDefaults) {
-                for (int j = 0; j < arrDefaults.Size(); j++) {
-                    String entry = HXDD_JsonString(arrDefaults.get(j)).s;
-                    if (entry) {
-                        xta.defaults.push(entry);
-                    }
-                }
-            } else {
-                String val = FileJSON.GetString(jo, "false");
-                if (val) {
-                    val.Substitute(" ", "");
-                    val.Split(xta.defaults, ",");
-                }
-            }
-            if (xta.defaults.Size() == 0) {
-                xta.defaults.push(key);
-            }
-        }
-
-        return xta;
-    }
-
-	String TryXClass(String replacee) {
-        XTranslationActors xta = self.xcls.GetIfExists(replacee);
-        if (xta && xta.key.MakeLower() == replacee.MakeLower()) {
-            Array<string> list;
-            list.copy(xta.defaults);
-            String replacement;
-            if (xta.hasCVARCompare()) {
-                bool useAlts = false;
-                XTACompare xcvar = xta.compare;
-                if (xcvar.type == ECVARCompareType_INT) {
-                    int val;
-                    if (xcvar.cvar) {
-                        val = LemonUtil.CVAR_GetInt(xcvar.cvar, -1);
-                    } else if (xcvar.command) {
-                        XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer();
-                        if (probe.Command(xcvar.command)) {
-                            val = probe.i_result;
-                        }
-                    }
-                    if (val) {
-                        if (xcvar.method == ECVARCompareMethod_EQUALS) {
-                            useAlts = (val == xcvar.i_value);
-                        } else if (xcvar.method == ECVARCompareMethod_LESSER) {
-                            useAlts = (val < xcvar.i_value);
-                        } else if (xcvar.method == ECVARCompareMethod_GREATER) {
-                            useAlts = (val > xcvar.i_value);
-                        }
-                    }
-                } else if (xcvar.type == ECVARCompareType_STRING) {
-                    String val;
-                    if (xcvar.cvar) {
-                        val = LemonUtil.CVAR_GetString(xcvar.cvar, "");
-                    } else if (xcvar.command) {
-                        XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer();
-                        if (probe.Command(xcvar.command)) {
-                            val = probe.s_result;
-                        }
-                    }
-                    if (val != "") {
-                        useAlts = (val == xcvar.s_value);
-                    }
-                }
-                if (useAlts && xta.alternates.Size() > 0) {
-                    list.copy(xta.alternates);
-                }
-            }
-
-            if (list.Size() == 0) {
-                return replacee;
-            }
-
-            // select random
-            int size = list.Size() - 1;
-            int choice = random[xclass](0, size);
-            replacement = list[choice];
-
-            return replacement;
-        }
-		return replacee;
-	}
-
-    void CreateXSwapTranslation() {
-        FileJSON fJSON = new("FileJSON");
-        let success = fJSON.Open("xgt/xswap.xgt");
-        if (!success) {
-            success = fJSON.Open("xgt/xswap.json");
-        }
-        if (success) {
-            HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
-            String ver = FileJSON.GetString(json, "version");
-            //if (ver) {
-            //    console.printf("XGameTranslation.CreateXSwapTranslation: Target Version %s", ver);
-            //}
-            HXDD_JsonArray arrListItems = HXDD_JsonArray(json.get("list"));
-            if (arrListItems) {
-                int size = arrListItems.Size();
-                self.xswap.Resize(size);
-                for (let i = 0; i < size; i++) {
-                    HXDD_JsonObject objListItem = HXDD_JsonObject(arrListItems.Get(i));
-                    if (objListItem) {
-                        String valKey = FileJSON.GetString(objListItem, "key");
-                        //String valCategory = GetString(objListItem, "category");
-                        //HXDD_JsonArray valLabels = GetArray(objListItem, "labels");
-                        HXDD_JsonArray valActors = FileJSON.GetArray(objListItem, "actors");
-                        if (valKey && valActors) {
-                            let newXSwap = new("XTranslationActors");
-                            newXSwap.key = valKey;
-                            newXSwap.defaults.Resize(valActors.Size());
-                            for (int j = 0; j < valActors.Size(); j++) {
-                                newXSwap.defaults[j] = HXDD_JsonString(valActors.get(j)).s;
-                            }
-                            self.xswap[i] = newXSwap;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    String TryXSwap(String replacee) {
-        bool isDev = LemonUtil.CVAR_GetBool("hxdd_isdev_environment", false);
-        if (!isDev) {
-            // not ready for general use
-            return replacee;
-        }
-        /*
-		for (let i = 0; i < self.xswap.Size(); i++) {
-            XTranslationActors xtaSwap = self.xswap[i];
-			if (xtaSwap.key.MakeLower().IndexOf(replacee.MakeLower()) != -1) {
-                String key = xtaSwap.key;
-                String cvarKey = String.format("hxdd_xswap_%s", key);
-                int option = LemonUtil.CVAR_GetInt(cvarKey, 0);
-                option = 1;
-                if (option == 0 || option > xtaSwap.defaults.Size() + 2) {
-                    return replacee;
-                }
-                int select = option - 1;
-                if (option == 1) {
-                    select = random[xswap](0, xtaSwap.defaults.Size() - 1);
-                }
-                String replacement = xtaSwap.defaults[select];
-				//console.printf("XGameTranslation.XSwap.TryXSwap %s %d Found: %s, Replacement: %s", cvarKey, i, replacee, replacement);
-                return replacement;
-            }
-        }
-        */
-        return replacee;
-    }
-}
-
-// Grabs Player stats in real time
-// TODO: Move into Progression for command responses
-class XGTPlayerProbe {
-    Progression invProgression;
-    int i_result;
-    String s_result;
-    XGTPlayerProbe GetPlayer() {
-        PlayerPawn player = PlayerPawn(players[0].mo);
-        if (player) {
-            let invProg = player.FindInventory("Progression");
-            if (invProg) {
-                self.invProgression = Progression(invProg);
-            }
-        }
-        return self;
-    }
-
-    bool CanReadPlayer() {
-        return self.invProgression != null;
-    }
-
-    bool Command(String cmd) {
-        if (!CanReadPlayer()) {
-            return false;
-        }
-        let sCmd = cmd.MakeLower();
-        if (sCmd == "armortype") {
-            self.i_result = self.GetArmorType();
-            return true;
-        }
-        return false;
-    }
-
-    int GetArmorType() {
-        return self.invProgression.ArmorType;
     }
 }

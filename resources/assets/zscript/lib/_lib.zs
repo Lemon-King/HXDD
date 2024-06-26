@@ -6,4 +6,5 @@
 #include "zscript/lib/gameinforeader.zs"
 #include "zscript/lib/lemonutil.zs"
 #include "zscript/lib/particles.zs"
+#include "zscript/lib/xclasstranslation.zs"
 #include "zscript/lib/xgametranslation.zs"

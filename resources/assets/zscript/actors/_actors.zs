@@ -2,6 +2,7 @@
 
 // Player Weapons and Ammo
 #include "zscript/actors/hxdd/items/doomarmor.zs"
+#include "zscript/actors/hxdd/items/pickupnode.zs"
 
 // Mobs
 #include "zscript/actors/hxdd/mobs/hxddfighterboss.zs"
