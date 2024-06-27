@@ -219,6 +219,12 @@ class PWeapVorpalSword_Swipe : Actor {
 		self.roll = self.target.roll;
 
 		self.UpdateOrigin();
+
+		for (int i = 0; i < Players.Size(); i++) {
+			if (i != p.mo.PlayerNumber()) {
+				self.DisableLocalRendering(i, true);
+			}
+		}
 	}
 
 	void UpdateOrigin() {
