@@ -80,3 +80,6 @@ server bool hxdd_disable_vorpal_flashing_projectile = false;
 
 // client side
 user float hxdd_recoil_scale = 1.0;
+
+// HXDD Statusbar
+user float hxdd_statusbar_velocity_scale = 1.0;

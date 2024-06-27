@@ -48,7 +48,11 @@ class HXDDStatusBar : BaseStatusBar {
 	private bool hasACArmor;
 
 	Progression prog;
-	
+
+	float GetVelocityScale() {
+		return LemonUtil.CVAR_GetFloat("hxdd_statusbar_velocity_scale", 1.0, CPlayer);
+	}
+
 	void UpdateProgression() {
 		if (CPlayer.mo is "PlayerPawn") {
 			prog = Progression(CPlayer.mo.FindInventory("Progression"));
@@ -247,6 +251,8 @@ class HXDDStatusBar : BaseStatusBar {
 		view.z *= viewPitchInverse;
 		view.z += -self.vecMotion.y;
 		view.z += self.vecViewMotion.x;
+
+		view *= self.GetVelocityScale();
 
 		vector2 v2Left = (view.x, view.y);
 		vector2 v2Center = (-self.vecMotion.y + self.vecViewMotion.x, view.y);
