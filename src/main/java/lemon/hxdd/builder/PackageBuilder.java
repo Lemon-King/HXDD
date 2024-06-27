@@ -480,9 +480,16 @@ public class PackageBuilder implements Runnable {
             za.ExtractFilesFromFolderAndConvert("filter/heretic/sprites/", "sprites", null, null);
             za.ExtractFilesFromFolderAndConvert("filter/hexen/sprites/", "sprites", null, null);
 
-            za.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "filter/heretic/graphics",  new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
-            za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics",  new String[]{"h2bar.lmp", "h2top.lmp"}, null);
-            za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics", new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
+            za.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "filter/heretic/graphics",
+                    new String[]{"barback.lmp", "ltfctop.lmp", "rtfctop.lmp"}, null);
+            za.ExtractFilesFromFolderAndConvert("filter/heretic/graphics/", "graphics",
+                    new String[]{"mape1.lmp", "mape2.lmp", "mape3.lmp", "final1.lmp", "final2.lmp"}, WidescreenGraphicDimensions);
+            za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics",
+                    new String[]{"h2bar.lmp", "h2top.lmp"}, null);
+            za.ExtractFilesFromFolderAndConvert("filter/hexen/graphics/", "graphics",
+                    new String[]{"interpic.lmp", "finale1.lmp", "finale2.lmp", "finale3.lmp"}, WidescreenGraphicDimensions);
+
+            za.ExtractSingleFile("filter/heretic/graphics/e2end.png", "graphics/e2end.png");
 
             String OPTION_ARTWORK = this.app.settings.Get("OPTION_TITLE_ARTWORK");
             if ("random".equals(OPTION_ARTWORK)) {

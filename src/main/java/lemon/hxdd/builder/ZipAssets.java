@@ -250,8 +250,8 @@ public class ZipAssets {
             this.Open();
             ZipEntry entry;
             while ((entry = this.zis.getNextEntry()) != null) {
-                if (!entry.isDirectory() && entry.getName().startsWith(input)) {
-                    String fileName = entry.getName();
+                String fileName = entry.getName();
+                if (!entry.isDirectory() && fileName.startsWith(input)) {
                     String cleanedName = fileName.startsWith(input) ? fileName.substring(input.length()) : fileName;
 
                     try {
