@@ -249,6 +249,11 @@ class XClassTranslation {
             replacement = GetDefaultByType((class<Inventory>)(replacement)).GetClassName();
         }
         XTranslationActors xta = self.xcls.GetIfExists(replacement);
+        if (!xta) {
+            // Try parent?
+            replacement = GetDefaultByType((class<Inventory>)(replacement)).GetParentClass().GetClassName();
+            xta = self.xcls.GetIfExists(replacement);
+        }
         if (xta && xta.key.MakeLower() == replacement.MakeLower()) {
             Array<string> list;
             list.copy(xta.defaults);
