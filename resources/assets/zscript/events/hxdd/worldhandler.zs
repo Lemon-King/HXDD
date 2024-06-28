@@ -87,22 +87,6 @@ class HXDDWorldEventHandler : EventHandler {
         //LemonUtil.TryOpenMapByName();
     }
 
-    // real nasty hack
-    override void WorldThingSpawned (WorldEvent e) {
-        if (e.Thing) {
-            PlayerPawn  p = PlayerPawn(players[0].mo);
-            Progression prog = Progression(p.FindInventory("Progression"));
-            if (prog) {
-                Inventory item = Inventory(e.Thing);
-                if (item is "Inventory" || item is "CustomInventory") {
-                    String pkupSound = item.PickupSound;
-                    String replacement = prog.FindSoundReplacement(pkupSound);
-                    item.PickupSound = replacement;
-                }
-            }
-        }
-    }
-
     override void WorldLinePreActivated(WorldEvent e) {
         if (LemonUtil.IsGameType(GAME_Doom)) {
             return;
