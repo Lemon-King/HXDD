@@ -38,12 +38,14 @@ Class HXDDLevelCompatibility : LevelPostProcessor {
                     String lumpDataLower = lumpData.MakeLower();
                     bool isCleared = lumpDataLower.IndexOf("clearlocks") != -1;
                     if (isCleared) {
-                        break;
+                        // all new keys set, no need to make changes
+                        return;
                     }
 
-                    bool altersLock1 = lumpDataLower.IndexOf("lock 1") != -1;
-                    bool altersLock2 = lumpDataLower.IndexOf("lock 2") != -1;
-                    bool altersLock3 = lumpDataLower.IndexOf("lock 3") != -1;
+                    // partial or all
+                    bool altersLock1 = lumpDataLower.IndexOf("lock 1\n{") != -1 || lumpDataLower.IndexOf("lock 1 {") != -1;
+                    bool altersLock2 = lumpDataLower.IndexOf("lock 2\n{") != -1 || lumpDataLower.IndexOf("lock 2 {") != -1;
+                    bool altersLock3 = lumpDataLower.IndexOf("lock 3\n{") != -1 || lumpDataLower.IndexOf("lock 3 {") != -1;
                     if (altersLock1) {
                         keySlots.insert(0, 1);
                     }
