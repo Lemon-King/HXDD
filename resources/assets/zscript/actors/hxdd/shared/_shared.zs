@@ -5,7 +5,6 @@
 
 #include "zscript/actors/hxdd/shared/inventory/gamemodecompat.zs"
 #include "zscript/actors/hxdd/shared/inventory/hxddarmor.zs"
-#include "zscript/actors/hxdd/shared/inventory/multipickup.zs"
 #include "zscript/actors/hxdd/shared/inventory/progression.zs"
 #include "zscript/actors/hxdd/shared/inventory/recoilcontroller.zs"
 #include "zscript/actors/hxdd/shared/player/hxddplayerpawn.zs"
