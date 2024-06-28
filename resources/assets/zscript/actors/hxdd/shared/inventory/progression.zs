@@ -45,11 +45,26 @@ class PlayerSheetEventHandler: EventHandler {
 		if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
 			if (e.thing.target.player.mo is "PlayerPawn") {
 				PlayerPawn pt = PlayerPawn(e.thing.target.player.mo);
+				int targetNum = pt.PlayerNumber();
 				if (pt.FindInventory("Progression")) {
 					Progression prog = Progression(pt.FindInventory("Progression"));
 					double exp = 0;
 					if (prog != NULL) {
-						exp = prog.AwardExperience(e.thing);
+						exp = prog.AwardExperience(e.thing, false);
+					}
+
+					for (int i = 0; i < players.Size(); i++) {
+						PlayerPawn pp = players[i].mo;
+						if (pp) {
+							if (targetNum != pp.PlayerNumber()) {
+								if (pp.FindInventory("Progression")) {
+									Progression oprog = Progression(pp.FindInventory("Progression"));
+									if (oprog != NULL) {
+										oprog.AwardExperience(e.thing, true);
+									}
+								}
+							}
+						}
 					}
 
 					if (prog.handler) {
@@ -65,11 +80,12 @@ class PlayerSheetEventHandler: EventHandler {
 
 		PlayerPawn pp = players[num].mo;
 		if (pp) {
-			uint end = AllActorClasses.Size();
-			for (uint i = 0; i < end; ++i) {
-				let node = (class<HXDDPickupNode>)(AllActorClasses[i]);
+			ThinkerIterator it = ThinkerIterator.Create("Actor");
+			Actor actor;
+			while (actor = Actor(it.Next())) {
+				HXDDPickupNode node = HXDDPickupNode(actor);
 				if (node) {
-
+					UpdateNode(node, pp);
 				}
 			}
 		}
@@ -77,16 +93,13 @@ class PlayerSheetEventHandler: EventHandler {
 
 	override void PlayerDisconnected(PlayerEvent e) {
 		// remove slots in nodes
-
 		int num = e.PlayerNumber;
-		PlayerPawn pp = players[num].mo;
-		if (pp) {
-			uint end = AllActorClasses.Size();
-			for (uint i = 0; i < end; ++i) {
-				let node = (class<HXDDPickupNode>)(AllActorClasses[i]);
-				if (node) {
-
-				}
+		ThinkerIterator it = ThinkerIterator.Create("Actor");
+		Actor actor;
+		while (actor = Actor(it.Next())) {
+			HXDDPickupNode node = HXDDPickupNode(actor);
+			if (node) {
+				node.RemovePickup(num);
 			}
 		}
 	}
@@ -97,7 +110,6 @@ class PlayerSheetEventHandler: EventHandler {
 		// Pickup Nodes
 		Actor original = e.thing;
 		if (original is "Inventory" && !(original is "Key") && !(Inventory(original).owner) && !(Inventory(original).target) && !(original is "HXDDPickupNode")) {
-			bool isMapSpawn = level.MapTime == 0;
 
 			// Fixes combined mana dropping things at 0,0,0 before PickupNode catches it
 			if (Inventory(original).bDropped && original.pos == (0,0,0) && original.vel == (0,0,0)) {
@@ -111,67 +123,75 @@ class PlayerSheetEventHandler: EventHandler {
 
 			HXDDPickupNode node = HXDDPickupNode(original.Spawn("HXDDPickupNode", original.pos));
 			node.Setup(Inventory(original));
+			original.Destroy();
 
 			let count = 0;
 			for (int i = 0; i < players.Size(); i++) {
 				PlayerPawn pp = players[i].mo;
-				if (pp) {
-					if (pp.FindInventory("Progression")) {
-						Progression prog = Progression(pp.FindInventory("Progression"));
-						bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
+				UpdateNode(node, pp);
+			}
+		}
+    }
 
-						if (prog && prog.xclass) {
-							let itemClassName = original.GetClassName();
-							let swapped = prog.xclass.TryXClass(i, itemClassName);
+	void UpdateNode(HXDDPickupNode node, PlayerPawn pp) {
+		if (!pp) {
+			return;
+		}
+		bool isMapSpawn = level.MapTime == 0;
+		int num = pp.PlayerNumber();
+		if (pp.FindInventory("Progression")) {
+			Progression prog = Progression(pp.FindInventory("Progression"));
+			bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
 
-							if (original is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
-								Weapon weap = Weapon(pp.FindInventory(swapped));
-								if (weap) {
-									if (pp.CountInv(swapped) > 0) {
-										let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
-										let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
-										String clsAmmo1;
-										if (ammo1) {
-											clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
-										}
-										String clsAmmo2;
-										if (ammo2) {
-											clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
-										}
+			if (prog && prog.xclass) {
+				let swapped = prog.xclass.TryXClass(num, node.parentClass);
 
-										if (ammo1 && ammo2) {
-											int select = random[rngWeapDrop](0,1);
-											if (select == 0) {
-												swapped = clsAmmo1;
-											} else if (select == 1) {
-												swapped = clsAmmo2;
-											}
-										} else if (ammo1) {
-											swapped = clsAmmo1;
-										} else if (ammo2) {
-											swapped = clsAmmo2;
-										}
-									}
+				if (node.parent is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
+					Weapon weap = Weapon(pp.FindInventory(swapped));
+					if (weap) {
+						if (pp.CountInv(swapped) > 0) {
+							let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
+							let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+							String clsAmmo1;
+							if (ammo1) {
+								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
+							}
+							String clsAmmo2;
+							if (ammo2) {
+								clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
+							}
+
+							if (ammo1 && ammo2) {
+								int select = random[rngWeapDrop](0,1);
+								if (select == 0) {
+									swapped = clsAmmo1;
+								} else if (select == 1) {
+									swapped = clsAmmo2;
 								}
-							}
-
-							Class<Inventory> cls = swapped;
-							String sfx = "";
-							if (swapped != "none" && swapped != "") {
-								sfx = GetDefaultByType(cls).PickupSound;
-								sfx = prog.FindSoundReplacement(sfx);
-							}
-							node.SwapOriginal().AssignPickup(i, swapped, sfx);
-
-							if (!isMapSpawn) {
-								node.SetDropped();
+							} else if (ammo1) {
+								swapped = clsAmmo1;
+							} else if (ammo2) {
+								swapped = clsAmmo2;
 							}
 						}
 					}
 				}
+
+				Class<Inventory> cls = swapped;
+				String sfx = "";
+				if (swapped != "none" && swapped != "") {
+					sfx = GetDefaultByType(cls).PickupSound;
+					sfx = prog.FindSoundReplacement(sfx);
+				}
+				//node.SwapOriginal().AssignPickup(i, swapped, sfx);
+				node.AssignPickup(num, swapped, sfx);
+
+				if (!isMapSpawn) {
+					node.SetDropped();
+				}
 			}
 		}
-    }
+	}
 }
 
 class PlayerSheetStatBase {
@@ -1360,7 +1380,7 @@ class Progression: Inventory {
 		return pLevel;
 	}
 
-	double AwardExperience(Actor target) {
+	double AwardExperience(Actor target, bool isShared = false) {
 		double exp = 0;
 		if (self.ProgressionType != PSP_LEVELS || self.experienceTable.Size() == 0 || !target) {
 			// Progression is not set to leveling, or Experience Table is not setup, or no target
@@ -1376,6 +1396,10 @@ class Progression: Inventory {
 			} else {
 				exp = GetExperienceByTargetHealth(target);
 			}
+		}
+		if (isShared) {
+			double CVAR_HXDD_PROGRESSION_XP_SHARED = LemonUtil.CVAR_GetFloat("hxdd_progression_xp_shared", 0.25);
+			exp = exp * CVAR_HXDD_PROGRESSION_XP_SHARED;
 		}
 		GiveExperience(exp);
 		return exp;

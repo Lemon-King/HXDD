@@ -164,6 +164,7 @@ class HXDDPickupNode : Inventory {
         // becomes proxy
         self.bCountSecret = original.bCountSecret;
 
+        /*
         if (self.slots.CountUsed() == 0) {
             original.angle = self.angle;
             original.vel = self.vel;
@@ -178,6 +179,7 @@ class HXDDPickupNode : Inventory {
         }
 
         self.isPending = true;
+        */
 
         return self;
     }
@@ -228,13 +230,12 @@ class HXDDPickupNode : Inventory {
 
     // Should only be called when a player leaves
     void RemovePickup(int index) {
-        bool hasSlot = self.slots.CheckKey(index);
+        HXDDPickupNodeSlot slot;
+        bool hasSlot = false;
+        [slot, hasSlot] = self.slots.CheckValue(index);
         if (hasSlot) {
-            HXDDPickupNodeSlot slot = self.slots.Get(index);
-            if (slot) {
-                slot.pickup.Destroy();
-                self.slots.Remove(index);
-            }
+            slot.pickup.Destroy();
+            self.slots.Remove(index);
         }
     }
 
