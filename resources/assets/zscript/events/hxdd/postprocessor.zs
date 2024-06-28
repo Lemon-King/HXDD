@@ -22,14 +22,62 @@ Class HXDDLevelCompatibility : LevelPostProcessor {
     }
 
     protected void Apply(Name checksum, String mapname) {
-        // HXDD Mode only modifies 6 keys, so we should be looking for those keys in lines
+        // HXDD only modifies 6 keys, so we should be looking for those keys in lines
         if (!LemonUtil.IsGameType(GAME_Doom) && LemonUtil.CVAR_GetBool("HXDD_USE_KEYDEF_MODE", true)) {
+            let nextLump = 0;
+            Array<int> keySlots;
+            keySlots.Resize(3);
+            while (nextLump != -1 || nextLump != Wads.GetNumLumps()) {
+                int lumpIndex = Wads.FindLump("lockdefs", nextLump + 1);
+                if (lumpIndex == -1) {
+                    String lumpData = Wads.ReadLump(nextLump);
+                    bool isHXDD = lumpData.mid(0,7) == "// HXDD";
+                    if (isHXDD) {
+                        break;
+                    }
+                    String lumpDataLower = lumpData.MakeLower();
+                    bool isCleared = lumpDataLower.IndexOf("clearlocks") != -1;
+                    if (isCleared) {
+                        break;
+                    }
+
+                    bool altersLock1 = lumpDataLower.IndexOf("lock 1") != -1;
+                    bool altersLock2 = lumpDataLower.IndexOf("lock 2") != -1;
+                    bool altersLock3 = lumpDataLower.IndexOf("lock 3") != -1;
+                    if (altersLock1) {
+                        keySlots.insert(0, 1);
+                    }
+                    if (altersLock2) {
+                        keySlots.insert(1, 2);
+                    }
+                    if (altersLock3) {
+                        keySlots.insert(2, 3);
+                    }
+                }
+                nextLump = lumpIndex;
+            }
+
             int gameMode = LemonUtil.GetOptionGameMode();
-            int offset = 0;
             if  (gameMode == GAME_Heretic) {
-                offset = 1000;
+                if (!keySlots[0]) {
+                    keySlots.insert(0, 1001);
+                }
+                if (!keySlots[1]) {
+                    keySlots.insert(1, 1002);
+                }
+                if (!keySlots[2]) {
+                    keySlots.insert(2, 1003);
+                }
             } else if (gameMode == GAME_Hexen) {
-                offset = 2000;
+                if (!keySlots[0]) {
+                    keySlots.insert(0, 2001);
+                }
+                if (!keySlots[1]) {
+                    keySlots.insert(1, 2002);
+                }
+                if (!keySlots[2]) {
+                    keySlots.insert(2, 2003);
+                }
             }
             for (int i = 0; i < Level.lines.Size(); i++) {
                 Line l = Level.lines[i];
@@ -42,19 +90,19 @@ Class HXDDLevelCompatibility : LevelPostProcessor {
                     }
                     if ( !l.locknumber ) {
                         // check the special
-                         int key;
+                        int key;
                         switch ( l.special ) {
                         case FS_Execute:
                             key = args[2] - 128;
                             if (key > 0 && key < 4) {
-                                args[2] = key + offset;
+                                args[2] = keySlots[key-1];
                             }
                             break;
                         case Door_LockedRaise:
                         case Door_Animated:
                             key = args[3] - 128;
                             if (key > 0 && key < 4) {
-                                args[3] = key + offset;
+                                args[3] = keySlots[key-1];
                             }
                             break;
                         case ACS_LockedExecute:
@@ -62,7 +110,7 @@ Class HXDDLevelCompatibility : LevelPostProcessor {
                         case Generic_Door:
                             key = args[4] - 128;
                             if (key > 0 && key < 4) {
-                                args[4] = key + offset;
+                                args[4] = keySlots[key-1];
                             }
                             break;
                         }
