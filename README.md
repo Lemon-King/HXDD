@@ -73,9 +73,9 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 * **Mod Support via PlayerSheets**<br/>Allows for cross game pickups and actors and expanded PlayerClass definitions. PlayerSheets will allow your mod to support HXDD only features without needing to expand actors or make another version of your mod. Just create a new json under playersheets/.json and you're ready to start!
 * **Korax Localization**<br/>Select between English, French, German, and Japanese for languages used by Hexen 64 Localizations.
 * **Title Screen Customization**<br/>Change the Artwork and Music to any of the games in the series, also has support for using Steam's Hero Artwork as Titles.
+* **Multiplayer Support**<br/>Grab some friends, pick a class, and cause some chaos!
 
 ## Current Upcoming & Planned Features
-* **Multiplayer Support**<br/>No longer locked to single player, multiplayer expansion.
 * **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are next for the major gameplay updates.
 * **Heretic II Corvus**<br/>Currently in an [prototyping phase](https://www.youtube.com/watch?v=RV1bI9vbNs8), due to the amount of work required.
 
