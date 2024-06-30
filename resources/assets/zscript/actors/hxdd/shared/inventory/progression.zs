@@ -109,7 +109,7 @@ class PlayerSheetEventHandler: EventHandler {
 	override void WorldThingSpawned(WorldEvent e) {
 		// Pickup Nodes
 		Actor original = e.thing;
-		if (original is "Inventory" && !(original is "Key") && !(Inventory(original).owner) && !(Inventory(original).target) && !(original is "HXDDPickupNode")) {
+		if (original is "Inventory" && !(original is "Key") && !(original is "HXDDPickupNode") && !(Inventory(original).owner) && !(Inventory(original).target is "HXDDPickupNode")) {
 
 			// Fixes combined mana dropping things at 0,0,0 before PickupNode catches it
 			if (Inventory(original).bDropped && original.pos == (0,0,0) && original.vel == (0,0,0)) {
@@ -182,8 +182,7 @@ class PlayerSheetEventHandler: EventHandler {
 				if (swapped != "none" && swapped != "") {
 					sfx = GetDefaultByType(cls).PickupSound;
 					sfx = prog.FindSoundReplacement(sfx);
-				}
-				//node.SwapOriginal().AssignPickup(i, swapped, sfx);
+				};
 				node.AssignPickup(num, swapped, sfx);
 
 				if (!isMapSpawn) {
