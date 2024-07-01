@@ -5,6 +5,9 @@ class HXDDStatusBar : BaseStatusBar {
 	const VIEW_SHIFT_RATE = 0.15;
 	const VIEW_SHIFT_DECAY = 0.85;
 
+	const BAR_SCREEN_WIDTH = 2560;
+	const BAR_SCREEN_HEIGHT = 1440;
+
 	const invAnimationDuration = 0.75;
 
 	private double shiftX;
@@ -20,6 +23,8 @@ class HXDDStatusBar : BaseStatusBar {
 	private vector2 vecLastView;
 	private double viewDist;
 	private double viewDistLast;
+
+	private vector2 screenScale;
 
 	private double invTime;
 
@@ -140,6 +145,9 @@ class HXDDStatusBar : BaseStatusBar {
 
 		UpdateProgression();
 
+		screenScale = (BAR_SCREEN_WIDTH, BAR_SCREEN_HEIGHT);
+		screenScale = (Screen.GetWidth() / screenScale.x, Screen.GetHeight() / screenScale.y);
+
 		if (prog) {
 			if (prog.ProgressionType == PSP_LEVELS) {
 				mXPInterpolator.Update(prog.levelpct);
@@ -252,6 +260,7 @@ class HXDDStatusBar : BaseStatusBar {
 		view.z += -self.vecMotion.y;
 		view.z += self.vecViewMotion.x;
 
+		view = (view.x * screenScale.x, view.y * screenScale.y, view.z * screenScale.x);
 		view *= self.GetVelocityScale();
 
 		vector2 v2Left = (view.x, view.y);
