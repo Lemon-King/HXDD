@@ -9,6 +9,7 @@ class PWeapAxe : PaladinWeapon {
 		Weapon.AmmoType1 "Mana2";
 		Weapon.AmmoUse 2;
 		Weapon.AmmoGive 32;
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.AXE.PICKUP";
 		+BLOODSPLATTER
 		+FLOATBOB
 

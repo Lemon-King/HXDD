@@ -4,7 +4,6 @@
 class PWeapPurifierPiece: WeaponPiece {
 	Default {
 		Inventory.PickupSound "misc/w_pkup";
-		Inventory.PickupMessage "$TXT_PURIFIER_PIECE";
 		Inventory.RestrictedTo "HX2PaladinPlayer";
 		WeaponPiece.Weapon "PWeapPurifier";
 		+FLOATBOB
@@ -14,6 +13,7 @@ class PWeapPurifierPiece: WeaponPiece {
 class PWeapPurifierPiece1: PWeapPurifierPiece {
 	Default {
 		WeaponPiece.Number 1;
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.PEICE.1.PICKUP";
 	}
 	States {
         Spawn:
@@ -25,6 +25,7 @@ class PWeapPurifierPiece1: PWeapPurifierPiece {
 class PWeapPurifierPiece2: PWeapPurifierPiece {
 	Default {
 		WeaponPiece.Number 2;
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.PEICE.2.PICKUP";
 	}
 	States {
         Spawn:
@@ -51,9 +52,9 @@ class PWeapPurifier: PaladinWeapon {
 		Weapon.AmmoGive 20;
 		Weapon.KickBack 150;
 		//Weapon.YAdjust 40;
-		Inventory.PickupMessage "$TXT_WEAPON_PURIFIER";
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.PICKUP";
 		Inventory.PickupSound "WeaponBuild";
-		Tag "$TAG_PWEAPPURIFIER";
+		Tag "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.TAG";
 	}
 
 	States {
@@ -195,7 +196,7 @@ class PWeapPurifier_Missile: Actor {
 		Scale 1;
 		
 		DeathSound "hexen2/weapons/expsmall";
-		Obituary "$OB_MPPWEAPPURIFIER";
+		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1";
 
 		PWeapPurifier_Missile.tickDuration (2.5 * 35.0);
 	}
@@ -236,6 +237,15 @@ class PWeapPurifier_Missile: Actor {
 		Actor sprfx = Spawn("FireCircle");
 		sprfx.SetOrigin(self.pos, false);
 	}
+
+	override string GetObituary(Actor victim, Actor inflictor, Name mod, bool playerattack) {
+		static const string messages[] = {
+			"$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1",
+			"$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.2"
+		};
+
+		return messages[Random(0, messages.Size() - 1)];
+	}
 }
 
 
@@ -264,7 +274,7 @@ class PWeapPurifier_DragonBall: Actor {
 		Scale 1;
 		
 		DeathSound "hexen2/weapons/exphuge";
-		Obituary "$OB_MPPWEAPPURIFIER";
+		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1";
 
 		PWeapPurifier_DragonBall.tickDuration (2.5 * 35.0);
 	}
@@ -339,6 +349,15 @@ class PWeapPurifier_DragonBall: Actor {
 
 		Actor sprfx = Spawn("BigExplosion");
 		sprfx.SetOrigin(self.pos, false);
+	}
+
+	override string GetObituary(Actor victim, Actor inflictor, Name mod, bool playerattack) {
+		static const string messages[] = {
+			"$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1",
+			"$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.2"
+		};
+
+		return messages[Random(0, messages.Size() - 1)];
 	}
 }
 

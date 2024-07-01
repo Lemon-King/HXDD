@@ -11,12 +11,13 @@ class PWeapVorpalSword : PaladinWeapon
 		Weapon.AmmoType1 "Mana1";
 		Weapon.AmmoUse 0;
 		Weapon.AmmoGive 25;
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.VORPAL_SWORD.PICKUP";
 		+BLOODSPLATTER
 		+FLOATBOB
         +WEAPON.AMMO_OPTIONAL
 
-		Obituary "$OB_MPPWEAPVORPALSWORD";
-		Tag "$TAG_PWEAPVORPALSWORD";
+		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.VORPAL_SWORD.OBITUARY";
+		Tag "$HXDD.HEXEN2.WEAPONS.PALADIN.VORPAL_SWORD.TAG";
 
 		FloatBobStrength 0.25;
 	}
@@ -334,7 +335,7 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 		DamageType "Electric";		// flavor
 		Projectile;
 		DeathSound "hexen2/weapons/explode";
-		Obituary "$OB_MPMWEAPFROST";
+		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.VORPAL_SWORD.SHOCKWAVE.OBITUARY";
         Scale 1.0;
 
         PWeapVorpalSword_MissileWave.tickDuration 3.0f;

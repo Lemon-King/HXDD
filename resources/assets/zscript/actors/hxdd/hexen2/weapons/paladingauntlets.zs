@@ -9,9 +9,10 @@ class PWeapGauntlet : PaladinWeapon
 		Weapon.SelectionOrder 3500;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 0;
+		Inventory.PickupMessage "$HXDD.HEXEN2.WEAPONS.PALADIN.FISTS.PICKUP";
 		+BLOODSPLATTER
-		Obituary "$OB_MPPWEAPGAUNTLETS";
-		Tag "$TAG_PWEAPGAUNTLETS";
+		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.FISTS.OBITUARY";
+		Tag "$HXDD.HEXEN2.WEAPONS.PALADIN.FISTS.TAG";
 	}
 
 	States

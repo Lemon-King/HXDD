@@ -484,31 +484,31 @@ class ZFGameOptions ui {
         self.ddl_Difficulty.Create(optionArea, (0, 25 + 75), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_SKILLSELECTION", skList, parent.selectedSkill, "skill", cmdHandler);
 
         HXDD_ZF_DropdownItems listArmorMode = new("HXDD_ZF_DropdownItems");
-        listArmorMode.items.push("$OPT_CLASS_DEFAULT");
-        listArmorMode.items.push("$OPT_ARMOR_BASIC");
-        listArmorMode.items.push("$OPT_ARMOR_AC");
-        listArmorMode.items.push("$OPT_RANDOM");
+        listArmorMode.items.push("$HXDD.MNU.OPTION.VALUE.CLASS_DEFAULT");
+        listArmorMode.items.push("$HXDD.MNU.OPTION.VALUE.ARMOR_BASIC");
+        listArmorMode.items.push("$HXDD.MNU.OPTION.VALUE.ARMOR_AC");
+        listArmorMode.items.push("$HXDD.MNU.OPTION.VALUE.RANDOM");
         //listArmorMode.items.push("Custom");
         DropDownCombo ddl_ArmorMode = new("DropDownCombo");
         ddl_ArmorMode.Create(optionArea, (0, 25 + 150), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_ARMORMODE", listArmorMode, 0, "hxdd_armor_mode", cmdHandler);
 
         HXDD_ZF_DropdownItems listProgression = new("HXDD_ZF_DropdownItems");
-        listProgression.items.push("$OPT_CLASS_DEFAULT");
-        listProgression.items.push("$OPT_NONE");
-        listProgression.items.push("$OPT_PROG_LEVELS");
-        listProgression.items.push("$OPT_RANDOM");
+        listProgression.items.push("$HXDD.MNU.OPTION.VALUE.CLASS_DEFAULT");
+        listProgression.items.push("$HXDD.MNU.OPTION.VALUE.NONE");
+        listProgression.items.push("$HXDD.MNU.OPTION.VALUE.PROG_LEVELS");
+        listProgression.items.push("$HXDD.MNU.OPTION.VALUE.RANDOM");
         //listProgression.items.push("Custom");
         DropDownCombo ddl_Progression = new("DropDownCombo");
         ddl_Progression.Create(optionArea, (0, 25 + 225), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_PROGRESSIONMODE", listProgression, 0, "hxdd_progression", cmdHandler);
 
         HXDD_ZF_DropdownItems listMapSet = new("HXDD_ZF_DropdownItems");
-        listMapSet.items.push("$OPT_AUTO_DETECT");
-        listMapSet.items.push("$OPT_HERETIC");
-        listMapSet.items.push("$OPT_HEXEN");
+        listMapSet.items.push("$HXDD.MNU.OPTION.VALUE.AUTO_DETECT");
+        listMapSet.items.push("$HXDD.MNU.OPTION.VALUE.HERETIC");
+        listMapSet.items.push("$HXDD.MNU.OPTION.VALUE.HEXEN");
         DropDownCombo ddl_GameMode = new("DropDownCombo");
         ddl_GameMode.Create(optionArea, (0, 25 + 300), (optionArea.GetWidth() - 32, 50), "$MNU_HEADER_GAMEMODE", listMapSet, 0, "hxdd_gamemode", cmdHandler);
 
-
+        
         let labelTex = HXDD_ZF_Label.create(
             (0, 25 + 450),
             (optionArea.GetWidth(), 50),
