@@ -118,26 +118,26 @@ Adding **-file HXDD.ipk3** to any DOOM IWAD.
 ### Youtube Videos
 
 <a href="https://www.youtube.com/watch?v=leqi5NL_JoE">
-<img src="https://img.youtube.com/vi/leqi5NL_JoE/0.jpg" alt="Youtube Video" width="415" height="auto">
+<img src="https://img.youtube.com/vi/leqi5NL_JoE/0.jpg" alt="Youtube Video" width="410" height="auto">
 </a>
 <a href="https://www.youtube.com/watch?v=PTh_TbOPyPc">
-<img src="https://img.youtube.com/vi/PTh_TbOPyPc/0.jpg" alt="Youtube Video" width="415" height="auto">
+<img src="https://img.youtube.com/vi/PTh_TbOPyPc/0.jpg" alt="Youtube Video" width="410" height="auto">
 </a>
 
 ### Screenshots
 <a href="https://i.imgur.com/8W0VM5p.png">
-<img src="https://i.imgur.com/8W0VM5pm.png" alt="Screenshot" width="415" height="auto">
+<img src="https://i.imgur.com/8W0VM5pm.png" alt="Screenshot" width="410" height="auto">
 </a>
 
 <a href="https://i.imgur.com/WF0hGCv.jpg">
-<img src="https://i.imgur.com/WF0hGCvm.jpg" alt="Screenshot" width="415" height="auto">
+<img src="https://i.imgur.com/WF0hGCvm.jpg" alt="Screenshot" width="410" height="auto">
 </a>
 
 <a href="https://i.imgur.com/HY5b2YZ.jpg">
-<img src="https://i.imgur.com/HY5b2YZm.jpg" alt="Screenshot" width="415" height="auto">
+<img src="https://i.imgur.com/HY5b2YZm.jpg" alt="Screenshot" width="410" height="auto">
 </a> 
 <a href="https://i.imgur.com/aXy3n3U.jpg">
-<img src="https://i.imgur.com/aXy3n3Um.jpg" alt="Screenshot" width="415" height="auto">
+<img src="https://i.imgur.com/aXy3n3Um.jpg" alt="Screenshot" width="410" height="auto">
 </a>
 
 ## License
