@@ -112,23 +112,33 @@ Select the PAK files in the application and ensure Enable Hexen II is checked.<b
 HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
 
 ## DOOM Compatibility「PWAD Mode」
-You can also use hxdd.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https://jp.itch.io/wadsmoosh).
+You can also use HXDD.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https://jp.itch.io/wadsmoosh).</br>
+Adding **-file HXDD.ipk3** to any DOOM IWAD.
 
-## Screenshots & Video
+### Youtube Videos
+
+<a href="https://www.youtube.com/watch?v=leqi5NL_JoE">
+<img src="https://img.youtube.com/vi/leqi5NL_JoE/0.jpg" alt="Youtube Video" width="415" height="auto">
+</a>
+<a href="https://www.youtube.com/watch?v=PTh_TbOPyPc">
+<img src="https://img.youtube.com/vi/PTh_TbOPyPc/0.jpg" alt="Youtube Video" width="415" height="auto">
+</a>
+
+### Screenshots
 <a href="https://i.imgur.com/8W0VM5p.png">
-<img src="https://i.imgur.com/8W0VM5pm.png" alt="Logo" width="475" height="auto">
+<img src="https://i.imgur.com/8W0VM5pm.png" alt="Screenshot" width="415" height="auto">
 </a>
 
 <a href="https://i.imgur.com/WF0hGCv.jpg">
-<img src="https://i.imgur.com/WF0hGCvm.jpg" alt="Logo" width="475" height="auto">
+<img src="https://i.imgur.com/WF0hGCvm.jpg" alt="Screenshot" width="415" height="auto">
 </a>
 
 <a href="https://i.imgur.com/HY5b2YZ.jpg">
-<img src="https://i.imgur.com/HY5b2YZm.jpg" alt="Logo" width="475" height="auto">
+<img src="https://i.imgur.com/HY5b2YZm.jpg" alt="Screenshot" width="415" height="auto">
+</a> 
+<a href="https://i.imgur.com/aXy3n3U.jpg">
+<img src="https://i.imgur.com/aXy3n3Um.jpg" alt="Screenshot" width="415" height="auto">
 </a>
-
-[![Release 0.8.1a Video](https://img.youtube.com/vi/leqi5NL_JoE/0.jpg)](https://www.youtube.com/watch?v=leqi5NL_JoE)
-[![YOUTUBE DEMO VIDEO](https://img.youtube.com/vi/PTh_TbOPyPc/0.jpg)](https://www.youtube.com/watch?v=PTh_TbOPyPc)
 
 ## License
 
