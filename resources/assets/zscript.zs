@@ -1,3 +1,3 @@
-version "4.11"
+version "4.12"
 
 #include "zscript/_hxdd.zs"
