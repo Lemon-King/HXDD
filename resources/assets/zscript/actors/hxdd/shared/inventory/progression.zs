@@ -180,8 +180,11 @@ class PlayerSheetEventHandler: EventHandler {
 				Class<Inventory> cls = swapped;
 				String sfx = "";
 				if (swapped != "none" && swapped != "") {
-					sfx = GetDefaultByType(cls).PickupSound;
-					sfx = prog.FindSoundReplacement(sfx);
+					let o = GetDefaultByType(cls);
+					if (o) {
+						sfx = o.PickupSound;
+						sfx = prog.FindSoundReplacement(sfx);
+					}
 				};
 				node.AssignPickup(num, swapped, sfx);
 
