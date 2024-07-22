@@ -116,7 +116,7 @@ class PlayerSheetEventHandler: EventHandler {
 				return;
 			}
 
-			// Ignore spawned ammo at map start
+			// Ignore spawned ammo at map start, used with HX2 Leveling
 			if (level.MapTime == 0 && Inventory(original).UseSound == "TAG_HXDD_IGNORE_SPAWN") {
 				return;
 			}
@@ -125,7 +125,6 @@ class PlayerSheetEventHandler: EventHandler {
 			node.Setup(Inventory(original));
 			original.Destroy();
 
-			let count = 0;
 			for (int i = 0; i < players.Size(); i++) {
 				PlayerPawn pp = players[i].mo;
 				UpdateNode(node, pp);
@@ -1525,45 +1524,5 @@ class Progression: Inventory {
 				}
 			}
 		}
-		// Fixes any actors spawned in before the Player.
-
-		/*
-        ThinkerIterator it = ThinkerIterator.Create("Actor");
-        Actor actor;
-
-		HXDDWorldEventHandler eHXDD = HXDDWorldEventHandler(EventHandler.Find("HXDDWorldEventHandler"));
-        while ((actor = Actor(it.Next())) != null) {
-			if (actor is "Inventory" || actor is "CustomInventory") {
-				Inventory item = Inventory(actor);
-
-				if (eHXDD && eHXDD.xgame) {
-					let itemClassName = item.GetClassName();
-					let swapped = eHXDD.xgame.TryXClass(itemClassName);
-					if (itemClassName != swapped) {
-						let newActorClassName = eHXDD.xgame.ActorNoneFix(swapped);
-
-						// Ignore spawned ammo at map start
-						if (level.MapTime == 0 && Inventory(actor).UseSound == "TAG_HXDD_IGNORE_SPAWN") {
-							continue;
-						}
-
-						let invNew = Inventory(actor.Spawn(newActorClassName, actor.pos));
-						if (invNew) {
-							invNew.angle = actor.angle;
-							invNew.vel = actor.vel;
-
-							actor.Destroy();
-
-							item = invNew;
-						}
-					}
-				}
-
-				String pkupSound = item.PickupSound;
-				String replacement = self.FindSoundReplacement(pkupSound);
-				item.PickupSound = replacement;
-			}
-        }
-		*/
 	}
 }
