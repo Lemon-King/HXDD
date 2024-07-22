@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="SWeapFireStorm">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l3_c5.md3" model="0" />
         <Skin file="w_l3_c5_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="SWeapFireStorm">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp3.md3" model="0" />
         <Skin file="sucwp3_skin0.png" model="0" />
 
@@ -41,7 +41,7 @@
         <Animation key="FSSP" frames="11" model="0" comment="Select / Deselect: Power"/>
     </Group>
     <Group class="SWeapFireStorm_FlameBall">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp1p.md3" model="0" />
         <Skin file="sucwp1p_skin0.png" model="0" />
 

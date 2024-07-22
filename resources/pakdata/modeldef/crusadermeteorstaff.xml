@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="CWeapMeteorStaff">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l3_c2.md3" model="0" />
         <Skin file="w_l3_c2_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapMeteorStaff">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="meteor.md3" model="0" />
         <Skin file="meteor_skin0.png" model="0" />
 
@@ -32,7 +32,7 @@
         <Animation key="CWMF" frames="9" model="0" comment="Fire"/>
     </Group>
     <Group class="CWeapMeteorStaff_Meteor">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="tempmetr.md3" model="0" />
         <Skin file="tempmetr_skin0.png" model="0" />
 

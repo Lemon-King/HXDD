@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <!-- Armor Pickups -->
+    <!--
+    <Group class="HX2Pickup_Amulet">
+        <Path folder="models/hexen2" />
+        <Model file="i_amulet.md3" model="0" />
+        <Skin file="i_amulet_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Amulet"/>
+    </Group>
+    <Group class="HX2Pickup_Breastplate">
+        <Path folder="models/hexen2" />
+        <Model file="i_bplate.md3" model="0" />
+        <Skin file="i_bplate_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Breastplate"/>
+    </Group>
+    <Group class="HX2Pickup_Bracer">
+        <Path folder="models/hexen2" />
+        <Model file="i_bracer.md3" model="0" />
+        <Skin file="i_bracer_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Bracer"/>
+    </Group>
+    <Group class="HX2Pickup_Helmet">
+        <Path folder="models/hexen2" />
+        <Model file="i_helmet.md3" model="0" />
+        <Skin file="i_helmet_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Helmet"/>
+    </Group>
+    -->
+
+    <!-- Mana Pickups -->
+    <Group class="HX2Mana1">
+        <Path folder="models/hexen2" />
+        <Model file="i_bmana.md3" model="0" />
+        <Skin file="i_bmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 1"/>
+    </Group>
+    <Group class="HX2Mana2">
+        <Path folder="models/hexen2" />
+        <Model file="i_gmana.md3" model="0" />
+        <Skin file="i_gmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 2"/>
+    </Group>
+    <Group class="HX2Mana3">
+        <Path folder="models/hexen2" />
+        <Model file="i_btmana.md3" model="0" />
+        <Skin file="i_btmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 3"/>
+    </Group>
+
+    <!-- General -->
+    <Group class="HX2CrystalVial">
+        <Path folder="models/hexen2" />
+        <Model file="i_hboost.md3" model="0" />
+        <Skin file="i_hboost_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Health Small"/>
+    </Group>
+    <Group class="HX2ArtiHealth">
+        <Path folder="models/hexen2" />
+        <Model file="a_hboost.md3" model="0" />
+        <Skin file="a_hboost_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 35" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Health"/>
+    </Group>
+</XMLModelDef>

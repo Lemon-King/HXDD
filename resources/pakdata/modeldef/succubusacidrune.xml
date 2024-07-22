@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="SWeapAcidRune">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l2_c5.md3" model="0" />
         <Skin file="w_l2_c5_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="SWeapAcidRune">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp2.md3" model="0" />
         <Skin file="sucwp2_skin0.png" model="0" />
 
@@ -41,7 +41,7 @@
         <Animation key="ARSP" frames="11" model="0" comment="Select / Deselect: Power"/>
     </Group>
     <Group class="SWeapAcidRune_Missile">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp2p.md3" model="0" />
         <Skin file="sucwp2p_skin0.png" model="0" />
 
@@ -53,7 +53,7 @@
         <Animation key="AMIS" frames="1" model="0" comment="Loop"/>
     </Group>
     <Group class="SWeapAcidRune_AcidDrop">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp2p.md3" model="0" />
         <Skin file="sucwp2p_skin0.png" model="0" />
 

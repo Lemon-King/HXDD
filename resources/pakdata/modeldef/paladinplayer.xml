@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef class="HX2PaladinPlayer">
     <Group>
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="paladin.md3" model="0" />
         <Skin file="paladin_skin0.png" model="0" />
 
@@ -35,7 +35,7 @@
         <Animation key="PSSA" frames="13" model="0" comment="Stand: Sword/Axe"/>
     </Group>
     <Group class="HX2PaladinPlayerHead">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="h_pal.md3" model="0" />
         <Skin file="h_pal_skin0.png" model="0" />
 

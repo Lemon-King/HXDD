@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef class="AWeapPunchDagger">
     <Group>
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="punchdgr.md3" model="0" />
         <Skin file="punchdgr_skin0.png" model="0" />
 

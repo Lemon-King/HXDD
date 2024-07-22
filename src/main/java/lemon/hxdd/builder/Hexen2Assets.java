@@ -246,16 +246,16 @@ public class Hexen2Assets {
                     options.add("-imgoutidx 70");
                     //options.add("-imgoutidx 271 ");
                 }
-                noe.ExportAsset(fileName_Noesis, "models/" + opt, options);
+                noe.ExportAsset(fileName_Noesis, "models/hexen2/" + opt, options);
             } else if (fileName.endsWith(".spr")) {
                 options.add("-texnorepfn");
                 options.add("-forcetc");
                 options.add("-logfile sprite_log.txt");
-                noe.ExportAsset(fileName_Noesis, "sprites/", options);
+                noe.ExportAsset(fileName_Noesis, "sprites/hexen2/", options);
                 AddImageCoords(fileName.replace(".spr", ""));
             } else if (fileName.endsWith(".lmp")) {
                 options.add("-forcetc");
-                noe.ExportAsset(fileName_Noesis, "graphics/", options);
+                noe.ExportAsset(fileName_Noesis, "graphics/hexen2/", options);
                 //FixImageCoords();
             }
             //p.SetPercent(++count / (float)assetListing.size());
@@ -277,7 +277,7 @@ public class Hexen2Assets {
 
     private void LMPExport(Map<String, String> ModelEffect) {
         String Settings_PathTemp = this.app.settings.GetPath("temp");
-        String PathTempModels = Settings_PathTemp + "/models/";
+        String PathTempModels = Settings_PathTemp + "/models/hexen2/";
         //String PathTempBrightmaps = Settings_PathTemp + "brightmaps/";
         //Util.CreateDirectory(PathTempBrightmaps);
 
@@ -351,7 +351,7 @@ public class Hexen2Assets {
     }
 
     private void CreateModelTexture(File asset, byte[] data, int width, int height, String effect, Palette pal) {
-        String PathTempModels = this.app.settings.GetPath("temp") + "/models/";
+        String PathTempModels = this.app.settings.GetPath("temp") + "/models/hexen2/";
         //String PathTempBrightmaps = Settings_PathTemp + "brightmaps/";
 
         try {
@@ -477,7 +477,7 @@ public class Hexen2Assets {
                     break;
                 }
 
-                File fileImage = new File("temp/sprites/" + matchedFileName + ".png");
+                File fileImage = new File("temp/sprites/hexen2/" + matchedFileName + ".png");
                 BufferedImage source = ImageIO.read(fileImage);
 
                 PNGPicture pngImg = new PNGPicture();
@@ -527,7 +527,7 @@ public class Hexen2Assets {
 
                 String outName = spriteName + nameNumber + alphaIndex + charFrame + "0";
 
-                File newFile = new File("./temp/sprites/" + outName + ".png");
+                File newFile = new File("./temp/sprites/hexen2/" + outName + ".png");
                 pngImg.writeBytes(new FileOutputStream(newFile, false));
 
                 Files.deleteIfExists(fileImage.toPath());

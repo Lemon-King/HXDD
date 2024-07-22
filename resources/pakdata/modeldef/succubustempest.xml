@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="SWeapTempestStaffPiece1">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l41_c5.md3" model="0" />
         <Skin file="w_l41_c5_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="SWeapTempestStaffPiece2">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l42_c5.md3" model="0" />
         <Skin file="w_l42_c5_skin0.png" model="0" />
 
@@ -29,7 +29,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="SWeapTempestStaff">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp4.md3" model="0" />
         <Skin file="sucwp4_skin0.png" model="0" />
 
@@ -50,7 +50,7 @@
         SWeapTempestStaff is split into 2 parts due to lightning animations interpolating poorly
     -->
     <Group class="SWeapTempestStaff">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sucwp4.md3" model="0" />
         <Skin file="sucwp4_skin0.png" model="0" />
 

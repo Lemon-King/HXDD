@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="NWeapSickle">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sickle.md3" model="0" />
         <Skin file="sickle_skin0.png" model="0" />
 

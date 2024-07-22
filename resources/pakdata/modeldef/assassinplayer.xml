@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef class="HX2AssassinPlayer">
     <Group>
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="assassin.md3" model="0" />
         <Skin file="assassin_skin0.png" model="0" />
 

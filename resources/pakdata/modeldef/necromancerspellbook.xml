@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="NWeapMagicMissile">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l2_c3.md3" model="0" />
         <Skin file="w_l2_c3_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="NWeapBoneShards">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l3_c3.md3" model="0" />
         <Skin file="w_l3_c3_skin0.png" model="0" />
 
@@ -29,7 +29,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="NWeapMagicMissile">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="spllbook.md3" model="0" />
         <Skin file="spllbook_skin0.png" model="0" />
 
@@ -55,7 +55,7 @@
         <Animation key="NBBS" frames="7" model="0" comment="Select / Deselect: Bone Shards"/>
     </Group>
     <Group class="NWeapBoneShards">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="spllbook.md3" model="0" />
         <Skin file="spllbook_skin0.png" model="0" />
 
@@ -81,7 +81,7 @@
         <Animation key="NBBS" frames="7" model="0" comment="Select / Deselect: Bone Shards"/>
     </Group>
     <Group class="NWeapSpellbook_Flash">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="handfx.md3" model="0" />
         <Skin file="handfx_skin0.png" model="0" />
 
@@ -93,7 +93,7 @@
         <Animation key="HDFX" frames="1" model="0" comment="FX Flash"/>
     </Group>
     <Group class="NWeapSpellbook_MagicMissile">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="newmmis.md3" model="0" />
         <Skin file="newmmis_skin0.png" model="0" />
 
@@ -105,7 +105,7 @@
         <Animation key="MMIS" frames="10" model="0" comment="New Model: Hexen World"/>
     </Group>
     <Group class="NWeapSpellbook_MagicMissilePower">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="newmmis.md3" model="0" />
         <Skin file="newmmis_skin0.png" model="0" />
 
@@ -117,7 +117,7 @@
         <Animation key="MMIS" frames="10" model="0" comment="New Model: Hexen World"/>
     </Group>
     <Group class="NWeapSpellbook_MissileFlare">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="ball.md3" model="0" />
         <Skin file="ball_skin0.png" model="0" />
 
@@ -129,7 +129,7 @@
         <Animation key="BODY" frames="1" model="0" comment="FX Flare"/>
     </Group>
     <Group class="NWeapSpellbook_MissileStarA">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="star.md3" model="0" />
         <Skin file="star_skin0.png" model="0" />
 
@@ -141,7 +141,7 @@
         <Animation key="BODY" frames="1" model="0" comment="FX Star A"/>
     </Group>
     <Group class="NWeapSpellbook_MissileStarB">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="star.md3" model="0" />
         <Skin file="star_skin0.png" model="0" />
 
@@ -153,7 +153,7 @@
         <Animation key="BODY" frames="1" model="0" comment="FX Star B"/>
     </Group>
     <Group class="NWeapSpellbook_BoneShot">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="boneshot.md3" model="0" />
         <Skin file="boneshot_skin0.png" model="0" />
 
@@ -165,7 +165,7 @@
         <Animation key="BONE" frames="1" model="0" comment="Bone Shot Model"/>
     </Group>
     <Group class="NWeapSpellbook_BoneShotPower">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="bonelump.md3" model="0" />
         <Skin file="bonelump_skin0.png" model="0" />
 
@@ -177,7 +177,7 @@
         <Animation key="BONE" frames="1" model="0" comment="Bone Lump Model"/>
     </Group>
     <Group class="NWeapSpellbook_BoneShotPowerShrapnel">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="boneshrd.md3" model="0" />
         <Skin file="boneshrd_skin0.png" model="0" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="CWeapIceMace">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l2_c2.md3" model="0" />
         <Skin file="w_l2_c2_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapIceMace">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="icestaff.md3" model="0" />
         <Skin file="icestaff_skin0.png" model="0" />
 
@@ -38,7 +38,7 @@
         <Animation key="CWIS" frames="9" model="0" comment="Select / Deselect"/>
     </Group>
     <Group class="CWeapIceMace_IceShot1">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="iceshot1.md3" model="0" />
         <Skin file="iceshot1_skin0.png" model="0" />
 
@@ -51,7 +51,7 @@
     </Group>
     <!--
     <Group class="CWeapIceMace_IceShot2">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="iceshot2.md3" model="0" />
         <Skin file="iceshot2_skin0.png" model="0" />
 

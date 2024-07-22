@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="AWeapGrenades">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l3_c4.md3" model="0" />
         <Skin file="w_l3_c4_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="AWeapGrenades">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="v_assgr.md3" model="0" />
         <Skin file="v_assgr_skin0.png" model="0" />
 
@@ -32,7 +32,7 @@
         <Animation key="AGRT" frames="12" model="0" comment="Shoot (Frame 15 blends poorly)"/>
     </Group>
     <Group class="AWeapGrenades_Grenade">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="assgren.md3" model="0" />
         <Skin file="assgren_skin0.png" model="0" />
 

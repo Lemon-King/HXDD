@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="PWeapPurifierPiece1">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l41_c1.md3" model="0" />
         <Skin file="w_l41_c1_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="PWeapPurifierPiece2">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l42_c1.md3" model="0" />
         <Skin file="w_l42_c1_skin0.png" model="0" />
 
@@ -29,7 +29,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="PWeapPurifier">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="purifier.md3" model="0" />
         <Skin file="purifier_skin0.png" model="0" />
 
@@ -52,7 +52,7 @@
         <Animation key="PSEL" frames="12" model="0" comment="Select / Deselect"/>
     </Group>
     <Group class="PWeapPurifier_Missile">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="purfir1.md3" model="0" />
         <Skin file="purfir1_skin0.png" model="0" />
 
@@ -64,7 +64,7 @@
         <Animation key="MISS" frames="1" model="0" comment="Root Pose"/>
     </Group>
     <Group class="PWeapPurifier_DragonBall">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="drgnball.md3" model="0" />
         <Skin file="drgnball_skin0.png" model="0" />
 
@@ -76,7 +76,7 @@
         <Animation key="DBLL" frames="1" model="0" comment="Root Pose"/>
     </Group>
     <Group class="PWeapPurifier_PuffRing">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="ring.md3" model="0" />
         <Skin file="ring_skin0.png" model="0" />
 

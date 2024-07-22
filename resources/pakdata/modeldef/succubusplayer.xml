@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef class="HX2SuccubusPlayer">
     <Group>
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="succubus.md3" model="0" />
         <Skin file="succubus_skin0.png" model="0" />
 
@@ -36,7 +36,7 @@
         <Animation key="PDD" frames="28" model="0" comment="Death: Decap"/>
     </Group>
     <Group class="HX2SuccubusPlayerHead">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="h_suc.md3" model="0" />
         <Skin file="h_suc_skin0.png" model="0" />
 

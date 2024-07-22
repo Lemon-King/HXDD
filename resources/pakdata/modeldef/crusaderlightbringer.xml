@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <XMLModelDef>
     <Group class="CWeapLightbringerPiece1">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l41_c2.md3" model="0" />
         <Skin file="w_l41_c2_skin0.png" model="0" />
 
@@ -15,7 +15,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringerPiece2">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="w_l42_c2.md3" model="0" />
         <Skin file="w_l42_c2_skin0.png" model="0" />
 
@@ -29,7 +29,7 @@
         <Animation key="PKUP" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringer">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="sunstaff.md3" model="0" />
         <Skin file="sunstaff_skin0.png" model="0" />
 
@@ -50,7 +50,7 @@
         <Animation key="SSTL" frames="5" model="0" comment="Settle"/>
     </Group>
     <Group class="CWeapLightbringer_Ball">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="stsunsf4.md3" model="0" />
         <Skin file="stsunsf4_skin0.png" model="0" />
 
@@ -62,7 +62,7 @@
         <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringer_Ball_Inner">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="stsunsf3.md3" model="0" />
         <Skin file="stsunsf3_skin0.png" model="0" />
 
@@ -74,7 +74,7 @@
         <Animation key="BALL" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringer_Beam">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="stsunsf2.md3" model="0" />
         <Skin file="stsunsf2_skin0.png" model="0" />
 
@@ -86,7 +86,7 @@
         <Animation key="BEAM" frames="1" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringer_Beam_Animated">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="stsunsf5.md3" model="0" />
         <Skin file="stsunsf5_skin0.png" model="0" />
 
@@ -98,7 +98,7 @@
         <Animation key="BEAM" frames="7" model="0" comment="Pickup Item"/>
     </Group>
     <Group class="CWeapLightbringer_Beam_Inner">
-        <Path folder="models" />
+        <Path folder="models/hexen2" />
         <Model file="stsunsf1.md3" model="0" />
         <Skin file="stsunsf1.png" model="0" />
 
