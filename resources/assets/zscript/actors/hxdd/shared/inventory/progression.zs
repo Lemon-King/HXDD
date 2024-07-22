@@ -104,12 +104,14 @@ class PlayerSheetEventHandler: EventHandler {
 		}
 	}
 
-
-
+	// KNOWN ISSUE: Items can be picked up as the original at spawn (1 tic)
+	// Currently limited due to WorldThingSpawned being triggered via PostBeginPlay
+	// Would need a World Event for BeginPlay to prevent cases where an item can be picked up right as it spawns
 	override void WorldThingSpawned(WorldEvent e) {
 		// Pickup Nodes
 		Actor original = e.thing;
 		if (original is "Inventory" && !(original is "Key") && !(original is "HXDDPickupNode") && !(Inventory(original).owner) && !(Inventory(original).target is "HXDDPickupNode")) {
+			original.A_ChangeLinkFlags(1, FLAG_NO_CHANGE);
 
 			// Fixes combined mana dropping things at 0,0,0 before PickupNode catches it
 			if (Inventory(original).bDropped && original.pos == (0,0,0) && original.vel == (0,0,0)) {
