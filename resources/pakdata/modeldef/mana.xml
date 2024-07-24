@@ -7,7 +7,7 @@
         <Skin file="i_bmana_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="ROTATING" />
         <Flag name="USEACTORPITCH" />
@@ -21,7 +21,7 @@
         <Skin file="i_gmana_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="ROTATING" />
         <Flag name="USEACTORPITCH" />
@@ -35,7 +35,7 @@
         <Skin file="i_btmana_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="ROTATING" />
         <Flag name="USEACTORPITCH" />
