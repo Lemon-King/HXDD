@@ -6,7 +6,7 @@
         <Skin file="a_hboost_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="ROTATING" />
         <Flag name="USEACTORPITCH" />

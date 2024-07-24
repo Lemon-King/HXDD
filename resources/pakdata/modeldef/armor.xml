@@ -7,7 +7,7 @@
         <Skin file="i_amulet_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
@@ -21,7 +21,7 @@
         <Skin file="i_bplate_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
@@ -35,7 +35,7 @@
         <Skin file="i_bracer_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
@@ -49,7 +49,7 @@
         <Skin file="i_helmet_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />

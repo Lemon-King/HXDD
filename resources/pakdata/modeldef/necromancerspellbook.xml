@@ -6,7 +6,7 @@
         <Skin file="w_l2_c3_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 35" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
@@ -20,7 +20,7 @@
         <Skin file="w_l3_c3_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
-        <Offset value="0 0 35" />
+        <Offset value="0 0 32" />
 
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
