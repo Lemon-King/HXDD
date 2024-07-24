@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <!-- Mana Pickups -->
+    <Group class="HX2Mana1">
+        <Path folder="models/hexen2" />
+        <Model file="i_bmana.md3" model="0" />
+        <Skin file="i_bmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 1"/>
+    </Group>
+    <Group class="HX2Mana2">
+        <Path folder="models/hexen2" />
+        <Model file="i_gmana.md3" model="0" />
+        <Skin file="i_gmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 2"/>
+    </Group>
+    <Group class="HX2Mana3">
+        <Path folder="models/hexen2" />
+        <Model file="i_btmana.md3" model="0" />
+        <Skin file="i_btmana_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 3"/>
+    </Group>
+</XMLModelDef>

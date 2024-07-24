@@ -1,20 +1,5 @@
 <?xml version="1.0"?>
 <XMLModelDef>
-    <!-- General -->
-    <Group class="HX2CrystalVial">
-        <Path folder="models/hexen2" />
-        <Model file="i_hboost.md3" model="0" />
-        <Skin file="i_hboost_skin0.png" model="0" />
-
-        <Scale value="1 1 1" />
-        <Offset value="0 0 30" />
-
-        <Flag name="ROTATING" />
-        <Flag name="USEACTORPITCH" />
-        <Flag name="USEACTORROLL" />
-
-        <Animation key="0000" frames="1" model="0" comment="Pickup: Health Small"/>
-    </Group>
     <Group class="HX2ArtiHealth">
         <Path folder="models/hexen2" />
         <Model file="a_hboost.md3" model="0" />

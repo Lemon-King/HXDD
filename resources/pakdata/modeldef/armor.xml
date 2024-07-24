@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <!-- Armor Pickups -->
+    <Group class="HX2Amulet">
+        <Path folder="models/hexen2" />
+        <Model file="i_amulet.md3" model="0" />
+        <Skin file="i_amulet_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Amulet"/>
+    </Group>
+    <Group class="HX2Breastplate">
+        <Path folder="models/hexen2" />
+        <Model file="i_bplate.md3" model="0" />
+        <Skin file="i_bplate_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Breastplate"/>
+    </Group>
+    <Group class="HX2Bracers">
+        <Path folder="models/hexen2" />
+        <Model file="i_bracer.md3" model="0" />
+        <Skin file="i_bracer_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Bracer"/>
+    </Group>
+    <Group class="HX2Helmet">
+        <Path folder="models/hexen2" />
+        <Model file="i_helmet.md3" model="0" />
+        <Skin file="i_helmet_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 30" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+        <Flag name="ROTATING" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: AC Helmet"/>
+    </Group>
+</XMLModelDef>
