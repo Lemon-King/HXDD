@@ -20,7 +20,10 @@ class FileJSON {
             return -1;
         }
 		HXDD_JsonInt type_int = HXDD_JsonInt(type_elem);
-		return type_int.i;
+        if (type_int) {
+		    return type_int.i;
+        }
+        return -1;
     }
     static double GetDouble(HXDD_JsonObject jo, String key) {
         HXDD_JsonElement type_elem = jo.get(key);
