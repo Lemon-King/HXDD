@@ -9,10 +9,10 @@ enum EPlaystyleArmorType {
 	PSAT_DEFAULT = 0,
 	PSAT_ARMOR_BASIC = 1,
 	PSAT_ARMOR_HXAC = 2,
-	//PSAT_ARMOR_HX2AC = 3,
-	PSAT_ARMOR_HXAC_RANDOM = 3,
-	PSAT_ARMOR_HX2AC_RANDOM = 4,
-	PSAT_ARMOR_USER = 5
+	PSAT_ARMOR_HX2AC = 3,
+	PSAT_ARMOR_HXAC_RANDOM = 4,
+	PSAT_ARMOR_HX2AC_RANDOM = 5,
+	PSAT_ARMOR_USER = 6
 };
 
 enum EPlaystyleProgressionType {
@@ -679,6 +679,8 @@ class Progression: Inventory {
 	int ArmorType;
 	int ProgressionType;
 
+	String ActiveArmorType;
+
 	bool UseMaxHealthScaler;
 	int SpawnHealth;
 
@@ -1017,13 +1019,15 @@ class Progression: Inventory {
 			ArmorModeSelection_Basic(player);
 		} else if (optionArmorMode == PSAT_ARMOR_HXAC) {
 			ArmorModeSelection_HXAC(player);
-		//} else if (optionArmorMode == PSAT_ARMOR_HX2AC) {
-		//	ArmorModeSelection_HX2AC(player);
+		} else if (optionArmorMode == PSAT_ARMOR_HX2AC) {
+			ArmorModeSelection_HX2AC(player);
 		} else if (optionArmorMode == PSAT_ARMOR_HXAC_RANDOM) {
 			ArmorModeSelection_HXAC_Random(player);
 		} else if (optionArmorMode == PSAT_ARMOR_USER) {
 			ArmorModeSelection_User(player);
 		}
+
+		self.ActiveArmorType = self.GetActiveArmorType();
 
 		ArmorSelected = true;
 	}
@@ -1076,6 +1080,21 @@ class Progression: Inventory {
 				ArmorModeSelection_HXAC_Random(player);
 			}
 			self.ArmorType = PSAT_ARMOR_HXAC;
+		}
+	}
+	void ArmorModeSelection_HX2AC(PlayerPawn player) {
+		// ensure the class has hexen armor values, if not fill with defaults
+		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
+		if (itemHexenArmor) {
+			int totalArmor = itemHexenArmor.Slots[4];
+			for (int i = 0; i < 4; i++) {
+				totalArmor += itemHexenArmor.SlotsIncrement[i];
+			}
+			if (totalArmor == 0) {
+				// no armor, use random instead
+				ArmorModeSelection_HXAC_Random(player);
+			}
+			self.ArmorType = PSAT_ARMOR_HX2AC;
 		}
 	}
 	void ArmorModeSelection_HXAC_Random(PlayerPawn player) {
@@ -1471,6 +1490,17 @@ class Progression: Inventory {
 			return self.soundSet.Get(key);
 		}
 		return key;
+	}
+
+	String GetActiveArmorType() {
+		if (self.armortype == PSAT_ARMOR_BASIC) {
+			return "basic,doom,heretic";
+		} else if (self.armortype == PSAT_ARMOR_HXAC || self.armortype == PSAT_ARMOR_HXAC_RANDOM) {
+			return "ac,hexen,hx";
+		} else if (self.armortype == PSAT_ARMOR_HX2AC || self.armortype == PSAT_ARMOR_HX2AC_RANDOM) {
+			return "ac2,hexen2,hx2";
+		}
+		return "basic,doom,heretic";
 	}
 
 	void RescanAllActors() {
