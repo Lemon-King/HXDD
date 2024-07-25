@@ -33,8 +33,16 @@ class XTranslationActors {
 	Array<String> defaults;
     Array<String> alternates;
 
-    bool hasCVARCompare() {
-        return (self.compare != null);
+    // Selector
+    String defaultValue;
+    Map<String,XGameArrayString> selector;
+
+    bool isCompare() {
+        return (self.compare != null && self.defaults.Size() > 0);
+    }
+
+    bool isSelector() {
+        return selector.CountUsed() > 0;
     }
 
     //bool canReadCommand() {
@@ -43,7 +51,7 @@ class XTranslationActors {
     //}
 }
 
-class XGameArrayStringResult {
+class XGameArrayString {
     Array<String> list;
 }
 
@@ -83,7 +91,7 @@ class XClassTranslation {
                     String key = keys[i];
                     String valClassItem = FileJSON.GetString(objClassItems, key);
                     if (valClassItem != "") {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
                         for (let i = 0; i < result.list.Size(); i++) {
                             XTranslationActors xta = CreateXTAFromString(result.list[i], valClassItem);
                             self.xcls.Insert(result.list[i], xta);
@@ -92,7 +100,7 @@ class XClassTranslation {
                     }
                     HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
                     if (valClassItemList) {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
                         for (let i = 0; i < result.list.Size(); i++) {
                             XTranslationActors xta = CreateXTAFromArray(result.list[i], valClassItemList);
                             self.xcls.Insert(result.list[i], xta);
@@ -101,7 +109,7 @@ class XClassTranslation {
                     }
                     HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
                     if (valClassItemObject) {
-                        XGameArrayStringResult result = self.GetKeysFromCombinedKey(key);
+                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
                         for (let i = 0; i < result.list.Size(); i++) {
                             XTranslationActors xta = CreateXTAFromObject(result.list[i], valClassItemObject);
                             self.xcls.Insert(result.list[i], xta);
@@ -113,8 +121,8 @@ class XClassTranslation {
 		//}
 	}
 
-    XGameArrayStringResult GetKeysFromCombinedKey(String combined) {
-        XGameArrayStringResult result = new("XGameArrayStringResult");
+    XGameArrayString GetKeysFromCombinedKey(String combined) {
+        XGameArrayString result = new("XGameArrayString");
         combined.Substitute(" ", "");
         combined.Split(result.list, ",");
         return result;
@@ -158,7 +166,10 @@ class XClassTranslation {
             xta.compare.command = sCommand;
         }
 
-        if (xta.compare.cvar || xta.compare.command) {
+        // Selector Method
+        HXDD_JsonArray arrSelector = FileJSON.GetArray(jo, "selector");
+
+        if ((xta.compare.cvar || xta.compare.command) && xta.compare.method) {
             xta.compare.method = ECVARCompareMethod_NONE;
             xta.compare.type = ECVARCompareType_NONE;
 
@@ -208,7 +219,7 @@ class XClassTranslation {
             if (arrAlternates) {
                 for (int j = 0; j < arrAlternates.Size(); j++) {
                     String entry = HXDD_JsonString(arrAlternates.get(j)).s;
-                    if (entry) {
+                    if (entry != "") {
                         xta.alternates.push(entry);
                     }
                 }
@@ -223,7 +234,7 @@ class XClassTranslation {
             if (arrDefaults) {
                 for (int j = 0; j < arrDefaults.Size(); j++) {
                     String entry = HXDD_JsonString(arrDefaults.get(j)).s;
-                    if (entry) {
+                    if (entry != "") {
                         xta.defaults.push(entry);
                     }
                 }
@@ -236,6 +247,55 @@ class XClassTranslation {
             }
             if (xta.defaults.Size() == 0) {
                 xta.defaults.push(key);
+            }
+        } else if (xta.compare.command && arrSelector) {
+
+            String sDefaultValue = FileJSON.GetString(jo, "default");
+            if (sDefaultValue != "") {
+                xta.defaultValue = sDefaultValue;
+            }
+
+            int iDefaultValue = FileJSON.GetInt(jo, "default");
+            if (iDefaultValue) {
+                xta.defaultValue = String.format("%d", iDefaultValue);
+            }
+
+            for (int i = 0; i < arrSelector.Size(); i++) {
+                HXDD_JsonObject so = HXDD_JsonObject(arrSelector.get(i));
+
+                int iValue = FileJSON.GetInt(so, "value");
+                String sValue = FileJSON.GetString(so, "value");
+                String key;
+
+                 if (sValue != "") {
+                    key = sValue.MakeLower();
+                } else if (iValue) {
+                    key = String.format("%d", iValue);
+                }
+
+                if (key != "") {
+                    XGameArrayString xgasEntries = new("XGameArrayString");;
+
+                    HXDD_JsonArray arrEntries = FileJSON.GetArray(so, "actor");
+                    String sEntries = FileJSON.GetString(so, "actor");
+                    if (arrEntries) {
+                        for (int j = 0; j < arrEntries.Size(); j++) {
+                            String sEntry = HXDD_JsonString(arrEntries.get(j)).s;
+                            if (sEntry != "") {
+                                xgasEntries.list.push(sEntry);
+                            }
+                        }
+                    } else if (sEntries != "") {
+                        XGameArrayString result = self.GetKeysFromCombinedKey(sEntries);
+                        if (result.list.Size() > 0) {
+                            xgasEntries.list.Move(result.list);
+                        }
+                    }
+
+                    if (xgasEntries.list.Size() > 0) {
+                        xta.selector.insert(key, xgasEntries);
+                    }
+                }
             }
         }
 
@@ -254,11 +314,33 @@ class XClassTranslation {
             replacement = GetDefaultByType((class<Inventory>)(replacement)).GetParentClass().GetClassName();
             xta = self.xcls.GetIfExists(replacement);
         }
-        if (xta && xta.key.MakeLower() == replacement.MakeLower()) {
+
+        // From here, we apply a best guess
+        if (!xta && LemonUtil.CVAR_GetBool("hxdd_xclass_allow_best_guess", false)) {
+            String keyMatch = "";
+            class<Actor> clsReplacement = GetDefaultByType((class<Actor>)(replacement)).GetClass();
+            class<Actor> clsReplacee = GetDefaultByType((class<Actor>)(replacee)).GetClass();
+            foreach ( k, v : self.xcls ) {
+                class<Actor> clsKey = GetDefaultByType((class<Actor>)(k)).GetClass();
+                // Try class match if inherited
+                if (clsKey is clsReplacement) {
+                    // match found
+                    xta = self.xcls.GetIfExists(k);
+                }
+                // if not, try a loose string match, may help with mod compat
+                if (!xta && replacement.MakeLower().IndexOf(k.MakeLower()) != -1 || replacement.MakeLower().IndexOf(k.MakeLower()) != -1) {
+                    // better match
+                    if (k.Length() > keyMatch.Length()) {
+                        keyMatch = k;
+                        xta = self.xcls.GetIfExists(k);
+                    }
+                }
+            }
+        }
+        if (xta) {
             Array<string> list;
             list.copy(xta.defaults);
-            String replacement;
-            if (xta.hasCVARCompare()) {
+            if (xta.isCompare()) {
                 bool useAlts = false;
                 XTACompare xcvar = xta.compare;
                 if (xcvar.type == ECVARCompareType_INT) {
@@ -297,6 +379,31 @@ class XClassTranslation {
                 if (useAlts && xta.alternates.Size() > 0) {
                     list.copy(xta.alternates);
                 }
+            } else if (xta.isSelector()) {
+                String key;
+                XTACompare xcvar = xta.compare;
+                XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer(index);
+                if (probe.Command(xcvar.command)) {
+                    key = probe.s_result;
+                }
+                int selectorSize = xta.selector.CountUsed();
+                if (selectorSize == 0) {
+                    return replacee;
+                }
+
+                String mKey = String.format("%s,%s", key, xta.defaultValue).MakeLower();
+                Array<String> kSplit;
+                mKey.Split(kSplit, ",");
+                for (int i = 0; i < kSplit.Size(); i++) {
+                    String k = kSplit[i];
+                    XGameArrayString selector;
+                    bool exists = false;
+                    [selector, exists] = xta.selector.CheckValue(k);
+                    if (exists) {
+                        list.copy(selector.list);
+                        break;
+                    }
+                }
             }
 
             if (list.Size() == 0) {
@@ -306,7 +413,7 @@ class XClassTranslation {
             // select random
             int size = list.Size() - 1;
             int choice = random[xclass](0, size);
-            replacement = list[choice];
+            String replacement = list[choice];
 
             return replacement;
         }
@@ -341,13 +448,10 @@ class XGTPlayerProbe {
         }
         let sCmd = cmd.MakeLower();
         if (sCmd == "armortype") {
-            self.i_result = self.GetArmorType();
+            self.i_result = self.invProgression.ArmorType;
+            self.s_result = self.invProgression.ActiveArmorType;
             return true;
         }
         return false;
-    }
-
-    int GetArmorType() {
-        return self.invProgression.ArmorType;
     }
 }
