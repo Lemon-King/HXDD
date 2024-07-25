@@ -51,4 +51,7 @@
 #include "zscript/actors/hxdd/hexen2/inventory/pickups.zs"
 
 // Pickups
+#include "zscript/actors/hxdd/hexen2/pickups/armor.zs"
+#include "zscript/actors/hxdd/hexen2/pickups/mana.zs"
+#include "zscript/actors/hxdd/hexen2/pickups/pickups.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/powerupsphere.zs"
