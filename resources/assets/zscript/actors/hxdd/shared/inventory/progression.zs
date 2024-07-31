@@ -111,8 +111,6 @@ class PlayerSheetEventHandler: EventHandler {
 		// Pickup Nodes
 		Actor original = e.thing;
 		if (original is "Inventory" && !(original is "Key") && !(original is "HXDDPickupNode") && !(Inventory(original).owner) && !(Inventory(original).target is "HXDDPickupNode")) {
-			original.A_ChangeLinkFlags(1, FLAG_NO_CHANGE);
-
 			// Fixes combined mana dropping things at 0,0,0 before PickupNode catches it
 			if (Inventory(original).bDropped && original.pos == (0,0,0) && original.vel == (0,0,0)) {
 				return;
@@ -125,11 +123,12 @@ class PlayerSheetEventHandler: EventHandler {
 
 			HXDDPickupNode node = HXDDPickupNode(original.Spawn("HXDDPickupNode", original.pos));
 			node.Setup(Inventory(original));
-			original.Destroy();
 
-			for (int i = 0; i < players.Size(); i++) {
-				PlayerPawn pp = players[i].mo;
-				UpdateNode(node, pp);
+			if (node) {
+				for (int i = 0; i < players.Size(); i++) {
+					PlayerPawn pp = players[i].mo;
+					UpdateNode(node, pp);
+				}
 			}
 		}
     }
@@ -188,6 +187,12 @@ class PlayerSheetEventHandler: EventHandler {
 					}
 				};
 				node.AssignPickup(num, swapped, sfx);
+
+				if (!isMapSpawn) {
+					node.SetDropped();
+				}
+			} else {
+				node.AssignPickup(num, node.parentClass, "");
 
 				if (!isMapSpawn) {
 					node.SetDropped();

@@ -2,6 +2,7 @@
 
 // Needs RestrictedToPlayerClass-like as a HiddenToPlayerNumber where it is not rendered or interactable to that class
 
+
 class HXDDPickupNodeSlot {
     String className;
     bool bPickedUp;
@@ -14,6 +15,7 @@ class HXDDPickupNode : Inventory {
     bool isMapSpawn;                // Items which spawn at maptime 0
     bool isDropped;                 // Any pickup handles all, dropped items
     bool isPending;                // Exists in original state, waiting for swap call
+    bool bRemoveSelf;
 
     Default {
     }
@@ -37,6 +39,10 @@ class HXDDPickupNode : Inventory {
             if (slot && slot.pickup && self.pos != slot.pickup.pos) {
                 slot.pickup.SetOrigin(self.pos, true);
             }
+        }
+
+        if (self.bRemoveSelf) {
+            self.GoAwayAndDie();
         }
     }
 
@@ -164,12 +170,30 @@ class HXDDPickupNode : Inventory {
         // becomes proxy
         self.bCountSecret = original.bCountSecret;
 
-        /*
         if (self.slots.CountUsed() == 0) {
+            if (original.sprite == GetSpriteIndex("TNT1")) {
+                // ignore, actor is temporary?
+                self.bRemoveSelf = true;
+                return self;
+            }
+
             original.angle = self.angle;
             original.vel = self.vel;
             original.target = self;
+
+            self.bCountSecret = original.bCountSecret;
+
+            // Hide actor and disable, removes all lighting too
+            original.sprite = GetSpriteIndex("TNT1");
+            original.frame = 0;
+            original.A_SetTics(-1);
             original.A_ChangeLinkFlags(1, FLAG_NO_CHANGE);
+            original.bCountItem = false;
+            original.bCountSecret = false;
+
+            for (int i = 0; i < players.Size(); i++) {
+                original.DisableLocalRendering(i, true);
+            }
 
             HXDDPickupNodeSlot slot = new("HXDDPickupNodeSlot");
             slot.className = self.parentClass;
@@ -177,9 +201,6 @@ class HXDDPickupNode : Inventory {
             slot.bPickedUp = false;
             self.slots.Insert(-1, slot);
         }
-
-        self.isPending = true;
-        */
 
         return self;
     }
@@ -202,9 +223,27 @@ class HXDDPickupNode : Inventory {
 
     // Called when a player enters or a new spawn occurs
     void AssignPickup(int index, String itemClass, String pickupSound = "") {
-        if (!itemClass || itemClass == "none" || itemClass == "") {
+        if (self.bRemoveSelf || !itemClass || itemClass == "none" || itemClass == "") {
             return;
         }
+
+        HXDDPickupNodeSlot slot;
+        bool hasOriginal = false;
+        [slot, hasOriginal] = self.slots.CheckValue(-1);
+        /*
+        if (hasOriginal) {
+            if (itemClass == slot.className) {
+                for (int i = 0; i < players.Size(); i++) {
+                    slot.pickup.DisableLocalRendering(i, i != index);
+                }
+                self.slots.Insert(index, slot);
+                self.slots.Remove(-1);
+
+                console.printf("%s,%s", itemClass, slot.className);
+                return;
+            }
+        }
+        */
         Inventory newPickup = Inventory(Spawn(itemClass, self.pos));
         if (newPickup) {
             newPickup.angle = self.angle;
@@ -215,9 +254,7 @@ class HXDDPickupNode : Inventory {
                 newPickup.PickupSound = pickupSound;
             }
             for (int i = 0; i < players.Size(); i++) {
-                if (i != index) {
-                    newPickup.DisableLocalRendering(i, true);
-                }
+                newPickup.DisableLocalRendering(i, i != index);
             }
 
             HXDDPickupNodeSlot slot = new("HXDDPickupNodeSlot");
