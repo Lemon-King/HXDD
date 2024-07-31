@@ -1,6 +1,6 @@
 {
     "class": "HX2PaladinPlayer",
-    "armor_type": "armorclass",
+    "armor_type": "hx2",
     "progression_type": "levels",
     "alignment": "good",
     "max_level": 20,

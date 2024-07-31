@@ -391,14 +391,19 @@ class PlayerSheetJSON {
 	XClassTranslation xclass;
 
 	int GetEnumFromArmorType(String type) {
-		Array<string> keys = {"ac", "armor", "armorclass", "hexen", "hx", "hx2"};
-		if (keys.Find(type) != keys.Size()) {
+		type = type.MakeLower();
+		Array<string> keysHXArmor = {"ac", "armorclass", "hexen", "hx"};
+		Array<string> keysHX2Armor = {"ac2", "armorclass2", "hexen2", "hx2"};
+		if (keysHXArmor.Find(type) != keysHXArmor.Size()) {
 			return PSAT_ARMOR_HXAC;
+		} else if (keysHX2Armor.Find(type) != keysHX2Armor.Size()) {
+			return PSAT_ARMOR_HX2AC;
 		} else {
 			return PSAT_ARMOR_BASIC;
 		}
 	}
 	int GetEnumFromProgressionType(String type) {
+		type = type.MakeLower();
 		Array<string> keys = {"levels", "level", "leveling", "hexen2", "hx2"};
 		if (keys.Find(type) != keys.Size()) {
 			return PSP_LEVELS;
@@ -1498,12 +1503,10 @@ class Progression: Inventory {
 	}
 
 	String GetActiveArmorType() {
-		if (self.armortype == PSAT_ARMOR_BASIC) {
-			return "basic,doom,heretic";
-		} else if (self.armortype == PSAT_ARMOR_HXAC || self.armortype == PSAT_ARMOR_HXAC_RANDOM) {
-			return "ac,hexen,hx";
+		if (self.armortype == PSAT_ARMOR_HXAC || self.armortype == PSAT_ARMOR_HXAC_RANDOM) {
+			return "ac,armorclass,hexen,hx";
 		} else if (self.armortype == PSAT_ARMOR_HX2AC || self.armortype == PSAT_ARMOR_HX2AC_RANDOM) {
-			return "ac2,hexen2,hx2";
+			return "ac2,armorclass2,hexen2,hx2";
 		}
 		return "basic,doom,heretic";
 	}
