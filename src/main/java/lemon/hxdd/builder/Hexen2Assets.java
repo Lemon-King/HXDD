@@ -5,9 +5,11 @@ package lemon.hxdd.builder;
 import lemon.hxdd.Application;
 import lemon.hxdd.shared.Util;
 import lemon.hxdd.shared.PAKTest;
+import net.mtrop.doom.WadFile;
 import net.mtrop.doom.graphics.Flat;
 import net.mtrop.doom.graphics.PNGPicture;
 import net.mtrop.doom.graphics.Palette;
+import net.mtrop.doom.graphics.Picture;
 import net.mtrop.doom.util.GraphicUtils;
 
 import javax.imageio.ImageIO;
@@ -160,6 +162,63 @@ public class Hexen2Assets {
         }
     }
 
+    public void ExportGFXWad(boolean useResources) {
+        if (useResources) {
+            this.app.controller.SetCurrentLabel("Extracting Hexen II gfx.wad data");
+            
+            String pathTemp = this.app.settings.GetPath("temp");
+            String path = pathTemp + "/graphics/hexen2/gfx.wad/";
+            File dirFile = new File(path);
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(this.app.settings.fileResources);
+            za.ExtractFilesToFolder("pakdata/hexen2/gfx.wad", path);
+            return;
+        }
+
+        String pathSource = this.app.settings.GetPath("hexen2");
+        String pathTemp = this.app.settings.GetPath("temp");
+
+        this.app.controller.SetCurrentLabel("Exporting Hexen II gfx.wad data");
+        this.app.controller.SetCurrentProgress(-1);
+
+        String[] files = {
+            "NUM_0", "NUM_1", "NUM_2", "NUM_3", "NUM_4",
+            "NUM_5", "NUM_6", "NUM_7", "NUM_8", "NUM_9",
+            "NUM_MINUS"
+        };
+
+        float count = 0;
+        try {
+            WadFile wad = new WadFile(pathSource + "/gfx.wad");
+            for (int i = 0; i < files.length; i++) {
+                String entry = files[i];
+                byte[] data = wad.getData(entry);
+
+                Picture p = new Picture();
+                p.fromBytes(data);
+
+                Palette pal = GetHexen2Palette();
+                PNGPicture pngImg = GraphicUtils.createPNGImage(p, pal);
+
+                Color colorTarget = new Color(0, 0, 0, 255);
+                Color colorReplace = new Color(0, 0, 0, 0);
+                Image texture = replaceColor(pngImg.getImage(), colorTarget, colorReplace);
+                BufferedImage result = imageToBufferedImage(texture);
+
+                File out = new File(pathTemp + String.format("/graphics/HX2_%s.png", entry));
+                ImageIO.write(result, "PNG", out);
+
+                this.app.controller.SetCurrentProgress(++count / (float)files.length);
+            }
+            wad.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void ExportAssets() {
         String Settings_PathHexen2 = this.app.settings.GetPath("hexen2");
@@ -240,6 +299,7 @@ public class Hexen2Assets {
                 //options.add("-vertbones");
                 options.add("-nofmtexopt");
                 options.add("-vorder");
+                options.add("-edgewelder 0.5");
                 options.add("-smoothnorm \"180\"");
                 options.add("-texpre " + opt + "\"%s\"");
                 if (ModelEffect.get(shortName) != null) {

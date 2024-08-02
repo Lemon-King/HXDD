@@ -374,12 +374,7 @@ public class MainViewController {
     }
 
     protected void BindOpenFolderButton() {
-        String storedPath = this.mainApp.GetSettings().Get("PATH_GZDOOM");
-        if (storedPath.equals("")) {
-            storedPath = "./";
-        }
-
-        String finalStoredPath = storedPath;
+        String finalStoredPath = "./";
         btnOpenFolder.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

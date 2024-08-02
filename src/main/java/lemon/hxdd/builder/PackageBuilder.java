@@ -111,6 +111,7 @@ public class PackageBuilder implements Runnable {
                     WriteHexen2InstallCVAR(ownedHX2);
                     Hexen2Assets h2a = new Hexen2Assets(this.app);
                     h2a.ExtractPakData();
+                    h2a.ExportGFXWad(true);
                     h2a.ExportAssets();
                     h2a.ExportSounds();
                     h2a.ExportMusic();
