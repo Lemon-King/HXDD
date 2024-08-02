@@ -6,6 +6,7 @@
 #include "zscript/events/_events.zs"
 #include "zscript/actors/_actors.zs"
 
-#include "zscript/statusbar/hxddstatusbar.zs"
-
 #include "zscript/menu/_menu.zs"
+
+#include "zscript/statusbar/themes/split/hxddhereticsplitstatusbar.zs"
+#include "zscript/statusbar/hxddstatusbar.zs"

@@ -1,9 +1,6 @@
 
 server noarchive string hxdd_map_select = "";
 
-// Multipickup (Temp until GL Lights are fixed)
-server noarchive latch bool hxdd_multipickup_singlemode = true;
-
 server noarchive latch int hxdd_gamemode = 0;
 
 // Armor Mode
@@ -86,4 +83,5 @@ server bool hxdd_disable_vorpal_flashing_projectile = false;
 user float hxdd_recoil_scale = 1.0;
 
 // HXDD Statusbar
+user string hxdd_statusbar_class = "HXDDHereticSplitStatusBar";
 user float hxdd_statusbar_velocity_scale = 1.0;
