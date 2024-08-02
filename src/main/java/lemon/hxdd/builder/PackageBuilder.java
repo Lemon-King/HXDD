@@ -109,12 +109,13 @@ public class PackageBuilder implements Runnable {
                         ownedHX2 = String.format("%s,world", ownedHX2);
                     }
                     WriteHexen2InstallCVAR(ownedHX2);
-                    Hexen2Assets h2a = new Hexen2Assets(this.app);
-                    h2a.ExtractPakData();
-                    h2a.ExportGFXWad(true);
-                    h2a.ExportAssets();
-                    h2a.ExportSounds();
-                    h2a.ExportMusic();
+                    Hexen2Assets assets = new Hexen2Assets(this.app);
+                    assets.ExtractPakData();
+                    assets.ExportAssets();
+                    assets.ExportSounds();
+                    assets.ExportMusic();
+                    assets.ExtractFontFromAtlases();
+                    assets.ExportGFXWad(true);
 
                     XMLModelDef xmd = new XMLModelDef(this.app);
                     xmd.Generate();
@@ -134,6 +135,7 @@ public class PackageBuilder implements Runnable {
 
             ExportHXDDFiles();
             ExportRealm667();
+            ExportBlankFonts();
             AddMapInfoConfiguaration();
 
 
@@ -783,6 +785,20 @@ public class PackageBuilder implements Runnable {
             wadMarineStuff.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void ExportBlankFonts() {
+        if (!sourceVersions.containsKey("hx2")) {
+            String pathTemp = this.app.settings.GetPath("temp");
+            String path = pathTemp + "/graphics/hexen2/gfx.wad/";
+            File dirFile = new File(path);
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(this.app.settings.fileResources);
+            za.ExtractFilesToFolder("pakdata/hexen2/blank", path);
         }
     }
 

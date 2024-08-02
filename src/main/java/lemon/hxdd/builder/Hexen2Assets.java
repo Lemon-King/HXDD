@@ -165,7 +165,7 @@ public class Hexen2Assets {
     public void ExportGFXWad(boolean useResources) {
         if (useResources) {
             this.app.controller.SetCurrentLabel("Extracting Hexen II gfx.wad data");
-            
+
             String pathTemp = this.app.settings.GetPath("temp");
             String path = pathTemp + "/graphics/hexen2/gfx.wad/";
             File dirFile = new File(path);
@@ -208,12 +208,62 @@ public class Hexen2Assets {
                 Image texture = replaceColor(pngImg.getImage(), colorTarget, colorReplace);
                 BufferedImage result = imageToBufferedImage(texture);
 
-                File out = new File(pathTemp + String.format("/graphics/HX2_%s.png", entry));
+                File out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/HX2_%s.png", entry));
                 ImageIO.write(result, "PNG", out);
 
                 this.app.controller.SetCurrentProgress(++count / (float)files.length);
             }
             wad.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ExtractFontFromAtlases() {
+        this.app.controller.SetCurrentLabel("Generating Hexen II Fonts");
+        GenerateFontFromAtlas("/graphics/hexen2/bigfont.png", "BIGFONT");
+        GenerateFontFromAtlas("/graphics/hexen2/bigfont2.png", "BIGFONT2");
+    }
+
+    private void GenerateFontFromAtlas(String source, String prefix) {
+        String pathTemp = this.app.settings.GetPath("temp");
+        String path = pathTemp + source;
+
+        int sizeX = 19;
+        int sizeY = 19;
+        int offset = 1;
+        int rowSize = 8;
+
+        String[] characters = {
+            "A", "B", "C", "D", "E", "F", "G", "H",
+            "I", "J", "K", "L", "M", "N", "O", "P",
+            "Q", "R", "S", "T", "U", "V", "W", "X",
+            "Y", "Z", "BSLASH"
+        };
+
+        float count = 0;
+        this.app.controller.SetCurrentProgress(-1);
+        try {
+            for (int i = 0; i < characters.length; i++) {
+                int col = i % 8;
+                int row = (i / rowSize);
+                int offX = (col * sizeX) + (col * offset);
+                int offY = (row * sizeY) + (row * offset);
+
+                String entry = characters[i];
+                BufferedImage atlas = ImageIO.read(new File(path));
+                BufferedImage imgFont = atlas.getSubimage(offX, offY, sizeX, sizeY);
+
+                Color colorTarget = new Color(0, 0, 0, 255);
+                Color colorReplace = new Color(0, 0, 0, 0);
+                Image texture = replaceColor(imgFont, colorTarget, colorReplace);
+                BufferedImage result = imageToBufferedImage(texture);
+
+                File out = new File(pathTemp + String.format("/graphics/hexen2/%s_%s.png", prefix, entry));
+                ImageIO.write(result, "PNG", out);
+
+                this.app.controller.SetCurrentProgress(++count / (float)characters.length);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
