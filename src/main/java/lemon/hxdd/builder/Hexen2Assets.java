@@ -203,14 +203,26 @@ public class Hexen2Assets {
                 Image imgFlat = GraphicUtils.createImage(flat, pal);
                 BufferedImage bufImage = imageToBufferedImage(imgFlat);
 
+                // greyscale
+                BufferedImage imgGS = new BufferedImage(lump.width, lump.height, BufferedImage.TYPE_BYTE_GRAY);
+                Graphics2D g = imgGS.createGraphics();
+                g.drawImage(bufImage, 0, 0, null);
+                g.dispose();
+
                 // Replace RGB 0,0,0 with Transparency
                 Color colorTarget = new Color(0, 0, 0, 255);
                 Color colorReplace = new Color(0, 0, 0, 0);
                 Image texture = replaceColor(bufImage, colorTarget, colorReplace);
                 BufferedImage result = imageToBufferedImage(texture);
 
+                texture = replaceColor(imgGS, colorTarget, colorReplace);
+                BufferedImage resultGS = imageToBufferedImage(texture);
+
                 File out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/%s.png", entry.name));
                 ImageIO.write(result, "PNG", out);
+
+                out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/%s_GS.png", entry.name));
+                ImageIO.write(resultGS, "PNG", out);
 
                 this.app.controller.SetCurrentProgress(++count / (float)w2.entries.length);
             };
@@ -255,13 +267,23 @@ public class Hexen2Assets {
                 BufferedImage atlas = ImageIO.read(new File(path));
                 BufferedImage imgFont = atlas.getSubimage(offX, offY, sizeX, sizeY);
 
+                BufferedImage imgGS = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_BYTE_GRAY);
+                Graphics2D g = imgGS.createGraphics();
+                g.drawImage(imgFont, 0, 0, null);
+                g.dispose();
+
                 Color colorTarget = new Color(0, 0, 0, 255);
                 Color colorReplace = new Color(0, 0, 0, 0);
                 Image texture = replaceColor(imgFont, colorTarget, colorReplace);
                 BufferedImage result = imageToBufferedImage(texture);
 
+                texture = replaceColor(imgGS, colorTarget, colorReplace);
+                BufferedImage resultGS = imageToBufferedImage(texture);
+
                 File out = new File(pathTemp + String.format("/graphics/hexen2/%s_%s.png", prefix, entry));
                 ImageIO.write(result, "PNG", out);
+                out = new File(pathTemp + String.format("/graphics/hexen2/%s_%s_GS.png", prefix, entry));
+                ImageIO.write(resultGS, "PNG", out);
 
                 this.app.controller.SetCurrentProgress(++count / (float)characters.length);
             }

@@ -829,6 +829,10 @@ public class PackageBuilder implements Runnable {
                     for (String c : characters) {
                         String name = String.format("%s_%s.png", f, c);
                         ImageIO.write(imgBlank, "png", new File(pathGraphics + name));
+
+                        // Greyscale
+                        name = String.format("%s_%s_GS.png", f, c);
+                        ImageIO.write(imgBlank, "png", new File(pathGraphics + name));
                     }
                 }
 
@@ -838,6 +842,10 @@ public class PackageBuilder implements Runnable {
                 }
                 for (String n : numbers) {
                     String name = String.format("%s.png", n);
+                    ImageIO.write(imgBlank, "png", new File(pathGFX + name));
+
+                    // Greyscale
+                    name = String.format("%s_GS.png", n);
                     ImageIO.write(imgBlank, "png", new File(pathGFX + name));
                 }
             } catch (IOException e) {
