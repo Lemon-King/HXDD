@@ -804,7 +804,7 @@ public class PackageBuilder implements Runnable {
                     "A", "B", "C", "D", "E", "F", "G", "H",
                     "I", "J", "K", "L", "M", "N", "O", "P",
                     "Q", "R", "S", "T", "U", "V", "W", "X",
-                    "Y", "Z", "BSLASH"
+                    "Y", "Z", "SLASH"
             };
             // graphics/hexen2/gfx.wad/
             String[] numbers = {
