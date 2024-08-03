@@ -1,0 +1,79 @@
+HX2_BIGNUM
+{
+	0 graphics/hexen2/gfx.wad/NUM_0.png
+	1 graphics/hexen2/gfx.wad/NUM_1.png
+	2 graphics/hexen2/gfx.wad/NUM_2.png
+	3 graphics/hexen2/gfx.wad/NUM_3.png
+	4 graphics/hexen2/gfx.wad/NUM_4.png
+	5 graphics/hexen2/gfx.wad/NUM_5.png
+	6 graphics/hexen2/gfx.wad/NUM_6.png
+	7 graphics/hexen2/gfx.wad/NUM_7.png
+	8 graphics/hexen2/gfx.wad/NUM_8.png
+	9 graphics/hexen2/gfx.wad/NUM_9.png
+
+	- graphics/hexen2/gfx.wad/NUM_MINUS.png
+}
+
+HX2_BIGFONT
+{
+	A graphics/hexen2/BIGFONT_A.png
+	B graphics/hexen2/BIGFONT_B.png
+	C graphics/hexen2/BIGFONT_C.png
+	D graphics/hexen2/BIGFONT_D.png
+	E graphics/hexen2/BIGFONT_E.png
+	F graphics/hexen2/BIGFONT_F.png
+	G graphics/hexen2/BIGFONT_G.png
+	H graphics/hexen2/BIGFONT_H.png
+	I graphics/hexen2/BIGFONT_I.png
+	J graphics/hexen2/BIGFONT_J.png
+	K graphics/hexen2/BIGFONT_K.png
+	L graphics/hexen2/BIGFONT_L.png
+	M graphics/hexen2/BIGFONT_M.png
+	N graphics/hexen2/BIGFONT_N.png
+	O graphics/hexen2/BIGFONT_O.png
+	P graphics/hexen2/BIGFONT_P.png
+	Q graphics/hexen2/BIGFONT_Q.png
+	R graphics/hexen2/BIGFONT_R.png
+	S graphics/hexen2/BIGFONT_S.png
+	T graphics/hexen2/BIGFONT_T.png
+	U graphics/hexen2/BIGFONT_U.png
+	V graphics/hexen2/BIGFONT_V.png
+	W graphics/hexen2/BIGFONT_W.png
+	X graphics/hexen2/BIGFONT_X.png
+	Y graphics/hexen2/BIGFONT_Y.png
+	Z graphics/hexen2/BIGFONT_Z.png
+
+	/ graphics/hexen2/BIGFONT_SLASH.png
+}
+
+HX2_BIGFONT2
+{
+	A graphics/hexen2/BIGFONT2_A.png
+	B graphics/hexen2/BIGFONT2_B.png
+	C graphics/hexen2/BIGFONT2_C.png
+	D graphics/hexen2/BIGFONT2_D.png
+	E graphics/hexen2/BIGFONT2_E.png
+	F graphics/hexen2/BIGFONT2_F.png
+	G graphics/hexen2/BIGFONT2_G.png
+	H graphics/hexen2/BIGFONT2_H.png
+	I graphics/hexen2/BIGFONT2_I.png
+	J graphics/hexen2/BIGFONT2_J.png
+	K graphics/hexen2/BIGFONT2_K.png
+	L graphics/hexen2/BIGFONT2_L.png
+	M graphics/hexen2/BIGFONT2_M.png
+	N graphics/hexen2/BIGFONT2_N.png
+	O graphics/hexen2/BIGFONT2_O.png
+	P graphics/hexen2/BIGFONT2_P.png
+	Q graphics/hexen2/BIGFONT2_Q.png
+	R graphics/hexen2/BIGFONT2_R.png
+	S graphics/hexen2/BIGFONT2_S.png
+	T graphics/hexen2/BIGFONT2_T.png
+	U graphics/hexen2/BIGFONT2_U.png
+	V graphics/hexen2/BIGFONT2_V.png
+	W graphics/hexen2/BIGFONT2_W.png
+	X graphics/hexen2/BIGFONT2_X.png
+	Y graphics/hexen2/BIGFONT2_Y.png
+	Z graphics/hexen2/BIGFONT2_Z.png
+
+	/ graphics/hexen2/BIGFONT2_SLASH.png
+}
