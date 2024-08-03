@@ -162,58 +162,59 @@ public class Hexen2Assets {
         }
     }
 
-    public void ExportGFXWad(boolean useResources) {
-        if (useResources) {
-            this.app.controller.SetCurrentLabel("Extracting Hexen II gfx.wad data");
-
-            String pathTemp = this.app.settings.GetPath("temp");
-            String path = pathTemp + "/graphics/hexen2/gfx.wad/";
-            File dirFile = new File(path);
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-            ZipAssets za = new ZipAssets(this.app);
-            za.SetFile(this.app.settings.fileResources);
-            za.ExtractFilesToFolder("pakdata/hexen2/gfx.wad", path);
-            return;
-        }
-
+    public void ExportGFXWad() {
         String pathSource = this.app.settings.GetPath("hexen2");
         String pathTemp = this.app.settings.GetPath("temp");
 
         this.app.controller.SetCurrentLabel("Exporting Hexen II gfx.wad data");
         this.app.controller.SetCurrentProgress(-1);
 
-        String[] files = {
-            "NUM_0", "NUM_1", "NUM_2", "NUM_3", "NUM_4",
-            "NUM_5", "NUM_6", "NUM_7", "NUM_8", "NUM_9",
-            "NUM_MINUS"
-        };
-
+        String path = pathTemp + "/graphics/hexen2/gfx.wad/";
+        File dirFile = new File(path);
+        if (!dirFile.exists()) {
+            dirFile.mkdirs();
+        }
         float count = 0;
         try {
-            WadFile wad = new WadFile(pathSource + "/gfx.wad");
-            for (int i = 0; i < files.length; i++) {
-                String entry = files[i];
-                byte[] data = wad.getData(entry);
+            Wad2File w2 = new Wad2File(pathSource + "/gfx.wad");
+            for (Wad2File.Wad2Entry entry : w2.entries) {
+                Wad2File.Wad2Flat lump = w2.readLumpAsFlat(entry.name);
 
-                Picture p = new Picture();
-                p.fromBytes(data);
+                if (entry.name.equals("TINYFONT")) {
+                    // skip tinyfont, vga graphics
+                    this.app.controller.SetCurrentProgress(++count / (float)w2.entries.length);
+                    continue;
+                }
+
+                if (lump.width <= 0 || lump.height <= 0) {
+                    System.out.printf("ExportGFXWad: [%s] Invalid Width & Height\n", entry.name);
+                    this.app.controller.SetCurrentProgress(++count / (float)w2.entries.length);
+                    continue;
+                }
+
+                for (int i = 0; i < lump.pixels.length; i++) {
+                    if ((lump.pixels[i] & 0xFF) == 0xFF) {
+                        lump.pixels[i] = 0;
+                    }
+                }
 
                 Palette pal = GetHexen2Palette();
-                PNGPicture pngImg = GraphicUtils.createPNGImage(p, pal);
+                Flat flat = Flat.create(lump.width, lump.height, lump.pixels);
+                Image imgFlat = GraphicUtils.createImage(flat, pal);
+                BufferedImage bufImage = imageToBufferedImage(imgFlat);
 
+                // Replace RGB 0,0,0 with Transparency
                 Color colorTarget = new Color(0, 0, 0, 255);
                 Color colorReplace = new Color(0, 0, 0, 0);
-                Image texture = replaceColor(pngImg.getImage(), colorTarget, colorReplace);
+                Image texture = replaceColor(bufImage, colorTarget, colorReplace);
                 BufferedImage result = imageToBufferedImage(texture);
 
-                File out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/HX2_%s.png", entry));
+                File out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/%s.png", entry.name));
                 ImageIO.write(result, "PNG", out);
 
-                this.app.controller.SetCurrentProgress(++count / (float)files.length);
-            }
-            wad.close();
+                this.app.controller.SetCurrentProgress(++count / (float)w2.entries.length);
+            };
+            w2.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -94,28 +94,28 @@ public class PackageBuilder implements Runnable {
             // HEXEN II EXPORT
             //
             // If Hexen II PAKs are found then try to export data
-            String ownedHX2 = "";
+            String sourcesHX2 = "";
             String OPTION_USE_HX2 = this.app.settings.Get("OPTION_ENABLE_HX2");
             if (OPTION_USE_HX2.equals("true") && HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK0"), this.app.settings.Get("PATH_HEXENII_PAK1")})) {
                 // If Noesis zip or folder with exe is found, try Hexen 2 paks
                 if (new Noesis(this.app).CheckAndInstall()) {
-                    ownedHX2 = "base";
+                    sourcesHX2 = "base";
                     if (HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK3")})) {
-                        // Set World flag
-                        ownedHX2 = String.format("%s,portals", ownedHX2);
+                        // Set Portals flag
+                        sourcesHX2 = String.format("%s,portals", sourcesHX2);
                     }
                     if (HasPAKFiles(new String[]{this.app.settings.Get("PATH_HEXENII_PAK4")})) {
-                        // Set Portals flag
-                        ownedHX2 = String.format("%s,world", ownedHX2);
+                        // Set World flag
+                        sourcesHX2 = String.format("%s,world", sourcesHX2);
                     }
-                    WriteHexen2InstallCVAR(ownedHX2);
+                    WriteHexen2InstallCVAR(sourcesHX2);
                     Hexen2Assets assets = new Hexen2Assets(this.app);
                     assets.ExtractPakData();
                     assets.ExportAssets();
                     assets.ExportSounds();
                     assets.ExportMusic();
+                    assets.ExportGFXWad();
                     assets.ExtractFontFromAtlases();
-                    assets.ExportGFXWad(true);
 
                     XMLModelDef xmd = new XMLModelDef(this.app);
                     xmd.Generate();
@@ -123,8 +123,10 @@ public class PackageBuilder implements Runnable {
                     SoundInfo si = new SoundInfo(this.app);
                     si.Export();
 
-                    sourceVersions.put("hx2", ownedHX2.toUpperCase());
+                    sourceVersions.put("hx2", sourcesHX2.toUpperCase());
                 }
+            } else {
+                GenerateBlankHexen2Fonts();
             }
 
             ExtractFilesFromGZDoom();
@@ -135,7 +137,6 @@ public class PackageBuilder implements Runnable {
 
             ExportHXDDFiles();
             ExportRealm667();
-            ExportBlankFonts();
             AddMapInfoConfiguaration();
 
 
@@ -788,17 +789,60 @@ public class PackageBuilder implements Runnable {
         }
     }
 
-    private void ExportBlankFonts() {
+    private void GenerateBlankHexen2Fonts() {
+        // Create Blanks
         if (!sourceVersions.containsKey("hx2")) {
             String pathTemp = this.app.settings.GetPath("temp");
-            String path = pathTemp + "/graphics/hexen2/gfx.wad/";
-            File dirFile = new File(path);
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
+            String pathGraphics = pathTemp + "/graphics/hexen2/";
+            String pathGFX = pathTemp + "/graphics/hexen2/gfx.wad/";
+
+            int size = 19;
+
+            // graphics/hexen2/
+            String[] fonts = { "BIGFONT", "BIGFONT2" };
+            String[] characters = {
+                    "A", "B", "C", "D", "E", "F", "G", "H",
+                    "I", "J", "K", "L", "M", "N", "O", "P",
+                    "Q", "R", "S", "T", "U", "V", "W", "X",
+                    "Y", "Z", "BSLASH"
+            };
+            // graphics/hexen2/gfx.wad/
+            String[] numbers = {
+                    "NUM_0", "NUM_1", "NUM_2",
+                    "NUM_3", "NUM_4", "NUM_5",
+                    "NUM_6", "NUM_7", "NUM_8",
+                    "NUM_9", "NUM_MINUS"
+            };
+
+            BufferedImage imgBlank = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = imgBlank.createGraphics();
+            g.setBackground(new Color(0, 0, 0, 0));
+            g.clearRect(0, 0, size, size);
+            g.dispose();
+
+            try {
+                File dirFile = new File(pathGraphics);
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs();
+                }
+                for (String f : fonts) {
+                    for (String c : characters) {
+                        String name = String.format("%s_%s.png", f, c);
+                        ImageIO.write(imgBlank, "png", new File(pathGraphics + name));
+                    }
+                }
+
+                dirFile = new File(pathGFX);
+                if (!dirFile.exists()) {
+                    dirFile.mkdirs();
+                }
+                for (String n : numbers) {
+                    String name = String.format("%s.png", n);
+                    ImageIO.write(imgBlank, "png", new File(pathGFX + name));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            ZipAssets za = new ZipAssets(this.app);
-            za.SetFile(this.app.settings.fileResources);
-            za.ExtractFilesToFolder("pakdata/hexen2/blank", path);
         }
     }
 
