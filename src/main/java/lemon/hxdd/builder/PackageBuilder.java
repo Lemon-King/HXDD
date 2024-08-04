@@ -115,7 +115,7 @@ public class PackageBuilder implements Runnable {
                     assets.ExportSounds();
                     assets.ExportMusic();
                     assets.ExportGFXWad();
-                    assets.ExtractFontFromAtlases();
+                    assets.ExtractFontsFromAtlases();
 
                     XMLModelDef xmd = new XMLModelDef(this.app);
                     xmd.Generate();
@@ -846,6 +846,15 @@ public class PackageBuilder implements Runnable {
 
                     // Greyscale
                     name = String.format("%s_GS.png", n);
+                    ImageIO.write(imgBlank, "png", new File(pathGFX + name));
+                }
+
+                for (int i = 0; i < 64; i++) {
+                    String name = String.format("TINYFONT_%d.png", i);
+                    ImageIO.write(imgBlank, "png", new File(pathGFX + name));
+
+                    // Greyscale
+                    name = String.format("TINYFONT_%d_GS.png", i);
                     ImageIO.write(imgBlank, "png", new File(pathGFX + name));
                 }
             } catch (IOException e) {

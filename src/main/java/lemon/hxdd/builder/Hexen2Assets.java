@@ -181,9 +181,10 @@ public class Hexen2Assets {
                 Wad2File.Wad2Flat lump = w2.readLumpAsFlat(entry.name);
 
                 if (entry.name.equals("TINYFONT")) {
-                    // skip tinyfont, vga graphics
-                    this.app.controller.SetCurrentProgress(++count / (float)w2.entries.length);
-                    continue;
+                    lump.width = 128;
+                    lump.height = 32;
+
+                    System.out.println(lump.pixels.length);
                 }
 
                 if (lump.width <= 0 || lump.height <= 0) {
@@ -232,13 +233,16 @@ public class Hexen2Assets {
         }
     }
 
-    public void ExtractFontFromAtlases() {
+    public void ExtractFontsFromAtlases() {
         this.app.controller.SetCurrentLabel("Generating Hexen II Fonts");
-        GenerateFontFromAtlas("/graphics/hexen2/bigfont.png", "BIGFONT");
-        GenerateFontFromAtlas("/graphics/hexen2/bigfont2.png", "BIGFONT2");
+        GenerateBigFontFromAtlas("/graphics/hexen2/bigfont.png", "BIGFONT");
+        GenerateBigFontFromAtlas("/graphics/hexen2/bigfont2.png", "BIGFONT2");
+
+        GenerateTinyFontFromAtlas("/graphics/hexen2/gfx.wad/TINYFONT.png", "TINYFONT");
+        GenerateTinyFontFromAtlas("/graphics/hexen2/gfx.wad/TINYFONT_GS.png", "TINYFONT");
     }
 
-    private void GenerateFontFromAtlas(String source, String prefix) {
+    private void GenerateBigFontFromAtlas(String source, String prefix) {
         String pathTemp = this.app.settings.GetPath("temp");
         String path = pathTemp + source;
 
@@ -286,6 +290,60 @@ public class Hexen2Assets {
                 ImageIO.write(resultGS, "PNG", out);
 
                 this.app.controller.SetCurrentProgress(++count / (float)characters.length);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void GenerateTinyFontFromAtlas(String source, String prefix) {
+        String pathTemp = this.app.settings.GetPath("temp");
+        String path = pathTemp + source;
+
+        int sizeX = 8;
+        int sizeY = 8;
+
+        int totalRows = 4;
+        int characterPerRow = 16;
+
+        int countChars = totalRows * characterPerRow;
+
+        float count = 0;
+        this.app.controller.SetCurrentProgress(-1);
+        try {
+            for (int r = 0; r < totalRows; r++) {
+                for (int c = 0; c < characterPerRow; c++) {
+                    int offX = (c * sizeX);
+                    int offY = (r * sizeY);
+
+                    // Offset fix, unsure if this is an issue with wad2 handling
+                    if (c == 15 && r != 3) {
+                        offY += 7;
+                    }
+
+                    BufferedImage atlas = ImageIO.read(new File(path));
+                    BufferedImage imgFont = atlas.getSubimage(offX, offY, sizeX, sizeY);
+
+                    BufferedImage imgGS = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_BYTE_GRAY);
+                    Graphics2D g = imgGS.createGraphics();
+                    g.drawImage(imgFont, 0, 0, null);
+                    g.dispose();
+
+                    Color colorTarget = new Color(0, 0, 0, 255);
+                    Color colorReplace = new Color(0, 0, 0, 0);
+                    Image texture = replaceColor(imgFont, colorTarget, colorReplace);
+                    BufferedImage result = imageToBufferedImage(texture);
+
+                    texture = replaceColor(imgGS, colorTarget, colorReplace);
+                    BufferedImage resultGS = imageToBufferedImage(texture);
+
+                    File out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/%s_%d.png", prefix, (int)count));
+                    ImageIO.write(result, "PNG", out);
+                    out = new File(pathTemp + String.format("/graphics/hexen2/gfx.wad/%s_%d_GS.png", prefix, (int)count));
+                    ImageIO.write(resultGS, "PNG", out);
+
+                    this.app.controller.SetCurrentProgress(++count / (float)countChars);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
