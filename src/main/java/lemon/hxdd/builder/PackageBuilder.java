@@ -264,8 +264,6 @@ public class PackageBuilder implements Runnable {
         this.organized.get("hexen").BatchRename("patches", "SKY3", "SKY3X", "equals");
         this.organized.get("hexen").BatchRename("patches", "WALL501", "WALL501X", "equals");   // shared patch name
 
-        this.organized.get("hexen").BatchRename("graphics", "CHAIN", "CHAINX", "equals");
-
         this.organized.get("hexen").BatchRename("graphics", "FONTB", "FONTBX", "startsWith");  // Lets keep Hexen's big red font around
 
         this.organized.get("hexen").BatchRename("graphics", "CHAIN", "CHAIN1", "equals");
