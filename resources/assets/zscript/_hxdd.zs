@@ -8,5 +8,11 @@
 
 #include "zscript/menu/_menu.zs"
 
+// Status Bars (Split)
 #include "zscript/statusbar/themes/split/hxddhereticsplitstatusbar.zs"
+#include "zscript/statusbar/themes/split/hxddhexen2splitstatusbar.zs"
+
+// Status Bar (Full)
+#include "zscript/statusbar/themes/hxddhexen2statusbar.zs"
+
 #include "zscript/statusbar/hxddstatusbar.zs"

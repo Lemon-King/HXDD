@@ -2,9 +2,9 @@
 // Parents standard Statusbars allowing runtime choice
 
 class HXDDStatusBar : BaseStatusBar {
-    Map<String,BaseStatusBar> mStatusBars;
-
+	BaseStatusBar active;
 	String selected;
+
 
 	override void Init() {
 		Super.Init();
@@ -19,19 +19,21 @@ class HXDDStatusBar : BaseStatusBar {
 
 		// Check CVAR
 		self.selected = LemonUtil.CVAR_GetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
-
-        BaseStatusBar sbar;
-        bool exists = false;
-        [sbar, exists] = self.mStatusBars.CheckValue(self.selected);
-		if (exists) {
-			sbar.Tick();
+		if (self.active is self.selected) {
+			self.active.Tick();
 		} else {
 			// try creating?
-			sbar = BaseStatusBar(new(self.selected));
-			if (sbar) {
-				self.mStatusBars.Insert(self.selected, sbar);
-				self.InitStatusBar(sbar);
-			} else {
+        	BaseStatusBar sbar;
+			Name sBarClass = self.selected;
+			class<BaseStatusBar> cls = sBarClass;
+			if (cls != null) {
+				sbar = BaseStatusBar(new(cls));
+				if (sbar) {
+					self.active = sbar;
+					self.InitStatusBar(self.active);
+				}
+			}
+			if (!sBarClass || !sbar) {
 				console.printf("HXDDSelectorStatusBar: Failed to create StatusBar [%s]!", self.selected);
 				LemonUtil.CVAR_SetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
 			}
@@ -40,18 +42,15 @@ class HXDDStatusBar : BaseStatusBar {
 
 	override void Draw (int state, double TicFrac) {
 		Super.Draw(state, TicFrac);
-    
-        BaseStatusBar sbar;
-        bool exists = false;
-        [sbar, exists] = self.mStatusBars.CheckValue(self.selected);
-		if (exists) {
-			sbar.Draw(state, TicFrac);
+
+		if (self.active) {
+			self.active.Draw(state, TicFrac);
 		}
 	}
 
 	void InitStatusBar(BaseStatusBar sbar) {
-		sbar.Init();
 		sbar.AttachToPlayer(CPlayer);
+		sbar.Init();
 		sbar.NewGame();
 	}
 }

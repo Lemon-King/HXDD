@@ -53,6 +53,9 @@ server int hxdd_armor_user_2 = 20;
 server int hxdd_armor_user_3 = 20;
 server int hxdd_armor_user_4 = 10;
 
+// XClass
+server bool hxdd_xclass_allow_best_guess = false;
+
 // Hexen egg artwork (Gold)
 user bool hxdd_hexen_artiegg = false;
 
