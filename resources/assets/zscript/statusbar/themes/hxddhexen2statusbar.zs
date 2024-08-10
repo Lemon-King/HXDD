@@ -1,7 +1,17 @@
 // ref: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/code/Sbar.c
 
 class HXDDHexen2StatusBar : BaseStatusBar {
+	// Hexen II Constants
+	const BAR_TOP_HEIGHT = 46;
+	const BAR_TOP_WIDTH = 160;
+	const BAR_BOTTOM_HEIGHT = 98;
+	const BAR_TOTAL_HEIGHT = (BAR_TOP_HEIGHT+BAR_BOTTOM_HEIGHT);
+	const BAR_BUMP_HEIGHT = 23;
+
+	const INV_NUM_FIELDS = 7;
+
 	const invAnimationDuration = 0.75;
+	const INV_FADE_DURATION = 0.35;
 	private double invTime;
 
 	Ammo ammo1, ammo2;
@@ -122,6 +132,30 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 
 	override void Tick() {
 		Super.Tick();
+
+		RefreshValues();
+	}
+
+	override void Draw (int state, double TicFrac) {
+		Super.Draw(state, TicFrac);
+
+		SetFields();
+		if (automapactive) {
+			// draw automap stuff
+		} else {
+			if (state == HUD_StatusBar) {
+				BeginStatusBar();
+				DrawBar(TicFrac);
+
+			} else if (state == HUD_Fullscreen) {
+				// We treat this as a status bar for auto centering and positioning
+				BeginStatusBar();
+				DrawFullScreen();
+			}
+		}
+	}
+
+	protected void RefreshValues() {
 		mHealthInterpolator.Update(CPlayer.health);
 		mHealthInterpolator2.Update(CPlayer.health);
 
@@ -168,56 +202,84 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		}
 	}
 
-	override void Draw (int state, double TicFrac) {
-		Super.Draw(state, TicFrac);
+	protected void DrawFullScreen() {
+		let y = 200 - 37;
+		DrawImage("graphics/hexen2/bmmana.png", (3, y), DI_ITEM_OFFSETS);
+		DrawImage("graphics/hexen2/gmmana.png", (3, y+18), DI_ITEM_OFFSETS);
 
-		BeginStatusBar();
-		SetFields();
-		if (automapactive) {
-			// draw automap stuff
-		} else {
-			DrawFullScreen(TicFrac);
-		}
-	}
+		String sAmmo1 = String.Format("\cu%03d", min(mAmmo1Interpolator.GetValue(), 999));
+		String sAmmo2 = String.Format("\cu%03d", min(mAmmo2Interpolator.GetValue(), 999));
+		DrawString(mTinyFont, sAmmo1, (10, y+6), DI_TEXT_ALIGN_LEFT);
+		DrawString(mTinyFont, sAmmo2, (10, y+18+6), DI_TEXT_ALIGN_LEFT);
 
-	protected void DrawFullScreen(double TicFrac) {
-        // Bar Frame Art
-        DrawImage("graphics/hexen2/topbar1.png", (0, 154), DI_ITEM_OFFSETS);
-        DrawImage("graphics/hexen2/topbar2.png", (160, 154), DI_ITEM_OFFSETS);
-        DrawImage("graphics/hexen2/topbumpl.png", (0, 154 - 23), DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM);
-        DrawImage("graphics/hexen2/topbumpm.png", (138, 154 - 8), DI_ITEM_OFFSETS | DI_ITEM_CENTER_BOTTOM);
-        DrawImage("graphics/hexen2/topbumpr.png", (269, 154 - 23), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM);
-
-        //DrawImage("graphics/hexen2/leftbumpwide.png", (0, 154), DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM);
-        //DrawImage("graphics/hexen2/rightbumpwide.png", (160, 154), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM);
-
-		int inthealth =  mHealthInterpolator2.GetValue();
-		DrawGemEx("graphics/hexen2/hpchain.png", "graphics/hexen2/hpgem.png", inthealth, CPlayer.mo.GetMaxHealth(true), (45 + 6, 191), (224 - 7, 10), 12, (multiplayer? DI_TRANSLATABLE : 0) | DI_ITEM_LEFT_TOP);
-
-        DrawImage("graphics/hexen2/chnlcov.png", (43 - 2, 154 + 46 - 10), DI_ITEM_OFFSETS);
-        DrawImage("graphics/hexen2/chnrcov.png", (267 + 2, 154 + 46 - 10), DI_ITEM_OFFSETS);
-
-		// draw all text
+		// Health
 		String strHealthValue = String.format("%d", mHealthInterpolator.GetValue());
 		int wStrHealthWidth = mHUDFontWidth * strHealthValue.Length();
 		double xOffset = wStrHealthWidth * 0.5;
 
-		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), (77 + xOffset, 168), DI_TEXT_ALIGN_RIGHT);
+		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), (38, y+18), DI_TEXT_ALIGN_LEFT);
 
+		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
+			if (isInventoryBarVisible()) {
+				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+			} else if (invTime != 0.0) {
+				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+			}
+			if (invTime != 0.0) {
+				int width = diparms_sbar.boxsize.X * INV_NUM_FIELDS;
+				double alpha = LemonUtil.flerp(0.0, 1.0, LemonUtil.Easing_Quadradic_Out(invTime / INV_FADE_DURATION));
+				DrawInventoryBarHXDD(diparms_sbar, (320 * 0.5 - (width * 0.5), y - 18), INV_NUM_FIELDS, DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM, HX_SHADOW, alpha: alpha);
+			}
+			vector2 iconPos = (288, y+7);
+			DrawInventoryIcon(CPlayer.mo.InvSel, iconPos, DI_ITEM_OFFSETS|DI_ITEM_LEFT_BOTTOM|DI_ARTIFLASH|DI_DIMDEPLETED, boxsize:(28, 28));
+			if (CPlayer.mo.InvSel.Amount > 1)
+			{
+				iconPos += (24, 21);
+				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), iconPos, DI_ITEM_OFFSETS|DI_ITEM_LEFT_BOTTOM|DI_TEXT_ALIGN_RIGHT);
+			}
+		}
+	}
+
+	protected void DrawBar(double TicFrac) {
+        // Bar Frame Art
+		let y = 200 - BAR_TOP_HEIGHT;
+        DrawImage("graphics/hexen2/topbar1.png", (0, y), DI_ITEM_OFFSETS);
+        DrawImage("graphics/hexen2/topbar2.png", (BAR_TOP_WIDTH, y), DI_ITEM_OFFSETS);
+        DrawImage("graphics/hexen2/topbumpl.png", (0, y - 23), DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM);
+        DrawImage("graphics/hexen2/topbumpm.png", (138, y - 8), DI_ITEM_OFFSETS | DI_ITEM_CENTER_BOTTOM);
+        DrawImage("graphics/hexen2/topbumpr.png", (269, y - 23), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM);
+
+        DrawImage("assets/ui/HEXEN2_BUMP_LEFT.png", (-65, y - 19), DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM);
+        DrawImage("assets/ui/HEXEN2_BUMP_RIGHT.png", (BAR_TOP_WIDTH * 2, y - 19), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM);
+
+		int inthealth =  mHealthInterpolator2.GetValue();
+		DrawGemEx("graphics/hexen2/hpchain.png", "graphics/hexen2/hpgem.png", inthealth, CPlayer.mo.GetMaxHealth(true), (45 + 6, y + 37), (224 - 7, 10), 12, (multiplayer? DI_TRANSLATABLE : 0) | DI_ITEM_LEFT_TOP);
+
+        DrawImage("graphics/hexen2/chnlcov.png", (43 - 2, y + 46 - 10), DI_ITEM_OFFSETS);
+        DrawImage("graphics/hexen2/chnrcov.png", (267 + 2, y + 46 - 10), DI_ITEM_OFFSETS);
+
+		// Health
+		String strHealthValue = String.format("%d", mHealthInterpolator.GetValue());
+		int wStrHealthWidth = mHUDFontWidth * strHealthValue.Length();
+		double xOffset = wStrHealthWidth * 0.5;
+
+		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), (77 + xOffset, y + 14), DI_TEXT_ALIGN_RIGHT);
+
+		// Armor
 		double armorValue = mArmorInterpolator.GetValue();
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
 		xOffset = wStrArmorWidth * 0.5;
-		DrawString(mHUDFont, FormatNumber(armorValue), (117 + xOffset, 168), DI_TEXT_ALIGN_RIGHT);
+		DrawString(mHUDFont, FormatNumber(armorValue), (117 + xOffset, y + 14), DI_TEXT_ALIGN_RIGHT);
 
-						
+
 		String assetLeftVial;
 		String assetRightVial;
 		Color altColor1 = 0xFFFFFFFFFF;
 		Color altColor2 = 0xFFFFFFFFFF;
 		if (ammo1 != null || ammo2 != null) {
 			if (!(ammo1 is "Mana1") && !(ammo1 is "Mana2")) {
-				DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (160, 154), DI_ITEM_OFFSETS);
+				DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (160, y), DI_ITEM_OFFSETS);
 				assetLeftVial = "assets/ui/lvial.png";
 				assetRightVial = "assets/ui/rvial.png";
 				Color col = CPlayer.GetColor();
@@ -229,10 +291,10 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 				altColor2 = Color(255, b, r, g);
 
 				if (ammo1) {
-					DrawTexture(ammo1.icon, (219 - 10, 167), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
+					DrawTexture(ammo1.icon, (219 - 10, y + 13), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
 				}
 				if (ammo2) {
-					DrawTexture(ammo2.icon, (261 - 10, 167), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
+					DrawTexture(ammo2.icon, (261 - 10, y + 13), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
 				}
 			} else if (ammo1 is "Mana1" || ammo1 is "Mana2") {
 				assetLeftVial = "graphics/hexen2/bmana.png";
@@ -241,30 +303,33 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 
 			String sAmmo1 = String.Format("\cu%03d", min(mAmmo1Interpolator.GetValue(), 999));
 			String sAmmo2 = String.Format("\cu%03d", min(mAmmo2Interpolator.GetValue(), 999));
-			DrawString(mTinyFont, sAmmo1, (219, 176), DI_ITEM_OFFSETS | DI_TEXT_ALIGN_RIGHT);
-			DrawString(mTinyFont, sAmmo2, (261, 176), DI_ITEM_OFFSETS | DI_TEXT_ALIGN_RIGHT);
+			DrawString(mTinyFont, sAmmo1, (219, y + 22), DI_ITEM_OFFSETS | DI_TEXT_ALIGN_RIGHT);
+			DrawString(mTinyFont, sAmmo2, (261, y + 22), DI_ITEM_OFFSETS | DI_TEXT_ALIGN_RIGHT);
 		} else {
-			DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (160, 154), DI_ITEM_OFFSETS);
+			DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (BAR_TOP_WIDTH, y), DI_ITEM_OFFSETS);
 		}
-		DrawBarEx(assetLeftVial, "", mAmmo1Interpolator.GetValue(), maxamt1, (190, 162), 0, SHADER_VERT | SHADER_REVERSE, DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, col: altColor1);
-		DrawBarEx(assetRightVial, "", mAmmo2Interpolator.GetValue(), maxamt2, (232, 162), 0, SHADER_VERT | SHADER_REVERSE, DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, col: altColor2);
-		DrawImage("graphics/hexen2/bmanacov.png", (190, 162), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
-		DrawImage("graphics/hexen2/gmanacov.png", (232, 162), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
-		
+		DrawBarEx(assetLeftVial, "", mAmmo1Interpolator.GetValue(), maxamt1, (190, y + 8), 0, SHADER_VERT | SHADER_REVERSE, DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, col: altColor1);
+		DrawBarEx(assetRightVial, "", mAmmo2Interpolator.GetValue(), maxamt2, (232, y + 8), 0, SHADER_VERT | SHADER_REVERSE, DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, col: altColor2);
+		DrawImage("graphics/hexen2/bmanacov.png", (190, y + 8), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
+		DrawImage("graphics/hexen2/gmanacov.png", (232, y + 8), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
+
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
-				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
 			} else if (invTime != 0.0) {
-				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
 			}
 			if (invTime != 0.0) {
-				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration));
-				DrawInventoryBarHXDD(diparms_sbar, (0, posInventory), 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW);
+				int width = diparms_sbar.boxsize.X * INV_NUM_FIELDS;
+				double alpha = LemonUtil.flerp(0.0, 1.0, LemonUtil.Easing_Quadradic_Out(invTime / INV_FADE_DURATION));
+				DrawInventoryBarHXDD(diparms_sbar, (320 * 0.5 - (width * 0.5), y + 0 - BAR_TOP_HEIGHT), INV_NUM_FIELDS, DI_ITEM_OFFSETS | DI_ITEM_LEFT_BOTTOM, HX_SHADOW, alpha: alpha);
 			}
-			DrawInventoryIcon(CPlayer.mo.InvSel, (158.5, 171), DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28));
+			//vector2 iconPos = (288, y+7);
+			DrawInventoryIcon(CPlayer.mo.InvSel, (158.5, y + 17), DI_ARTIFLASH|DI_ITEM_CENTER|DI_DIMDEPLETED, boxsize:(28, 28));
 			if (CPlayer.mo.InvSel.Amount > 1)
 			{
-				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (172, 178), DI_TEXT_ALIGN_RIGHT);
+				//iconPos += (24, 21);
+				DrawString(mIndexFont, FormatNumber(CPlayer.mo.InvSel.Amount, 3), (172, y + 24), DI_TEXT_ALIGN_RIGHT);
 			}
 		}
 	}
@@ -285,20 +350,20 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y * scale.y);
-		
+
 		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
-		
-		
+
+
 		// {cx, cb, cr, cy}
 		double Clip[4];
 		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
-		
+
 		bool horizontal = !(vertical & SHADER_VERT);
 		bool reverse = !!(vertical & SHADER_REVERSE);
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
-		
+
 		// preserve the active clipping rectangle
 		int cx, cy, cw, ch;
 		[cx, cy, cw, ch] = screen.GetClipRect();
@@ -311,10 +376,10 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
-		
+
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha);
 		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
-		
+
 		if (border == 0)
 		{
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
@@ -323,7 +388,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		// restore the previous clipping rectangle
 		screen.SetClipRect(cx, cy, cw, ch);
 	}
-	
+
 	//============================================================================
 	//
 	// DrawInventoryBar
@@ -333,25 +398,25 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 	// the actual drawing code.
 	//
 	//============================================================================
-	
+
 	// Except for the placement information this gets all info from the struct that gets passed in.
-	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0))
+	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0), double alpha = 1.0)
 	{
 		double width = parms.boxsize.X * numfields;
 		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y * scale.y);
-		
+
 		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
 		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
-		
+
 		Vector2 boxsize = parms.boxsize;
 		// First draw all the boxes
 		for(int i = 0; i < numfields; i++)
 		{
 			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha, scale: scale);
 		}
-		
+
 		// now the items and the rest
-		
+
 		Vector2 itempos = position + boxsize / 2;
 		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight() * scale.y);
 
@@ -367,30 +432,20 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 					{
 						double flashAlpha = bgalpha;
 						if (flags & DI_ARTIFLASH) flashAlpha *= itemflashFade;
-						DrawTexture(parms.selector, position + parms.selectofs + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, flashAlpha, scale: scale);
+						DrawImage("graphics/hexen2/artisel.png", position + parms.selectofs + (boxsize.X * i, 0) + ((boxsize.X * 0.5) - 6, -11), DI_ITEM_OFFSETS | DI_ITEM_CENTER_BOTTOM, alpha, scale: scale);
 					}
 				}
 				else
 				{
-					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, scale: scale);
+					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, alpha: alpha, scale: scale);
 				}
 			}
-			
+
 			if (parms.amountfont != null && (item.Amount > 1 || (flags & DI_ALWAYSSHOWCOUNTERS)))
 			{
-				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, parms.itemalpha, scale: scale);
+				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, alpha, scale: scale);
 			}
 			i++;
-		}
-		// Is there something to the left?
-		if (CPlayer.mo.FirstInv() != CPlayer.mo.InvFirst)
-		{
-			DrawTexture(parms.left, position + (-parms.arrowoffset.X, parms.arrowoffset.Y), flags | DI_ITEM_RIGHT|DI_ITEM_VCENTER, scale: scale);
-		}
-		// Is there something to the right?
-		if (item != NULL)
-		{
-			DrawTexture(parms.right, position + parms.arrowoffset + (width, 0), flags | DI_ITEM_LEFT|DI_ITEM_VCENTER, scale: scale);
 		}
 	}
 
