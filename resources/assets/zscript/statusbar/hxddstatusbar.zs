@@ -3,8 +3,8 @@
 
 class HXDDStatusBar : BaseStatusBar {
 	BaseStatusBar active;
-	String selected;
-	String defaultStatusBar;
+	Name selected;
+	Name defaultStatusBar;
 
 
 	override void Init() {
@@ -19,7 +19,9 @@ class HXDDStatusBar : BaseStatusBar {
 	override void Tick() {
 		Super.Tick();
 
-		if (self.selected == "") {
+		if (self.active is self.selected) {
+			self.active.Tick();
+		} else {
 			RefreshSelected();
 		}
 	}
@@ -53,15 +55,13 @@ class HXDDStatusBar : BaseStatusBar {
 				}
 			}
 		}
-		String cvarSelected = LemonUtil.CVAR_GetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
+		Name cvarSelected = LemonUtil.CVAR_GetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
 		if (cvarSelected == "default") {
 			self.selected = self.defaultStatusBar;
 		} else {
 			self.selected = cvarSelected;
 		}
-		if (self.active is self.selected) {
-			self.active.Tick();
-		} else {
+		if (!(self.active is self.selected)) {
 			// try creating?
         	BaseStatusBar sbar;
 			Name sBarClass = self.selected;
