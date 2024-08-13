@@ -51,7 +51,6 @@ class HXDDStatusBar : BaseStatusBar {
 			if (invProg) {
 				if (invProg.defaultStatusBar) {
 					self.defaultStatusBar = invProg.defaultStatusBar;
-					console.printf("%s", invProg.defaultStatusBar);
 				}
 			}
 		}
