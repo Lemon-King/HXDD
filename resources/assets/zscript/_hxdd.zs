@@ -13,6 +13,7 @@
 #include "zscript/statusbar/themes/split/hxddhexen2splitstatusbar.zs"
 
 // Status Bar (Full)
+#include "zscript/statusbar/themes/hxddhexenstatusbar.zs"
 #include "zscript/statusbar/themes/hxddhexen2statusbar.zs"
 
 #include "zscript/statusbar/hxddstatusbar.zs"

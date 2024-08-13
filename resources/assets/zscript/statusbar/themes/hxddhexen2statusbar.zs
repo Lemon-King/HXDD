@@ -127,7 +127,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 	}
 
 	override int GetProtrusion(double scaleratio) const {
-		return scaleratio > 0.85? 28 : 12;	// need to get past the gargoyle's wings
+		return scaleratio > 0.85? 28 : 12;
 	}
 
 	override void Tick() {
@@ -282,11 +282,9 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 				DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (160, y), DI_ITEM_OFFSETS);
 				assetLeftVial = "assets/ui/lvial.png";
 				assetRightVial = "assets/ui/rvial.png";
-				Color col = CPlayer.GetColor();
-				double s = min(255.0 / col.r, min(255.0 / col.g, 255.0 / col.b));
-				int r = col.r * s;
-				int g = col.g * s;
-				int b = col.b * s;
+
+				int r,g,b;
+				[r,g,b] = LemonUtil.GetNormalizedPlayerColor(CPlayer);
 				altColor1 = Color(255, r, g, b);
 				altColor2 = Color(255, b, r, g);
 

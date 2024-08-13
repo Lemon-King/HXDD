@@ -1,7 +1,7 @@
 class HXDDHexen2SplitStatusBar : BaseStatusBar {
 	const BAR_SHIFT_RATE = 0.1;
 	const BAR_SHIFT_DECAY = 0.8;
-	
+
 	const VIEW_SHIFT_RATE = 0.15;
 	const VIEW_SHIFT_DECAY = 0.85;
 
@@ -29,6 +29,8 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 	private double invTime;
 
 
+	Ammo ammo1, ammo2;
+	int amt1, maxamt1, amt2, maxamt2;
 
 	DynamicValueInterpolator mHealthInterpolator;
 	DynamicValueInterpolator mHealthInterpolator2;
@@ -149,6 +151,54 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		return 0;
 	}
 
+
+	protected void RefreshValues() {
+		mHealthInterpolator.Update(CPlayer.health);
+		mHealthInterpolator2.Update(CPlayer.health);
+
+		UpdateProgression();
+
+		if (prog) {
+			if (prog.ProgressionType == PSP_LEVELS) {
+				mXPInterpolator.Update(prog.levelpct);
+			}
+			if (prog.ArmorType == PSAT_ARMOR_BASIC) {
+				mArmorInterpolator.Update(GetArmorAmount());
+			} else {
+				mArmorInterpolator.Update(GetArmorSavePercent() / 5.0);
+			}
+		}
+
+		[ammo1, ammo2] = GetCurrentAmmo();
+		if (ammo1 is "Mana1" || ammo1 is "Mana2") {
+			[amt1, maxamt1] = GetAmount("Mana1");
+			[amt2, maxamt2] = GetAmount("Mana2");
+			mAmmo1Interpolator.Update(amt1);
+			mAmmo2Interpolator.Update(amt2);
+		} else {
+			if(ammo1) {
+				[amt1, maxamt1] = GetAmount(ammo1.GetClass());
+				mAmmo1Interpolator.Update(ammo1.Amount);
+			}
+			if (ammo2) {
+				[amt2, maxamt2] = GetAmount(ammo2.GetClass());
+				mAmmo2Interpolator.Update(ammo2.Amount);
+			}
+			/*
+			if (!ammo1 && !ammo2) {
+				let m1 = Ammo(CPlayer.mo.FindInventory("Mana1"));
+				let m2 = Ammo(CPlayer.mo.FindInventory("Mana2"));
+				if (m1 && m2) {
+					ammo1 = m1;
+					ammo2 = m2;
+					[amt1, maxamt1] = GetAmount("Mana1");
+					[amt2, maxamt2] = GetAmount("Mana2");
+				}
+			}
+			*/
+		}
+	}
+
 	override void Tick() {
 		Super.Tick();
 		mHealthInterpolator.Update(CPlayer.health);
@@ -170,6 +220,9 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 			}
 		}
 
+		RefreshValues();
+
+		/*
 		Ammo ammo1, ammo2;
 		[ammo1, ammo2] = GetCurrentAmmo();
 		if (ammo1 is "Mana1" || ammo1 is "Mana2") {
@@ -186,6 +239,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 				mAmmo2Interpolator.Update(ammo2.Amount);
 			}
 		}
+		*/
 
 		if (CPlayer.mo) {
 			// Captures player motion, angle, and pitch without hacky input reading
@@ -238,7 +292,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		SetFields();
 		if (automapactive) {
 			// draw automap stuff
-		} else {
+		} else if (state != HUD_None) {
 			DrawFullScreen();
 		}
 	}
@@ -310,65 +364,45 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
 		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 82) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 22) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
 
-		/*
-		Ammo ammo1, ammo2;
-		[ammo1, ammo2] = GetCurrentAmmo();
-		if (ammo1 != null && ammo2 == null) {
-			DrawString(mHUDFont, FormatNumber(mAmmo1Interpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawTexture(ammo1.icon, (anchorRight - 14, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-		} else if (ammo2 != null) {
-			DrawString(mIndexFont, FormatNumber(mAmmo1Interpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawString(mIndexFont, FormatNumber(mAmmo2Interpolator.GetValue(), 3), (anchorRight - 50, anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawTexture(ammo1.icon, (anchorRight - 23, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-			DrawTexture(ammo2.icon, (anchorRight - 23, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-		}
-		*/
+		String assetLeftVial;
+		String assetRightVial;
+		Color altColor1 = 0xFFFFFFFFFF;
+		Color altColor2 = 0xFFFFFFFFFF;
+		DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_MANA.png", (anchorRight + 49 - 7, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+		if (ammo1 != null || ammo2 != null) {
+			if (!(ammo1 is "Mana1") && !(ammo1 is "Mana2")) {
+				assetLeftVial = "assets/ui/lvial.png";
+				assetRightVial = "assets/ui/rvial.png";
 
-						
-		Ammo ammo1, ammo2;
-		[ammo1, ammo2] = GetCurrentAmmo();
-		
-		if (ammo1 != null && !(ammo1 is "Mana1") && !(ammo1 is "Mana2"))
-		{
-			Ammo ammo1, ammo2;
-			[ammo1, ammo2] = GetCurrentAmmo();
-			if (ammo1 != null && ammo2 == null) {
-				DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_SOLO.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-				String sAmmo1 = String.Format("\cu%03d", min(mAmmo1Interpolator.GetValue(), 999));
-				DrawString(mTinyFont, sAmmo1, (anchorRight - 15, anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-				DrawTexture(ammo1.icon, (anchorRight - 25, anchorBottom - 24) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-			} else if (ammo2 != null) {
-				DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_DUO.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+				int r,g,b;
+				[r,g,b] = LemonUtil.GetNormalizedPlayerColor(CPlayer);
+				altColor1 = Color(255, r, g, b);
+				altColor2 = Color(255, b, r, g);
 
-				String sAmmo1 = String.Format("\cu%03d", min(mAmmo1Interpolator.GetValue(), 999));
-				String sAmmo2 = String.Format("\cu%03d", min(mAmmo2Interpolator.GetValue(), 999));
-				DrawString(mTinyFont, sAmmo1, (anchorRight - 50, anchorBottom - 28) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-				DrawString(mTinyFont, sAmmo2, (anchorRight - 50, anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-				DrawTexture(ammo1.icon, (anchorRight - 23, anchorBottom - 22) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
-				DrawTexture(ammo2.icon, (anchorRight - 23, anchorBottom - 10) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER);
+				if (ammo1) {
+					DrawTexture(ammo1.icon, (219 - 10, 13), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
+				}
+				if (ammo2) {
+					DrawTexture(ammo2.icon, (261 - 10, 13), DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_CENTER, scale: (0.75, 0.75));
+				}
+			} else if (ammo1 is "Mana1" || ammo1 is "Mana2") {
+				assetLeftVial = "graphics/hexen2/bmana.png";
+				assetRightVial = "graphics/hexen2/gmana.png";
 			}
-		}
-		else if (ammo1 is "Mana1" || ammo2 is "Mana2")
-		{
-			DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_MANA.png", (anchorRight + 49 - 7, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			int amt1, maxamt1, amt2, maxamt2;
-			[amt1, maxamt1] = GetAmount("Mana1");
-			[amt2, maxamt2] = GetAmount("Mana2");
 
 			String sAmmo1 = String.Format("\cu%03d", min(mAmmo1Interpolator.GetValue(), 999));
 			String sAmmo2 = String.Format("\cu%03d", min(mAmmo2Interpolator.GetValue(), 999));
-			
-			DrawString(mTinyFont, sAmmo2, (floor((anchorRight - 7 + 39)), anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawBar("graphics/hexen2/bmana.png", "", mAmmo1Interpolator.GetValue(), maxamt1, (anchorRight - 7 - 29, anchorBottom - 9) + v2Right, 0, SHADER_VERT | SHADER_REVERSE, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			DrawImage("graphics/hexen2/bmanacov.png", (anchorRight - 7 - 29, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
+			DrawString(mTinyFont, sAmmo1, (floor((anchorRight - 7 + 39)), anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
+			DrawString(mTinyFont, sAmmo2, (floor((anchorRight - 7 - 3)), anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
 
-			DrawString(mTinyFont, sAmmo1, (floor((anchorRight - 7 - 3)), anchorBottom - 14) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_TEXT_ALIGN_RIGHT);
-			DrawBar("graphics/hexen2/gmana.png", "", mAmmo2Interpolator.GetValue(), maxamt2, (anchorRight + 6, anchorBottom - 9) + v2Right, 0, SHADER_VERT | SHADER_REVERSE, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
-			DrawImage("graphics/hexen2/bmanacov.png", (anchorRight + 6, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
 		} else {
-			DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT.png", (anchorRight, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
+			//DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (0, 0) + v2Off, DI_ITEM_OFFSETS);
 		}
-		
+		DrawBarEx(assetLeftVial, "", mAmmo1Interpolator.GetValue(), maxamt1, (anchorRight - 7 - 29, anchorBottom - 9) + v2Right, 0, SHADER_VERT | SHADER_REVERSE, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, col: altColor1);
+		DrawBarEx(assetRightVial, "", mAmmo2Interpolator.GetValue(), maxamt2, (anchorRight + 6, anchorBottom - 9) + v2Right, 0, SHADER_VERT | SHADER_REVERSE, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, col: altColor2);
+		DrawImage("graphics/hexen2/bmanacov.png", (anchorRight - 7 - 29, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
+		DrawImage("graphics/hexen2/gmanacov.png", (anchorRight + 6, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
+
 		DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_ITEM.png", (anchorRight - 49, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
@@ -404,20 +438,20 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y * scale.y);
-		
+
 		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
-		
-		
+
+
 		// {cx, cb, cr, cy}
 		double Clip[4];
 		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
-		
+
 		bool horizontal = !(vertical & SHADER_VERT);
 		bool reverse = !!(vertical & SHADER_REVERSE);
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
-		
+
 		// preserve the active clipping rectangle
 		int cx, cy, cw, ch;
 		[cx, cy, cw, ch] = screen.GetClipRect();
@@ -430,10 +464,10 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
-		
+
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha);
 		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
-		
+
 		if (border == 0)
 		{
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
@@ -442,7 +476,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		// restore the previous clipping rectangle
 		screen.SetClipRect(cx, cy, cw, ch);
 	}
-	
+
 	//============================================================================
 	//
 	// DrawInventoryBar
@@ -452,25 +486,25 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 	// the actual drawing code.
 	//
 	//============================================================================
-	
+
 	// Except for the placement information this gets all info from the struct that gets passed in.
 	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0))
 	{
 		double width = parms.boxsize.X * numfields;
 		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y * scale.y);
-		
+
 		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
 		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
-		
+
 		Vector2 boxsize = parms.boxsize;
 		// First draw all the boxes
 		for(int i = 0; i < numfields; i++)
 		{
 			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha, scale: scale);
 		}
-		
+
 		// now the items and the rest
-		
+
 		Vector2 itempos = position + boxsize / 2;
 		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight() * scale.y);
 
@@ -494,7 +528,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, scale: scale);
 				}
 			}
-			
+
 			if (parms.amountfont != null && (item.Amount > 1 || (flags & DI_ALWAYSSHOWCOUNTERS)))
 			{
 				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, parms.itemalpha, scale: scale);
@@ -525,7 +559,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		TextureID texture;
 		Vector2 applyscale;
 		[texture, applyscale] = GetIcon(item, flags, false);
-		
+
 		if((flags & DI_ARTIFLASH) && artiflashTick > 0)
 		{
 			DrawImage(flashimgs[artiflashTick-1], pos, flags, alpha, boxsize, scale);
@@ -537,5 +571,52 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 			applyscale.Y *= scale.Y;
 			DrawTexture(texture, pos, flags, alpha, boxsize, applyscale);
 		}
+	}
+
+	void DrawBarEx(String ongfx, String offgfx, double curval, double maxval, Vector2 position, int border, int vertical, int flags = 0, double alpha = 1.0, Color col = 0xffffffff)
+	{
+		let ontex = TexMan.CheckForTexture(ongfx, TexMan.TYPE_MiscPatch);
+		if (!ontex.IsValid()) return;
+		let offtex = TexMan.CheckForTexture(offgfx, TexMan.TYPE_MiscPatch);
+
+		Vector2 texsize = TexMan.GetScaledSize(ontex);
+		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y);
+
+		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
+		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
+
+
+		// {cx, cb, cr, cy}
+		double Clip[4];
+		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
+
+		bool horizontal = !(vertical & SHADER_VERT);
+		bool reverse = !!(vertical & SHADER_REVERSE);
+		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
+		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
+
+		// preserve the active clipping rectangle
+		int cx, cy, cw, ch;
+		[cx, cy, cw, ch] = screen.GetClipRect();
+
+		if(border != 0)
+		{
+			for(int i = 0; i < 4; i++) Clip[i] += border;
+
+			//Draw the whole foreground
+			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, col: col);
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
+		}
+
+		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha, col: col);
+		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
+
+		if (border == 0)
+		{
+			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
+			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, col: col);
+		}
+		// restore the previous clipping rectangle
+		screen.SetClipRect(cx, cy, cw, ch);
 	}
 }

@@ -4,6 +4,7 @@
 class HXDDStatusBar : BaseStatusBar {
 	BaseStatusBar active;
 	String selected;
+	String defaultStatusBar;
 
 
 	override void Init() {
@@ -12,13 +13,52 @@ class HXDDStatusBar : BaseStatusBar {
 
 	override void NewGame () {
 		Super.NewGame();
+		RefreshSelected();
 	}
 
 	override void Tick() {
 		Super.Tick();
 
+		if (self.selected == "") {
+			RefreshSelected();
+		}
+	}
+
+	override void Draw (int state, double TicFrac) {
+		Super.Draw(state, TicFrac);
+
+		if (menuactive || paused) {
+			RefreshSelected();
+		}
+
+		if (self.active) {
+			self.active.Draw(state, TicFrac);
+		}
+	}
+
+	void InitStatusBar(BaseStatusBar sbar) {
+		sbar.AttachToPlayer(CPlayer);
+		sbar.Init();
+		sbar.NewGame();
+	}
+
+	void RefreshSelected() {
 		// Check CVAR
-		self.selected = LemonUtil.CVAR_GetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
+		if (CPlayer.mo) {
+			let invProg = Progression(CPlayer.mo.FindInventory("Progression"));
+			if (invProg) {
+				if (invProg.defaultStatusBar) {
+					self.defaultStatusBar = invProg.defaultStatusBar;
+					console.printf("%s", invProg.defaultStatusBar);
+				}
+			}
+		}
+		String cvarSelected = LemonUtil.CVAR_GetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
+		if (cvarSelected == "default") {
+			self.selected = self.defaultStatusBar;
+		} else {
+			self.selected = cvarSelected;
+		}
 		if (self.active is self.selected) {
 			self.active.Tick();
 		} else {
@@ -33,24 +73,6 @@ class HXDDStatusBar : BaseStatusBar {
 					self.InitStatusBar(self.active);
 				}
 			}
-			if (!sBarClass || !sbar) {
-				console.printf("HXDDSelectorStatusBar: Failed to create StatusBar [%s]!", self.selected);
-				LemonUtil.CVAR_SetString("hxdd_statusbar_class", "HXDDHereticSplitStatusBar", CPlayer);
-			}
 		}
-	}
-
-	override void Draw (int state, double TicFrac) {
-		Super.Draw(state, TicFrac);
-
-		if (self.active) {
-			self.active.Draw(state, TicFrac);
-		}
-	}
-
-	void InitStatusBar(BaseStatusBar sbar) {
-		sbar.AttachToPlayer(CPlayer);
-		sbar.Init();
-		sbar.NewGame();
 	}
 }
