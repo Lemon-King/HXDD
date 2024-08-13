@@ -226,19 +226,19 @@ class ZFPlayerClassSelection ui {
             // display Hexen II classes
             double classLineXOffset = (136 * 1.5) + 50;
             btnClassAssassin = new("ButtonPlayerClass");
-            btnClassAssassin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 320, classLineX + classLineXOffset), 1.5, "Paladin", "HX2PaladinPlayer", "graphics/netp1.png");
+            btnClassAssassin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 320, classLineX + classLineXOffset), 1.5, "Paladin", "HX2PaladinPlayer", "graphics/hexen2/netp1.png");
             btnClassCrusader = new("ButtonPlayerClass");
-            btnClassCrusader.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 160, classLineX + classLineXOffset), 1.5, "Crusader", "HX2CrusaderPlayer", "graphics/netp2.png");
+            btnClassCrusader.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY - 160, classLineX + classLineXOffset), 1.5, "Crusader", "HX2CrusaderPlayer", "graphics/hexen2/netp2.png");
             btnClassNecromancer = new("ButtonPlayerClass");
-            btnClassNecromancer.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY, classLineX + classLineXOffset), 1.5, "Necromancer", "HX2NecromancerPlayer", "graphics/netp3.png");
+            btnClassNecromancer.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY, classLineX + classLineXOffset), 1.5, "Necromancer", "HX2NecromancerPlayer", "graphics/hexen2/netp3.png");
             btnClassPaladin = new("ButtonPlayerClass");
-            btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", "HX2AssassinPlayer", "graphics/netp4.png");
+            btnClassPaladin.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 160, classLineX + classLineXOffset), 1.5, "Assassin", "HX2AssassinPlayer", "graphics/hexen2/netp4.png");
 
             // Cvar hxdd_installed_hexen2_expansion is located in cvarinfo.installed_hexen2_expansion
             if (cvarHX2.IndexOf("portals") != -1) {
                 // display Hexen II Expansion classes
                 btnClassSuccubus = new("ButtonPlayerClass");
-                btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", "HX2SuccubusPlayer", "graphics/netp5.png");
+                btnClassSuccubus.CreateHX2(frame, cmdHandlerClassSelect, (hexenPosY + 320, classLineX + classLineXOffset), 1.5, "Demoness", "HX2SuccubusPlayer", "graphics/hexen2/netp5.png");
             }
         }
     }
