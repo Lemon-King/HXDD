@@ -31,6 +31,9 @@ class HXDDStatusBar : BaseStatusBar {
 
 		if (menuactive || paused) {
 			RefreshSelected();
+			if (self.active is self.selected) {
+				self.active.Tick();
+			}
 		}
 
 		if (self.active) {
