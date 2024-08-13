@@ -109,6 +109,17 @@ OptionString "HXDD_StatusBar_Selection"
     "HXDDHereticSplitStatusbar", "Heretic Split Statusbar"
     "HXDDHexen2SplitStatusbar", "Hexen II Split Statusbar"
 }
+OptionString "HXDD_StatusBar_Selection_DOOM"
+{
+    "default", "Class Default"
+    "DoomStatusBar", "DOOM Statusbar"
+    "HereticStatusBar", "Heretic Statusbar"
+    "HXDDHexenStatusBar", "Hexen Statusbar"
+    "HXDDHexen2StatusBar", "Hexen II Statusbar"
+    "HXDDHereticSplitStatusbar", "Heretic Split Statusbar"
+    "HXDDHexen2SplitStatusbar", "Hexen II Split Statusbar"
+}
+
 OptionValue "HXDD_GameSelectOption"
 {
     0, "Default"
@@ -201,7 +212,12 @@ OptionMenu "HXDDSettings"
     StaticText ""
     StaticText ""
     StaticText "Statusbar Selection", "Green"
-    Option "Statusbar", "hxdd_statusbar_class", "HXDD_StatusBar_Selection"
+    IfNotGame(Doom) {
+        Option "Statusbar", "hxdd_statusbar_class", "HXDD_StatusBar_Selection"
+    }
+    IfGame(Doom) {
+        Option "Statusbar", "hxdd_statusbar_class", "HXDD_StatusBar_Selection_DOOM"
+    }
 }
 
 OptionMenu "HXDDAltSetup_OLD"
