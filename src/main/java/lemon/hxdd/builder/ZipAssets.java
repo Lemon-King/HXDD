@@ -314,9 +314,20 @@ public class ZipAssets {
             Picture p = new Picture();
             p.setDimensions(dimensions[0], dimensions[1]);
             p.fromBytes(data);
+
+            PNGPicture pngImg = GraphicUtils.createPNGImage(p, pal);
+
+            // Get grAB offsets from DOOM Format and add to PNG output
+            int offsetX = p.getOffsetX();
+            int offsetY = p.getOffsetY();
+            pngImg.setOffsetX(offsetX);
+            pngImg.setOffsetY(offsetY);
+
             BufferedImage image = GraphicUtils.createImage(p, pal);
 
             ImageIO.write(image, "PNG", target);
+            pngImg.writeBytes(new FileOutputStream(target, false));
+
         } catch (IOException e) {
             System.out.println("ZipAssets.ExportGraphic: Failed to export " + path + "\n" + e);
         }

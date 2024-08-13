@@ -226,6 +226,8 @@ public class PackageBuilder implements Runnable {
         this.organized.get("hexen").BatchRename("sprites", "MNTRJ", "MNTRY", "equals");
         this.organized.get("hexen").BatchRename("sprites", "MNTRK", "MNTRZ", "equals");
 
+        this.organized.get("hexen").BatchRename("graphics", "STATBAR", "H2STATBAR", "equals");
+
         // Rename cluster messages follow new cluster order
         this.organized.get("hexen").BatchRename("lumps", "CLUS1MSG", "CLUS7MSG", "equals");
         this.organized.get("hexen").BatchRename("lumps", "CLUS2MSG", "CLUS8MSG", "equals");
