@@ -1,6 +1,7 @@
 {
     "class": "HX2NecromancerPlayer",
-    "armor_type": "armorclass",
+    "statusbar": "HXDDHexen2StatusBar",
+    "armor_type": "hx2",
     "progression_type": "levels",
     "alignment": "evil",
     "max_level": 20,
@@ -30,110 +31,131 @@
     "xgame": {
         "GreenArmor,SilverShield": {
             "command": "armortype",
-            "equals": 2,
-            "true": ["MeshArmor","PlatinumHelm"],
-            "false": "SilverShield"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": ["MeshArmor","PlatinumHelm"]},
+                {"value": "hx2",    "actor": ["HX2Breastplate", "HX2Helmet"]}
+            ]
         },
         "BlueArmor,EnchantedShield": {
             "command": "armortype",
-            "equals": 2,
-            "true": ["FalconShield","AmuletOfWarding"],
-            "false": "EnchantedShield"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": ["FalconShield","AmuletOfWarding"]},
+                {"value": "hx2",    "actor": ["HX2Bracers", "HX2Amulet"]}
+            ]
         },
         "MeshArmor": {
             "command": "armortype",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "MeshArmor"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": "MeshArmor"},
+                {"value": "hx2",    "actor": "HX2Breastplate"}
+            ]
         },
         "PlatinumHelm": {
             "command": "armortype",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "PlatinumHelm"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": "PlatinumHelm"},
+                {"value": "hx2",    "actor": "HX2Helmet"}
+            ]
         },
         "AmuletOfWarding": {
             "command": "armortype",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "AmuletOfWarding"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": "AmuletOfWarding"},
+                {"value": "hx2",    "actor": "HX2Amulet"}
+            ]
         },
         "FalconShield": {
             "command": "armortype",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "FalconShield"
+            "default": "hx2",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": "FalconShield"},
+                {"value": "hx2",    "actor": "HX2Bracers"}
+            ]
         },
 
-        "Fist": "Mana1",
+        // Doom
+        "Fist": "HX2Mana1",
         "Chainsaw": "none",
-        "Pistol": "Mana1",
+        "Pistol": "HX2Mana1",
         "Shotgun": "NWeapMagicMissile",
         "SuperShotgun": "NWeapBoneShards",
         "Chaingun": "NWeapMagicMissile",
-        "RocketLauncher": "Mana3",
+        "RocketLauncher": "HX2Mana3",
         "PlasmaRifle": "NWeapBoneShards",
         "BFG9000": "none",
 
         "Clip": "none",
-        "ClipBox": "Mana3",
-        "Shell": "Mana1",
-        "ShellBox": "Mana3",
-        "RocketAmmo": "Mana2",
-        "RocketBox": "Mana3",
-        "Cell": "Mana2",
-        "CellPack": "Mana3",
+        "ClipBox": "HX2Mana3",
+        "Shell": "HX2Mana1",
+        "ShellBox": "HX2Mana3",
+        "RocketAmmo": "HX2Mana2",
+        "RocketBox": "HX2Mana3",
+        "Cell": "HX2Mana2",
+        "CellPack": "HX2Mana3",
 
         "HealthBonus": "none",
-        "Stimpack": "CrystalVial",
-        "Medikit": "ArtiHealth",
+        "Stimpack": "HX2CrystalVial",
+        "Medikit": "HX2ArtiHealth",
 
         "ArmorBonus": "ArtiPoisonBag",
 
-        "InvulnerabilitySphere": "ArtiInvulnerability2",
-        "Soulsphere": "ArtiSuperHealth",
+        "InvulnerabilitySphere": "HX2ArtiInvulnerability2",
+        "Soulsphere": "HX2ArtiSuperHealth",
         "Megasphere": "ArtiBoostArmor",
-        "BlurSphere": "ArtiPork,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
+        "BlurSphere": "ArtiEgg,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
         "RadSuit": "ArtiSpeedBoots",
         "Infrared": "ArtiTorch",
         "Allmap": "SuperMap",
         "Berserk": "ArtiDarkServant",
 
+        // Heretic
         "GoldWandAmmo": "none",
-        "GoldWandHefty": "Mana1",
+        "GoldWandHefty": "HX2Mana1",
 
-        "CrossbowAmmo": "Mana1",
-        "CrossbowHefty": "Mana1",
+        "CrossbowAmmo": "HX2Mana1",
+        "CrossbowHefty": "HX2Mana1",
 
-        "BlasterAmmo": "Mana1",
-        "BlasterHefty": "Mana1",
+        "BlasterAmmo": "HX2Mana1",
+        "BlasterHefty": "HX2Mana1",
 
-        "SkullRodAmmo": "Mana2",
-        "SkullRodHefty": "Mana2",
+        "SkullRodAmmo": "HX2Mana2",
+        "SkullRodHefty": "HX2Mana2",
 
-        "PhoenixRodAmmo": "Mana2",
-        "PhoenixRodHefty": "Mana3",
+        "PhoenixRodAmmo": "HX2Mana2",
+        "PhoenixRodHefty": "HX2Mana3",
 
-        "MaceAmmo": "Mana3",
-        "MaceHefty": "Mana3",
+        "MaceAmmo": "HX2Mana3",
+        "MaceHefty": "HX2Mana3",
 
-        "Gauntlets": "Mana3",
-        "GoldWand": "Mana3",
+        "Gauntlets": "HX2Mana3",
+        "GoldWand": "HX2Mana3",
         "Crossbow": "NWeapMagicMissile",
-        "Blaster": "Mana3",
+        "Blaster": "HX2Mana3",
         "SkullRod": "NWeapBoneShards",
-        "PhoenixRod": "Mana3",
+        "PhoenixRod": "HX2Mana3",
         "Mace": "ArtiDarkServant",
 
+        "CrystalVial": "HX2CrystalVial",
+        "ArtiHealth": "HX2ArtiHealth",
+
         "BagOfHolding": "ArtiBoostMana",
+        "ArtiSuperHealth": "HX2ArtiSuperHealth",
         "ArtiTimeBomb": "ArtiPoisonBag",
         "ArtiInvulnerability": "ArtiInvulnerability2",
-        "ArtiEgg": "ArtiPork",
+        //"ArtiEgg": "ArtiPork",
 
-        "Mana1": "Mana1",
-        "Mana2": "Mana2",
-        "Mana3": "Mana3",
-
+        // Hexen
         "FWeapAxe": "none",
         "CWeapStaff": "none",
         "MWeapFrost": "NWeapMagicMissile",

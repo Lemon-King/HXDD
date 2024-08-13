@@ -1,5 +1,6 @@
 {
     "class": "ClericPlayer",
+    "statusbar": "HXDDHexenStatusBar",
     "armor_type": "armorclass",
     "progression_type": "none",
     "alignment": "good",
@@ -28,41 +29,60 @@
         "dexterity": [6,10]
     },
     "xgame": {
+
         "GreenArmor,SilverShield": {
             "command": "armortype",
-            "equals": 2,
-            "true": ["PlatinumHelm","MeshArmor"],
-            "false": "SilverShield"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": ["PlatinumHelm","MeshArmor"]},
+                {"value": "hx2",    "actor": ["HX2Helmet", "HX2Breastplate"]}
+            ]
         },
         "BlueArmor,EnchantedShield": {
             "command": "armortype",
-            "equals": 2,
-            "true": ["AmuletOfWarding","FalconShield"],
-            "false": "EnchantedShield"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": ["AmuletOfWarding","FalconShield"]},
+                {"value": "hx2",    "actor": ["HX2Amulet", "HX2Bracers"]}
+            ]
         },
         "MeshArmor": {
             "command": "armortype",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "MeshArmor"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": "MeshArmor"},
+                {"value": "hx2",    "actor": "HX2Breastplate"}
+            ]
         },
         "PlatinumHelm": {
             "command": "armortype",
-            "equals": 1,
-            "true": "SilverShield",
-            "false": "PlatinumHelm"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "SilverShield"},
+                {"value": "hx",     "actor": "PlatinumHelm"},
+                {"value": "hx2",    "actor": "HX2Helmet"}
+            ]
         },
         "AmuletOfWarding": {
             "command": "armortype",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "AmuletOfWarding"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": "AmuletOfWarding"},
+                {"value": "hx2",    "actor": "HX2Amulet"}
+            ]
         },
         "FalconShield": {
             "command": "armortype",
-            "equals": 1,
-            "true": "EnchantedShield",
-            "false": "FalconShield"
+            "default": "hx",
+            "selector": [
+                {"value": "basic",  "actor": "EnchantedShield"},
+                {"value": "hx",     "actor": "FalconShield"},
+                {"value": "hx2",    "actor": "HX2Bracers"}
+            ]
         },
 
         "Fist": "Mana1",

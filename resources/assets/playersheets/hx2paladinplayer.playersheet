@@ -1,6 +1,9 @@
 {
     "class": "HX2PaladinPlayer",
+    "game_type": "hexen2",
+    "statusbar": "HXDDHexen2StatusBar",
     "armor_type": "hx2",
+    "pickup_type": "hx2",
     "progression_type": "levels",
     "alignment": "good",
     "max_level": 20,
@@ -109,10 +112,10 @@
 
         "ArmorBonus": "ArtiPoisonBag",
 
-        "InvulnerabilitySphere": "ArtiInvulnerability2",
-        "Soulsphere": "ArtiSuperHealth",
+        "InvulnerabilitySphere": "HX2ArtiInvulnerability2",
+        "Soulsphere": "HX2ArtiSuperHealth",
         "Megasphere": "ArtiBoostArmor",
-        "BlurSphere": "ArtiPork,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
+        "BlurSphere": "ArtiEgg,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
         "RadSuit": "ArtiSpeedBoots",
         "Infrared": "ArtiTorch",
         "Allmap": "SuperMap",
@@ -149,9 +152,10 @@
         "ArtiHealth": "HX2ArtiHealth",
 
         "BagOfHolding": "ArtiBoostMana",
+        "ArtiSuperHealth": "HX2ArtiSuperHealth",
         "ArtiTimeBomb": "ArtiPoisonBag",
         "ArtiInvulnerability": "ArtiInvulnerability2",
-        "ArtiEgg": "ArtiPork",
+        //"ArtiEgg": "ArtiPork",
 
         // Hexen
         "FWeapAxe": "PWeapVorpalSword",
