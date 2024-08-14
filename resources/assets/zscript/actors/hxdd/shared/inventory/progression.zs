@@ -358,6 +358,8 @@ class PlayerSheetJSON {
 
 	String PlayerClass;
 	String Alignment;
+	String GameType;
+	String PickupType;
 	int ArmorType;
 	int ProgressionType;
 
@@ -387,6 +389,8 @@ class PlayerSheetJSON {
 
 	String soundClass;
 	Map<String, String> soundSet;
+
+	String defaultStatusBar;
 
 	XClassTranslation xclass;
 
@@ -463,11 +467,14 @@ class PlayerSheetJSON {
 
 			String valClassName			= FileJSON.GetString(jsonObject, "name");
 			String valPlayerClass		= FileJSON.GetString(jsonObject, "class");
+			String valGameType			= FileJSON.GetString(jsonObject, "game_type");
+			String valPickupType		= FileJSON.GetString(jsonObject, "pickup_type");
 			String valArmorType			= FileJSON.GetString(jsonObject, "armor_type");
 			String valProgressionType	= FileJSON.GetString(jsonObject, "progression_type");
 			int valMaxLevel				= FileJSON.GetInt(jsonObject, "max_level");
 			String valAlignment			= FileJSON.GetString(jsonObject, "alignment");
 			String valSoundClass		= FileJSON.GetString(jsonObject, "soundclass");
+			String valStatusBarClass	= FileJSON.GetString(jsonObject, "statusbar");
 			bool valUseMaxHealthScaler	= FileJSON.GetBool(jsonObject, "use_max_health_scaler");
 			let valSkillModifier		= FileJSON.GetArray(jsonObject, "skill_modifier");
 			double valXPModifier		= FileJSON.GetDouble(jsonObject, "xp_modifier");
@@ -614,7 +621,9 @@ class PlayerSheetJSON {
 
 			self.PlayerClass 				= valPlayerClass.MakeLower();
 			self.Alignment 					= valAlignment.MakeLower();
+			self.GameType					= valGameType.MakeLower();
 			self.ArmorType 					= GetEnumFromArmorType(valArmorType.MakeLower());
+			self.PickupType					= valPickupType.MakeLower();
 			self.ProgressionType 			= GetEnumFromProgressionType(valProgressionType.MakeLower());
 
 			self.UseMaxHealthScaler 		= valUseMaxHealthScaler;
@@ -626,6 +635,7 @@ class PlayerSheetJSON {
 
 			self.soundLevelUp				= valSoundLevelUp;
 			self.soundClass					= valSoundClass;
+			self.defaultStatusBar			= valStatusBarClass;
 
 			self.OnlyDropUnownedWeapons		= valOnlyDropUnownedWeapons;
 
@@ -656,8 +666,6 @@ class PlayerSheetJSON {
 				PlayerSheetStat rt = new("PlayerSheetStat");
 				rt.Init("_default").SetFromArray(valResourceTable).Roll();
 				self.resources.insert("_default", rt);
-			} else if (objResources) {
-
 			}
 			if (valHexenArmorTable && valHexenArmorTable.Size() >= 5) {
 				self.hexenArmorTable.Resize(5);
@@ -686,6 +694,8 @@ class Progression: Inventory {
 	String Alignment;
 
 	// Gameplay Modes
+	String GameType;
+	String PickupType;
 	int ArmorType;
 	int ProgressionType;
 
@@ -702,7 +712,6 @@ class Progression: Inventory {
 	// Class Tables
 	Array<int> experienceTable;
 	Array<int> hitpointTable;
-	//Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 
 	Array<double> skillmodifier;
@@ -713,25 +722,20 @@ class Progression: Inventory {
 	double experience;			// uint may not be large enough given some megawads and mods
 	double experienceModifier;
 
-	int maxHealth;
-	//int maxResource;
-	int strength;
-	int intelligence;
-	int wisdom;
-	int dexterity;
+	int MaxHealth;
 
-	//Array<PlayerSheetStat> stats;
-	//Array<String> stats_lookup;
 	String xp_bonus_stat;
 
 	ProgressionEventHandler handler;
 
-	Map<String, PlayerSheetStat> resources;		// per resource
 	Map<String, PlayerSheetStat> stats;
+	Map<String, PlayerSheetStat> resources;		// per resource
 
 	String soundLevelUp;
 	String soundClass;
 	Map<String, String> soundSet;
+
+	String defaultStatusBar;
 
 	XClassTranslation xclass;
 
@@ -773,11 +777,6 @@ class Progression: Inventory {
 		self.Experience = 0;
 
 		self.MaxHealth = 100;
-		//self.MaxResource = 0;
-		//self.Strength = 10;
-		//self.Intelligence = 10;
-		//self.Wisdom = 10;
-		//self.Dexterity = 10;
 	}
 
 	override void PostBeginPlay() {
@@ -826,6 +825,9 @@ class Progression: Inventory {
 		PlayerSheet.Load(playerClassName);
 
 		self.xclass = PlayerSheet.xclass;
+
+		self.GameType = PlayerSheet.GameType;
+		self.PickupType = PlayerSheet.PickupType;
 
 		if (PlayerSheet.ArmorType == PSAT_DEFAULT) {
 			self.ArmorType = cvarArmorType;
@@ -893,9 +895,11 @@ class Progression: Inventory {
 		self.hitpointTable.Copy(PlayerSheet.hitpointTable);
 		//self.resourceTable.Copy(PlayerSheet.resourceTable);
 
-		self.resources.Move(PlayerSheet.resources);
 		self.stats.Move(PlayerSheet.stats);
+		self.resources.Move(PlayerSheet.resources);
 		self.soundSet.Move(PlayerSheet.soundSet);
+
+		self.defaultStatusBar = Playersheet.defaultStatusBar;
 
 		if (cvarProgression == PSP_LEVELS_USER) {
 
@@ -971,24 +975,7 @@ class Progression: Inventory {
 			self.resourceTable[4] = self.resourceTable[2] * (0.4 + frandom[exprnd](0.0, 0.2));
 			*/
 
-			//self.stats.Copy(PlayerSheet.stats);
-			//self.stats_lookup.Copy(PlayerSheet.stats_lookup);
-
 			self.stats.Move(PlayerSheet.stats);
-
-			/*
-			foreach (k, v : self.stats) {
-				v.table.Resize(5);
-				for (let j = 0; j < 2; j++) {
-					double mult = ((j+1) * 10.0f);
-					v.table[j] = frandom[exprnd](0.5f, 1.0f) * mult;
-					v.table[j + 2] = random[exprnd](2, 5);
-				}
-				v.table[4] = v.table[1] * 4.0;
-				v.Roll();
-
-			}
-			*/
 
 			self.maxlevel = 10 + (random[RNGLEVEL](0,4) * 5);
 		}
@@ -1119,6 +1106,9 @@ class Progression: Inventory {
 			self.ArmorType = PSAT_ARMOR_HXAC;
 		}
 	}
+	void ArmorModeSelection_HX2AC_Random(PlayerPawn player) {
+		// TODO
+	}
 	void ArmorModeSelection_User(PlayerPawn player) {
 		let itemHexenArmor = FindOrGivePlayerHexenArmor(player);
 		if (itemHexenArmor) {
@@ -1182,7 +1172,7 @@ class Progression: Inventory {
 				}
 				ammoItem.AttachToOwner(Owner.player.mo);
 				AmmoItem_RefreshAmount(ammoItem);
-				if (isUnowned) {
+				if (ammoItem.UseSound == "TAG_HXDD_IGNORE_SPAWN") {
 					// Clear any unowned ammo
 					ammoItem.Amount = 0;
 				}
