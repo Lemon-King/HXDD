@@ -132,8 +132,8 @@ public class PackageBuilder implements Runnable {
             ExtractFilesFromGZDoom();
             FixPatches();
 
-            DownloadSteamArtwork();
-            DownloadKoraxLocalization();
+            ExtractSteamArtwork();
+            ExtractKoraxLocalization();
 
             ExportHXDDFiles();
             ExportRealm667();
@@ -522,6 +522,33 @@ public class PackageBuilder implements Runnable {
         }
     }
 
+    private void ExtractSteamArtwork() {
+        // Included in Resources now due to DOOM + DOOM II rerelease over DOOM.
+
+        this.app.controller.SetStageLabel("Title Artwork");
+        this.app.controller.SetCurrentLabel("Checking");
+        this.app.controller.SetCurrentProgress(-1);
+
+        String OPTION_USE_STEAM_ARTWORK = this.app.settings.Get("OPTION_USE_STEAM_ARTWORK");
+        if ("true".equals(OPTION_USE_STEAM_ARTWORK)) {
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(this.app.settings.fileResources);
+
+            String OPTION_ARTWORK = this.app.settings.Get("OPTION_TITLE_ARTWORK");
+            if (OPTION_ARTWORK.equals("heretic")) {
+                OPTION_ARTWORK = "heretic.shadow";
+            }
+
+            za.ExtractSingleFile("steam_hero_artwork/" + OPTION_ARTWORK + ".png", "graphics/title.png");
+            // PWAD Mode Titles
+            za.ExtractSingleFile("steam_hero_artwork/doom.id.doom1.png", "filter/doom.id.doom1/graphics/titlepic.png");
+            za.ExtractSingleFile("steam_hero_artwork/doom.id.doom2.png", "filter/doom.id.doom2/graphics/titlepic.png");
+            za.ExtractSingleFile("steam_hero_artwork/doom.masterlevels.png", "filter/doom.id.wadsmoosh/graphics/titlepic.png");
+
+            hideAdvisory = true;
+        }
+    }
+
     private void DownloadSteamArtwork() {
         this.app.controller.SetStageLabel("Title Artwork");
         this.app.controller.SetCurrentLabel("Checking");
@@ -597,6 +624,36 @@ public class PackageBuilder implements Runnable {
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void ExtractKoraxLocalization() {
+        String OPTION_KORAX_LOCALIZATION = this.app.settings.Get("OPTION_KORAX_LOCALIZATION");
+        if (OPTION_KORAX_LOCALIZATION.equals("en")) {
+            return;
+        }
+
+        this.app.controller.SetStageLabel(String.format("Korax Localization (%s)", OPTION_KORAX_LOCALIZATION.toUpperCase()));
+        this.app.controller.SetCurrentProgress(-1);
+        String path = this.app.settings.GetPath("temp");
+
+        ZipAssets za = new ZipAssets(this.app);
+        za.SetFile(this.app.settings.fileResources);
+
+
+        za.ExtractFilesToFolder(String.format("n64/korax/%s", OPTION_KORAX_LOCALIZATION), path + "/sounds");
+
+        String[] lumps = {
+            "GRTNGS1", "READY1", "BLOOD1","GAME1",
+            "BOARD1","WRSHIP1","MAYBE1","STRONG1",
+            "FACE1",
+        };
+        for (String fn : lumps) {
+            File f = new File(path + String.format("/sounds/%s.lmp", fn));
+            f.delete();
+        }
+
+        this.app.controller.SetCurrentProgress(1);
     }
 
     private void DownloadKoraxLocalization() {

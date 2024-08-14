@@ -199,6 +199,16 @@ class LemonUtil {
         //l.locknumber = newLockNumber;
     }
 
+    static int,int,int GetNormalizedPlayerColor(PlayerInfo p) {
+        Color col = p.GetColor();
+        double s = min(255.0 / col.r, min(255.0 / col.g, 255.0 / col.b));
+        int r = col.r * s;
+        int g = col.g * s;
+        int b = col.b * s;
+
+        return r,g,b;
+    }
+
     // CVAR user / server null safe get/find
     static cvar GetCVAR(string name, PlayerInfo player = null) {
         return player ? CVar.GetCvar(name, player) : CVar.FindCVar(name);

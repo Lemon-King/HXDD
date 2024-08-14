@@ -205,7 +205,7 @@ class ZFPlayerClassSelection ui {
 
         Array<String> imagesCorvus = {"sprites/CORVA1.png", "sprites/CORVB1.png", "sprites/CORVC1.png", "sprites/CORVD1.png"};
         btnClassCorvus = new("ButtonPlayerClass");
-        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", "HXDDHereticPlayer", "graphics/M_HBOX.png", imagesCorvus);
+        btnClassCorvus.Create(frame, cmdHandlerClassSelect, (hereticPosY, classLineX), 1.5, "Corvus", "HXDDHereticPlayer", "graphics/hxdd/M_HBOX.png", imagesCorvus);
 
         double hexenPosY = 1920 - 450 - (144 * 2.5) + ((144 * 2.5 * 0.5) - (112 * 1.5 * 0.5));
         Array<String> imagesFighter = {"graphics/M_FWALK1.png", "graphics/M_FWALK2.png", "graphics/M_FWALK3.png", "graphics/M_FWALK4.png"};

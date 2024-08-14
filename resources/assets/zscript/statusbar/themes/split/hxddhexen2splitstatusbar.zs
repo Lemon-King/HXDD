@@ -1,7 +1,7 @@
 class HXDDHexen2SplitStatusBar : BaseStatusBar {
 	const BAR_SHIFT_RATE = 0.1;
 	const BAR_SHIFT_DECAY = 0.8;
-
+	
 	const VIEW_SHIFT_RATE = 0.15;
 	const VIEW_SHIFT_DECAY = 0.85;
 
@@ -363,7 +363,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		String strArmorValue = String.format("%d", armorValue);
 		int wStrArmorWidth = mHUDFontWidth * strArmorValue.Length();
 		DrawString(mHUDFont, FormatNumber(armorValue), ((anchorLeft + 82) - (wStrArmorWidth / strArmorValue.Length()), anchorBottom - 22) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_CENTER | DI_ITEM_CENTER);
-
+	
 		String assetLeftVial;
 		String assetRightVial;
 		Color altColor1 = 0xFFFFFFFFFF;
@@ -402,7 +402,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		DrawBarEx(assetRightVial, "", mAmmo2Interpolator.GetValue(), maxamt2, (anchorRight + 6, anchorBottom - 9) + v2Right, 0, SHADER_VERT | SHADER_REVERSE, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, col: altColor2);
 		DrawImage("graphics/hexen2/bmanacov.png", (anchorRight - 7 - 29, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
 		DrawImage("graphics/hexen2/gmanacov.png", (anchorRight + 6, anchorBottom - 9) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
-
+		
 		DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_ITEM.png", (anchorRight - 49, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
@@ -438,20 +438,20 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y * scale.y);
-
+		
 		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
-
-
+		
+		
 		// {cx, cb, cr, cy}
 		double Clip[4];
 		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
-
+		
 		bool horizontal = !(vertical & SHADER_VERT);
 		bool reverse = !!(vertical & SHADER_REVERSE);
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
-
+		
 		// preserve the active clipping rectangle
 		int cx, cy, cw, ch;
 		[cx, cy, cw, ch] = screen.GetClipRect();
@@ -464,10 +464,10 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
-
+		
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha);
 		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
-
+		
 		if (border == 0)
 		{
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
@@ -476,7 +476,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		// restore the previous clipping rectangle
 		screen.SetClipRect(cx, cy, cw, ch);
 	}
-
+	
 	//============================================================================
 	//
 	// DrawInventoryBar
@@ -486,25 +486,25 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 	// the actual drawing code.
 	//
 	//============================================================================
-
+	
 	// Except for the placement information this gets all info from the struct that gets passed in.
 	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0))
 	{
 		double width = parms.boxsize.X * numfields;
 		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y * scale.y);
-
+		
 		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
 		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
-
+		
 		Vector2 boxsize = parms.boxsize;
 		// First draw all the boxes
 		for(int i = 0; i < numfields; i++)
 		{
 			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha, scale: scale);
 		}
-
+		
 		// now the items and the rest
-
+		
 		Vector2 itempos = position + boxsize / 2;
 		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight() * scale.y);
 
@@ -528,7 +528,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, scale: scale);
 				}
 			}
-
+			
 			if (parms.amountfont != null && (item.Amount > 1 || (flags & DI_ALWAYSSHOWCOUNTERS)))
 			{
 				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, parms.itemalpha, scale: scale);
@@ -559,7 +559,7 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		TextureID texture;
 		Vector2 applyscale;
 		[texture, applyscale] = GetIcon(item, flags, false);
-
+		
 		if((flags & DI_ARTIFLASH) && artiflashTick > 0)
 		{
 			DrawImage(flashimgs[artiflashTick-1], pos, flags, alpha, boxsize, scale);
@@ -581,20 +581,20 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y);
-
+		
 		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
-
-
+		
+		
 		// {cx, cb, cr, cy}
 		double Clip[4];
 		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
-
+		
 		bool horizontal = !(vertical & SHADER_VERT);
 		bool reverse = !!(vertical & SHADER_REVERSE);
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
-
+		
 		// preserve the active clipping rectangle
 		int cx, cy, cw, ch;
 		[cx, cy, cw, ch] = screen.GetClipRect();
@@ -607,10 +607,10 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, col: col);
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
-
+		
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha, col: col);
 		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
-
+		
 		if (border == 0)
 		{
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);

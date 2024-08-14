@@ -218,7 +218,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		double xOffset = wStrHealthWidth * 0.5;
 
 		DrawString(mHUDFont, FormatNumber(mHealthInterpolator.GetValue()), (38, y+18), DI_TEXT_ALIGN_LEFT);
-
+		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
 				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
@@ -272,7 +272,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		xOffset = wStrArmorWidth * 0.5;
 		DrawString(mHUDFont, FormatNumber(armorValue), (117 + xOffset, y + 14), DI_TEXT_ALIGN_RIGHT);
 
-
+						
 		String assetLeftVial;
 		String assetRightVial;
 		Color altColor1 = 0xFFFFFFFFFF;
@@ -282,7 +282,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 				DrawImage("assets/ui/HEXEN2_TOPBAR_COVER.png", (160, y), DI_ITEM_OFFSETS);
 				assetLeftVial = "assets/ui/lvial.png";
 				assetRightVial = "assets/ui/rvial.png";
-
+				
 				int r,g,b;
 				[r,g,b] = LemonUtil.GetNormalizedPlayerColor(CPlayer);
 				altColor1 = Color(255, r, g, b);
@@ -310,7 +310,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		DrawBarEx(assetRightVial, "", mAmmo2Interpolator.GetValue(), maxamt2, (232, y + 8), 0, SHADER_VERT | SHADER_REVERSE, DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, col: altColor2);
 		DrawImage("graphics/hexen2/bmanacov.png", (190, y + 8), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
 		DrawImage("graphics/hexen2/gmanacov.png", (232, y + 8), DI_ITEM_OFFSETS | DI_ITEM_RIGHT_BOTTOM, 1, style: STYLE_ColorBlend);
-
+		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
 				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
@@ -348,20 +348,20 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 
 		Vector2 texsize = TexMan.GetScaledSize(ontex);
 		[position, flags] = AdjustPosition(position, flags, texsize.X, texsize.Y * scale.y);
-
+		
 		double value = (maxval != 0) ? clamp(curval / maxval, 0, 1) : 0;
 		if(border != 0) value = 1. - value; //invert since the new drawing method requires drawing the bg on the fg.
-
-
+		
+		
 		// {cx, cb, cr, cy}
 		double Clip[4];
 		Clip[0] = Clip[1] = Clip[2] = Clip[3] = 0;
-
+		
 		bool horizontal = !(vertical & SHADER_VERT);
 		bool reverse = !!(vertical & SHADER_REVERSE);
 		double sizeOfImage = (horizontal ? texsize.X - border*2 : texsize.Y - border*2);
 		Clip[(!horizontal) | ((!reverse)<<1)] = sizeOfImage - sizeOfImage *value;
-
+		
 		// preserve the active clipping rectangle
 		int cx, cy, cw, ch;
 		[cx, cy, cw, ch] = screen.GetClipRect();
@@ -374,10 +374,10 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 			DrawTexture(ontex, position, flags | DI_ITEM_LEFT_TOP, alpha, scale: scale, style: STYLE_Add);
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
 		}
-
+		
 		if (offtex.IsValid() && TexMan.GetScaledSize(offtex) == texsize) DrawTexture(offtex, position, flags | DI_ITEM_LEFT_TOP, alpha);
 		else Fill(color(int(255*alpha),0,0,0), position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3]);
-
+		
 		if (border == 0)
 		{
 			SetClipRect(position.X + Clip[0], position.Y + Clip[1], texsize.X - Clip[0] - Clip[2], texsize.Y - Clip[1] - Clip[3], flags);
@@ -386,7 +386,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		// restore the previous clipping rectangle
 		screen.SetClipRect(cx, cy, cw, ch);
 	}
-
+	
 	//============================================================================
 	//
 	// DrawInventoryBar
@@ -396,25 +396,25 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 	// the actual drawing code.
 	//
 	//============================================================================
-
+	
 	// Except for the placement information this gets all info from the struct that gets passed in.
 	void DrawInventoryBarHXDD(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1., vector2 scale = (1.0,1.0), double alpha = 1.0)
 	{
 		double width = parms.boxsize.X * numfields;
 		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y * scale.y);
-
+		
 		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
 		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
-
+		
 		Vector2 boxsize = parms.boxsize;
 		// First draw all the boxes
 		for(int i = 0; i < numfields; i++)
 		{
 			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha, scale: scale);
 		}
-
+		
 		// now the items and the rest
-
+		
 		Vector2 itempos = position + boxsize / 2;
 		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight() * scale.y);
 
@@ -438,7 +438,7 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 					DrawInventoryIconHXDD(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED, alpha: alpha, scale: scale);
 				}
 			}
-
+			
 			if (parms.amountfont != null && (item.Amount > 1 || (flags & DI_ALWAYSSHOWCOUNTERS)))
 			{
 				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, alpha, scale: scale);
