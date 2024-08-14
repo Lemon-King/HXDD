@@ -536,7 +536,7 @@
                                                 </HBox>
                                                 <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="42.0" prefHeight="35.0" prefWidth="352.0">
                                                    <children>
-                                                      <CheckBox fx:id="cxDownloadTitleSteam" mnemonicParsing="false" text="Download Steam Header as Title Screen">
+                                                      <CheckBox fx:id="cxDownloadTitleSteam" mnemonicParsing="false" text="Use High Resolution Steam Headers as Title Screen">
                                                          <HBox.margin>
                                                             <Insets right="8.0" />
                                                          </HBox.margin>
@@ -561,7 +561,7 @@
                                                       </ChoiceBox>
                                                    </children>
                                                 </HBox>
-                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="This setting will download Korax Voice files from TCRF in the selected language." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
+                                                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="167.0" prefWidth="286.0" text="Use Localized Korax Nintendo 64 Sound Files" textAlignment="CENTER" textFill="#00000099" wrapText="true" />
                                                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="260.0" prefHeight="41.0" prefWidth="293.0" text="WARNING: Hexen II functionality is a work in progress, has classes which are being developed, and may crash." textAlignment="CENTER" textFill="#00000099" wrapText="true" />
                                                 <HBox alignment="CENTER_RIGHT" layoutX="13.0" layoutY="77.0" prefHeight="28.0" prefWidth="352.0">
                                                    <children>
