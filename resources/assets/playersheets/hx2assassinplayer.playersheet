@@ -104,21 +104,6 @@
         "Cell": "HX2Mana2",
         "CellPack": "HX2Mana3",
 
-        "HealthBonus": "none",
-        "Stimpack": "HX2CrystalVial",
-        "Medikit": "HX2ArtiHealth",
-
-        "ArmorBonus": "ArtiPoisonBag",
-
-        "InvulnerabilitySphere": "HX2ArtiInvulnerability2",
-        "Soulsphere": "HX2ArtiSuperHealth",
-        "Megasphere": "ArtiBoostArmor",
-        "BlurSphere": "ArtiEgg,ArtiTeleport,ArtiTeleportOther,ArtiBlastRadius",
-        "RadSuit": "ArtiSpeedBoots",
-        "Infrared": "ArtiTorch",
-        "Allmap": "SuperMap",
-        "Berserk": "ArtiDarkServant",
-
         // Heretic
         "GoldWandAmmo": "none",
         "GoldWandHefty": "HX2Mana1",
@@ -146,12 +131,6 @@
         "PhoenixRod": "HX2Mana3",
         "Mace": "ArtiDarkServant",
 
-        "BagOfHolding": "ArtiBoostMana",
-        "ArtiSuperHealth": "HX2ArtiSuperHealth",
-        "ArtiTimeBomb": "ArtiPoisonBag",
-        "ArtiInvulnerability": "ArtiInvulnerability2",
-        //"ArtiEgg": "ArtiPork",
-
         // Hexen
         "FWeapAxe": "AWeapCrossbow",
         "CWeapStaff": "none",
@@ -171,7 +150,40 @@
 
         "MWeaponPiece1": "none",
         "MWeaponPiece2": "none",
-        "MWeaponPiece3": "none"
+        "MWeaponPiece3": "none",
+
+        // Items
+        "HealthBonus": "none",
+        "ArmorBonus": "ArtiPoisonBag",
+        "Stimpack": "HX2CrystalVial",
+        "Medikit": "HX2ArtiHealth",
+
+        "InvulnerabilitySphere": "HX2ArtiInvulnerability",
+        "Soulsphere,Megasphere": "HX2ArtiSuperHealth",
+        "BlurSphere": "HX2ArtiInvisibility",
+        "RadSuit": "HX2ArtiSpeedBoots,HX2ArtiTeleport",
+        "Infrared": "HX2ArtiTorch",
+        "Allmap": "SuperMap",
+        "Berserk": "ArtiDarkServant,HX2ArtiTomeOfPower",
+        
+        "CrystalVial": "HX2CrystalVial",
+        "ArtiHealth": "HX2ArtiHealth",
+
+        "BagOfHolding": "HX2ArtiBoostMana",
+        "ArtiSuperHealth": "HX2ArtiSuperHealth",
+        "ArtiTimeBomb": "ArtiPoisonBag",    // Placeholder
+        "ArtiInvulnerability": "HX2ArtiInvulnerability",
+        "ArtiInvulnerability2": "HX2ArtiInvulnerability",
+        "ArtiTomeOfPower": "HX2ArtiTomeOfPower",
+        "ArtiTorch": "HX2ArtiTorch",
+        "ArtiBlastRadius": "HX2ArtiBlastRadius",
+        "ArtiSpeedBoots": "HX2ArtiSpeedBoots",
+        "ArtiInvisibility": "HX2ArtiInvisibility",
+        "ArtiTeleport": "HX2ArtiTeleport",
+        "ArtiBoostMana": "HX2ArtiBoostMana",
+        //"ArtiDarkServant": "HX2ArtiSummon",
+        "ArtiFly": "HX2ArtiFly",
+        "ArtiPork": "ArtiEgg"  // Placeholder
     },
     "sound_set": {
         "misc/health_pkup":	"hexen2/items/itempkup",

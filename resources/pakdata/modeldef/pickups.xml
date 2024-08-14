@@ -27,6 +27,6 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Health"/>
+        <Animation key="BMAN" frames="1" model="0" comment="Pickup: Arti Health"/>
     </Group>
 </XMLModelDef>

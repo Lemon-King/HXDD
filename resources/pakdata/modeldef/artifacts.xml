@@ -14,4 +14,145 @@
 
         <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Health"/>
     </Group>
+    <Group class="HX2ArtiSuperHealth">
+        <!-- This model has corrected UVs stored in resources -->
+        <Path folder="models/hexen2/hxdd" />
+        <Model file="a_hboost.md3" model="0" />
+        <Skin file="a_hboost_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Health"/>
+    </Group>
+    <Group class="HX2ArtiBoostMana">
+        <Path folder="models/hexen2" />
+        <Model file="a_mboost.md3" model="0" />
+        <Skin file="a_mboost_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Health"/>
+    </Group>
+    <Group class="HX2ArtiFly">
+        <Path folder="models/hexen2" />
+        <Model file="a_hboost.md3" model="0" />
+        <Skin file="a_hboost_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Fly"/>
+    </Group>
+    <Group class="HX2ArtiInvulnerability">
+        <Path folder="models/hexen2" />
+        <Model file="a_invinc.md3" model="0" />
+        <Skin file="a_invinc_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Inv"/>
+    </Group>
+    <Group class="HX2ArtiTomeOfPower">
+        <Path folder="models/hexen2" />
+        <Model file="a_tome.md3" model="0" />
+        <Skin file="a_tome_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Tome of Power"/>
+    </Group>
+    <Group class="HX2ArtiSpeedBoots">
+        <Path folder="models/hexen2" />
+        <Model file="a_haste.md3" model="0" />
+        <Skin file="a_haste_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Speed Boots"/>
+    </Group>
+    <Group class="HX2ArtiBlastRadius">
+        <Path folder="models/hexen2" />
+        <Model file="a_blast.md3" model="0" />
+        <Skin file="a_blast_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Blast Radius"/>
+    </Group>
+    <Group class="HX2ArtiTorch">
+        <Path folder="models/hexen2" />
+        <Model file="a_torch.md3" model="0" />
+        <Skin file="a_torch_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Torch"/>
+    </Group>
+    <Group class="HX2ArtiInvisibility">
+        <Path folder="models/hexen2" />
+        <Model file="a_invis.md3" model="0" />
+        <Skin file="a_invis_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Invisibility"/>
+    </Group>
+    <Group class="HX2ArtiTeleport">
+        <Path folder="models/hexen2" />
+        <Model file="a_telprt.md3" model="0" />
+        <Skin file="a_telprt_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Arti Teleport"/>
+    </Group>
 </XMLModelDef>
