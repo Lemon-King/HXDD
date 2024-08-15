@@ -155,10 +155,12 @@ class PlayerSheetEventHandler: EventHandler {
 							String clsAmmo1;
 							if (ammo1) {
 								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
+								clsAmmo1 = prog.xclass.TryXClass(num, clsAmmo1);
 							}
 							String clsAmmo2;
 							if (ammo2) {
 								clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
+								clsAmmo2 = prog.xclass.TryXClass(num, clsAmmo2);
 							}
 
 							if (ammo1 && ammo2) {
