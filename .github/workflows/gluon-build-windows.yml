@@ -18,7 +18,7 @@ jobs:
 
       # Setup the Windows build environment
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.3.1
+        uses: microsoft/setup-msbuild@v2
 
       - name: Visual Studio shell
         uses: egor-tensin/vs-shell@v2
@@ -76,7 +76,7 @@ jobs:
 
       # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.ARCHIVE_NAME}}
           path: staging
