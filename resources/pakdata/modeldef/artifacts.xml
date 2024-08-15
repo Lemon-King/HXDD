@@ -45,8 +45,8 @@
     </Group>
     <Group class="HX2ArtiFly">
         <Path folder="models/hexen2" />
-        <Model file="a_hboost.md3" model="0" />
-        <Skin file="a_hboost_skin0.png" model="0" />
+        <Model file="ringft.md3" model="0" />
+        <Skin file="ringft_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
         <Offset value="0 0 32" />
