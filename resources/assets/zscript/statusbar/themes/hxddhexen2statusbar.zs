@@ -81,8 +81,8 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		return false;
 	}
 
-	void SetFields() {
-        SetSize(38, 320, 200);
+	void SetFields(int barHeight = 38) {
+        SetSize(barHeight, 320, 200);
 		//CompleteBorder = true;
 	}
 
@@ -139,10 +139,11 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 	override void Draw (int state, double TicFrac) {
 		Super.Draw(state, TicFrac);
 
-		SetFields();
 		if (automapactive) {
 			// draw automap stuff
+			SetFields(0);
 		} else {
+			SetFields();
 			if (state == HUD_StatusBar) {
 				BeginStatusBar();
 				DrawBar(TicFrac);
