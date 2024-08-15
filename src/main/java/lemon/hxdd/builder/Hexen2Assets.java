@@ -395,11 +395,11 @@ public class Hexen2Assets {
             ArrayList<String> options = new ArrayList<String>();
             this.app.controller.SetCurrentLabel(name);
             if (fileName.endsWith(".mdl")) {
-                String opt = "";
+                String subFolder = "";
                 if (fileName.contains("boss")) {
-                    opt = "boss_";
+                    subFolder = "boss/";
                 } else if (fileName.contains("puzzle")) {
-                    opt = "puzzle_";
+                    subFolder = "puzzle/";
                 }
 
                 // Read model and determine how to process
@@ -432,12 +432,12 @@ public class Hexen2Assets {
                 options.add("-vorder");
                 options.add("-edgewelder 0.5");
                 options.add("-smoothnorm \"180\"");
-                options.add("-texpre " + opt + "\"%s\"");
+                options.add("-texpre \"%s\"");
                 if (ModelEffect.get(shortName) != null) {
                     options.add("-imgoutidx 70");
                     //options.add("-imgoutidx 271 ");
                 }
-                noe.ExportAsset(fileName_Noesis, "models/hexen2/" + opt, options);
+                noe.ExportAsset(fileName_Noesis, "models/hexen2/" + subFolder, options);
             } else if (fileName.endsWith(".spr")) {
                 options.add("-texnorepfn");
                 options.add("-forcetc");

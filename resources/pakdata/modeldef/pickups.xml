@@ -15,10 +15,11 @@
 
         <Animation key="0000" frames="1" model="0" comment="Pickup: Health Small"/>
     </Group>
-    <Group class="HX2ArtiHealth">
-        <Path folder="models/hexen2" />
-        <Model file="a_hboost.md3" model="0" />
-        <Skin file="a_hboost_skin0.png" model="0" />
+    <!-- Not a real Hexen II Item, but fits the role for Heretic -->
+    <Group class="HX2SuperMap">
+        <Path folder="models/hexen2/puzzle" />
+        <Model file="scrol.md3" model="0" />
+        <Skin file="scrol_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
         <Offset value="0 0 30" />
@@ -27,6 +28,6 @@
         <Flag name="USEACTORPITCH" />
         <Flag name="USEACTORROLL" />
 
-        <Animation key="BMAN" frames="1" model="0" comment="Pickup: Arti Health"/>
+        <Animation key="0000" frames="1" model="0" comment="Pickup: SuperMap"/>
     </Group>
 </XMLModelDef>
