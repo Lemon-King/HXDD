@@ -216,6 +216,12 @@ OptionMenu "HXDDSettings"
     StaticText ""
     StaticText ""
     StaticText "$HXDD.MNU.SETTINGS.STATUS_BAR.TITLE", "Green"
+    IfNotGame(Doom) {
+        Option "Statusbar", "hxdd_statusbar_class", "%s"
+    }
+    IfGame(Doom) {
+        Option "Statusbar", "hxdd_statusbar_class", "%s"
+    }
     Slider "$HXDD.MNU.SETTINGS.STATUSBAR.OPTION", "hxdd_statusbar_velocity_scale", 0.0, 1.0, 0.1, 2
     StaticText ""
     StaticText ""
@@ -226,13 +232,6 @@ OptionMenu "HXDDSettings"
     StaticText ""
     StaticText ""
     StaticText ""
-    StaticText "Statusbar Selection", "Green"
-    IfNotGame(Doom) {
-        Option "Statusbar", "hxdd_statusbar_class", "HXDD_StatusBar_Selection"
-    }
-    IfGame(Doom) {
-        Option "Statusbar", "hxdd_statusbar_class", "HXDD_StatusBar_Selection_DOOM"
-    }
 }
 
 OptionMenu "HXDDAltSetup_OLD"

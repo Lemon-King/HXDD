@@ -138,7 +138,7 @@ public class PackageBuilder implements Runnable {
             ExportHXDDFiles();
             ExportRealm667();
             AddMapInfoConfiguaration();
-
+            AddMenuDefConfiguration();
 
             WriteInstallLanguageLookup();
 
@@ -761,6 +761,16 @@ public class PackageBuilder implements Runnable {
 
         formatFileContent(path + "/filter/game-raven/mapinfo.hxdd", music, advisoryTime, classes);
         formatFileContent(path + "/filter/game-doom/mapinfo.hxdd", classes);
+    }
+
+    private void AddMenuDefConfiguration() {
+        String path = this.app.settings.GetPath("temp");
+
+        String hx2Version = sourceVersions.get("hx2");
+        String suffixHX2 = (hx2Version != null && hx2Version.contains("BASE")) ? "_HX2" : "";
+        String optionValues = "HXDD_StatusBar_Selection" + suffixHX2;
+        String optionValuesDOOM = "HXDD_StatusBar_Selection_DOOM" + suffixHX2;
+        formatFileContent(path + "/menudef.shared", optionValues, optionValuesDOOM);
     }
 
     public void formatFileContent(String path, Object... formatArgs) {
