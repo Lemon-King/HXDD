@@ -11,3 +11,11 @@ class HX2CrystalVial : CrystalVial {
             Stop;
 	}
 }
+
+class HX2SuperMap : SuperMap {
+	States {
+        Spawn:
+            0000 A -1;
+            Loop;
+	}
+}
