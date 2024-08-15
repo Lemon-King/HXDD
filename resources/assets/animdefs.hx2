@@ -1,5 +1,5 @@
 // HX2 Menu Cursor
-texture optional hx2menudot1
+texture optional graphics/hexen2/menudot1.png
 pic graphics/hexen2/menudot1.png tics 4
 pic graphics/hexen2/menudot2.png tics 4
 pic graphics/hexen2/menudot3.png tics 4
@@ -10,7 +10,7 @@ pic graphics/hexen2/menudot7.png tics 4
 pic graphics/hexen2/menudot8.png tics 4
 
 // HX2 Boots of Speed
-texture optional hx2durhst1
+texture optional graphics/hexen2/durhst1.png
 pic graphics/hexen2/durhst1.png tics 3
 pic graphics/hexen2/durhst2.png tics 3
 pic graphics/hexen2/durhst3.png tics 3
@@ -29,7 +29,7 @@ pic graphics/hexen2/durhst15.png tics 3
 pic graphics/hexen2/durhst16.png tics 3
 
 // HX2 Icon of the Defender
-texture optional hx2durshd1
+texture optional graphics/hexen2/durshd1.png
 pic graphics/hexen2/durshd1.png tics 3
 pic graphics/hexen2/durshd2.png tics 3
 pic graphics/hexen2/durshd3.png tics 3
@@ -48,7 +48,7 @@ pic graphics/hexen2/durshd15.png tics 3
 pic graphics/hexen2/durshd16.png tics 3
 
 // HX2 Tome of Power
-texture optional hx2pwrbook1
+texture optional graphics/hexen2/pwrbook1.png
 pic graphics/hexen2/pwrbook1.png tics 3
 pic graphics/hexen2/pwrbook2.png tics 3
 pic graphics/hexen2/pwrbook3.png tics 3
@@ -67,7 +67,7 @@ pic graphics/hexen2/pwrbook15.png tics 3
 pic graphics/hexen2/pwrbook16.png tics 3
 
 // HX2 Ring of Flight
-texture optional hx2rngfly1
+texture optional graphics/hexen2/rngfly1.png
 pic graphics/hexen2/rngfly1.png tics 3
 pic graphics/hexen2/rngfly2.png tics 3
 pic graphics/hexen2/rngfly3.png tics 3
@@ -86,7 +86,7 @@ pic graphics/hexen2/rngfly15.png tics 3
 pic graphics/hexen2/rngfly16.png tics 3
 
 // HX2 Ring of Regeneration
-texture optional hx2rngtrn1
+texture optional graphics/hexen2/rngtrn1.png
 pic graphics/hexen2/rngtrn1.png tics 3
 pic graphics/hexen2/rngtrn2.png tics 3
 pic graphics/hexen2/rngtrn3.png tics 3
@@ -105,7 +105,7 @@ pic graphics/hexen2/rngtrn15.png tics 3
 pic graphics/hexen2/rngtrn16.png tics 3
 
 // HX2 Ring of Water Breathing
-texture optional hx2rngwtr1
+texture optional graphics/hexen2/rngwtr1.png
 pic graphics/hexen2/rngwtr1.png tics 3
 pic graphics/hexen2/rngwtr2.png tics 3
 pic graphics/hexen2/rngwtr3.png tics 3
