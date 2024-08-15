@@ -1,12 +1,9 @@
 // Single and Multiplayer pickup node
 
-// Needs RestrictedToPlayerClass-like as a HiddenToPlayerNumber where it is not rendered or interactable to that class
-
-
 class HXDDPickupNodeSlot {
+    Inventory pickup;
     String className;
     bool bPickedUp;
-    Inventory pickup;
 }
 
 class HXDDPickupNode : Inventory {
@@ -54,13 +51,17 @@ class HXDDPickupNode : Inventory {
             HXDDPickupNodeSlot slot;
             bool hasSlot = false;
             [slot, hasSlot] = self.slots.CheckValue(playerNumber);
-            if (hasSlot && slot.pickup) {
+            if (hasSlot && slot.pickup && !slot.bPickedUp) {
                 if (self.ProxyTouch(slot.pickup, toucher)) {
-                    self.slots.Remove(playerNumber);
+                    slot.pickup = null;
+                    slot.bPickedUp = true;
 
                     if (self.isDropped && !sv_localitems) {
-                        foreach( slot : self.slots ) {
-                            slot.pickup.Destroy();
+                        foreach ( slot : self.slots ) {
+                            if (slot.pickup != null) {
+                                slot.pickup.Destroy();
+                            }
+                            slot.bPickedUp = true;
                         }
                     }
                 }
@@ -171,7 +172,7 @@ class HXDDPickupNode : Inventory {
         self.bCountSecret = original.bCountSecret;
 
         if (self.slots.CountUsed() == 0) {
-            if (original.sprite == GetSpriteIndex("TNT1")) {
+            if (original.sprite == self.GetSpriteIndex("TNT1")) {
                 // ignore, actor is temporary?
                 self.bRemoveSelf = true;
                 return self;
@@ -184,7 +185,7 @@ class HXDDPickupNode : Inventory {
             self.bCountSecret = original.bCountSecret;
 
             // Hide actor and disable, removes all lighting too
-            original.sprite = GetSpriteIndex("TNT1");
+            original.sprite = self.GetSpriteIndex("TNT1");
             original.frame = 0;
             original.A_SetTics(-1);
             original.A_ChangeLinkFlags(1, FLAG_NO_CHANGE);
@@ -227,23 +228,14 @@ class HXDDPickupNode : Inventory {
             return;
         }
 
+        // Prevents respawning pickups in Hub based wads
         HXDDPickupNodeSlot slot;
-        bool hasOriginal = false;
-        [slot, hasOriginal] = self.slots.CheckValue(-1);
-        /*
-        if (hasOriginal) {
-            if (itemClass == slot.className) {
-                for (int i = 0; i < players.Size(); i++) {
-                    slot.pickup.DisableLocalRendering(i, i != index);
-                }
-                self.slots.Insert(index, slot);
-                self.slots.Remove(-1);
-
-                console.printf("%s,%s", itemClass, slot.className);
-                return;
-            }
+        bool exists = false;
+        [slot, exists] = self.slots.CheckValue(index);
+        if (exists) {
+            return;
         }
-        */
+
         Inventory newPickup = Inventory(Spawn(itemClass, self.pos));
         if (newPickup) {
             newPickup.angle = self.angle;
