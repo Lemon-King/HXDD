@@ -94,8 +94,8 @@
         "SuperShotgun": "PWeapAxe",
         "Chaingun": "PWeapVorpalSword",
         "RocketLauncher": "HX2Mana3",
-        "PlasmaRifle": "PWeapAxe",
-        "BFG9000": "PWeapPurifierPiece1",
+        "PlasmaRifle,Incinerator": "PWeapAxe",
+        "BFG9000,Heatwave": "PWeapPurifierPiece1",
 
         "Clip": "none",
         "ClipBox": "HX2Mana3",
@@ -103,8 +103,8 @@
         "ShellBox": "HX2Mana3",
         "RocketAmmo": "HX2Mana2",
         "RocketBox": "HX2Mana3",
-        "Cell": "HX2Mana2",
-        "CellPack": "HX2Mana3",
+        "Cell,FuelAmmoSmall": "HX2Mana2",
+        "CellPack,FuelAmmoLarge": "HX2Mana3",
 
         // Heretic
         "GoldWandAmmo": "none",
@@ -169,13 +169,14 @@
         "BlurSphere": "HX2ArtiInvisibility",
         "RadSuit": "HX2ArtiSpeedBoots,HX2ArtiTeleport",
         "Infrared": "HX2ArtiTorch",
-        "Allmap": "SuperMap",
+        "Allmap": "HX2SuperMap",
         "Berserk": "ArtiDarkServant,HX2ArtiTomeOfPower",
         
         "CrystalVial": "HX2CrystalVial",
         "ArtiHealth": "HX2ArtiHealth",
-
+        "SuperMap": "HX2SuperMap",
         "BagOfHolding": "HX2ArtiBoostMana",
+        
         "ArtiSuperHealth": "HX2ArtiSuperHealth",
         "ArtiTimeBomb": "ArtiPoisonBag",    // Placeholder
         "ArtiInvulnerability": "HX2ArtiInvulnerability",

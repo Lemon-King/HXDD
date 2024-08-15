@@ -91,8 +91,8 @@
         "SuperShotgun": "Crossbow",
         "Chaingun": "Blaster",
         "RocketLauncher": "PhoenixRod",
-        "PlasmaRifle": "SkullRod",
-        "BFG9000": "Mace",
+        "PlasmaRifle,Incinerator": "SkullRod",
+        "BFG9000,Heatwave": "Mace",
 
         "Clip": "GoldWandAmmo,BlasterAmmo",
         "ClipBox": "GoldWandHefty,BlasterHefty",
@@ -100,8 +100,8 @@
         "ShellBox": "CrossbowHefty",
         "RocketAmmo": "PhoenixRodAmmo",
         "RocketBox": "PhoenixRodHefty",
-        "Cell": "SkullRodAmmo,MaceAmmo",
-        "CellPack": "SkullRodHefty,MaceHefty",
+        "Cell,FuelAmmoSmall": "SkullRodAmmo,MaceAmmo",
+        "CellPack,FuelAmmoLarge": "SkullRodHefty,MaceHefty",
 
         "HealthBonus": "none",
         "Stimpack": "CrystalVial",

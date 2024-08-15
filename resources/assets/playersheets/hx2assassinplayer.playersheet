@@ -92,8 +92,8 @@
         "SuperShotgun": "AWeapGrenades",
         "Chaingun": "AWeapCrossbow",
         "RocketLauncher": "HX2Mana3",
-        "PlasmaRifle": "AWeapGrenades",
-        "BFG9000": "HX2Mana3",
+        "PlasmaRifle,Incinerator": "AWeapGrenades",
+        "BFG9000,Heatwave": "HX2Mana3",
 
         "Clip": "none",
         "ClipBox": "HX2Mana3",
@@ -101,8 +101,8 @@
         "ShellBox": "HX2Mana3",
         "RocketAmmo": "HX2Mana2",
         "RocketBox": "HX2Mana3",
-        "Cell": "HX2Mana2",
-        "CellPack": "HX2Mana3",
+        "Cell,FuelAmmoSmall": "HX2Mana2",
+        "CellPack,FuelAmmoLarge": "HX2Mana3",
 
         // Heretic
         "GoldWandAmmo": "none",
@@ -168,8 +168,9 @@
         
         "CrystalVial": "HX2CrystalVial",
         "ArtiHealth": "HX2ArtiHealth",
-
+        "SuperMap": "HX2SuperMap",
         "BagOfHolding": "HX2ArtiBoostMana",
+        
         "ArtiSuperHealth": "HX2ArtiSuperHealth",
         "ArtiTimeBomb": "ArtiPoisonBag",    // Placeholder
         "ArtiInvulnerability": "HX2ArtiInvulnerability",

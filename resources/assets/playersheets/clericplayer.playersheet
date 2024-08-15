@@ -92,8 +92,8 @@
         "SuperShotgun": "CWeapFlame",
         "Chaingun": "CWeapStaff",
         "RocketLauncher": "CWeaponPiece2",
-        "PlasmaRifle": "CWeapFlame",
-        "BFG9000": "CWeaponPiece1",
+        "PlasmaRifle,Incinerator": "CWeapFlame",
+        "BFG9000,Heatwave": "CWeaponPiece1",
 
         "Clip": "none",
         "ClipBox": "Mana3",
@@ -101,8 +101,8 @@
         "ShellBox": "Mana3",
         "RocketAmmo": "Mana2",
         "RocketBox": "Mana3",
-        "Cell": "Mana2",
-        "CellPack": "Mana3",
+        "Cell,FuelAmmoSmall": "Mana2",
+        "CellPack,FuelAmmoLarge": "Mana3",
 
         "HealthBonus": "none",
         "Stimpack": "CrystalVial",

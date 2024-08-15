@@ -91,8 +91,8 @@
         "SuperShotgun": "FWeapHammer",
         "Chaingun": "FWeapAxe",
         "RocketLauncher": "FWeaponPiece2",
-        "PlasmaRifle": "FWeapHammer",
-        "BFG9000": "FWeaponPiece1",
+        "PlasmaRifle,Incinerator": "FWeapHammer",
+        "BFG9000,Heatwave": "FWeaponPiece1",
 
         "Clip": "none",
         "ClipBox": "Mana3",
@@ -100,8 +100,8 @@
         "ShellBox": "Mana3",
         "RocketAmmo": "Mana2",
         "RocketBox": "Mana3",
-        "Cell": "Mana2",
-        "CellPack": "Mana3",
+        "Cell,FuelAmmoSmall": "Mana2",
+        "CellPack,FuelAmmoLarge": "Mana3",
 
         "HealthBonus": "none",
         "Stimpack": "CrystalVial",
