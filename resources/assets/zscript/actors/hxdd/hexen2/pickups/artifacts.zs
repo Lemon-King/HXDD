@@ -156,6 +156,13 @@ class HX2ArtiTorch : ArtiTorch {
             0000 A -1;
             Stop;
     }
+    override bool Use(bool pickup) {
+        if (CurSector.MoreFlags & Sector.SECMF_UNDERWATERMASK) {
+            return false;
+        }
+        let result = Super.Use(pickup);
+        return result;
+    }
 }
 
 class HX2ArtiInvisibility : ArtiInvisibility {
