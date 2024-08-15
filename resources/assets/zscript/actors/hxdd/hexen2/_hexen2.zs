@@ -47,11 +47,15 @@
 #include "zscript/actors/hxdd/hexen2/weapons/succubusfirestorm.zs"          // NEEDS POLISH PASS, GL LIGHTING, ICON
 #include "zscript/actors/hxdd/hexen2/weapons/succubustempeststaff.zs"       // NEEDS IMPLEMENTION
 
+// Powerups
+#include "zscript/actors/hxdd/hexen2/powerup/torch.zs"
+
 // Inventory
 #include "zscript/actors/hxdd/hexen2/inventory/pickups.zs"
 
 // Pickups
 #include "zscript/actors/hxdd/hexen2/pickups/armor.zs"
+#include "zscript/actors/hxdd/hexen2/pickups/artifacts.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/mana.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/pickups.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/powerupsphere.zs"
