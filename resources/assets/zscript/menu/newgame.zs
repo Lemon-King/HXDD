@@ -35,7 +35,7 @@ class ZFPreGameSetupHandler : HXDD_ZF_Handler {
                 Menu.MenuSound("menu/choose");
                 if (menu.selectedGameMode == 0) {
                     EpisodeInfo episode = menu.frameGameOptions.gameinfo.episodes[menu.selectedEpisode];
-                    menu.selectedGameMode = LemonUtil.GetGameType(episode.gametype);
+                    //menu.selectedGameMode = LemonUtil.GetGameType(episode.gametype);
                 }
                 LemonUtil.CVAR_SetInt("hxdd_gamemode", menu.selectedGameMode);
                 LemonUtil.CVAR_SetInt("hxdd_armor_mode", menu.selectedArmorMode);

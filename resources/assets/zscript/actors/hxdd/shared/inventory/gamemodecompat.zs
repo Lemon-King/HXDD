@@ -25,6 +25,20 @@ class GameModeCompat: Inventory {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
+		self.RefreshGameMode();
+    }
+
+    override void Travelled() {
+        self.RefreshGameMode();
+    }
+
+    override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags) {
+        if (!passive && damage > 0) {
+            newdamage = max(0, ApplyDamageFactors(GetClass(), damageType, damage, damage * DamageMult));
+        }
+    }
+
+    void RefreshGameMode() {
 		int cvarGameMode = LemonUtil.GetOptionGameMode();
         if (LemonUtil.IsGameType(GAME_Doom) || cvarGameMode == GAME_Heretic) {
             SetDamageScale_Standard();
@@ -32,12 +46,6 @@ class GameModeCompat: Inventory {
         } else if (cvarGameMode == GAME_Hexen) {
             SetDamageScale_Hexen();
             SetPlayerSize_Hexen();
-        }
-    }
-
-    override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags) {
-        if (!passive && damage > 0) {
-            newdamage = max(0, ApplyDamageFactors(GetClass(), damageType, damage, damage * DamageMult));
         }
     }
 
@@ -52,31 +60,32 @@ class GameModeCompat: Inventory {
         }
     }
     void SetPlayerSize_Standard() {
-        PlayerPawn p = PlayerPawn(owner.player.mo);
-        if (p.Height == 56) {
-            return;
+        // Doom / Heretic Bounds
+        int targetHeight = 56;
+        PlayerClass primaryPlayerClass;
+        primaryPlayerClass = PlayerClasses[0];
+        let playerDefaults = GetDefaultByType(primaryPlayerClass.Type);
+        if (playerDefaults) {
+            targetHeight = playerDefaults.Height;
         }
-        // Doom & Heretic Bounds
-        p.A_SetSize(p.Radius, 56);
-        //p.Viewheight = 41;
-        //owner.player.ViewHeight = p.Viewheight;
-        double nextScale = 56.0 / 64.0;
-        p.A_SetScale(nextScale,nextScale);
-        p.Viewheight = p.Viewheight * nextScale;
-        owner.player.ViewHeight = p.Viewheight;
+        self.ScalePlayerPawn(targetHeight);
     }
     void SetPlayerSize_Hexen() {
-        PlayerPawn p = PlayerPawn(owner.player.mo);
-        if (p.Height == 64) {
+		// Hexen Bounds
+        self.ScalePlayerPawn(64);
+    }
+
+    void ScalePlayerPawn(int targetHeight) {
+        PlayerPawn pp = PlayerPawn(owner.player.mo);
+        if (pp.Height == targetHeight) {
             return;
         }
-		// Hexen Bounds
-        //p.Viewheight = 48
-        //owner.player.ViewHeight = p.Viewheight;
-        p.A_SetSize(p.Radius, 64);
-        double nextScale = 64.0 / 56.0;
-        p.Viewheight = p.Viewheight * nextScale;
-        owner.player.ViewHeight = p.Viewheight;
-        p.A_SetScale(nextScale,nextScale);
+
+        let ppDefault = GetDefaultByType(pp.GetClass());
+        double nextScale = targetHeight / ppDefault.height;
+        pp.A_SetSize(ppDefault.Radius, targetHeight);
+        pp.A_SetScale(nextScale,nextScale);
+        pp.Viewheight = ppDefault.Viewheight * nextScale;
+        owner.player.ViewHeight = ppDefault.Viewheight;
     }
 }
