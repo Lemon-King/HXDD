@@ -49,7 +49,8 @@ class SWeapTempestStaff: SuccubusWeapon {
 		Weapon.AmmoType2 "Mana2";
 		Weapon.AmmoUse1 1;
 		Weapon.AmmoUse2 1;
-		Weapon.AmmoGive 150;
+		Weapon.AmmoGive1 20;
+		Weapon.AmmoGive2 20;
 		Weapon.KickBack 150;
 		//Weapon.YAdjust 10;
 		Obituary "$OB_MPSWEAPTEMPESTSTAFF";

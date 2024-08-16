@@ -51,7 +51,8 @@ class CWeapLightbringer: CrusaderWeapon {
 		Weapon.AmmoType2 "Mana2";
 		Weapon.AmmoUse1 1;
 		Weapon.AmmoUse2 1;
-		Weapon.AmmoGive 20;
+		Weapon.AmmoGive1 20;
+		Weapon.AmmoGive2 20;
 		Weapon.KickBack 150;
 		//Weapon.YAdjust 40;
 		Inventory.PickupMessage "$TXT_WEAPON_LIGHTBRINGER";
