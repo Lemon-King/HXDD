@@ -83,7 +83,7 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 
 A modern version of Windows or Wine on MacOS and Linux.
 
-HXDD has a minimum requirement with [GZDOOM 4.11+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
+HXDD has a minimum requirement with [GZDOOM 4.12+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
 
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
