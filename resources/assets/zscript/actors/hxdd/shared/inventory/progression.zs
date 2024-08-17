@@ -143,8 +143,8 @@ class PlayerSheetEventHandler: EventHandler {
 			Progression prog = Progression(pp.FindInventory("Progression"));
 			bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
 
-			if (prog && prog.xclass) {
-				let swapped = prog.xclass.TryXClass(num, node.parentClass);
+			if (prog && prog.XClass) {
+				let swapped = prog.XClass.TryXClass(num, node.parentClass);
 
 				if (node.parent is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
 					Weapon weap = Weapon(pp.FindInventory(swapped));
@@ -155,12 +155,12 @@ class PlayerSheetEventHandler: EventHandler {
 							String clsAmmo1;
 							if (ammo1) {
 								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
-								clsAmmo1 = prog.xclass.TryXClass(num, clsAmmo1);
+								clsAmmo1 = prog.XClass.TryXClass(num, clsAmmo1);
 							}
 							String clsAmmo2;
 							if (ammo2) {
 								clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
-								clsAmmo2 = prog.xclass.TryXClass(num, clsAmmo2);
+								clsAmmo2 = prog.XClass.TryXClass(num, clsAmmo2);
 							}
 
 							if (ammo1 && ammo2) {
@@ -394,7 +394,7 @@ class PlayerSheetJSON {
 
 	String defaultStatusBar;
 
-	XClassTranslation xclass;
+	XClassTranslation XClass;
 
 	int GetEnumFromArmorType(String type) {
 		type = type.MakeLower();
@@ -464,8 +464,8 @@ class PlayerSheetJSON {
 				console.printf("PlayerSheetJSON: Loaded %s!", file);
 			}
 
-			self.xclass = new("XClassTranslation");
-			self.xclass.CreateXClassTranslation(jsonObject);
+			self.XClass = new("XClassTranslation");
+			self.XClass.CreateXClassTranslation(jsonObject);
 
 			String valClassName			= FileJSON.GetString(jsonObject, "name");
 			String valPlayerClass		= FileJSON.GetString(jsonObject, "class");
@@ -739,7 +739,7 @@ class Progression: Inventory {
 
 	String defaultStatusBar;
 
-	XClassTranslation xclass;
+	XClassTranslation XClass;
 
     Default {
 		+INVENTORY.KEEPDEPLETED
@@ -826,7 +826,7 @@ class Progression: Inventory {
 		let PlayerSheet = new("PlayerSheetJSON");
 		PlayerSheet.Load(playerClassName);
 
-		self.xclass = PlayerSheet.xclass;
+		self.XClass = PlayerSheet.XClass;
 
 		self.GameType = PlayerSheet.GameType;
 		self.PickupType = PlayerSheet.PickupType;
@@ -1512,8 +1512,8 @@ class Progression: Inventory {
 		while (actor = Actor(it.Next())) {
 			HXDDPickupNode node = HXDDPickupNode(actor);
 			if (node) {
-				if (self.xclass) {
-					String swapped = self.xclass.TryXClass(num, node.parentClass);
+				if (self.XClass) {
+					String swapped = self.XClass.TryXClass(num, node.parentClass);
 
 					if (GetDefaultByType(node.parent) is "Weapon" && self.onlyDropUnownedWeapons && node.isDropped) {
 						Weapon weap = Weapon(self.owner.player.mo.FindInventory(swapped));
