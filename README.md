@@ -63,7 +63,7 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
   </a>
 </div>
 
-## Features
+## - Features -
 
 * **Unified Game & Episode Structure**<br/>Play Heretic, Hexen and Deathkings from one menu with any class from either game!
 * **PWAD Mode**</br>Why stop with Heretic and Hexen. Bring all the features into DOOM and your existing wads for more content!
@@ -75,11 +75,23 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 * **Title Screen Customization**<br/>Change the Artwork and Music to any of the games in the series, also has support for using Steam's Hero Artwork as Titles.
 * **Multiplayer Support**<br/>Grab some friends, pick a class, and cause some chaos!
 
-## Current Upcoming & Planned Features
-* **Hexen II Classes**<br/>You can use many of the classes now in a **WORK IN PROGRESS** state. Focusing on finishing these classes are next for the major gameplay updates.
-* **Heretic II Corvus**<br/>Currently in an [prototyping phase](https://www.youtube.com/watch?v=RV1bI9vbNs8), due to the amount of work required.
+## - Hexen II Development -
+Hexen II is still currently in a stage of heavy development and as more feature come online they will be updated here.</br>
+Items which match functionality to Heretic and Hexen are implemented.
+- **Mystic Urn**: Follows Hexen's rules for now, needs to follow Hexen II Health rules
+- **Stone of Summoning**: NYI
+- **Seal of the Ovinomancer**: NYI
+- **Force Cube**: NYI
+- **Torch**: Implemented, emulates Hexen II's Torch lighting
 
-## Getting Started
+### Classes
+- **Paladin:** Playable</br>- Weapons: Complete</br>- Powered Weapons: Complete</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Crusader:** Playable / Incomplete</br>- Weapons: All (4th WIP)</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Necromancer:** Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Assassin:** Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Demoness:** Playable / Incomplete</br>- Weapons: 1 - 3, 4 WIP</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+
+## - Getting Started -
 
 A modern version of Windows or Wine on MacOS and Linux.
 
@@ -88,7 +100,7 @@ HXDD has a minimum requirement with [GZDOOM 4.12+](https://zdoom.org/downloads) 
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
 
-## Setup
+## - Setup -
 
 HXDD will make use of data from GZDOOM/VKDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.<br/>
 
@@ -104,18 +116,18 @@ HXDD will make use of data from GZDOOM/VKDOOM, Heretic, Hexen, Hexen's expansion
 
 Your selections will be stored for the next time you run it.
 
-## Hexen II PAK Support
+## - Hexen II PAK Support -
 
 When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).<br/>
 Download and place the Noesis zip file in the same folder as HXDD's exe.<br/>
 Select the PAK files in the application and ensure Enable Hexen II is checked.<br/>
 HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
 
-## DOOM Compatibility「PWAD Mode」
+## - DOOM Compatibility「PWAD Mode」 -
 You can also use HXDD.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https://jp.itch.io/wadsmoosh).</br>
 Adding **-file HXDD.ipk3** to any DOOM IWAD.
 
-### Youtube Videos
+### Gameplay Videos
 
 <a href="https://www.youtube.com/watch?v=leqi5NL_JoE">
 <img src="https://img.youtube.com/vi/leqi5NL_JoE/0.jpg" alt="Youtube Video" width="410" height="auto">
