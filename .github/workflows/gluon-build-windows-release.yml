@@ -78,6 +78,9 @@ jobs:
       - name: Copy Project License
         run: cp -r LICENSE.md staging
 
+      - name: Copy Project Readme
+        run: cp -r README.md staging
+
       - name: Prepare Release
         shell: pwsh
         run: Compress-Archive -CompressionLevel "Optimal" -Path staging/* -DestinationPath ${{env.ARCHIVE_NAME}}.zip

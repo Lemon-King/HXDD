@@ -74,6 +74,9 @@ jobs:
       - name: Copy Project License
         run: cp -r LICENSE.md staging
 
+      - name: Copy Project Readme
+        run: cp -r README.md staging
+
       # Upload the staging directory as a build artifact. You will be able to download this after the build finishes.
       - name: Upload
         uses: actions/upload-artifact@v4
