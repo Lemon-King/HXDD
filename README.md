@@ -77,19 +77,27 @@ This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBr
 
 ## - Hexen II Development -
 Hexen II is still currently in a stage of heavy development and as more feature come online they will be updated here.</br>
-Items which match functionality to Heretic and Hexen are implemented.
-- **Mystic Urn**: Follows Hexen's rules for now, needs to follow Hexen II Health rules
+
+### Items
+- **Glyph of the Ancients**: NYI
+- **Mystic Urn**: Follows Hexen's rules as a placeholder
 - **Stone of Summoning**: NYI
 - **Seal of the Ovinomancer**: NYI
 - **Force Cube**: NYI
 - **Torch**: Implemented, emulates Hexen II's Torch lighting
+- **Ring of Flight**: Follows Heretic's flight rules as a placeholder
+- **Ring of Reflection**: NYI
+- **Ring of Regeneration**: NYI
+- **Ring of Water Breathing**: NYI 
+
+Items which match functionality with Heretic and Hexen are implemented.
 
 ### Classes
-- **Paladin:** Playable</br>- Weapons: Complete</br>- Powered Weapons: Complete</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
-- **Crusader:** Playable / Incomplete</br>- Weapons: All (4th WIP)</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
-- **Necromancer:** Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
-- **Assassin:** Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
-- **Demoness:** Playable / Incomplete</br>- Weapons: 1 - 3, 4 WIP</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Paladin**: Playable</br>- Weapons: Complete</br>- Powered Weapons: Complete</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Crusader**:Playable / Incomplete</br>- Weapons: All (4th WIP)</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Necromancer**: Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Assassin**: Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Demoness**: Playable / Incomplete</br>- Weapons: 1 - 3, 4 WIP</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
 
 ## - Getting Started -
 
