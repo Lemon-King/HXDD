@@ -25,6 +25,7 @@ class HX2ArtiSuperHealth : ArtiSuperHealth  {
 // Needs HX2 Matching Implementation
 class HX2ArtiFly : ArtiFly {
     Default {
+        Inventory.PickupSound "hexen2/items/ringpkup";
         Inventory.Icon "graphics/hexen2/arti12.png";
     }
     States {
