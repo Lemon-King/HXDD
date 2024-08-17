@@ -125,10 +125,16 @@ Adding **-file HXDD.ipk3** to any DOOM IWAD.
 </a>
 
 ### Screenshots
+<a href="https://i.imgur.com/Qk3Yl5M.png">
+<img src="https://i.imgur.com/Qk3Yl5Mm.png" alt="Screenshot" width="410" height="auto">
+</a>
+<a href="https://i.imgur.com/9r6GNmA.jpeg">
+<img src="https://i.imgur.com/9r6GNmAm.jpeg" alt="Screenshot" width="410" height="auto">
+</a>
+
 <a href="https://i.imgur.com/8W0VM5p.png">
 <img src="https://i.imgur.com/8W0VM5pm.png" alt="Screenshot" width="410" height="auto">
 </a>
-
 <a href="https://i.imgur.com/WF0hGCv.jpg">
 <img src="https://i.imgur.com/WF0hGCvm.jpg" alt="Screenshot" width="410" height="auto">
 </a>
