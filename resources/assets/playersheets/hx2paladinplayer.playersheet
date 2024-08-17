@@ -171,6 +171,7 @@
         "Infrared": "HX2ArtiTorch",
         "Allmap": "HX2SuperMap",
         "Berserk": "ArtiDarkServant,HX2ArtiTomeOfPower",
+        "Backpack": "HX2ArtiBoostMana",
         
         "CrystalVial": "HX2CrystalVial",
         "ArtiHealth": "HX2ArtiHealth",
