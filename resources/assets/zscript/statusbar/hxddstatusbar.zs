@@ -54,6 +54,23 @@ class HXDDStatusBar : BaseStatusBar {
 			if (invProg) {
 				if (invProg.defaultStatusBar) {
 					self.defaultStatusBar = invProg.defaultStatusBar;
+				} else {
+					//
+					// Crashes loading SBarInfoWrapper, this is due to core C++ binding
+					/*
+					int lumpIndex = Wads.CheckNumForFullName("SBARINFO");
+					if (lumpIndex == -1) {
+						lumpIndex = Wads.CheckNumForFullName("sbarinfo");
+					}
+					if (lumpIndex != -1) {
+						self.defaultStatusBar = "SBarInfoWrapper";
+					}
+					*/
+					if (LemonUtil.IsGameType(GAME_Doom)) {
+						self.defaultStatusBar = "DoomStatusBar";
+					} else {
+						self.defaultStatusBar = "HXDDHereticSplitStatusBar";
+					}
 				}
 			}
 		}
