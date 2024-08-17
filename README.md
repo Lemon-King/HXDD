@@ -94,7 +94,7 @@ Items which match functionality with Heretic and Hexen are implemented.
 
 ### Classes
 - **Paladin**: Playable</br>- Weapons: Complete</br>- Powered Weapons: Complete</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
-- **Crusader**:Playable / Incomplete</br>- Weapons: All (4th WIP)</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
+- **Crusader**: Playable / Incomplete</br>- Weapons: All (4th WIP)</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
 - **Necromancer**: Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: Complete</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
 - **Assassin**: Playable / Incomplete</br>- Weapons: 1 - 3</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
 - **Demoness**: Playable / Incomplete</br>- Weapons: 1 - 3, 4 WIP</br>- Powered Weapons: WIP</br>- Class Logic: WIP</br>- Lighting Effects: WIP</br>- Brightmaps: NYI
