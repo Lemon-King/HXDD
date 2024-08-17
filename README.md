@@ -103,7 +103,8 @@ Items which match functionality with Heretic and Hexen are implemented.
 
 A modern version of Windows or Wine on MacOS and Linux.
 
-HXDD has a minimum requirement with [GZDOOM 4.12+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
+HXDD has a minimum requirement with [GZDOOM 4.13+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
+<i>Due to a bug with saved games, [GZDOOM 4.13 Dev Build](https://devbuilds.drdteam.org/gzdoom/) is required for now.</i>
 
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
