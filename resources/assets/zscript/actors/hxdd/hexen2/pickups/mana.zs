@@ -15,6 +15,12 @@ class HX2Mana1 : CustomInventory {
             Stop;
 	}
 
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
+
 }
 class HX2Mana2 : CustomInventory {
 	Default {
@@ -31,6 +37,12 @@ class HX2Mana2 : CustomInventory {
             TNT1 A 0 A_GiveInventory("Mana2", 15);
             Stop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 class HX2Mana3 : Mana3 {
 	States {
@@ -42,4 +54,10 @@ class HX2Mana3 : Mana3 {
             TNT1 A 0 A_GiveInventory("Mana2", 20);
             Stop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }

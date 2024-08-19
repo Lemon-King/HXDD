@@ -10,6 +10,12 @@ class HX2CrystalVial : CrystalVial {
             TNT1 A 0 A_GiveInventory("CrystalVial", 1);
             Stop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 
 class HX2SuperMap : SuperMap {
@@ -18,4 +24,10 @@ class HX2SuperMap : SuperMap {
             0000 A -1;
             Loop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }

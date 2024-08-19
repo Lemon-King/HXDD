@@ -1,6 +1,14 @@
+class HX2Armor : HexenArmor {
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
+}
+
 // Breastplate (1) -----------------------------------------------------------
 
-class HX2Breastplate : HexenArmor {
+class HX2Breastplate : HX2Armor {
 	Default {
 		+FLOATBOB
 		+NOGRAVITY
@@ -17,7 +25,7 @@ class HX2Breastplate : HexenArmor {
 	
 // Bracers (2) --------------------------------------------------------
 
-class HX2Bracers : HexenArmor {
+class HX2Bracers : HX2Armor {
 	Default {
 		+FLOATBOB
 		+NOGRAVITY
@@ -34,7 +42,7 @@ class HX2Bracers : HexenArmor {
 
 // Helmet (3) --------------------------------------------------------
 
-class HX2Helmet : HexenArmor {
+class HX2Helmet : HX2Armor {
 	Default {
 		+FLOATBOB
 		+NOGRAVITY
@@ -51,7 +59,7 @@ class HX2Helmet : HexenArmor {
 
 // Amulet of Protection (4) ----------------------------------------------------
 
-class HX2Amulet : HexenArmor {
+class HX2Amulet : HX2Armor {
 	Default {
 		+FLOATBOB
 		+NOGRAVITY

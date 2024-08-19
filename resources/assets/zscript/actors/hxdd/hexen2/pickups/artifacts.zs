@@ -8,6 +8,12 @@ class HX2ArtiHealth : ArtiHealth {
             0000 A -1;
             Loop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 
 // Needs HX2 Matching Implementation
@@ -20,6 +26,12 @@ class HX2ArtiSuperHealth : ArtiSuperHealth  {
             0000 A 350;
             Loop;
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 
 // Needs HX2 Matching Implementation
@@ -32,6 +44,12 @@ class HX2ArtiFly : ArtiFly {
         Spawn:
             0000 A -1;
             Stop;
+    }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
     }
 
     override bool Use(bool pickup) {
@@ -59,6 +77,12 @@ class HX2ArtiInvulnerability : ArtiInvulnerability2 {
             Stop;
     }
 
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
+
     override bool Use(bool pickup) {
         let result = Super.Use(pickup);
         if (result) {
@@ -82,6 +106,12 @@ class HX2ArtiTomeOfPower : ArtiTomeOfPower {
         Spawn:
             0000 A -1;
             Stop;
+    }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
     }
 
     override bool Use(bool pickup) {
@@ -109,6 +139,12 @@ class HX2ArtiSpeedBoots : ArtiSpeedBoots {
             Stop;
     }
 
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
+
     override bool Use(bool pickup) {
         let result = Super.Use(pickup);
         if (result) {
@@ -133,6 +169,12 @@ class HX2ArtiBlastRadius : ArtiBlastRadius {
             0000 A -1;
             Stop;
     }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 
 class HX2ArtiBoostMana : ArtiBoostMana {
@@ -143,6 +185,12 @@ class HX2ArtiBoostMana : ArtiBoostMana {
         Spawn:
             0000 A -1;
             Stop;
+    }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
     }
 }
 
@@ -157,6 +205,13 @@ class HX2ArtiTorch : ArtiTorch {
             0000 A -1;
             Stop;
     }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
+
     override bool Use(bool pickup) {
         if (CurSector.MoreFlags & Sector.SECMF_UNDERWATERMASK) {
             return false;
@@ -175,6 +230,12 @@ class HX2ArtiInvisibility : ArtiInvisibility {
             0000 A -1;
             Stop;
     }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+    }
 }
 
 class HX2ArtiTeleport : ArtiTeleport {
@@ -185,5 +246,11 @@ class HX2ArtiTeleport : ArtiTeleport {
         Spawn:
             0000 A -1;
             Stop;
+    }
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
     }
 }
