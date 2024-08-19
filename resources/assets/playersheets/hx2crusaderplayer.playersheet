@@ -152,6 +152,10 @@
         "MWeaponPiece2": "none",
         "MWeaponPiece3": "none",
 
+        "Mana1": "HX2Mana1",
+        "Mana2": "HX2Mana2",
+        "Mana3": "HX2Mana3",
+
         // Items
         "HealthBonus": "none",
         "ArmorBonus": "ArtiPoisonBag",

@@ -17,8 +17,8 @@
     <Group class="HX2ArtiSuperHealth">
         <!-- This model has corrected UVs stored in resources -->
         <Path folder="models/hexen2/hxdd" />
-        <Model file="a_hboost.md3" model="0" />
-        <Skin file="a_hboost_skin0.png" model="0" />
+        <Model file="a_shbost.md3" model="0" />
+        <Skin file="a_shbost_skin0.png" model="0" />
 
         <Scale value="1 1 1" />
         <Offset value="0 0 32" />

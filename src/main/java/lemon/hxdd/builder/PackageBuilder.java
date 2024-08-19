@@ -137,6 +137,7 @@ public class PackageBuilder implements Runnable {
 
             ExportHXDDFiles();
             ExportRealm667();
+            AddHexen2ModelFixes();
             AddMapInfoConfiguaration();
             AddMenuDefConfiguration();
 
@@ -549,6 +550,7 @@ public class PackageBuilder implements Runnable {
         }
     }
 
+    /*
     private void DownloadSteamArtwork() {
         this.app.controller.SetStageLabel("Title Artwork");
         this.app.controller.SetCurrentLabel("Checking");
@@ -590,6 +592,7 @@ public class PackageBuilder implements Runnable {
             DownloadArtwork(STEAM_DOOM_ML_ID, "titlepic", "doom.masterlevels", "/filter/doom.id.wadsmoosh");
         }
     }
+    */
 
     private void DownloadArtwork(int id, String name, String gamePath) {
         DownloadArtwork(id, name, gamePath, "");
@@ -656,6 +659,7 @@ public class PackageBuilder implements Runnable {
         this.app.controller.SetCurrentProgress(1);
     }
 
+    /*
     private void DownloadKoraxLocalization() {
         String OPTION_KORAX_LOCALIZATION = this.app.settings.Get("OPTION_KORAX_LOCALIZATION");
         if (OPTION_KORAX_LOCALIZATION.equals("en")) {
@@ -733,6 +737,7 @@ public class PackageBuilder implements Runnable {
             }
         });
     }
+    */
 
     private void AddMapInfoConfiguaration() {
         String path = this.app.settings.GetPath("temp");
@@ -853,6 +858,28 @@ public class PackageBuilder implements Runnable {
             wadMarineStuff.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void AddHexen2ModelFixes() {
+        String hx2Version = sourceVersions.get("hx2");
+        if (hx2Version != null && hx2Version.contains("BASE")) {
+            this.app.controller.SetCurrentLabel("Adding Hexen II Model Fixes");
+            this.app.controller.SetCurrentProgress(-1);
+
+
+            String path = this.app.settings.GetPath("temp");
+
+            String target = path + "/models/hexen2/hxdd/";
+            File dirFile = new File(target);
+            if (!dirFile.exists()) {
+                dirFile.mkdirs();
+            }
+
+            ZipAssets za = new ZipAssets(this.app);
+            za.SetFile(this.app.settings.fileResources);
+
+            za.ExtractFilesToFolder("pakdata/hexen2/models/hexen2/hxdd/", target);
         }
     }
 
