@@ -282,7 +282,6 @@ class HXDDPickupNode : Inventory {
         }
 
         if (newSound != "") {
-            console.printf("%s", newSound);
             slot.pickup.PickupSound = newSound;
         }
         return self;
@@ -300,7 +299,6 @@ class HXDDPickupNode : Inventory {
             return self;
         }
         if (newSound != "") {
-            console.printf("%s", newSound);
             slot.pickup.UseSound = newSound;
         }
         return self;
