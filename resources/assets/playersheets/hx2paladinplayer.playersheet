@@ -200,8 +200,10 @@
         "misc/i_pkup": "hexen2/items/itempkup",
         "misc/k_pkup": "hexen/misc/k_pkup",
         "misc/p_pkup": "hexen2/items/artpkup",
-        "misc/w_pkup": "hexen2/weapons/weappkup"
+        "misc/w_pkup": "hexen2/weapons/weappkup",
+        "misc/invuse": "hexen2/misc/invuse"
     },
+    "teleportfog": "HX2TeleportFog",
     "only_drop_unowned_weapons": true,
     "xp_bonus_stat": "wisdom",
     "use_max_health_scaler": false,

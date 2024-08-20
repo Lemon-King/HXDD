@@ -223,7 +223,7 @@ class HXDDPickupNode : Inventory {
     }
 
     // Called when a player enters or a new spawn occurs
-    void AssignPickup(int index, String itemClass, String pickupSound = "") {
+    void AssignPickup(int index, String itemClass) {
         if (self.bRemoveSelf || !itemClass || itemClass == "none" || itemClass == "") {
             return;
         }
@@ -242,9 +242,9 @@ class HXDDPickupNode : Inventory {
             newPickup.vel = self.vel;
             newPickup.target = self;
             newPickup.A_ChangeLinkFlags(1, FLAG_NO_CHANGE);
-            if (pickupSound != "") {
-                newPickup.PickupSound = pickupSound;
-            }
+            //if (pickupSound != "") {
+            //    newPickup.PickupSound = pickupSound;
+            //}
             for (int i = 0; i < players.Size(); i++) {
                 newPickup.DisableLocalRendering(i, i != index);
             }
@@ -266,6 +266,44 @@ class HXDDPickupNode : Inventory {
             slot.pickup.Destroy();
             self.slots.Remove(index);
         }
+    }
+
+    HXDDPickupNode SetPickupSound(int index, String newSound = "") {
+        if (self.bRemoveSelf) {
+            return self;
+        }
+
+        // Prevents respawning pickups in Hub based wads
+        HXDDPickupNodeSlot slot;
+        bool exists = false;
+        [slot, exists] = self.slots.CheckValue(index);
+        if (!exists) {
+            return self;
+        }
+
+        if (newSound != "") {
+            console.printf("%s", newSound);
+            slot.pickup.PickupSound = newSound;
+        }
+        return self;
+    }
+    HXDDPickupNode SetUseSound(int index, String newSound = "") {
+        if (self.bRemoveSelf) {
+            return self;
+        }
+
+        // Prevents respawning pickups in Hub based wads
+        HXDDPickupNodeSlot slot;
+        bool exists = false;
+        [slot, exists] = self.slots.CheckValue(index);
+        if (!exists) {
+            return self;
+        }
+        if (newSound != "") {
+            console.printf("%s", newSound);
+            slot.pickup.UseSound = newSound;
+        }
+        return self;
     }
 
     Class<Actor> GetParentClass() {

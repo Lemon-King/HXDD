@@ -180,21 +180,22 @@ class PlayerSheetEventHandler: EventHandler {
 				}
 
 				Class<Inventory> cls = swapped;
-				String sfx = "";
+				String sfxPickup = "";
+				String sfxUse = "";
 				if (swapped != "none" && swapped != "") {
-					let o = GetDefaultByType(cls);
-					if (o) {
-						sfx = o.PickupSound;
-						sfx = prog.FindSoundReplacement(sfx);
-					}
-				};
-				node.AssignPickup(num, swapped, sfx);
+					sfxPickup = GetDefaultByType(cls).PickupSound;
+					sfxPickup = prog.FindSoundReplacement(sfxPickup);
+					sfxUse = GetDefaultByType(cls).UseSound;
+					sfxUse = prog.FindSoundReplacement(sfxUse);
+				}
+				node.SwapOriginal().AssignPickup(num, swapped);
+				node.SetPickupSound(num, sfxPickup).SetUseSound(num, sfxUse);
 
 				if (!isMapSpawn) {
 					node.SetDropped();
 				}
 			} else {
-				node.AssignPickup(num, node.parentClass, "");
+				node.AssignPickup(num, node.parentClass);
 
 				if (!isMapSpawn) {
 					node.SetDropped();
@@ -396,6 +397,9 @@ class PlayerSheetJSON {
 
 	XClassTranslation XClass;
 
+	// actor params
+	String teleportfog;
+
 	int GetEnumFromArmorType(String type) {
 		type = type.MakeLower();
 		Array<string> keysHXArmor = {"ac", "armorclass", "hexen", "hx"};
@@ -477,6 +481,9 @@ class PlayerSheetJSON {
 			String valAlignment			= FileJSON.GetString(jsonObject, "alignment");
 			String valSoundClass		= FileJSON.GetString(jsonObject, "soundclass");
 			String valStatusBarClass	= FileJSON.GetString(jsonObject, "statusbar");
+			String valTeleportFog		= FileJSON.GetString(jsonObject, "teleportfog");
+
+
 			bool valUseMaxHealthScaler	= FileJSON.GetBool(jsonObject, "use_max_health_scaler");
 			let valSkillModifier		= FileJSON.GetArray(jsonObject, "skill_modifier");
 			double valXPModifier		= FileJSON.GetDouble(jsonObject, "xp_modifier");
@@ -641,6 +648,8 @@ class PlayerSheetJSON {
 
 			self.OnlyDropUnownedWeapons		= valOnlyDropUnownedWeapons;
 
+			self.teleportfog				= valTeleportFog;
+
 			if (valSkillModifier) {
 				if (defaultSkillMod.Size() < valSkillModifier.arr.Size()) {
 					self.skillmodifier.Resize(valSkillModifier.arr.Size());
@@ -738,6 +747,7 @@ class Progression: Inventory {
 	Map<String, String> soundSet;
 
 	String defaultStatusBar;
+	Name teleportfog;
 
 	XClassTranslation XClass;
 
@@ -902,6 +912,7 @@ class Progression: Inventory {
 		self.soundSet.Move(PlayerSheet.soundSet);
 
 		self.defaultStatusBar = Playersheet.defaultStatusBar;
+		self.teleportfog = PlayerSheet.teleportfog;
 
 		if (cvarProgression == PSP_LEVELS_USER) {
 
@@ -990,6 +1001,10 @@ class Progression: Inventory {
 		let player = owner.player.mo;
 		if (self.soundClass) {
 			player.SoundClass = self.soundClass;
+		}
+		if (self.teleportfog) {
+			player.TeleFogSourceType = self.teleportfog;
+			player.TeleFogDestType = self.teleportfog;
 		}
 	}
 
@@ -1547,12 +1562,16 @@ class Progression: Inventory {
 					}
 
 					Class<Inventory> cls = swapped;
-					String sfx = "";
+					String sfxPickup = "";
+					String sfxUse = "";
 					if (swapped != "none" && swapped != "") {
-						sfx = GetDefaultByType(cls).PickupSound;
-						sfx = self.FindSoundReplacement(sfx);
+						sfxPickup = GetDefaultByType(cls).PickupSound;
+						sfxPickup = self.FindSoundReplacement(sfxPickup);
+						sfxUse = GetDefaultByType(cls).UseSound;
+						sfxUse = self.FindSoundReplacement(sfxUse);
 					}
-					node.SwapOriginal().AssignPickup(num, swapped, sfx);
+					node.SwapOriginal().AssignPickup(num, swapped);
+					node.SetPickupSound(num, sfxPickup).SetUseSound(num, sfxUse);
 				}
 			}
 		}

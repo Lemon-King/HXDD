@@ -12,3 +12,12 @@ doom/misc/i_pkup            dsitemup
 doom/misc/k_pkup            dsitemup
 doom/misc/p_pkup            dsgetpow
 doom/misc/w_pkup            dswpnup
+
+// Split Teleport Sounds
+heretic/misc/teleport		telept
+hexen/misc/teleport			Teleport
+doom/misc/teleport			dstelept
+
+$playeralias	fighter male 	*evillaugh	hxdd/empty
+$playeralias	cleric male 	*evillaugh	hxdd/empty
+$playeralias	mage male 	    *evillaugh	hxdd/empty

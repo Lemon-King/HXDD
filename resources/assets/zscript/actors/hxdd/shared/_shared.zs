@@ -8,6 +8,7 @@
 #include "zscript/actors/hxdd/shared/inventory/progression.zs"
 #include "zscript/actors/hxdd/shared/inventory/recoilcontroller.zs"
 #include "zscript/actors/hxdd/shared/player/hxddplayerpawn.zs"
+#include "zscript/actors/hxdd/shared/world/teleportfog.zs"
 
 // Progression Event Handler
 #include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/progressioneventhandler.zs"
