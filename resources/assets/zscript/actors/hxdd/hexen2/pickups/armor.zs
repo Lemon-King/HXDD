@@ -2,7 +2,7 @@ class HX2Armor : HexenArmor {
     override void Tick() {
         Super.Tick();
         
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 

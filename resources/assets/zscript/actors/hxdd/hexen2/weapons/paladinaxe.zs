@@ -45,9 +45,14 @@ class PWeapAxe : PaladinWeapon {
 			Goto Ready;
 	}
 
-	override void Tick() {
-		Super.Tick();
-	}
+    override void Tick() {
+        Super.Tick();
+        
+		if (player == null) {
+			self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
+		}
+    }
+
 
 	action void A_Swing() {
 		if (player == null) {

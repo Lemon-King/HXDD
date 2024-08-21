@@ -66,9 +66,10 @@ class PlayerSheetEventHandler: EventHandler {
 							}
 						}
 					}
-
-					if (prog.handler) {
-						prog.handler.OnKill(pt, e.thing, exp);
+					
+					HXDDSkillBase skill = HXDDSkillBase(pt.FindInventory("HXDDSkillBase", true));
+					if (skill) {
+						skill.OnKill(pt, e.thing, exp);
 					}
 				}
 			}
@@ -218,7 +219,12 @@ class PlayerSheetStatGain {
 class PlayerSheetStatParams {
 	int maximum;			// Maximum Stat Value
 	PlayerSheetStatBase base;
-	PlayerSheetStatGain gain;
+	PlayerSheetStatGain gain;			
+}
+
+class PlayerSheetItemSlot {
+	String item;
+	int quantity;
 }
 
 class PlayerSheetStat {
@@ -303,7 +309,7 @@ class PlayerSheetStat {
 		let valMaximum		= FileJSON.GetInt(o, "maximum");
 		let valIsActual		= FileJSON.GetBool(o, "actual");
 		let valBonusScale	= FileJSON.GetDouble(o, "bonus");
-
+		
 		self.params.base.min = valStartMin;
 		self.params.base.max = valStartMax;
 		if (valGainMin != -1 && valGainMax != -1) {
@@ -338,7 +344,7 @@ class PlayerSheetStat {
 			// error?
 			return self;
 		}
-
+		
 		self.params.base.min = result[0];
 		self.params.base.max = result[1];
 		if (size > 3) {
@@ -382,6 +388,8 @@ class PlayerSheetJSON {
 	//Array<int> resourceTable;
 	Array<int> hexenArmorTable;
 	bool hasHexenArmorTable;
+
+	Array<PlayerSheetItemSlot> initInventory;
 
 	String xp_bonus_stat;
 
@@ -482,7 +490,6 @@ class PlayerSheetJSON {
 			String valSoundClass		= FileJSON.GetString(jsonObject, "soundclass");
 			String valStatusBarClass	= FileJSON.GetString(jsonObject, "statusbar");
 			String valTeleportFog		= FileJSON.GetString(jsonObject, "teleportfog");
-
 
 			bool valUseMaxHealthScaler	= FileJSON.GetBool(jsonObject, "use_max_health_scaler");
 			let valSkillModifier		= FileJSON.GetArray(jsonObject, "skill_modifier");
@@ -602,16 +609,24 @@ class PlayerSheetJSON {
 				}
 			}
 
-			HXDD_JsonObject objSoundSet	= HXDD_JsonObject(jsonObject.get("sound_set"));
-			if (objSoundSet) {
-				Array<String> keys;
-				objSoundSet.GetKeysInto(keys);
+			HXDD_JsonArray valInventory	= HXDD_JsonArray(jsonObject.get("inventory"));
+			if (valInventory && valInventory.arr.Size() > 0) {
+				for (int i = 0; i < valInventory.arr.Size(); i++) {
+					HXDD_JsonObject o = HXDD_JsonObject(valInventory.arr[i]);
+					if (o) {
+						String item		= FileJSON.GetString(o, "item");
+						int quantity	= FileJSON.GetInt(o, "quantity");
 
-				for (let i = 0; i < keys.Size(); i++) {
-					String key = keys[i];
-					let value = FileJSON.GetString(objSoundSet, key);
+						if (!item) {
+							// skip
+							continue;
+						}
 
-					self.soundSet.insert(key, value);
+						PlayerSheetItemSlot slot = new("PlayerSheetItemSlot");
+						slot.item = item;
+						slot.quantity = max(1, quantity);
+						self.initInventory.push(slot);
+					}
 				}
 			}
 
@@ -727,6 +742,8 @@ class Progression: Inventory {
 
 	Array<double> skillmodifier;
 
+	Array<PlayerSheetItemSlot> initInventory;
+
 	// Character Stats
 	int currlevel;
 	int maxlevel;
@@ -736,8 +753,6 @@ class Progression: Inventory {
 	int MaxHealth;
 
 	String xp_bonus_stat;
-
-	ProgressionEventHandler handler;
 
 	Map<String, PlayerSheetStat> stats;
 	Map<String, PlayerSheetStat> resources;		// per resource
@@ -872,19 +887,13 @@ class Progression: Inventory {
 			cvarProgression = self.ProgressionType;
 		}
 
-		if (cvarProgression != PSP_NONE) {
-			bool hasEvents = PlayerSheet.UsesEventHandler;
-			if (hasEvents) {
-				String eventClass = String.format("peh_%s", playerClassName);
-				Class<Actor> handler = eventClass;
-				if (handler) {
-					ProgressionEventHandler invEventHandler = ProgressionEventHandler(owner.player.mo.FindInventory(eventClass));
-					if (invEventHandler == null) {
-						owner.player.mo.GiveInventory(eventClass, 1);
-						self.handler = ProgressionEventHandler(owner.player.mo.FindInventory(eventClass));
-					}
-				}
-			}
+		// Keep for reference?
+		for (int i = 0; i < PlayerSheet.initInventory.Size(); i++) {
+			PlayerSheetItemSlot slot = PlayerSheet.initInventory[i];
+			self.initInventory.push(slot);
+			
+			console.printf("Given: %s", slot.item);
+			owner.player.mo.GiveInventory(slot.item, slot.quantity);
 		}
 
 		self.OnlyDropUnownedWeapons	= PlayerSheet.OnlyDropUnownedWeapons;

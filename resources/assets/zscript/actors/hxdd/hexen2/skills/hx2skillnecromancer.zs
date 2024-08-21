@@ -1,11 +1,11 @@
-class PEH_NecromancerPlayer: ProgressionEventHandler {
+class HX2SkillNecromancerPlayer: HXDDSkillBase {
 	override void OnKill(PlayerPawn player, Actor target, double amount) {
         Progression prog = Progression(owner.FindInventory("Progression"));
 		if (prog == NULL) {
 			return;
 		}
 
-		if (prog.currlevel > 5) {
+		if (prog.currlevel >= 5) {
 			double chance = 0.05 + (prog.currlevel - 3) * 0.03;
 			if (chance > 0.2) {
 				chance = 0.2;

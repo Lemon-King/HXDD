@@ -1,4 +1,4 @@
-class PEH_CrusaderPlayer: ProgressionEventHandler {
+class HX2SkillCrusaderPlayer: HXDDSkillBase {
 	override void OnKill(PlayerPawn player, Actor target, double amount) {
 		// Crusader Skill
 		// Ref: https://github.com/videogamepreservation/hexen2/blob/master/H2W/HCode/stats.hc#L503

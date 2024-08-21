@@ -10,7 +10,5 @@
 #include "zscript/actors/hxdd/shared/player/hxddplayerpawn.zs"
 #include "zscript/actors/hxdd/shared/world/teleportfog.zs"
 
-// Progression Event Handler
-#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/progressioneventhandler.zs"
-#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/peh_crusaderplayer.zs"
-#include "zscript/actors/hxdd/shared/inventory/progressioneventhandler/peh_necromancerplayer.zs"
+// Skills
+#include "zscript/actors/hxdd/shared/skills/hxddskillbase.zs"

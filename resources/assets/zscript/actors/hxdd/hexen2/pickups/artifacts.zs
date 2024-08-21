@@ -1,7 +1,6 @@
 
 class HX2ArtiHealth : ArtiHealth {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti01.png";
     }
 	States {
@@ -12,15 +11,14 @@ class HX2ArtiHealth : ArtiHealth {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
 // Needs HX2 Matching Implementation
 class HX2ArtiSuperHealth : ArtiSuperHealth  {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti02.png";
     }
 	States {
@@ -31,15 +29,14 @@ class HX2ArtiSuperHealth : ArtiSuperHealth  {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
 // Needs HX2 Matching Implementation
 class HX2ArtiFly : ArtiFly {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.PickupSound "hexen2/items/ringpkup";
         Inventory.Icon "graphics/hexen2/arti12.png";
     }
@@ -51,8 +48,8 @@ class HX2ArtiFly : ArtiFly {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
     override bool Use(bool pickup) {
@@ -72,7 +69,6 @@ class HX2ArtiFly : ArtiFly {
 
 class HX2ArtiInvulnerability : ArtiInvulnerability2 {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti14.png";
     }
     States {
@@ -83,8 +79,8 @@ class HX2ArtiInvulnerability : ArtiInvulnerability2 {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
     override bool Use(bool pickup) {
@@ -104,7 +100,6 @@ class HX2ArtiInvulnerability : ArtiInvulnerability2 {
 
 class HX2ArtiTomeOfPower : ArtiTomeOfPower {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti05.png";
     }
     States {
@@ -115,8 +110,8 @@ class HX2ArtiTomeOfPower : ArtiTomeOfPower {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
     override bool Use(bool pickup) {
@@ -136,7 +131,6 @@ class HX2ArtiTomeOfPower : ArtiTomeOfPower {
 
 class HX2ArtiSpeedBoots : ArtiSpeedBoots {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti09.png";
     }
     States {
@@ -147,8 +141,8 @@ class HX2ArtiSpeedBoots : ArtiSpeedBoots {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
     override bool Use(bool pickup) {
@@ -168,7 +162,6 @@ class HX2ArtiSpeedBoots : ArtiSpeedBoots {
 
 class HX2ArtiBlastRadius : ArtiBlastRadius {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti10.png";
     }
     States {
@@ -179,14 +172,13 @@ class HX2ArtiBlastRadius : ArtiBlastRadius {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
 class HX2ArtiBoostMana : ArtiBoostMana {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti03.png";
     }
     States {
@@ -197,15 +189,14 @@ class HX2ArtiBoostMana : ArtiBoostMana {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
 // Needs HX2 Matching Implementation
 class HX2ArtiTorch : ArtiTorch {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti00.png";
         Powerup.Type "HX2PowerTorch";
     }
@@ -217,8 +208,8 @@ class HX2ArtiTorch : ArtiTorch {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
     override bool Use(bool pickup) {
@@ -232,7 +223,6 @@ class HX2ArtiTorch : ArtiTorch {
 
 class HX2ArtiInvisibility : ArtiInvisibility {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti07.png";
     }
     States {
@@ -243,14 +233,13 @@ class HX2ArtiInvisibility : ArtiInvisibility {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
 class HX2ArtiTeleport : ArtiTeleport {
     Default {
-        Inventory.UseSound "hexen2/misc/invuse";
         Inventory.Icon "graphics/hexen2/arti04.png";
     }
     States {
@@ -261,10 +250,10 @@ class HX2ArtiTeleport : ArtiTeleport {
 
     override void Tick() {
         Super.Tick();
-
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
-
+	
 	override bool Use(bool pickup)
 	{
 		Vector3 dest;

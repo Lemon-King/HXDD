@@ -18,7 +18,7 @@ class HX2Mana1 : CustomInventory {
     override void Tick() {
         Super.Tick();
         
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 
 }
@@ -41,7 +41,7 @@ class HX2Mana2 : CustomInventory {
     override void Tick() {
         Super.Tick();
         
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 class HX2Mana3 : Mana3 {
@@ -58,6 +58,6 @@ class HX2Mana3 : Mana3 {
     override void Tick() {
         Super.Tick();
         
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }

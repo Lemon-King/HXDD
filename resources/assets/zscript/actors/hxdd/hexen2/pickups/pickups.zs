@@ -14,7 +14,7 @@ class HX2CrystalVial : CrystalVial {
     override void Tick() {
         Super.Tick();
 
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }
 
@@ -28,6 +28,6 @@ class HX2SuperMap : SuperMap {
     override void Tick() {
         Super.Tick();
         
-        self.lightlevel = LemonActor.CalcHX2ModelGlowLighting(self);
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
     }
 }

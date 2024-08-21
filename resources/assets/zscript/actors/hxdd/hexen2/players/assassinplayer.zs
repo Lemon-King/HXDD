@@ -193,39 +193,4 @@ class HX2AssassinPlayer : HXDDHexenIIPlayerPawn
 		ACLO E 8;
 		Stop;
 	}
-
-	override void Tick() {
-		Super.Tick();
-
-		// NYI: Just testing tech
-
-		Progression prog = Progression(Player.mo.FindInventory("Progression"));
-		if (prog) {
-			if (Player && prog.currlevel >= 0) {
-				//GetActorLightLevel
-				// Check Player Light level, update stealth state
-				if (InStateSequence(CurState, Player.mo.FindState("Death")) || InStateSequence(CurState, Player.mo.FindState("XDeath"))) {
-
-				} else {
-					int lightLevel = self.cursector.GetLightLevel();
-					double stealthChange = 0;
-					double lightHigh = 144;
-					if (lightLevel >= lightHigh) {
-						stealthChange = -lightLevel * 0.00075f;
-					} else {
-						stealthChange = (255.0f - lightLevel) * 0.00025f;
-					}
-
-					stealthLevel = Clamp(stealthLevel + stealthChange, 0.0f, 1.0f);
-
-					if (stealthLevel == 1.0) {
-						A_SetRenderStyle(1, STYLE_Shadow);
-					} else {
-						self.Alpha = 1.0f;
-						A_SetRenderStyle(1, STYLE_Normal);
-					}
-				}
-			}
-		}
-	}
 }

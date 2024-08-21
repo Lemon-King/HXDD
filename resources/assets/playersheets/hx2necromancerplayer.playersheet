@@ -28,6 +28,9 @@
         "wisdom": [10,13],
         "dexterity": [8,12]
     },
+    "inventory":[
+        {"item": "HX2SkillNecromancerPlayer"}
+    ],
     "xgame": {
         "GreenArmor,SilverShield": {
             "command": "armortype",

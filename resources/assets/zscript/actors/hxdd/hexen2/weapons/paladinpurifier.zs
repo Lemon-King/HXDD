@@ -8,6 +8,13 @@ class PWeapPurifierPiece: WeaponPiece {
 		WeaponPiece.Weapon "PWeapPurifier";
 		+FLOATBOB
 	}
+
+    override void Tick() {
+        Super.Tick();
+        
+        self.lightlevel = LemonActor.HX2RenderPickupGlow(self);
+    }
+
 }
 
 class PWeapPurifierPiece1: PWeapPurifierPiece {

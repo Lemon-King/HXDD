@@ -1,6 +1,4 @@
-class ProgressionEventHandler: Inventory {
-	Progression parent;
-
+class HXDDSkillBase: Inventory {
     Default {
 		+INVENTORY.KEEPDEPLETED
         +INVENTORY.HUBPOWER
@@ -13,6 +11,7 @@ class ProgressionEventHandler: Inventory {
         Inventory.InterHubAmount 1;
     }
 	
+    virtual void OnLevelGain(int level) {}
 	virtual void OnExperienceBonus(double experience) {}
 	virtual void OnKill(PlayerPawn player, Actor target, double experience) {}
 }

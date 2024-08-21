@@ -28,6 +28,9 @@
         "wisdom": [15,18],
         "dexterity": [6,10]
     },
+    "inventory":[
+        {"item": "HX2SkillCrusaderPlayer"}
+    ],
     "xgame": {
         "GreenArmor,SilverShield": {
             "command": "armortype",

@@ -59,3 +59,6 @@
 #include "zscript/actors/hxdd/hexen2/pickups/mana.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/pickups.zs"
 #include "zscript/actors/hxdd/hexen2/pickups/powerupsphere.zs"
+
+// Skills
+#include "zscript/actors/hxdd/hexen2/skills/hx2skillnecromancer.zs"
