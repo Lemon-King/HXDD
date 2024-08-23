@@ -5,7 +5,7 @@ class LemonActor {
     static int HX2RenderPickupGlow(Actor source) {
         double quakeOverbright = 2.0;
         int curLightLevel = source.cursector.GetLightLevel();
-        int ambLightLevel = clamp(5, 60 + 34 + sin((source.pos.x + source.pos.y + (level.MapTime * 3.8)) * 34) * quakeOverbright, 255);
+        int ambLightLevel = clamp(5, (60.0 + 34.0 + sin((source.pos.x + source.pos.y + (level.MapTime * 3.8))) * 34.0), 255);
         return curLightLevel + ambLightLevel;
     }
 }
