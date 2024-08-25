@@ -609,6 +609,18 @@ class PlayerSheetJSON {
 				}
 			}
 
+			HXDD_JsonObject objSoundSet	= HXDD_JsonObject(jsonObject.get("sound_set"));
+			if (objSoundSet) {
+				Array<String> keys;
+				objSoundSet.GetKeysInto(keys);
+
+				for (let i = 0; i < keys.Size(); i++) {
+					String key = keys[i];
+					let value = FileJSON.GetString(objSoundSet, key);
+					self.soundSet.insert(key, value);
+				}
+			}
+
 			HXDD_JsonArray valInventory	= HXDD_JsonArray(jsonObject.get("inventory"));
 			if (valInventory && valInventory.arr.Size() > 0) {
 				for (int i = 0; i < valInventory.arr.Size(); i++) {
