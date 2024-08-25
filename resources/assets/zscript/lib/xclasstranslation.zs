@@ -433,7 +433,6 @@ class XClassTranslation {
                 if (lastCount == 0) {
                     self.PickNextTargetValue(xcomp);
                 }
-                console.printf("C: %d %d x R: %d %d", lastCount, targetVal, xcomp.counter, xcomp.targetVal);
                 if (lastCount != targetVal) {
                     return "none";
                 }
