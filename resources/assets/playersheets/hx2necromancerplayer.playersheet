@@ -160,7 +160,10 @@
         "Mana3": "HX2Mana3",
 
         // Items
-        "HealthBonus": "none",
+        "HealthBonus": {
+            "counter": 10,
+            "actor": "CrystalVial"
+        },
         "ArmorBonus": "ArtiPoisonBag",
         "Stimpack": "HX2CrystalVial",
         "Medikit": "HX2ArtiHealth",

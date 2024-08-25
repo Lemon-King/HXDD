@@ -103,7 +103,10 @@
         "Cell,FuelAmmoSmall": "SkullRodAmmo,MaceAmmo",
         "CellPack,FuelAmmoLarge": "SkullRodHefty,MaceHefty",
 
-        "HealthBonus": "none",
+        "HealthBonus": {
+            "counter": 10,
+            "actor": "CrystalVial"
+        },
         "Stimpack": "CrystalVial",
         "Medikit": "ArtiHealth",
 

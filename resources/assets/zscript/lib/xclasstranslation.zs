@@ -25,6 +25,10 @@ class XTACompare {
     String s_value;
     ECVARCompareMethod method;
     ECVARCompareType type;
+
+    int counterMod;
+    int counter;
+    int targetVal;
 }
 
 class XTranslationActors {
@@ -38,17 +42,16 @@ class XTranslationActors {
     Map<String,XGameArrayString> selector;
 
     bool isCompare() {
-        return (self.compare != null && self.defaults.Size() > 0);
+        return (self.compare != null && self.compare.cvar != "" && self.defaults.Size() > 0);
     }
 
     bool isSelector() {
         return selector.CountUsed() > 0;
     }
 
-    //bool canReadCommand() {
-    //    let probe = new("XGTPlayerProbe");
-    //    return probe.GetPlayer().CanReadPlayer();
-    //}
+    bool isCounter() {
+        return self.compare != null && self.compare.CounterMod > 0;
+    }
 }
 
 class XGameArrayString {
@@ -68,57 +71,46 @@ class XClassTranslation {
     }
 
 	void CreateXClassTranslation(HXDD_JsonObject json) {
-        /*
-        FileJSON fJSON = new("FileJSON");
-        let success = fJSON.Open(String.format("playersheets/%s.playersheet", playerClassName));
-        if (!success) {
-            success = fJSON.Open(String.format("playersheets/%s.json", playerClassName));
+        HXDD_JsonObject objClassItems = HXDD_JsonObject(json.get("xgame"));
+        if (!objClassItems) {
+            objClassItems = HXDD_JsonObject(json.get("inventory"));
         }
-        */
-        //if (success) {
-            // Class Item Swap List Generation
-            //HXDD_JsonObject json = HXDD_JsonObject(fJSON.json);
-            HXDD_JsonObject objClassItems = HXDD_JsonObject(json.get("xgame"));
-            if (!objClassItems) {
-                objClassItems = HXDD_JsonObject(json.get("inventory"));
-            }
-            if (objClassItems) {
-                Array<String> keys;
-                objClassItems.GetKeysInto(keys);
+        if (objClassItems) {
+            Array<String> keys;
+            objClassItems.GetKeysInto(keys);
 
-                //self.xclass.Resize(keys.Size());
-                for (let i = 0; i < keys.Size(); i++) {
-                    String key = keys[i];
-                    String valClassItem = FileJSON.GetString(objClassItems, key);
-                    if (valClassItem != "") {
-                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromString(result.list[i], valClassItem);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
+            //self.xclass.Resize(keys.Size());
+            for (let i = 0; i < keys.Size(); i++) {
+                String key = keys[i];
+                String valClassItem = FileJSON.GetString(objClassItems, key);
+                if (valClassItem != "") {
+                    XGameArrayString result = self.GetKeysFromCombinedKey(key);
+                    for (let i = 0; i < result.list.Size(); i++) {
+                        XTranslationActors xta = CreateXTAFromString(result.list[i], valClassItem);
+                        self.xcls.Insert(result.list[i], xta);
                     }
-                    HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
-                    if (valClassItemList) {
-                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromArray(result.list[i], valClassItemList);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
+                    continue;
+                }
+                HXDD_JsonArray valClassItemList = FileJSON.GetArray(objClassItems, key);
+                if (valClassItemList) {
+                    XGameArrayString result = self.GetKeysFromCombinedKey(key);
+                    for (let i = 0; i < result.list.Size(); i++) {
+                        XTranslationActors xta = CreateXTAFromArray(result.list[i], valClassItemList);
+                        self.xcls.Insert(result.list[i], xta);
                     }
-                    HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
-                    if (valClassItemObject) {
-                        XGameArrayString result = self.GetKeysFromCombinedKey(key);
-                        for (let i = 0; i < result.list.Size(); i++) {
-                            XTranslationActors xta = CreateXTAFromObject(result.list[i], valClassItemObject);
-                            self.xcls.Insert(result.list[i], xta);
-                        }
-                        continue;
+                    continue;
+                }
+                HXDD_JsonObject valClassItemObject = HXDD_JsonObject(objClassItems.Get(key));
+                if (valClassItemObject) {
+                    XGameArrayString result = self.GetKeysFromCombinedKey(key);
+                    for (let i = 0; i < result.list.Size(); i++) {
+                        XTranslationActors xta = CreateXTAFromObject(result.list[i], valClassItemObject);
+                        self.xcls.Insert(result.list[i], xta);
                     }
+                    continue;
                 }
             }
-		//}
+        }
 	}
 
     XGameArrayString GetKeysFromCombinedKey(String combined) {
@@ -165,6 +157,12 @@ class XClassTranslation {
         if (sCommand != "") {
             xta.compare.command = sCommand;
         }
+
+        int iCounter = FileJSON.GetInt(jo, "counter");
+        if (iCounter != -1) {
+            xta.compare.counterMod = iCounter;
+        }
+
 
         // Selector Method
         HXDD_JsonArray arrSelector = FileJSON.GetArray(jo, "selector");
@@ -249,7 +247,6 @@ class XClassTranslation {
                 xta.defaults.push(key);
             }
         } else if (xta.compare.command && arrSelector) {
-
             String sDefaultValue = FileJSON.GetString(jo, "default");
             if (sDefaultValue != "") {
                 xta.defaultValue = sDefaultValue;
@@ -297,6 +294,26 @@ class XClassTranslation {
                     }
                 }
             }
+        } else if (xta.compare.counterMod > 0) {
+            HXDD_JsonArray arrDefaults = FileJSON.GetArray(jo, "actor");
+            if (arrDefaults) {
+                for (int j = 0; j < arrDefaults.Size(); j++) {
+                    String entry = HXDD_JsonString(arrDefaults.get(j)).s;
+                    if (entry != "") {
+                        xta.defaults.push(entry);
+                    }
+                }
+            } else {
+                String val = FileJSON.GetString(jo, "actor");
+                if (val) {
+                    val.Substitute(" ", "");
+                    val.Split(xta.defaults, ",");
+                }
+            }
+            if (xta.defaults.Size() == 0) {
+                xta.defaults.push(key);
+            }
+            self.PickNextTargetValue(xta.compare);
         }
 
         return xta;
@@ -369,7 +386,7 @@ class XClassTranslation {
                     } else if (xcvar.command) {
                         XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer(index);
                         if (probe.Command(xcvar.command)) {
-                            val = probe.s_result;
+                            val = probe.result;
                         }
                     }
                     if (val != "") {
@@ -384,7 +401,11 @@ class XClassTranslation {
                 XTACompare xcvar = xta.compare;
                 XGTPlayerProbe probe = new("XGTPlayerProbe").GetPlayer(index);
                 if (probe.Command(xcvar.command)) {
-                    key = probe.s_result;
+                    key = probe.result;
+                }
+                if (!key) {
+                    console.printf("XClassTranslation: Actor %s has bad command [%s]!", replacee, xcvar.command);
+                    return replacee;
                 }
                 int selectorSize = xta.selector.CountUsed();
                 if (selectorSize == 0) {
@@ -404,6 +425,18 @@ class XClassTranslation {
                         break;
                     }
                 }
+            } else if (xta.isCounter()) {
+                XTACompare xcomp = xta.compare;
+                int lastCount = xcomp.counter;
+                int targetVal = xcomp.targetVal;
+                xcomp.counter = (xcomp.counter + 1) % xcomp.counterMod;
+                if (lastCount == 0) {
+                    self.PickNextTargetValue(xcomp);
+                }
+                console.printf("C: %d %d x R: %d %d", lastCount, targetVal, xcomp.counter, xcomp.targetVal);
+                if (lastCount != targetVal) {
+                    return "none";
+                }
             }
 
             if (list.Size() == 0) {
@@ -419,6 +452,19 @@ class XClassTranslation {
         }
 		return replacee;
 	}
+
+    void PickNextTargetValue(XTACompare xtac) {
+        // Add Cvar control?
+        bool PICK_MID = false;
+        bool PICK_RANDOM = false;
+        if (PICK_MID) {
+            xtac.targetVal = int(xtac.counterMod-1 * 0.5);
+        } else if (PICK_RANDOM) {
+            xtac.targetVal = random(0, xtac.counterMod-1);
+        } else {
+            xtac.targetVal = 0;
+        }
+    }
 }
 
 // Grabs Player stats in real time
@@ -426,7 +472,7 @@ class XClassTranslation {
 class XGTPlayerProbe {
     Progression invProgression;
     int i_result;
-    String s_result;
+    String result;
     XGTPlayerProbe GetPlayer(int index) {
         PlayerPawn player = PlayerPawn(players[index].mo);
         if (player) {
@@ -449,9 +495,10 @@ class XGTPlayerProbe {
         let sCmd = cmd.MakeLower();
         if (sCmd == "armortype") {
             self.i_result = self.invProgression.ArmorType;
-            self.s_result = self.invProgression.ActiveArmorType;
-            return true;
+            self.result = self.invProgression.ActiveArmorType;
+        } else if (sCmd == "pickuptype") {
+            self.result = "";
         }
-        return false;
+        return (self.result != "");
     }
 }

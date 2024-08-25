@@ -103,7 +103,10 @@
         "Cell,FuelAmmoSmall": "Mana2",
         "CellPack,FuelAmmoLarge": "Mana3",
 
-        "HealthBonus": "none",
+        "HealthBonus": {
+            "counter": 10,
+            "actor": "CrystalVial"
+        },
         "Stimpack": "CrystalVial",
         "Medikit": "ArtiHealth",
 

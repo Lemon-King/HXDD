@@ -24,6 +24,8 @@ enum EPlaystyleProgressionType {
 };
 
 class PlayerSheetEventHandler: EventHandler {
+	mixin PlayerSheetNodeUpdate;
+
     override void PlayerSpawned(PlayerEvent e) {
 		int num = e.PlayerNumber;
 		PlayerPawn pp = PlayerPawn(players[num].mo);
@@ -32,6 +34,7 @@ class PlayerSheetEventHandler: EventHandler {
 			if (prog == null) {
 				pp.GiveInventory("Progression", 1);
 				prog = Progression(pp.FindInventory("Progression"));
+				prog.Init();
 			}
 
 			GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
@@ -66,7 +69,7 @@ class PlayerSheetEventHandler: EventHandler {
 							}
 						}
 					}
-					
+
 					HXDDSkillBase skill = HXDDSkillBase(pt.FindInventory("HXDDSkillBase", true));
 					if (skill) {
 						skill.OnKill(pt, e.thing, exp);
@@ -86,7 +89,7 @@ class PlayerSheetEventHandler: EventHandler {
 			while (actor = Actor(it.Next())) {
 				HXDDPickupNode node = HXDDPickupNode(actor);
 				if (node) {
-					UpdateNode(node, pp);
+					NodeUpdate(node, pp);
 				}
 			}
 		}
@@ -128,82 +131,11 @@ class PlayerSheetEventHandler: EventHandler {
 			if (node) {
 				for (int i = 0; i < players.Size(); i++) {
 					PlayerPawn pp = players[i].mo;
-					UpdateNode(node, pp);
+					NodeUpdate(node, pp);
 				}
 			}
 		}
     }
-
-	void UpdateNode(HXDDPickupNode node, PlayerPawn pp) {
-		if (!pp) {
-			return;
-		}
-		bool isMapSpawn = level.MapTime == 0;
-		int num = pp.PlayerNumber();
-		if (pp.FindInventory("Progression")) {
-			Progression prog = Progression(pp.FindInventory("Progression"));
-			bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
-
-			if (prog && prog.XClass) {
-				let swapped = prog.XClass.TryXClass(num, node.parentClass);
-
-				if (node.parent is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
-					Weapon weap = Weapon(pp.FindInventory(swapped));
-					if (weap) {
-						if (pp.CountInv(swapped) > 0) {
-							let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
-							let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
-							String clsAmmo1;
-							if (ammo1) {
-								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
-								clsAmmo1 = prog.XClass.TryXClass(num, clsAmmo1);
-							}
-							String clsAmmo2;
-							if (ammo2) {
-								clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
-								clsAmmo2 = prog.XClass.TryXClass(num, clsAmmo2);
-							}
-
-							if (ammo1 && ammo2) {
-								int select = random[rngWeapDrop](0,1);
-								if (select == 0) {
-									swapped = clsAmmo1;
-								} else if (select == 1) {
-									swapped = clsAmmo2;
-								}
-							} else if (ammo1) {
-								swapped = clsAmmo1;
-							} else if (ammo2) {
-								swapped = clsAmmo2;
-							}
-						}
-					}
-				}
-
-				Class<Inventory> cls = swapped;
-				String sfxPickup = "";
-				String sfxUse = "";
-				if (swapped != "none" && swapped != "") {
-					sfxPickup = GetDefaultByType(cls).PickupSound;
-					sfxPickup = prog.FindSoundReplacement(sfxPickup);
-					sfxUse = GetDefaultByType(cls).UseSound;
-					sfxUse = prog.FindSoundReplacement(sfxUse);
-				}
-				node.SwapOriginal().AssignPickup(num, swapped);
-				node.SetPickupSound(num, sfxPickup).SetUseSound(num, sfxUse);
-
-				if (!isMapSpawn) {
-					node.SetDropped();
-				}
-			} else {
-				node.AssignPickup(num, node.parentClass);
-
-				if (!isMapSpawn) {
-					node.SetDropped();
-				}
-			}
-		}
-	}
 }
 
 class PlayerSheetStatBase {
@@ -219,7 +151,7 @@ class PlayerSheetStatGain {
 class PlayerSheetStatParams {
 	int maximum;			// Maximum Stat Value
 	PlayerSheetStatBase base;
-	PlayerSheetStatGain gain;			
+	PlayerSheetStatGain gain;
 }
 
 class PlayerSheetItemSlot {
@@ -309,7 +241,7 @@ class PlayerSheetStat {
 		let valMaximum		= FileJSON.GetInt(o, "maximum");
 		let valIsActual		= FileJSON.GetBool(o, "actual");
 		let valBonusScale	= FileJSON.GetDouble(o, "bonus");
-		
+
 		self.params.base.min = valStartMin;
 		self.params.base.max = valStartMax;
 		if (valGainMin != -1 && valGainMax != -1) {
@@ -344,7 +276,7 @@ class PlayerSheetStat {
 			// error?
 			return self;
 		}
-		
+
 		self.params.base.min = result[0];
 		self.params.base.max = result[1];
 		if (size > 3) {
@@ -790,6 +722,8 @@ class Progression: Inventory {
         Inventory.InterHubAmount 1;
     }
 
+	mixin PlayerSheetNodeUpdate;
+
 	// Stat Compute
 	double stats_compute(double min, double max) {
 		double value = (max-min+1) * frandom[Stats](0.0, 1.0) + min;
@@ -808,6 +742,26 @@ class Progression: Inventory {
 		return optionProgression == PSP_LEVELS || optionProgression == PSP_LEVELS_RANDOM || optionProgression == PSP_LEVELS_USER;
 	}
 
+	void Init() {
+		self.ExperienceModifier = 1.0;
+		self.currlevel = 0;
+		self.Experience = 0;
+
+		self.MaxHealth = 100;
+
+		LoadPlayerSheet();
+		PostSheetSetup();
+		if (!ProgressionSelected) {
+			if (ProgressionAllowed()) {
+				InitLevel_PostBeginPlay();
+			}
+			ProgressionSelected = true;
+		}
+		ArmorModeSelection();
+		RescanAllActors();
+	}
+
+	/*
 	override void BeginPlay() {
 		Super.BeginPlay();
 
@@ -832,6 +786,7 @@ class Progression: Inventory {
 		ArmorModeSelection();
 		RescanAllActors();
 	}
+	*/
 
 	override void Travelled() {
 		RescanAllActors();
@@ -903,8 +858,7 @@ class Progression: Inventory {
 		for (int i = 0; i < PlayerSheet.initInventory.Size(); i++) {
 			PlayerSheetItemSlot slot = PlayerSheet.initInventory[i];
 			self.initInventory.push(slot);
-			
-			console.printf("Given: %s", slot.item);
+
 			owner.player.mo.GiveInventory(slot.item, slot.quantity);
 		}
 
@@ -1549,50 +1503,81 @@ class Progression: Inventory {
 			HXDDPickupNode node = HXDDPickupNode(actor);
 			if (node) {
 				if (self.XClass) {
-					String swapped = self.XClass.TryXClass(num, node.parentClass);
+					NodeUpdate(node, self.owner.player.mo);
+				}
+			}
+		}
+	}
+}
 
-					if (GetDefaultByType(node.parent) is "Weapon" && self.onlyDropUnownedWeapons && node.isDropped) {
-						Weapon weap = Weapon(self.owner.player.mo.FindInventory(swapped));
-						if (weap) {
-							if (self.owner.player.mo.CountInv(swapped) > 0) {
-								let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
-								let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
-								String clsAmmo1;
-								if (ammo1) {
-									clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
-								}
-								String clsAmmo2;
-								if (ammo2) {
-									clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
-								}
+// Shared by Progression and WorldEvents
+mixin class PlayerSheetNodeUpdate {
+	void NodeUpdate(HXDDPickupNode node, PlayerPawn pp) {
+		if (!pp) {
+			return;
+		}
+		bool isMapSpawn = level.MapTime == 0;
+		int num = pp.PlayerNumber();
+		if (pp.FindInventory("Progression")) {
+			Progression prog = Progression(pp.FindInventory("Progression"));
+			bool onlyDropUnownedWeapons = prog.OnlyDropUnownedWeapons;
 
-								if (ammo1 && ammo2) {
-									int select = random[rngWeapDrop](0,1);
-									if (select == 0) {
-										swapped = clsAmmo1;
-									} else if (select == 1) {
-										swapped = clsAmmo2;
-									}
-								} else if (ammo1) {
+			if (prog && prog.XClass) {
+				let swapped = prog.XClass.TryXClass(num, node.parentClass);
+
+				if (node.parent is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
+					Weapon weap = Weapon(pp.FindInventory(swapped));
+					if (weap) {
+						if (pp.CountInv(swapped) > 0) {
+							let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
+							let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+							String clsAmmo1;
+							if (ammo1) {
+								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
+								clsAmmo1 = prog.XClass.TryXClass(num, clsAmmo1);
+							}
+							String clsAmmo2;
+							if (ammo2) {
+								clsAmmo2 = GetDefaultByType(ammo2).GetClassName();
+								clsAmmo2 = prog.XClass.TryXClass(num, clsAmmo2);
+							}
+
+							if (ammo1 && ammo2) {
+								int select = random[rngWeapDrop](0,1);
+								if (select == 0) {
 									swapped = clsAmmo1;
-								} else if (ammo2) {
+								} else if (select == 1) {
 									swapped = clsAmmo2;
 								}
+							} else if (ammo1) {
+								swapped = clsAmmo1;
+							} else if (ammo2) {
+								swapped = clsAmmo2;
 							}
 						}
 					}
+				}
 
-					Class<Inventory> cls = swapped;
-					String sfxPickup = "";
-					String sfxUse = "";
-					if (swapped != "none" && swapped != "") {
-						sfxPickup = GetDefaultByType(cls).PickupSound;
-						sfxPickup = self.FindSoundReplacement(sfxPickup);
-						sfxUse = GetDefaultByType(cls).UseSound;
-						sfxUse = self.FindSoundReplacement(sfxUse);
-					}
-					node.SwapOriginal().AssignPickup(num, swapped);
-					node.SetPickupSound(num, sfxPickup).SetUseSound(num, sfxUse);
+				Class<Inventory> cls = swapped;
+				String sfxPickup = "";
+				String sfxUse = "";
+				if (swapped != "none" && swapped != "") {
+					sfxPickup = GetDefaultByType(cls).PickupSound;
+					sfxPickup = prog.FindSoundReplacement(sfxPickup);
+					sfxUse = GetDefaultByType(cls).UseSound;
+					sfxUse = prog.FindSoundReplacement(sfxUse);
+				}
+				node.SwapOriginal().AssignPickup(num, swapped);
+				node.SetPickupSound(num, sfxPickup).SetUseSound(num, sfxUse);
+
+				if (!isMapSpawn) {
+					node.SetDropped();
+				}
+			} else {
+				node.AssignPickup(num, node.parentClass);
+
+				if (!isMapSpawn) {
+					node.SetDropped();
 				}
 			}
 		}
