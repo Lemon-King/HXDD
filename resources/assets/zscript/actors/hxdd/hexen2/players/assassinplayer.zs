@@ -6,29 +6,22 @@ class HX2AssassinPlayer : HXDDHexenIIPlayerPawn
 
 	Default
 	{
-		Health 100;
-		PainChance 255;
-		Radius 16;
-		Height 56;
-		Speed 1;
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
 		PainSound "Hexen2PlayerFemalePain";
 		RadiusDamageFactor 0.25;
-		Player.JumpZ 9;
-		Player.Viewheight 41;
 		Player.SpawnClass "Assassin";
 		Player.DisplayName "Assassin";
 		Player.SoundClass "hexen2female";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Health";
+		Player.JumpZ 9;
+		Player.Viewheight 41;
 		Player.HexenArmor 10, 15, 25, 5, 20;
 		//Player.StartItem "Mana1";
 		//Player.StartItem "Mana2";
 		Player.StartItem "AWeapPunchDagger";
-		Player.ForwardMove 1.08, 1.2;
-		Player.SideMove 1.125, 1.475;
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "AWeapPunchDagger";
 		Player.WeaponSlot 2, "AWeapCrossbow";

@@ -1,13 +1,4 @@
-class HXDDPlayerPawn : PlayerPawn {
-	override void BeginPlay() {
-		Super.BeginPlay();
-	}
-
-	virtual void OnExperienceBonus(double experience) {}
-	virtual void OnKill(Actor target, double experience) {}
-}
-
-class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
+class HXDDHexenIIPlayerPawn : PlayerPawn {
 	// Arrays cannot be passed in a property due to limitations.
 	String Weapon1AnimationSetClass;
 	int Weapon1AnimationSetIndex;
@@ -30,6 +21,16 @@ class HXDDHexenIIPlayerPawn : HXDDPlayerPawn {
 	property HasJumpAnimation: HasJumpAnimation;
 
 	Default {
+		Health 100;
+		PainChance 255;
+		Radius 16;
+		Height 56;
+
+		//Speed (200.0 / 320.0);
+		Speed 1;
+		Player.ForwardMove 1, 1;
+		Player.SideMove 0.8, 0.8;
+
 		HXDDHexenIIPlayerPawn.HasJumpAnimation true;
 	}
 

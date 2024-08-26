@@ -4,23 +4,18 @@ class HX2CrusaderPlayer : HXDDHexenIIPlayerPawn
 {
 	Default
 	{
-		Health 100;
-		PainChance 255;
-		Radius 16;
-		Height 56;
-		Speed 1;
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
 		PainSound "Hexen2PlayerMalePain";
 		RadiusDamageFactor 0.25;
-		Player.JumpZ 9;
-		Player.Viewheight 41;
 		Player.SpawnClass "Crusader";
 		Player.DisplayName "Crusader";
 		Player.SoundClass "hexen2male";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
+		Player.JumpZ 9;
+		Player.Viewheight 41;
 		Player.HexenArmor 10, 20, 15, 25, 5;
 		//Player.StartItem "Mana1";
 		//Player.StartItem "Mana2";

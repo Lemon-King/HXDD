@@ -6,31 +6,23 @@ class HX2NecromancerPlayer : HXDDHexenIIPlayerPawn
 {
 	Default
 	{
-		Health 100;
-		ReactionTime 0;
-		PainChance 255;
-		Radius 16;
-		Height 56;
-		Speed 1;
 		+NOSKIN
 		+NODAMAGETHRUST
 		+PLAYERPAWN.NOTHRUSTWHENINVUL
 		PainSound "Hexen2PlayerMalePain";
 		RadiusDamageFactor 0.25;
-		Player.JumpZ 9;
-		Player.Viewheight 41;
 		Player.SpawnClass "Necromancer";
 		Player.DisplayName "Necromancer";
 		Player.SoundClass "hexen2male";
 		Player.ScoreIcon "MAGEFACE";
 		Player.InvulnerabilityMode "Reflective";
 		Player.HealRadiusType "Mana";
+		Player.JumpZ 9;
+		Player.Viewheight 41;
 		Player.HexenArmor 5, 5, 15, 10, 25;
 		//Player.StartItem "Mana1";
 		//Player.StartItem "Mana2";
 		Player.StartItem "NWeapSickle";
-		Player.ForwardMove 0.88, 0.92;
-		Player.SideMove 0.875, 0.925;
 		Player.Portrait "P_MWALK1";
 		Player.WeaponSlot 1, "NWeapSickle";
 		Player.WeaponSlot 2, "NWeapMagicMissile";
