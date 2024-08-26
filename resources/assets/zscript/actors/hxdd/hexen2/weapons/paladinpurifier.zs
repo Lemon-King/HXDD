@@ -206,7 +206,7 @@ class PWeapPurifier_Missile: Actor {
 		DeathSound "hexen2/weapons/expsmall";
 		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1";
 
-		PWeapPurifier_Missile.tickDuration (2.5 * double(TICRATE));
+		PWeapPurifier_Missile.tickDuration (2.5 * TICRATEF);
 	}
 
 	States {
@@ -284,7 +284,7 @@ class PWeapPurifier_DragonBall: Actor {
 		DeathSound "hexen2/weapons/exphuge";
 		Obituary "$HXDD.HEXEN2.WEAPONS.PALADIN.PURIFIER.OBITUARY.1";
 
-		PWeapPurifier_DragonBall.tickDuration (2.5 * double(TICRATE));
+		PWeapPurifier_DragonBall.tickDuration (2.5 * TICRATEF);
 	}
 
 	States {
@@ -299,7 +299,7 @@ class PWeapPurifier_DragonBall: Actor {
 	void A_HandleHoming() {
 		if (self.delayHoming <= 0.0) {
 			self.A_SeekerMissile(2, 10, SMF_LOOK | SMF_CURSPEED, 50);
-			self.delayHoming = (0.15 * double(TICRATE));
+			self.delayHoming = (0.15 * TICRATEF);
 			return;
 		}
 		self.delayHoming--;
@@ -308,7 +308,7 @@ class PWeapPurifier_DragonBall: Actor {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		self.delayHoming = ((1/3) * double(TICRATE));
+		self.delayHoming = ((1/3) * TICRATEF);
 
 		Vector3 avelocity = (-6.25, 6.25, -6.25);
 		angle += avelocity.x;
@@ -391,7 +391,7 @@ class PWeapPurifier_PuffRing: SpriteFXParticle {
 	override void Tick() {
 		Super.Tick();
 
-		self.duration -= 1.0 / double(TICRATE);
+		self.duration -= 1.0 / TICRATEF;
 
 		if (self.duration < 0.30) {
 			self.ChangeTexture(4);

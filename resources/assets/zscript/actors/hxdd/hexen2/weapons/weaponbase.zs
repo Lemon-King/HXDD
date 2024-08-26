@@ -266,7 +266,7 @@ class Hexen2Weapon: Weapon {
 
     action bool CooldownTick(Weapon ReadyWeapon, int frameTime = 1) {
 		Hexen2Weapon weap = Hexen2Weapon(ReadyWeapon);
-        weap.nextFire -= (frameTime / double(TICRATE)) * weap.ticRatePassed;
+        weap.nextFire -= (frameTime / TICRATEF) * weap.ticRatePassed;
         return (weap.nextFire > 0.0);
     }
 

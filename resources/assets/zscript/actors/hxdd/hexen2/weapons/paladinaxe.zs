@@ -313,7 +313,7 @@ class PWeapAxe_BladeProjectile : Hexen2Projectile {
 			A_DestroySelf();
 		}
 
-		tickDuration -= double(TICRATE) / 1000.0f;
+		tickDuration -= TICRATEF / 1000.0f;
 	}
 
 	void A_OnBounce() {

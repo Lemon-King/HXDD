@@ -51,7 +51,7 @@ class HX2PowerTorch : Powerup {
             return;
         }
 
-        self.lifeTime += (1 / 35);
+        self.lifeTime += (1 / TICRATEF);
 
         String idxChar = self.lightStyle.mid(lightIdx, 1);
         int val = self.styleDefs.indexOf(idxChar);

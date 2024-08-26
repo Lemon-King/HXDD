@@ -248,7 +248,7 @@ class SWeapAcidRune_Missile: Hexen2Projectile {
 		DeathSound "hexen2/succubus/acidhit";
 		Obituary "$OB_MPSWEAPACIDRUNE";
 
-		SWeapAcidRune_Missile.tickDuration (double(TICRATE) * 1.5);
+		SWeapAcidRune_Missile.tickDuration (TICRATEF * 1.5);
 	}
 
 	States {
@@ -274,7 +274,7 @@ class SWeapAcidRune_Missile: Hexen2Projectile {
 		if (self.isPowered) {
 			// TODO: make veer cvar value as dependant between modes
 			self.veerAmount = 30;
-			self.tickDuration = double(TICRATE) * 5;
+			self.tickDuration = TICRATEF * 5;
 			self.Scale = (2.5, 2.5);
 
 			double avecz = frandom(0.0, 1.0) * -360.0 - 100.0;
@@ -338,7 +338,7 @@ class SWeapAcidRune_Missile: Hexen2Projectile {
 				sprfx.SetOrigin(self.pos, false);
 				self.nextTrail = 0.1;
 			} else {
-				self.nextTrail -= (1.0 / double(TICRATE));
+				self.nextTrail -= (1.0 / TICRATEF);
 			}
 		}
 
@@ -489,7 +489,7 @@ class SWeapAcidRune_PFX_Shimmer: Actor {
 		if (self.remove) {
 			self.Destroy();
 		}
-		self.delay -= (1.0 / double(TICRATE));
+		self.delay -= (1.0 / TICRATEF);
 		if (self.delay <= 0) {
 			ParticleGenerator pg = ParticleGenerator(Spawn("ParticleGenerator"));
 			pg.Attach(self);
@@ -621,7 +621,7 @@ class SWeapAcidRune_AcidDrop: Hexen2Projectile {
 		pgs.SetOrigin(self.pos, false);
 		SWeapAcidRune_PFX_Shimmer(pgs).delay = 0.6;
 
-		self.lifetime -= (1.0 / double(TICRATE));
+		self.lifetime -= (1.0 / TICRATEF);
 		if (self.lifetime <= 0) {
             A_ExplodeAndDamage();
             self.Destroy();

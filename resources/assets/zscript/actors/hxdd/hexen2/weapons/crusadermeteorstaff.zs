@@ -90,7 +90,7 @@ class CWeapMeteorStaff_Meteor: Hexen2Projectile {
 		DeathSound "hexen2/weapons/explode";
 		Obituary "$OB_MPMWEAPFROST";
 
-        CWeapMeteorStaff_Meteor.tickDuration (5.0 * double(TICRATE));
+        CWeapMeteorStaff_Meteor.tickDuration (5.0 * TICRATEF);
 	}
 
 	States

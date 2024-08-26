@@ -384,7 +384,7 @@ class PWeapVorpalSword_MissileWave : Hexen2Projectile {
 			Destroy();
 		}
 
-		tickDuration -= double(TICRATE) / 1000.0f;
+		tickDuration -= TICRATEF / 1000.0f;
 
 		Vector3 facing = LemonUtil.GetEularFromVelocity(self.vel);
 		self.angle = facing.x;
@@ -564,7 +564,7 @@ class PWeapVorpalSword_Shock2 : Actor {
 	}
 
 	override void BeginPlay() {
-		self.lifeTime = 0.5 * double(TICRATE);
+		self.lifeTime = 0.5 * TICRATEF;
 	}
 
 	override void Tick() {

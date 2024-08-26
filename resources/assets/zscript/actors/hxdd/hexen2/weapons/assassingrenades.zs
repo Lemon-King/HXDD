@@ -182,7 +182,7 @@ class AWeapGrenades_Grenade: Hexen2Projectile {
 		DeathSound "hexen2/weapons/explode";
 		Obituary "$OB_MPMWEAPFROST";
 
-        AWeapGrenades_Grenade.tickDuration (2.0 * double(TICRATE));
+        AWeapGrenades_Grenade.tickDuration (2.0 * TICRATEF);
 	}
 
 	States {
@@ -277,7 +277,7 @@ class AWeapGrenades_Grenade: Hexen2Projectile {
                 gren.SetOrigin(self.pos, false);
                 gren.isModified = self.isModified;
                 gren.ex_damage = ex_damage;
-                gren.ticNextExplosion = frandom(0.1, 0.6) * double(TICRATE);
+                gren.ticNextExplosion = frandom(0.1, 0.6) * TICRATEF;
                 gren.isMulti = (i == 0);
                 
                 double x;
@@ -365,7 +365,7 @@ class AWeapGrenades_SuperGrenade: Hexen2Projectile {
                     gren.isMulti = self.isMulti;
                     gren.isModified = self.isModified;
                     gren.ex_damage = self.ex_damage;
-                    gren.ticNextExplosion = frandom(0.1, 0.6) * double(TICRATE);
+                    gren.ticNextExplosion = frandom(0.1, 0.6) * TICRATEF;
 
                     double x;
                     double y;

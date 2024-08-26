@@ -406,9 +406,9 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		DrawImage("assets/ui/FS_HEXEN2_SBAR_RIGHT_ITEM.png", (anchorRight - 49, anchorBottom) + v2Right, DI_SCREEN_RIGHT_BOTTOM | DI_ITEM_RIGHT_BOTTOM);
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
-				invTime = clamp(invTime + (1.0 / double(TICRATE)), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime + (1.0 / TICRATEF), 0.0,  invAnimationDuration);
 			} else if (invTime != 0.0) {
-				invTime = clamp(invTime - (1.0 / double(TICRATE)), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime - (1.0 / TICRATEF), 0.0,  invAnimationDuration);
 			}
 			if (invTime != 0.0) {
 				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration));

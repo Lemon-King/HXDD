@@ -123,7 +123,7 @@ class ParticleGenerator: Actor {
                 flags |= SPF_NOTIMEFREEZE;  // will not work with actor particles
             }
             for (int i = 0; i < amount; i++) {
-                double ticksLifetime = CustomLifetime(i) * (1000.0 / 35);
+                double ticksLifetime = CustomLifetime(i) * (1000.0 / TICRATEF);
                 double c_size = CustomSize(i);
                 double c_angle = CustomAngle(i);
 

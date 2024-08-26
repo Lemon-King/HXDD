@@ -1,1 +1,3 @@
-const HX_VALUE = 20;    // PH: Example
+const TICRATEF = double(Object.TICRATE);
+
+CONST HXDD_MAX_PLAYERS = 32;
