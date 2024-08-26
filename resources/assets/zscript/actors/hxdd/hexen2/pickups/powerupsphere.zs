@@ -67,11 +67,11 @@ class H2HolyStrength: HXDDPowerupSphere {
         self.A_StartSound("hexen2/items/artpkup");
 
         // Give Health
-        int amountHealth = floor((1000.0 / 35.0) / tickDuration);
+        int amountHealth = floor((1000.0 / double(TICRATE)) / tickDuration);
         HealThing(amountHealth);
 
         // Give Ammo
-        int amount = floor((1000.0 / 35.0) / tickDuration);
+        int amount = floor((1000.0 / double(TICRATE)) / tickDuration);
         self.GiveAmmoAmount(toucher, amount);
     }
 }
@@ -130,11 +130,11 @@ class H2SoulSphere: HXDDPowerupSphere {
         self.A_StartSound("hexen2/items/artpkup");
 
         // Give Health
-        int amountHealth = floor((1000.0 / 35.0) / tickDuration) * 2;
+        int amountHealth = floor((1000.0 / double(TICRATE)) / tickDuration) * 2;
         HealThing(amountHealth);
 
         // Give Ammo
-        int amount = 15 + floor((1000.0 / 35.0) / tickDuration);
+        int amount = 15 + floor((1000.0 / double(TICRATE)) / tickDuration);
         self.GiveAmmoAmount(toucher, amount);
     }
 
@@ -142,11 +142,11 @@ class H2SoulSphere: HXDDPowerupSphere {
         self.A_StartSound("hexen2/items/artpkup");
 
         // Give Health
-        int amountHealth = floor((1000.0 / 35.0) / tickDuration);
+        int amountHealth = floor((1000.0 / double(TICRATE)) / tickDuration);
         HealThing(amountHealth);
 
         // Give Ammo
-        int amount = floor((1000.0 / 35.0) / tickDuration);
+        int amount = floor((1000.0 / double(TICRATE)) / tickDuration);
         self.GiveAmmoAmount(toucher, amount);
     }
 }

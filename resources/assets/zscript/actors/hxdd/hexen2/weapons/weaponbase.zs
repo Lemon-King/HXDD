@@ -246,7 +246,7 @@ class Hexen2Weapon: Weapon {
 	** Dynamic Refire
 	** Simulates Hexen II's delay before allowing to fire again
 	**/
-	double ticRate;	// used to count how many tics have passed in a fire loop
+	double ticRatePassed;	// used to count how many tics have passed in a fire loop
 	double nextFire;
 	action void ResetCooldown(Weapon ReadyWeapon) {
 		Hexen2Weapon weap = Hexen2Weapon(ReadyWeapon);
@@ -255,7 +255,7 @@ class Hexen2Weapon: Weapon {
 
     action void SetCooldown(Weapon ReadyWeapon, double seconds, double tics = 1) {
 		Hexen2Weapon weap = Hexen2Weapon(ReadyWeapon);
-		weap.ticRate = tics;
+		weap.ticRatePassed = tics;
         weap.nextFire = seconds;
     }
 
@@ -266,7 +266,7 @@ class Hexen2Weapon: Weapon {
 
     action bool CooldownTick(Weapon ReadyWeapon, int frameTime = 1) {
 		Hexen2Weapon weap = Hexen2Weapon(ReadyWeapon);
-        weap.nextFire -= (frameTime / 35.0) * weap.ticRate;
+        weap.nextFire -= (frameTime / double(TICRATE)) * weap.ticRatePassed;
         return (weap.nextFire > 0.0);
     }
 

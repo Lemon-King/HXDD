@@ -120,7 +120,7 @@ class CWeapIceMace_IceShot1 : Hexen2Projectile {
 		Obituary "$OB_MPMWEAPFROST";
         Scale 1.5;
 
-        CWeapIceMace_IceShot1.tickDuration (4.0 * 35.0);
+        CWeapIceMace_IceShot1.tickDuration (4.0 * double(TICRATE));
 	}
 
 	States

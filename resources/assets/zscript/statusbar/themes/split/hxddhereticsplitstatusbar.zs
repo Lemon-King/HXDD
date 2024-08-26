@@ -387,9 +387,9 @@ class HXDDHereticSplitStatusBar : BaseStatusBar {
 		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
-				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime + (1.0 / double(TICRATE)), 0.0,  invAnimationDuration);
 			} else if (invTime != 0.0) {
-				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  invAnimationDuration);
+				invTime = clamp(invTime - (1.0 / double(TICRATE)), 0.0,  invAnimationDuration);
 			}
 			if (invTime != 0.0) {
 				double posInventory = LemonUtil.flerp(80.0, 0.0, LemonUtil.Easing_Quadradic_Out(invTime / invAnimationDuration));

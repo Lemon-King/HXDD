@@ -241,7 +241,7 @@ class SWeapFireStorm_FlameStream: Hexen2Projectile {
 		DeathSound "hexen2/succubus/flampow";
 		Obituary "$OB_MPSWEAPFIRESTORM";
 
-		SWeapFireStorm_FlameStream.tickDuration (2.0 * 35.0);
+		SWeapFireStorm_FlameStream.tickDuration (2.0 * double(TICRATE));
 	}
 
 	States {
@@ -273,7 +273,7 @@ class SWeapFireStorm_FlameStream: Hexen2Projectile {
 		if (self.isPowered) {
 			// TODO: make veer cvar value as dependant between modes
 			self.veerAmount = 30;
-			self.tickDuration = 35.0 * 5;
+			self.tickDuration = double(TICRATE) * 5;
 			self.Scale = (2.5, 2.5);
 
 			double avecz = frandom(0.0, 1.0) * -360.0 - 100.0;
@@ -314,7 +314,7 @@ class SWeapFireStorm_FlameStream: Hexen2Projectile {
 		//self.roll += self.avelocity.z;
 
 		if (self.isPowered) {
-			self.nextTrail -= (1.0 / 35.0);
+			self.nextTrail -= (1.0 / double(TICRATE));
 			if (self.nextTrail <= 0.0) {
 				Actor sprfx = Spawn("AcidMuzzleFlash");
 				sprfx.SetOrigin(self.pos, false);
@@ -384,7 +384,7 @@ class SWeapFireStorm_Burner: Actor {
 		Height 0;
 		Radius 0;
 
-		SWeapFireStorm_Burner.tickDuration (5.0 * 35.0);
+		SWeapFireStorm_Burner.tickDuration (5.0 * double(TICRATE));
 	}
 
 	States {
@@ -396,7 +396,7 @@ class SWeapFireStorm_Burner: Actor {
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		self.tickDuration = (5 + random[swfs_burner](0, 5) * 35.0);
+		self.tickDuration = (5 + random[swfs_burner](0, 5) * double(TICRATE));
 	}
 
 	void AttachToActor(Actor nextTarget) {
@@ -429,7 +429,7 @@ class SWeapFireStorm_Burner: Actor {
 		pg.actorParticleTypes.push("FireWall2Particle");
 		pg.actorParticleTypes.push("FireWall3Particle");
 
-		self.nextDamage = frandom(0.0, 0.5) * 35.0;
+		self.nextDamage = frandom(0.0, 0.5) * double(TICRATE);
 	}
 
 	void SetOwner(Actor owner) {
@@ -456,7 +456,7 @@ class SWeapFireStorm_Burner: Actor {
 			self.burnTarget.DamageMobj(self, self.target, random[swfs_burndmg](2,3), 'Fire');
 			self.A_StartSound("hexen2/raven/fire1", CHAN_WEAPON, 1);
 
-			self.nextDamage = frandom(0.0, 0.5) * 35.0;
+			self.nextDamage = frandom(0.0, 0.5) * double(TICRATE);
 		}
 	}
 }
@@ -606,7 +606,7 @@ class SWeapFireStorm_FlameBall: Hexen2Projectile {
 		DeathSound "hexen2/succubus/flampow";
 		Obituary "$OB_MPSWEAPFIRESTORM";
 
-		//SWeapFireStorm_FlameBall.tickDuration (2.0 * 35.0);
+		//SWeapFireStorm_FlameBall.tickDuration (2.0 * double(TICRATE));
 	}
 
 	States {

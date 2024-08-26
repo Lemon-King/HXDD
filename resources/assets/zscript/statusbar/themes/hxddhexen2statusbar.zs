@@ -222,9 +222,9 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
-				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+				invTime = clamp(invTime + (1.0 / double(TICRATE)), 0.0,  INV_FADE_DURATION);
 			} else if (invTime != 0.0) {
-				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+				invTime = clamp(invTime - (1.0 / double(TICRATE)), 0.0,  INV_FADE_DURATION);
 			}
 			if (invTime != 0.0) {
 				int width = diparms_sbar.boxsize.X * INV_NUM_FIELDS;
@@ -314,9 +314,9 @@ class HXDDHexen2StatusBar : BaseStatusBar {
 		
 		if (!Level.NoInventoryBar && CPlayer.mo.InvSel != null) {
 			if (isInventoryBarVisible()) {
-				invTime = clamp(invTime + (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+				invTime = clamp(invTime + (1.0 / double(TICRATE)), 0.0,  INV_FADE_DURATION);
 			} else if (invTime != 0.0) {
-				invTime = clamp(invTime - (1.0 / 35.0), 0.0,  INV_FADE_DURATION);
+				invTime = clamp(invTime - (1.0 / double(TICRATE)), 0.0,  INV_FADE_DURATION);
 			}
 			if (invTime != 0.0) {
 				int width = diparms_sbar.boxsize.X * INV_NUM_FIELDS;

@@ -355,7 +355,7 @@ class NWeapSpellbook_Flash : Actor {
 			Alpha = self.Default.Alpha * (tickDuration / (0.75 * 0.5));
 		}
 
-		tickDuration -= 35.0f / 100.0f;
+		tickDuration -= double(TICRATE) / 100.0f;
 	}
 }
 
@@ -541,7 +541,7 @@ class NWeapSpellbook_MagicMissile : Hexen2Projectile {
 			Destroy();
 		}
 
-		tickDuration -= 35.0f / 1000.0f;
+		tickDuration -= double(TICRATE) / 1000.0f;
 
 		Vector3 avelocity = (0, 0, frandom(300.0f,600.0f) / 32.0f);
 		if (!self.useNewModel) {
