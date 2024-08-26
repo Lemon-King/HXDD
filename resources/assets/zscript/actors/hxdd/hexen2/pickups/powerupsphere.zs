@@ -4,6 +4,7 @@ class H2HolyStrength: HXDDPowerupSphere {
     ParticleGenerator pg;
 
 	Default {
+        Inventory.PickupSound "hexen2/items/artpkup";
         Inventory.PickupMessage "$TXT_H2HOLYSTRENGTH";
         Tag "$TAG_H2HOLYSTRENGTH";
 
@@ -81,6 +82,7 @@ class H2SoulSphere: HXDDPowerupSphere {
     ParticleGenerator pg;
 
 	Default {
+        Inventory.PickupSound "hexen2/items/artpkup";
         Inventory.PickupMessage "$TXT_H2SOULSPHERE";
         Tag "$TAG_H2SOULSPHERE";
 
