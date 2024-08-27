@@ -34,7 +34,50 @@
         <Model file="i_btmana.md3" model="0" />
         <Skin file="i_btmana_skin0.png" model="0" />
 
-        <Scale value="1 1 1" />
+        <Scale value="2 2 2" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 3"/>
+    </Group>
+    <!-- Large Mana Pickups -->
+    <Group class="HX2ManaBig1">
+        <Path folder="models/hexen2" />
+        <Model file="i_bmana.md3" model="0" />
+        <Skin file="i_bmana_skin0.png" model="0" />
+
+        <Scale value="2 2 2" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 1"/>
+    </Group>
+    <Group class="HX2ManaBig2">
+        <Path folder="models/hexen2" />
+        <Model file="i_gmana.md3" model="0" />
+        <Skin file="i_gmana_skin0.png" model="0" />
+
+        <Scale value="2 2 2" />
+        <Offset value="0 0 32" />
+
+        <Flag name="ROTATING" />
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="1" model="0" comment="Pickup: Mana 2"/>
+    </Group>
+    <Group class="HX2ManaBig3">
+        <Path folder="models/hexen2" />
+        <Model file="i_btmana.md3" model="0" />
+        <Skin file="i_btmana_skin0.png" model="0" />
+
+        <Scale value="2 2 2" />
         <Offset value="0 0 32" />
 
         <Flag name="ROTATING" />
