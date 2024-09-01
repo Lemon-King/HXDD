@@ -1,16 +1,18 @@
-corvus/misc/i_pkup          itemup
-corvus/misc/k_pkup          keyup
-corvus/misc/p_pkup          artiup
-corvus/misc/w_pkup          wpnup
+hxdd/empty                  dsempty
 
-hexen/misc/i_pkup           picup5
-hexen/misc/k_pkup           keys2a
-hexen/misc/p_pkup           art1
-hexen/misc/w_pkup           sample11
+corvus/misc/i_pkup			itemup
+corvus/misc/k_pkup			keyup
+corvus/misc/p_pkup			artiup
+corvus/misc/w_pkup	        wpnup
 
-doom/misc/i_pkup            dsitemup
-doom/misc/k_pkup            dsitemup
-doom/misc/p_pkup            dsgetpow
+hexen/misc/i_pkup			picup5
+hexen/misc/k_pkup			keys2a
+hexen/misc/p_pkup			art1
+hexen/misc/w_pkup	        sample11
+
+doom/misc/i_pkup			dsitemup
+doom/misc/k_pkup			dsitemup
+doom/misc/p_pkup			dsgetpow
 doom/misc/w_pkup            dswpnup
 
 // Split Teleport Sounds
@@ -18,6 +20,6 @@ heretic/misc/teleport		telept
 hexen/misc/teleport			Teleport
 doom/misc/teleport			dstelept
 
-$playeralias	fighter male 	*evillaugh	hxdd/empty
-$playeralias	cleric male 	*evillaugh	hxdd/empty
-$playeralias	mage male 	    *evillaugh	hxdd/empty
+$playeralias	fighter male 	*evillaugh	hxdd/empty 
+$playeralias	cleric male 	*evillaugh	hxdd/empty 
+$playeralias	mage male 	    *evillaugh	hxdd/empty 
