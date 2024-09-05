@@ -321,6 +321,10 @@ class LemonUtil {
         return scaled + point;
     }
 
+    static vector3 ModVector3(vector3 vec, double mod) {
+        return (vec.x % mod, vec.y % mod, vec.z % mod);
+    }
+
     static double GetHeading(vector3 a, vector3 b) {
         double x = b.x - a.x;
         double y = b.y - a.y;
@@ -344,18 +348,45 @@ class LemonUtil {
         return Vector3ToEularAngles(norm);
     }
 
+    static double GetAngleBetweenVectors(Vector3 a, Vector3 b) {
+        double dotProd = a dot b;
 
-    // https://chat.openai.com/c/feee51cd-b3fc-4415-89d4-d32b50336225
-    static vector3 GetEularFromVelocityAndAngularVelocity(Vector3 v, Vector3 av) {
-        HXDD_GM_Matrix mVel = HXDD_GM_Matrix.fromEulerAngles(v.x, v.y, v.z);
-        mVel = mVel.multiplyVector3((1, -1, 0));
-        HXDD_GM_Matrix mAngVel = HXDD_GM_Matrix.fromEulerAngles(av.x, av.y, av.z);
-        mAngVel = mAngVel.multiplyVector3((1, -1, 0));
+        double magA = sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+        double magB = sqrt(b.x * b.x + b.y * b.y + b.z * b.z);
 
-        //HXDD_GM_Matrix comb = mVel.multiplyMatrix(mAngVel);
+        double theta = dotProd / (magA * magB);
+        double rads = acos(theta);
 
-        double angle, pitch, roll = mVel.rotationToEulerAngles();
-        return (angle, pitch, roll);
+        return rads;
+    }
+
+    static vector3 GetVector3PosOffset(vector3 origin = (0,0,0), double angle = 0, double pitch = 0, double roll = 0, vector3 offset = (0,0,0), double angleoffs = 0, double pitchoffs = 0) {
+        double a = angle + angleoffs;
+        double p = Clamp(pitch + pitchoffs, -90, 90);
+        double r = roll;
+        let mat = HXDD_GM_Matrix.fromEulerAngles(a, p, r);
+        mat = mat.multiplyVector3((offset.x, -offset.y, offset.z));
+        vector3 offsetPos = mat.asVector3(false);
+
+        offsetPos = level.vec3offset(offsetPos, origin);
+
+        return offsetPos;
+    }
+
+    static double, double, double GetFacingWithRotation(Vector3 baseAngles, Vector3 rotationAngles) {
+        HXDD_GM_Matrix mBase = HXDD_GM_Matrix.fromEulerAngles(baseAngles.x, baseAngles.y, baseAngles.z);
+        HXDD_GM_Matrix mRotation = HXDD_GM_Matrix.fromEulerAngles(rotationAngles.x, rotationAngles.y, rotationAngles.z);
+        HXDD_GM_Matrix mFinal = mBase.multiplyMatrix(mRotation);
+        double a,p,r;
+        [a,p,r] = mFinal.rotationToEulerAngles();
+        return a,p,r;
+    }
+
+    static double, double, double GetFacingFromVelocityWithRotation(Vector3 vel, Vector3 rotationAngles) {
+        vector3 facing = LemonUtil.GetEularFromVelocity(vel);
+        double a,p,r;
+        [a,p,r] = LemonUtil.GetFacingWithRotation(facing, rotationAngles);
+        return a,p,r;
     }
 
 
@@ -367,9 +398,9 @@ class LemonUtil {
         return val * ( 2.0 - val);
     }
 
-    static double Easing_Bounce_Out(double val) {		
+    static double Easing_Bounce_Out(double val) {
         if (val < (1.0/2.75)) {
-            return 7.5625*val*val;				
+            return 7.5625*val*val;
         }
         else if (val < (2.0/2.75)) {
             return 7.5625*(val -= (1.5/2.75f))*val + 0.75;
@@ -382,11 +413,17 @@ class LemonUtil {
         }
     }
 
-    static double MathPI() {
-        return 3.141592653589793238462643383279502884197;
-    }
+    static double, double, double GetFacingAngle(Vector3 start, Vector3 target) {
+        Vector3 dir = target - start;
 
-    static double GetDegrees() {
-        return 180.0 / LemonUtil.MathPI();
+        Vector3 forward = dir.Unit();
+        Vector3 right = forward cross (0, 0, 1);
+        Vector3 up = right cross forward;
+
+        double angle = atan2(dir.y, dir.x);
+        double pitch = atan2(dir.z, sqrt(dir.x * dir.x + dir.y * dir.y));
+        double roll = atan2(up.y, up.z);
+
+        return angle, pitch, roll;
     }
 }
