@@ -4,6 +4,9 @@
 // lighting: https://github.com/videogamepreservation/hexen2/blob/eac5fd50832ce2509226761b3b1a387c468e7a50/H2MP/code/CL_MAIN.C#L727
 
 
+// BeamFX
+#include "zscript/actors/hxdd/hexen2/beamfx/_beamfx.zs"
+
 // SpriteFX
 #include "zscript/actors/hxdd/hexen2/spritefx/_spritefx.zs"
 

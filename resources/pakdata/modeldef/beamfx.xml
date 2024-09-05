@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<XMLModelDef>
+    <Group class="BeamFX_Lightning">
+        <Path folder="models/hexen2" />
+        <Model file="stlghtng.md3" model="0" />
+        <Skin file="stlghtng_skin0.png" model="0" />
+
+        <Scale value="1 1 1" />
+        <Offset value="0 0 0" />
+
+        <Flag name="USEACTORPITCH" />
+        <Flag name="USEACTORROLL" />
+
+        <Animation key="0000" frames="6" model="0" comment="Crusader Warhammer: Lightning FX"/>
+    </Group>
+</XMLModelDef>
