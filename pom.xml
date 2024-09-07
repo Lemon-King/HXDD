@@ -18,7 +18,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
 
-    <gluonfx-maven-plugin.version>1.0.22</gluonfx-maven-plugin.version>
+    <gluonfx-maven-plugin.version>1.0.23</gluonfx-maven-plugin.version>
     <javafx.version>20.0.2</javafx.version>
     <gson.version>2.10.1</gson.version>
 
