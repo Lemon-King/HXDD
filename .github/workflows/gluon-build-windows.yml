@@ -26,10 +26,14 @@ jobs:
       # Make sure the latest GraalVM is installed.
       # after this step env.JAVA_HOME and env.GRAALVM_HOME will point to the GraalVM location
       - name: Setup GraalVM built by Gluon
-        uses: gluonhq/setup-graalvm@22.1.0.1-Final
+        uses: gluonhq/setup-graalvm@master
         # set GITHUB_TOKEN to avoid exceeding GitHub's API rate limit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          graalvm: '22.1.0.1-Final'
+          jdk: 'java23'
+          arch: 'x86_64'
 
       # Create a staging directory where the binary will be copied into
       - name: Setup directories
