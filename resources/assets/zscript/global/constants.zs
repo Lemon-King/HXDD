@@ -1,3 +1,4 @@
 const TICRATEF = double(Object.TICRATE);
+const TICRATEFRAC = 1.0 / TICRATEF;
 
 CONST HXDD_MAX_PLAYERS = 32;
