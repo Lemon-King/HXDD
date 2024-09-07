@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           graalvm: '22.1.0.1-Final'
-          jdk: 'java23'
+          jdk: 'java17'
 
       # Create a staging directory where the binary will be copied into
       - name: Setup directories
