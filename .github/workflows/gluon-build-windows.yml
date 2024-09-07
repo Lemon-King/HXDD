@@ -33,7 +33,6 @@ jobs:
         with:
           graalvm: '22.1.0.1-Final'
           jdk: 'java23'
-          arch: 'x86_64'
 
       # Create a staging directory where the binary will be copied into
       - name: Setup directories
