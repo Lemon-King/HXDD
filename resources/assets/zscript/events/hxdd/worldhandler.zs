@@ -1,7 +1,9 @@
 
 // ref: https://forum.zdoom.org/viewtopic.php?f=122&t=67766
 
-class HXDDWorldEventHandler : EventHandler {
+class HXDDWorldEventHandler : StaticEventHandler {
+    XGameTranslation xgame;
+
     void UserOptions_TextureSwap() {
 		int hxdd_waterstyle = LemonUtil.CVAR_GetInt("hxdd_waterstyle", 0);
 		int hxdd_lavastyle = LemonUtil.CVAR_GetInt("hxdd_lavastyle", 0);
@@ -73,6 +75,11 @@ class HXDDWorldEventHandler : EventHandler {
         }
     }
 
+    override void OnRegister() {
+        SetOrder(0x48657265746963 + 0x486578656E);
+        self.xgame = new("XGameTranslation").Init();
+    }
+
     override void WorldLoaded(WorldEvent e) {
         if (LemonUtil.IsGameType(Game_Doom)) {
 
@@ -81,10 +88,6 @@ class HXDDWorldEventHandler : EventHandler {
             HexenFixes();
         }
         UserOptions_TextureSwap();
-    }
-
-    override void NewGame () {
-        //LemonUtil.TryOpenMapByName();
     }
 
     override void WorldLinePreActivated(WorldEvent e) {
@@ -104,12 +107,7 @@ class HXDDWorldEventHandler : EventHandler {
         }
     }
 
-    XGameTranslation xgame;
     override void CheckReplacement(ReplaceEvent e) {
-        if (!xgame) {
-            xgame = new("XGameTranslation");
-            xgame.Init();
-        }
         if (e.IsFinal) {
             return;
         }
