@@ -26,23 +26,62 @@ enum EPlaystyleProgressionType {
 class PlayerSheetEventHandler: EventHandler {
 	mixin PlayerSheetNodeUpdate;
 
+	// FIX: Does not seem to work correctly with GZ 4.12+
+	/*
     override void PlayerSpawned(PlayerEvent e) {
 		int num = e.PlayerNumber;
+
+		if (!PlayerInGame[num]) return;
+
 		PlayerPawn pp = PlayerPawn(players[num].mo);
 		if (pp) {
 			Progression prog = Progression(pp.FindInventory("Progression"));
-			if (prog == null) {
+			if (!prog) {
 				pp.GiveInventory("Progression", 1);
 				prog = Progression(pp.FindInventory("Progression"));
 				prog.Init();
 			}
 
 			GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
-			if (gmcompat == null) {
+			if (!gmcompat) {
 				pp.GiveInventory("GameModeCompat", 1);
+				gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+				gmcompat.Init();
 			}
 		}
 	}
+	*/
+
+	// Placeholder Fix
+    override void WorldTick() {
+        if (level.maptime != 0) {
+            return;
+		}
+
+        for (int i = 0; i < Players.Size(); i++) {
+			int num = i;
+            if (!PlayerInGame[num]) {
+                continue;
+			}
+
+			PlayerPawn pp = PlayerPawn(players[num].mo);
+			if (pp) {
+				Progression prog = Progression(pp.FindInventory("Progression"));
+				if (!prog) {
+					pp.GiveInventory("Progression", 1);
+					prog = Progression(pp.FindInventory("Progression"));
+					prog.Init();
+				}
+
+				GameModeCompat gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+				if (!gmcompat) {
+					pp.GiveInventory("GameModeCompat", 1);
+					gmcompat = GameModeCompat(pp.FindInventory("GameModeCompat"));
+					gmcompat.Init();
+				}
+			}
+        }
+    }
 
 	override void WorldThingDied(WorldEvent e) {
 		if (e.thing && e.thing.bIsMonster && e.thing.bCountKill && e.thing.target && e.thing.target.player) {
@@ -84,10 +123,9 @@ class PlayerSheetEventHandler: EventHandler {
 
 		PlayerPawn pp = players[num].mo;
 		if (pp) {
-			ThinkerIterator it = ThinkerIterator.Create("Actor");
-			Actor actor;
-			while (actor = Actor(it.Next())) {
-				HXDDPickupNode node = HXDDPickupNode(actor);
+			ThinkerIterator it = ThinkerIterator.Create("HXDDPickupNode");
+			HXDDPickupNode node;
+			while (node = HXDDPickupNode(it.Next())) {
 				if (node) {
 					NodeUpdate(node, pp);
 				}
@@ -98,10 +136,9 @@ class PlayerSheetEventHandler: EventHandler {
 	override void PlayerDisconnected(PlayerEvent e) {
 		// remove slots in nodes
 		int num = e.PlayerNumber;
-		ThinkerIterator it = ThinkerIterator.Create("Actor");
-		Actor actor;
-		while (actor = Actor(it.Next())) {
-			HXDDPickupNode node = HXDDPickupNode(actor);
+		ThinkerIterator it = ThinkerIterator.Create("HXDDPickupNode");
+		HXDDPickupNode node;
+		while (node = HXDDPickupNode(it.Next())) {
 			if (node) {
 				node.RemovePickup(num);
 			}
@@ -644,6 +681,8 @@ class PlayerSheetJSON {
 				}
 			}
 		}
+
+		self.IsLoaded = true;
     }
 
 	String GetPlayerClassName(PlayerPawn pp) {
@@ -712,7 +751,7 @@ class Progression: Inventory {
 
     Default {
 		+INVENTORY.KEEPDEPLETED
-        +INVENTORY.HUBPOWER
+        +INVENTORY.PERSISTENTPOWER
         +INVENTORY.UNDROPPABLE
         +INVENTORY.UNTOSSABLE
         +INVENTORY.UNCLEARABLE
@@ -1508,6 +1547,15 @@ class Progression: Inventory {
 			}
 		}
 	}
+
+	void DEBUG_LevelUp(int amount = 1) {
+		console.printf("DEBUG CHEAT: LEVEL UP!");
+		int pLevel = clamp(0, self.currlevel + amount, self.maxLevel);
+		if (pLevel != self.currlevel && pLevel < self.maxLevel) {
+			self.experience = self.experienceTable[min(pLevel, self.experienceTable.Size() - 1)];
+			AdvanceLevel(pLevel);
+		}
+	}
 }
 
 // Shared by Progression and WorldEvents
@@ -1526,11 +1574,15 @@ mixin class PlayerSheetNodeUpdate {
 				let swapped = prog.XClass.TryXClass(num, node.parentClass);
 
 				if (node.parent is "Weapon" && onlyDropUnownedWeapons && !isMapSpawn) {
-					Weapon weap = Weapon(pp.FindInventory(swapped));
+					class<Weapon> clsWeapon;
+					let weap = Weapon(pp.FindInventory(swapped));
 					if (weap) {
+						clsWeapon = weap.GetClass();
+					}
+					if (clsWeapon) {
 						if (pp.CountInv(swapped) > 0) {
-							let ammo1 = GetDefaultByType(weap.GetClass()).AmmoType1;
-							let ammo2 = GetDefaultByType(weap.GetClass()).AmmoType2;
+							let ammo1 = GetDefaultByType(clsWeapon).AmmoType1;
+							let ammo2 = GetDefaultByType(clsWeapon).AmmoType2;
 							String clsAmmo1;
 							if (ammo1) {
 								clsAmmo1 = GetDefaultByType(ammo1).GetClassName();
@@ -1558,13 +1610,13 @@ mixin class PlayerSheetNodeUpdate {
 					}
 				}
 
-				Class<Inventory> cls = swapped;
+				Class<Inventory> clsSwapped = swapped;
 				String sfxPickup = "";
 				String sfxUse = "";
 				if (swapped != "none" && swapped != "") {
-					sfxPickup = GetDefaultByType(cls).PickupSound;
+					sfxPickup = GetDefaultByType(clsSwapped).PickupSound;
 					sfxPickup = prog.FindSoundReplacement(sfxPickup);
-					sfxUse = GetDefaultByType(cls).UseSound;
+					sfxUse = GetDefaultByType(clsSwapped).UseSound;
 					sfxUse = prog.FindSoundReplacement(sfxUse);
 				}
 				node.SwapOriginal().AssignPickup(num, swapped);
@@ -1581,5 +1633,72 @@ mixin class PlayerSheetNodeUpdate {
 				}
 			}
 		}
+	}
+}
+
+class Cheat_LevelUp : Actor {
+	int amount;
+
+	Default {
+		+NOINTERACTION;
+
+		Height 0;
+		Radius 0;
+	}
+
+	States {
+		Spawn:
+			TNT0 A 1;
+			Stop;
+	}
+
+	override void PostBeginPlay() {
+		Super.PostBeginPlay();
+
+		FindPlayerAndLevelUp();
+	}
+
+	void FindPlayerAndLevelUp() {
+		if (!amount) {
+			amount = 1;
+		}
+
+		console.printf("Searching for Players");
+		int pid = -1;
+		double dist = -1;
+        for (int i = 0; i < Players.Size(); i++) {
+            if (!PlayerInGame[i]) {
+                continue;
+			}
+
+			PlayerPawn pp = PlayerPawn(players[i].mo);
+
+			if (pp) {
+				double ndist = pp.pos.Length() - self.pos.Length();
+				if (dist == -1 || ndist < dist) {
+					console.printf("Found %d", i);
+					pid = i;
+					dist = ndist;
+				}
+			}
+		}
+
+		if (pid != -1) {
+			PlayerPawn pp = PlayerPawn(players[pid].mo);
+			if (pp) {
+				Progression prog = Progression(pp.FindInventory("Progression"));
+				if (prog) {
+					console.printf("DEBUG_LevelUp %d", pid);
+					prog.DEBUG_LevelUp(amount);
+				}
+			}
+		}
+	}
+}
+
+
+class Cheat_LevelUpMax : Cheat_LevelUp {
+	override void BeginPlay() {
+		amount = 255;
 	}
 }
