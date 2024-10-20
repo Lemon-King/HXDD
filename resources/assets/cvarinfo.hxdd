@@ -1,4 +1,4 @@
-server noarchive string hxdd_sessionstorage = "HXDDRootStore";    // Do not change this value
+server noarchive string hxdd_lemontree_sessionstorage = "HXDDPlayerStore, HXDDGameplayStore";    // Do not change this value
 
 server noarchive string hxdd_map_select = "";
 

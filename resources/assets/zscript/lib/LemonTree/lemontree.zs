@@ -14,6 +14,20 @@ class LemonTree {
         }
         return handler;
     }
+    static LemonTreeBranch GetStore(String key) {
+        LemonTreeSession ltSession = LemonTree.GetSession();
+        if (ltSession) {
+            bool exists = false;
+            LemonTreeBranch store;
+            [store, exists] = ltSession.stores.CheckValue(key);
+            if (exists) {
+                return store;
+            }
+        }
+
+        // are we outside a map?
+        return null;
+    }
 }
 
 class LemonTreeStatic : StaticEventHandler {
@@ -46,19 +60,16 @@ class LemonTreeStatic : StaticEventHandler {
 
     override void OnRegister() {
         console.printf("LemonTree: Initialized");
+        console.printf(Level.MapName);
 
         SetOrder(1000);
 
-        String cvarDataStore = LemonUtil.CVAR_GetString("hxdd_sessionstorage", "LemonTreeBranch");
+        String cvarDataStore = LemonUtil.CVAR_GetString("hxdd_lemontree_sessionstorage", "LemonTreeBranch");
         Array<String> dataStoreClasses;
         cvarDataStore.Substitute(" ", "");
-        cvarDataStore.split(dataStoreClasses, ",");
-        if (cvarDataStore.MakeLower().IndexOf("lemontreebranch") != -1) {
-            console.printf("LemonTreeSession: The default storage class is in use!");
-        }
-
-        for (int i = 0; i < dataStoreClasses.Size(); i++) {
-            self.storeClasses.Move(dataStoreClasses);
+        cvarDataStore.split(self.storeClasses, ",");
+        if (self.storeClasses.Find("LemonTreeBranch") != -1) {
+            console.printf("LemonTree.Static: The default storage class [LemonTreeBranch] is in use!");
         }
     }
 
@@ -108,7 +119,6 @@ class LemonTreeSession : EventHandler {
         return handler;
     }
     static void MoveStoresFromStatic() {
-        console.printf("GetStatic %d", LemonTree.GetStatic().stores.CountUsed());
         if (LemonTree.GetStatic().stores.CountUsed() != 0) {
             LemonTree.GetSession().stores.Move(LemonTree.GetStatic().stores);
         }
