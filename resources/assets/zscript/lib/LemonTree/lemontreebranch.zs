@@ -2,6 +2,19 @@
 class LemonTreeBranch {
     bool _persist;  // allows data to persist between games
 
+    LemonTreeBranch GetStore() {
+        LemonTreeSession ltSession = LemonTree.GetSession();
+        if (ltSession) {
+            bool exists = false;
+            LemonTreeBranch store;
+            [store, exists] = ltSession.stores.CheckValue(self.GetClassName());
+            if (exists) {
+                return store;
+            }
+        }
+        return null;
+    }
+
     virtual void Init() {
         self._persist = false;
         console.printf("%s: Init", self.GetClassName());
