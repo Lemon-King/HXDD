@@ -60,7 +60,6 @@ class LemonTreeStatic : StaticEventHandler {
 
     override void OnRegister() {
         console.printf("LemonTree: Initialized");
-        console.printf(Level.MapName);
 
         SetOrder(1000);
 
