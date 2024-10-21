@@ -162,7 +162,9 @@ class LemonTreeSession : EventHandler {
 
     override void OnUnregister() {
         foreach(store : self.stores) {
-            store.OnMapLeave();
+            if (store) {
+                store.OnMapLeave();
+            }
         }
         LemonTree.GetSession().MoveStoresToStatic();
     }
@@ -207,7 +209,9 @@ class LemonTreeSession : EventHandler {
     }
     override void WorldThingDestroyed (WorldEvent e) {
         foreach(store : self.stores) {
-            store.WorldThingDestroyed(e);
+            if (store) {
+                store.WorldThingDestroyed(e);
+            }
         }
     }
 
