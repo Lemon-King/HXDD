@@ -143,17 +143,15 @@ class LemonTreeSession : EventHandler {
             if (LemonTree.GetStatic().stores.CountUsed() != 0) {
                 self.stores.Move(LemonTree.GetStatic().stores);
             }
-            if (self.stores.CountUsed() == 0) {
-                Array<String> storeNames;
-                LemonTree.GetStatic().GetStoreClasses(storeNames);
-                for (let i = 0; i < storeNames.Size(); i++) {
-                    String storeName = storeNames[i];
-                    if (storeName != "") {
-                        LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
-                        if (newStore) {
-                            newStore.Init();
-                            self.stores.Insert(storeName, newStore);
-                        }
+            Array<String> storeNames;
+            LemonTree.GetStatic().GetStoreClasses(storeNames);
+            for (let i = 0; i < storeNames.Size(); i++) {
+                String storeName = storeNames[i];
+                if (storeName != "") {
+                    LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
+                    if (newStore) {
+                        newStore.Init();
+                        self.stores.Insert(storeName, newStore);
                     }
                 }
             }
