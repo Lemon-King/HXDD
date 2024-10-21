@@ -80,30 +80,37 @@ class LemonTreeStatic : StaticEventHandler {
         if (!!LemonTree.GetSession()) {
             LemonTree.GetStatic().MoveStoresFromSession();
         }
+        Array<String> removal;
         foreach(key, store : self.stores) {
             if (store._persist) {
                 console.printf("LemonTree.Static: NewGame, %s Store Persist", key);
                 store.OnReset();
             } else {
                 console.printf("LemonTree.Static: NewGame, %s Store Cleared", key);
-                self.stores.Remove(key);
+                removal.Push(key);
+            }
+        }
+        if (removal.Size() > 0) {
+            for (int i = 0; i < removal.Size(); i++) {
+                console.printf("LemonTree.Static: Removing %s for Reset", removal[i]);
+                self.stores.Remove(removal[i]);
             }
         }
     }
 
     override void WorldLoaded(WorldEvent e) {
-        if (Level.MapName.MakeLower() == "titlemap") {
+        console.printf("LemonTree.Static: WorldLoaded");
+        if (e.IsSaveGame || Level.MapName.MakeLower() == "titlemap") {
             return;
         }
         self.stores.Clear();
-        console.printf("LemonTree.Static: WorldLoaded");
     }
 
     override void WorldUnloaded(WorldEvent e) {
+        console.printf("LemonTree.Static: WorldUnloaded");
         if (Level.MapName.MakeLower() == "titlemap") {
             return;
         }
-        console.printf("LemonTree.Static: WorldUnloaded");
     }
 }
 
@@ -132,19 +139,21 @@ class LemonTreeSession : EventHandler {
         if (Level.MapName.MakeLower() == "titlemap") {
             return;
         }
-        if (LemonTree.GetStatic().stores.CountUsed() != 0) {
-            self.stores.Move(LemonTree.GetStatic().stores);
-        }
-        if (self.stores.CountUsed() == 0) {
-            Array<String> storeNames;
-            LemonTree.GetStatic().GetStoreClasses(storeNames);
-            for (let i = 0; i < storeNames.Size(); i++) {
-                String storeName = storeNames[i];
-                if (storeName != "") {
-                    LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
-                    if (newStore) {
-                        newStore.Init();
-                        self.stores.Insert(storeName, newStore);
+        if (self.stores.CountUsed() == 0) { // loading from a save if the value is > 0
+            if (LemonTree.GetStatic().stores.CountUsed() != 0) {
+                self.stores.Move(LemonTree.GetStatic().stores);
+            }
+            if (self.stores.CountUsed() == 0) {
+                Array<String> storeNames;
+                LemonTree.GetStatic().GetStoreClasses(storeNames);
+                for (let i = 0; i < storeNames.Size(); i++) {
+                    String storeName = storeNames[i];
+                    if (storeName != "") {
+                        LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
+                        if (newStore) {
+                            newStore.Init();
+                            self.stores.Insert(storeName, newStore);
+                        }
                     }
                 }
             }
