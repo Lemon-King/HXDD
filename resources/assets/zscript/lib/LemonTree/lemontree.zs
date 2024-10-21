@@ -1,25 +1,21 @@
-// Cached store will be assigned data during world change, gameplay it is in a locked state
-class LemonTree {
-    static LemonTreeStatic GetStatic() {
-        LemonTreeStatic handler = LemonTreeStatic(StaticEventHandler.Find("LemonTreeStatic"));
+class LemonTree : EventHandler {
+    Map<String, LemonTreeBranch> stores;
+
+    // Singleton access method
+    static LemonTree GetInstance() {
+        LemonTree handler = LemonTree(EventHandler.Find("LemonTree"));
         if (handler == null) {
-            //console.printf("LemonTreeStatic instance not found! Panic?");
+            //console.printf("LemonTree instance not found! Panic?");
         }
         return handler;
     }
-    static LemonTreeSession GetSession() {
-        LemonTreeSession handler = LemonTreeSession(EventHandler.Find("LemonTreeSession"));
-        if (handler == null) {
-            //console.printf("LemonTreeSession instance not found! Panic?");
-        }
-        return handler;
-    }
+
     static LemonTreeBranch GetStore(String key) {
-        LemonTreeSession ltSession = LemonTree.GetSession();
-        if (ltSession) {
+        LemonTree ltInstance = LemonTree.GetInstance();
+        if (ltInstance) {
             bool exists = false;
             LemonTreeBranch store;
-            [store, exists] = ltSession.stores.CheckValue(key);
+            [store, exists] = ltInstance.stores.CheckValue(key);
             if (exists) {
                 return store;
             }
@@ -28,129 +24,36 @@ class LemonTree {
         // are we outside a map?
         return null;
     }
-}
-
-class LemonTreeStatic : StaticEventHandler {
-    Map<String, LemonTreeBranch> stores;
-    Array<String> storeClasses;
-
-    // Singleton access method, should only be accessed by LemonTreeSession
-    static LemonTreeStatic GetInstance() {
-        LemonTreeStatic handler = LemonTreeStatic(StaticEventHandler.Find("LemonTreeStatic"));
-        if (handler == null) {
-            //console.printf("LemonTreeStatic instance not found! Panic?");
-        }
-        return handler;
-    }
-
-    static uint GetStoresCount() {
-        return LemonTree.GetStatic().stores.CountUsed();
-    }
-
-    static void MoveStoresFromSession() {
-        LemonTree.GetStatic().stores.Move(LemonTree.GetSession().stores);
-    }
-    static void MoveStoresToSession() {
-        LemonTree.GetSession().stores.Move(LemonTree.GetStatic().stores);
-    }
-
-    static void GetStoreClasses(in out Array<String> ioStoreClasses) {
-        ioStoreClasses.Copy(LemonTree.GetStatic().storeClasses);
-    }
-
-    override void OnRegister() {
-        console.printf("LemonTree: Initialized");
-
-        SetOrder(1000);
-
-        String cvarDataStore = LemonUtil.CVAR_GetString("hxdd_lemontree_sessionstorage", "LemonTreeBranch");
-        Array<String> dataStoreClasses;
-        cvarDataStore.Substitute(" ", "");
-        cvarDataStore.split(self.storeClasses, ",");
-        if (self.storeClasses.Find("LemonTreeBranch") != -1) {
-            console.printf("LemonTree.Static: The default storage class [LemonTreeBranch] is in use!");
-        }
-    }
-
-    override void NewGame() {
-        if (Level.MapName.MakeLower() == "titlemap") {
-            return;
-        }
-        if (!!LemonTree.GetSession()) {
-            LemonTree.GetStatic().MoveStoresFromSession();
-        }
-        Array<String> removal;
-        foreach(key, store : self.stores) {
-            if (store._persist) {
-                console.printf("LemonTree.Static: NewGame, %s Store Persist", key);
-                store.OnReset();
-            } else {
-                console.printf("LemonTree.Static: NewGame, %s Store Cleared", key);
-                removal.Push(key);
-            }
-        }
-        if (removal.Size() > 0) {
-            for (int i = 0; i < removal.Size(); i++) {
-                console.printf("LemonTree.Static: Removing %s for Reset", removal[i]);
-                self.stores.Remove(removal[i]);
-            }
-        }
-    }
-
-    override void WorldLoaded(WorldEvent e) {
-        console.printf("LemonTree.Static: WorldLoaded");
-        if (e.IsSaveGame || Level.MapName.MakeLower() == "titlemap") {
-            return;
-        }
-        self.stores.Clear();
-    }
-
-    override void WorldUnloaded(WorldEvent e) {
-        console.printf("LemonTree.Static: WorldUnloaded");
-        if (Level.MapName.MakeLower() == "titlemap") {
-            return;
-        }
-    }
-}
-
-class LemonTreeSession : EventHandler {
-    Map<String, LemonTreeBranch> stores;
-
-    // Singleton access method
-    static LemonTreeSession GetInstance() {
-        LemonTreeSession handler = LemonTreeSession(EventHandler.Find("LemonTreeSession"));
-        if (handler == null) {
-            //console.printf("LemonTreeSession instance not found! Panic?");
-        }
-        return handler;
-    }
-    static void MoveStoresFromStatic() {
-        if (LemonTree.GetStatic().stores.CountUsed() != 0) {
-            LemonTree.GetSession().stores.Move(LemonTree.GetStatic().stores);
-        }
-    }
-    static void MoveStoresToStatic() {
-        LemonTree.GetStatic().stores.Move(LemonTree.GetSession().stores);
-    }
 
     // Load data before game starts
     override void OnRegister() {
         if (Level.MapName.MakeLower() == "titlemap") {
             return;
         }
-        if (self.stores.CountUsed() == 0) { // loading from a save if the value is > 0
-            if (LemonTree.GetStatic().stores.CountUsed() != 0) {
-                self.stores.Move(LemonTree.GetStatic().stores);
-            }
+
+        // Recover Branches
+        if (self.stores.CountUsed() == 0) {
             Array<String> storeNames;
-            LemonTree.GetStatic().GetStoreClasses(storeNames);
+            String cvarDataStore = LemonUtil.CVAR_GetString("hxdd_lemontree_sessionstorage", "LemonTreeBranch");
+            cvarDataStore.Substitute(" ", "");
+            cvarDataStore.split(storeNames, ",");
             for (let i = 0; i < storeNames.Size(); i++) {
                 String storeName = storeNames[i];
                 if (storeName != "") {
-                    LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
-                    if (newStore) {
-                        newStore.Init();
-                        self.stores.Insert(storeName, newStore);
+                    ThinkerIterator it = ThinkerIterator.Create(storeName, Thinker.STAT_STATIC);
+                    let foundStore = LemonTreeBranch(it.Next());
+                    if (foundStore && !foundStore._clearOnMapChange) {
+                        self.stores.Insert(storeName, foundStore);
+                    } else {
+                        if (foundStore) {
+                            foundStore.Destroy();
+                        }
+                        LemonTreeBranch newStore = LemonTreeBranch(new(storeName));
+                        if (newStore) {
+                            newStore.ChangeStatNum(Thinker.STAT_STATIC);
+                            newStore.Init();
+                            self.stores.Insert(storeName, newStore);
+                        }
                     }
                 }
             }
@@ -160,13 +63,24 @@ class LemonTreeSession : EventHandler {
         }
     }
 
+    override void NewGame() {
+        if (Level.MapName.MakeLower() == "titlemap") {
+            return;
+        }
+        foreach(store : self.stores) {
+            store.OnNewGame();
+        }
+    }
+
     override void OnUnregister() {
+        if (Level.MapName.MakeLower() == "titlemap") {
+            return;
+        }
         foreach(store : self.stores) {
             if (store) {
                 store.OnMapLeave();
             }
         }
-        LemonTree.GetSession().MoveStoresToStatic();
     }
 
     // Event handlers

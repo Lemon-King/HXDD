@@ -1,22 +1,23 @@
 // Extend with classes and use mixins, this is just a base
 class LemonTreeBranch : Thinker {
-    bool _persist;  // allows data to persist between games
+    bool _clearOnMapChange;
 
     LemonTreeBranch GetStore() {
-        LemonTreeSession ltSession = LemonTree.GetSession();
-        if (ltSession) {
+        LemonTree ltInstance = LemonTree.GetInstance();
+        if (ltInstance) {
             bool exists = false;
             LemonTreeBranch store;
-            [store, exists] = ltSession.stores.CheckValue(self.GetClassName());
+            [store, exists] = ltInstance.stores.CheckValue(self.GetClassName());
             if (exists) {
                 return store;
             }
         }
+
+        // are we outside a map?
         return null;
     }
 
     virtual void Init() {
-        self._persist = false;
         console.printf("%s: Init", self.GetClassName());
     }
 
@@ -24,6 +25,10 @@ class LemonTreeBranch : Thinker {
         // called on new game and data already exists
         // used for manually setting data between new games
         console.printf("%s: OnReset", self.GetClassName());
+    }
+
+    virtual void OnNewGame() {
+        console.printf("%s: OnNewGame", self.GetClassName());
     }
 
     // Map event handlers
