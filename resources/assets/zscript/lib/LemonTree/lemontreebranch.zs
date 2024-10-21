@@ -1,5 +1,5 @@
 // Extend with classes and use mixins, this is just a base
-class LemonTreeBranch {
+class LemonTreeBranch : Thinker {
     bool _persist;  // allows data to persist between games
 
     LemonTreeBranch GetStore() {
