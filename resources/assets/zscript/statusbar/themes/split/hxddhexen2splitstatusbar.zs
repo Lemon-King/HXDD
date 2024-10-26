@@ -56,44 +56,39 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 	private bool hasACArmor;
 
-	Progression prog;
+	int currLevel;
+	double levelpct;
+	int ProgressionType;
+	int ArmorType;
 
 	float GetVelocityScale() {
 		return LemonUtil.CVAR_GetFloat("hxdd_statusbar_velocity_scale", 1.0, CPlayer);
 	}
 
 	void UpdateProgression() {
-		if (CPlayer.mo is "PlayerPawn") {
-			prog = Progression(CPlayer.mo.FindInventory("Progression"));
+		PlayerSlot pStore = HXDDPlayerStore.UI_GetPlayerSlot(CPlayer.mo.PlayerNumber());
+		if (pStore) {
+			self.currLevel = pStore.currLevel;
+			self.levelpct = pStore.levelpct;
+			self.ProgressionType = pStore.ProgressionType;
+			self.ArmorType = pStore.ArmorType;
 		}
 	}
 
 	int GetPlayerLevel() {
-		if (prog) {
-			return prog.currlevel;
-		}
-		return 0;
+		return self.currlevel;
 	}
 
 	String GetPlayerExperience() {
-		if (prog) {
-			return String.format("%.2f", mXPInterpolator.GetValue());
-		}
-		return "";
+		return String.format("%.2f", mXPInterpolator.GetValue());
 	}
 
 	int GetPlayerProgressionType() {
-		if (prog) {
-			return prog.ProgressionType;
-		}
-		return PSP_NONE;
+		return self.ProgressionType;
 	}
 
 	bool IsPlayerArmorAC() {
-		if (prog) {
-			return prog.ArmorType == PSAT_ARMOR_HXAC;
-		}
-		return false;
+		return self.ArmorType == PSAT_ARMOR_HXAC;
 	}
 
 	void SetFields() {
@@ -158,15 +153,13 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 		UpdateProgression();
 
-		if (prog) {
-			if (prog.ProgressionType == PSP_LEVELS) {
-				mXPInterpolator.Update(prog.levelpct);
-			}
-			if (prog.ArmorType == PSAT_ARMOR_BASIC) {
-				mArmorInterpolator.Update(GetArmorAmount());
-			} else {
-				mArmorInterpolator.Update(GetArmorSavePercent() / 5.0);
-			}
+		if (self.ProgressionType == PSP_LEVELS) {
+			mXPInterpolator.Update(self.levelpct);
+		}
+		if (self.ArmorType == PSAT_ARMOR_BASIC) {
+			mArmorInterpolator.Update(GetArmorAmount());
+		} else {
+			mArmorInterpolator.Update(GetArmorSavePercent() / 5.0);
 		}
 
 		[ammo1, ammo2] = GetCurrentAmmo();
@@ -209,15 +202,13 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 		screenScale = (BAR_SCREEN_WIDTH, BAR_SCREEN_HEIGHT);
 		screenScale = (Screen.GetWidth() / screenScale.x, Screen.GetHeight() / screenScale.y);
 
-		if (prog) {
-			if (prog.ProgressionType == PSP_LEVELS) {
-				mXPInterpolator.Update(prog.levelpct);
-			}
-			if (prog.ArmorType == PSAT_ARMOR_BASIC) {
-				mArmorInterpolator.Update(GetArmorAmount());
-			} else {
-				mArmorInterpolator.Update(GetArmorSavePercent() / 5.0);
-			}
+		if (self.ProgressionType == PSP_LEVELS) {
+			mXPInterpolator.Update(self.levelpct);
+		}
+		if (self.ArmorType == PSAT_ARMOR_BASIC) {
+			mArmorInterpolator.Update(GetArmorAmount());
+		} else {
+			mArmorInterpolator.Update(GetArmorSavePercent() / 5.0);
 		}
 
 		RefreshValues();
@@ -339,16 +330,16 @@ class HXDDHexen2SplitStatusBar : BaseStatusBar {
 
 
 		String imgFrameLeft = "assets/ui/FS_HEXEN2_SBAR_LEFT.png";
-		if (prog && prog.ArmorType == PSAT_ARMOR_HXAC) {
+		if (self.ArmorType == PSAT_ARMOR_HXAC) {
 			imgFrameLeft = "assets/ui/FS_HEXEN2_SBAR_LEFT.png";
 		}
 		DrawImage(imgFrameLeft, (anchorLeft, -15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 
-		if (prog && prog.ProgressionType == PSP_LEVELS) {
+		if (self.ProgressionType == PSP_LEVELS) {
 			// draw xp bar
 			DrawImage("assets/ui/FS_HERETIC_SBAR_LEFT_XP_LEFTSIDE.png", (anchorLeft - 63, anchorBottom) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 
-			DrawString(mIndexFont, FormatNumber(prog.currlevel), (anchorLeft - 46, anchorBottom - 15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT);
+			DrawString(mIndexFont, FormatNumber(self.currlevel), (anchorLeft - 46, anchorBottom - 15) + v2Left, DI_SCREEN_LEFT_BOTTOM | DI_TEXT_ALIGN_LEFT);
 			DrawBarHXDD("assets/ui/FS_HERETIC_SBAR_LEFT_XP_BAR_FILL_SMALL.png", "", mXPInterpolator.GetValue(), 100, (anchorLeft - 57, anchorBottom - 5) + v2Left, 0, SHADER_HORZ, DI_SCREEN_LEFT_BOTTOM | DI_ITEM_LEFT_BOTTOM);
 		}
 

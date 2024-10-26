@@ -129,10 +129,11 @@ class CWeapWarhammer : CrusaderWeapon {
             x = offset;
         }
 
-        Progression prog = Progression(Player.mo.FindInventory("Progression"));
+		
+		PlayerSlot pSlot = HXDDPlayerStore.GetPlayerSlot(Player.mo.PlayerNumber());
 		int strengthValue = 10;
-		if (prog) {
-			PlayerSheetStat statStrength = prog.GetStat("strength");
+		if (pSlot) {
+			PlayerSheetStat statStrength = pSlot.GetStat("strength");
 			if (statStrength) {
 				strengthValue = statStrength.value;
 			}

@@ -50,10 +50,10 @@ class HXDDStatusBar : BaseStatusBar {
 	void RefreshSelected() {
 		// Check CVAR
 		if (CPlayer.mo) {
-			let invProg = Progression(CPlayer.mo.FindInventory("Progression"));
-			if (invProg) {
-				if (invProg.defaultStatusBar) {
-					self.defaultStatusBar = invProg.defaultStatusBar;
+			PlayerSlot pSlot = HXDDPlayerStore.UI_GetPlayerSlot(CPlayer.mo.PlayerNumber());
+			if (pSlot) {
+				if (pSlot.defaultStatusBar) {
+					self.defaultStatusBar = pSlot.defaultStatusBar;
 				} else {
 					//
 					// Crashes loading SBarInfoWrapper, this is due to core C++ binding

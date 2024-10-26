@@ -13,7 +13,7 @@ class HXDDPickupNode : Inventory {
     bool isDropped;                 // Any pickup handles all, dropped items
     bool isPending;                // Exists in original state, waiting for swap call
     bool bRemoveSelf;
-
+    
     Default {
     }
 	States {
@@ -132,7 +132,7 @@ class HXDDPickupNode : Inventory {
 			} else {
 				give.PlayPickupSound (toucher);
 			}
-		}
+		}							
 
 		// [RH] Execute an attached special (if any)
 		source.DoPickupSpecial (toucher);
@@ -177,7 +177,7 @@ class HXDDPickupNode : Inventory {
                 self.bRemoveSelf = true;
                 return self;
             }
-
+            
             original.angle = self.angle;
             original.vel = self.vel;
             original.target = self;
@@ -272,6 +272,9 @@ class HXDDPickupNode : Inventory {
         if (self.bRemoveSelf) {
             return self;
         }
+        if (newSound == "") {
+            return self;
+        }
 
         // Prevents respawning pickups in Hub based wads
         HXDDPickupNodeSlot slot;
@@ -281,15 +284,19 @@ class HXDDPickupNode : Inventory {
             return self;
         }
 
-        if (newSound != "") {
+        if (slot.pickup) {
             slot.pickup.PickupSound = newSound;
         }
+
         return self;
     }
     HXDDPickupNode SetUseSound(int index, String newSound = "") {
         if (self.bRemoveSelf) {
             return self;
         }
+        if (newSound == "") {
+            return self;
+        }
 
         // Prevents respawning pickups in Hub based wads
         HXDDPickupNodeSlot slot;
@@ -298,9 +305,11 @@ class HXDDPickupNode : Inventory {
         if (!exists) {
             return self;
         }
-        if (newSound != "") {
+        
+        if (slot.pickup) {
             slot.pickup.UseSound = newSound;
         }
+            
         return self;
     }
 

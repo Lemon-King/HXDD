@@ -5,7 +5,7 @@
  */
 
 class GameModeCompat: Inventory {
-    float DamageMult;
+    float DamageScale;
 
 	Default {
 		+INVENTORY.KEEPDEPLETED
@@ -16,16 +16,21 @@ class GameModeCompat: Inventory {
         -INVENTORY.INVBAR
 	}
 
+    void Init() {
+        DamageScale = 1.0;
+		self.RefreshGameMode();
+    }
+
 	override void BeginPlay() {
 		Super.BeginPlay();
 
-        DamageMult = 1.0;
+        //DamageScale = 1.0;
 	}
 
 	override void PostBeginPlay() {
 		Super.PostBeginPlay();
 
-		self.RefreshGameMode();
+		//self.RefreshGameMode();
     }
 
     override void Travelled() {
@@ -34,7 +39,7 @@ class GameModeCompat: Inventory {
 
     override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags) {
         if (!passive && damage > 0) {
-            newdamage = max(0, ApplyDamageFactors(GetClass(), damageType, damage, damage * DamageMult));
+            newdamage = max(0, ApplyDamageFactors(GetClass(), damageType, damage, damage * DamageScale));
         }
     }
 
@@ -51,12 +56,12 @@ class GameModeCompat: Inventory {
 
     void SetDamageScale_Standard() {
         if (!(owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn")) {
-            DamageMult = 0.5;
+            DamageScale = 0.5;
         }
     }
     void SetDamageScale_Hexen() {
         if (owner.player.mo is "DoomPlayer" || owner.player.mo is "HereticPlayer" || owner.player.mo is "HXDDHexenIIPlayerPawn") {
-            DamageMult = 1.5;
+            DamageScale = 1.5;
         }
     }
     void SetPlayerSize_Standard() {
@@ -68,14 +73,14 @@ class GameModeCompat: Inventory {
         if (playerDefaults) {
             targetHeight = playerDefaults.Height;
         }
-        self.ScalePlayerPawn(targetHeight);
+        self.ScalePlayerPawn(targetHeight, 8);
     }
     void SetPlayerSize_Hexen() {
 		// Hexen Bounds
-        self.ScalePlayerPawn(64);
+        self.ScalePlayerPawn(64, 9);
     }
 
-    void ScalePlayerPawn(int targetHeight) {
+    void ScalePlayerPawn(int targetHeight, int targetJumpZ) {
         PlayerPawn pp = PlayerPawn(owner.player.mo);
         if (pp.Height == targetHeight) {
             return;
@@ -87,5 +92,7 @@ class GameModeCompat: Inventory {
         pp.A_SetScale(nextScale,nextScale);
         pp.Viewheight = ppDefault.Viewheight * nextScale;
         owner.player.ViewHeight = ppDefault.Viewheight;
+
+        pp.JumpZ = max(ppDefault.JumpZ, targetJumpZ);
     }
 }

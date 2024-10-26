@@ -70,7 +70,7 @@ class XClassTranslation {
         return source;
     }
 
-	void CreateXClassTranslation(HXDD_JsonObject json) {
+	void CreateXClassTranslation(HXDD_JsonObject json) {        
         HXDD_JsonObject objClassItems = HXDD_JsonObject(json.get("xgame"));
         if (!objClassItems) {
             objClassItems = HXDD_JsonObject(json.get("inventory"));
@@ -130,7 +130,7 @@ class XClassTranslation {
     }
 
     XTranslationActors CreateXTAFromArray(String key, HXDD_JsonArray ja) {
-        XTranslationActors xta = new("XTranslationActors");
+        XTranslationActors xta = new("XTranslationActors"); 
         xta.key = key;
         xta.defaults.Resize(ja.Size());
         for (int j = 0; j < ja.Size(); j++) {
@@ -143,7 +143,7 @@ class XClassTranslation {
     }
 
     XTranslationActors CreateXTAFromObject(String key, HXDD_JsonObject jo) {
-        XTranslationActors xta = new("XTranslationActors");
+        XTranslationActors xta = new("XTranslationActors"); 
         xta.key = key;
         xta.compare = new("XTACompare");
 
@@ -198,7 +198,7 @@ class XClassTranslation {
                     xta.compare.i_value = iValue_Greater;
                 }
             }
-
+            
             String sValue_Equals = FileJSON.GetString(jo, "equals");
             if (sValue_Equals != "") {
                 xta.compare.method = ECVARCompareMethod_EQUALS;
@@ -259,11 +259,11 @@ class XClassTranslation {
 
             for (int i = 0; i < arrSelector.Size(); i++) {
                 HXDD_JsonObject so = HXDD_JsonObject(arrSelector.get(i));
-
+                
                 int iValue = FileJSON.GetInt(so, "value");
                 String sValue = FileJSON.GetString(so, "value");
                 String key;
-
+                
                  if (sValue != "") {
                     key = sValue.MakeLower();
                 } else if (iValue) {
@@ -328,28 +328,39 @@ class XClassTranslation {
         XTranslationActors xta = self.xcls.GetIfExists(replacement);
         if (!xta) {
             // Try parent?
-            replacement = GetDefaultByType((class<Inventory>)(replacement)).GetParentClass().GetClassName();
-            xta = self.xcls.GetIfExists(replacement);
+            let tryParent = GetDefaultByType((class<Inventory>)(replacement)).GetParentClass().GetClassName();
+            if (tryParent != "Actor" && tryParent != "Ammo" && tryParent != "Weapon") {
+                replacement = tryParent;
+                xta = self.xcls.GetIfExists(replacement);
+            }
         }
-
+        
         // From here, we apply a best guess
         if (!xta && LemonUtil.CVAR_GetBool("hxdd_xclass_allow_best_guess", false)) {
             String keyMatch = "";
-            class<Actor> clsReplacement = GetDefaultByType((class<Actor>)(replacement)).GetClass();
-            class<Actor> clsReplacee = GetDefaultByType((class<Actor>)(replacee)).GetClass();
-            foreach ( k, v : self.xcls ) {
-                class<Actor> clsKey = GetDefaultByType((class<Actor>)(k)).GetClass();
-                // Try class match if inherited
-                if (clsKey is clsReplacement) {
-                    // match found
-                    xta = self.xcls.GetIfExists(k);
-                }
-                // if not, try a loose string match, may help with mod compat
-                if (!xta && replacement.MakeLower().IndexOf(k.MakeLower()) != -1 || replacement.MakeLower().IndexOf(k.MakeLower()) != -1) {
-                    // better match
-                    if (k.Length() > keyMatch.Length()) {
-                        keyMatch = k;
-                        xta = self.xcls.GetIfExists(k);
+            class<Actor> clsReplacement = (class<Actor>)(replacement);
+            class<Actor> clsReplacee = (class<Actor>)(replacee);
+            if (clsReplacement) {
+                foreach ( k, v : self.xcls ) {
+                    class<Actor> clsKey = (class<Actor>)(k);
+                    // Try class match if inherited
+                    if (clsKey && clsReplacement is clsKey) {
+                        // match found
+                        replacement = k;
+                        xta = v;
+                        break;
+                    }
+                    if (!xta && clsKey && clsReplacee is clsKey) {
+                        // match found
+                        replacement = k;
+                        xta = v;
+                        break;
+                    }
+                    // if not, try a loose string match, may help with mod compat
+                    if (!xta && (replacement.MakeLower().IndexOf(k.MakeLower()) != -1 || replacee.MakeLower().IndexOf(k.MakeLower()) != -1)) { 
+                        replacement = k;
+                        xta = v;
+                        break;
                     }
                 }
             }
@@ -411,7 +422,7 @@ class XClassTranslation {
                 if (selectorSize == 0) {
                     return replacee;
                 }
-
+                
                 String mKey = String.format("%s,%s", key, xta.defaultValue).MakeLower();
                 Array<String> kSplit;
                 mKey.Split(kSplit, ",");
@@ -457,7 +468,7 @@ class XClassTranslation {
         bool PICK_MID = false;
         bool PICK_RANDOM = false;
         if (PICK_MID) {
-            xtac.targetVal = int(xtac.counterMod-1 * 0.5);
+            xtac.targetVal = max(int(xtac.counterMod * 0.5) - 1, 0);
         } else if (PICK_RANDOM) {
             xtac.targetVal = random(0, xtac.counterMod-1);
         } else {
@@ -469,32 +480,30 @@ class XClassTranslation {
 // Grabs Player stats in real time
 // TODO: Move into Progression for command responses
 class XGTPlayerProbe {
-    Progression invProgression;
+    int index;
+    int ArmorType;
+    String ActiveArmorType;
     int i_result;
     String result;
     XGTPlayerProbe GetPlayer(int index) {
-        PlayerPawn player = PlayerPawn(players[index].mo);
-        if (player) {
-            let invProg = player.FindInventory("Progression");
-            if (invProg) {
-                self.invProgression = Progression(invProg);
-            }
+        PlayerSlot pSlot = HXDDPlayerStore.DATA_GetPlayerSlot(index);
+        if (pSlot) {
+            self.index = index;
+            self.ArmorType = pSlot.ArmorType;
+            self.ActiveArmorType = pSlot.ActiveArmorType;
         }
         return self;
     }
 
-    bool CanReadPlayer() {
-        return self.invProgression != null;
-    }
-
     bool Command(String cmd) {
-        if (!CanReadPlayer()) {
-            return false;
+        PlayerSlot pSlot = HXDDPlayerStore.DATA_GetPlayerSlot(self.index);
+        if (!pSlot) {
+            return false;   
         }
         let sCmd = cmd.MakeLower();
         if (sCmd == "armortype") {
-            self.i_result = self.invProgression.ArmorType;
-            self.result = self.invProgression.ActiveArmorType;
+            self.i_result = self.ArmorType;
+            self.result = self.ActiveArmorType;
         } else if (sCmd == "pickuptype") {
             self.result = "";
         }

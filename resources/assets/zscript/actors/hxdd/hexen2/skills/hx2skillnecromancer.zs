@@ -1,12 +1,9 @@
 class HX2SkillNecromancerPlayer: HXDDSkillBase {
 	override void OnKill(PlayerPawn player, Actor target, double amount) {
-        Progression prog = Progression(owner.FindInventory("Progression"));
-		if (prog == NULL) {
-			return;
-		}
+		PlayerSlot pSlot = HXDDPlayerStore.GetPlayerSlot(player.PlayerNumber());
 
-		if (prog.currlevel >= 5) {
-			double chance = 0.05 + (prog.currlevel - 3) * 0.03;
+		if (pSlot && pSlot.currlevel >= 5) {
+			double chance = 0.05 + (pSlot.currlevel - 3) * 0.03;
 			if (chance > 0.2) {
 				chance = 0.2;
 			}

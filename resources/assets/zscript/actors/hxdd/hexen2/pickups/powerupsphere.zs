@@ -304,13 +304,20 @@ class HXDDPowerupSphere: Inventory {
                 }
 
                 if (mo is "PlayerPawn") {
-                    Progression prog = Progression(mo.FindInventory("Progression"));
-                    if (prog) {
-                        if (prog.Alignment == self.alignmentType) {
+                    PlayerSlot pSlot = HXDDPlayerStore.GetPlayerSlot(mo.PlayerNumber());
+                    if (pSlot) {
+                        if (pSlot.Alignment == self.alignmentType) {
                             self.target = mo;
                             break;
                         }
                     }
+                    //Progression prog = Progression(mo.FindInventory("Progression"));
+                    //if (prog) {
+                        //if (PlayerSlot.Alignment == self.alignmentType) {
+                        //    self.target = mo;
+                        //    break;
+                        //}
+                    //}
                 }
             }
         }
@@ -337,11 +344,12 @@ class HXDDPowerupSphere: Inventory {
 	}
 
     override bool TryPickup(in out Actor toucher) {
-        Progression prog = Progression(toucher.FindInventory("Progression"));
-        if (prog) {
-            if (prog.Alignment == "good") {
+        PlayerSlot pSlot = HXDDPlayerStore.GetPlayerSlot(toucher.PlayerNumber());
+        if (pSlot) {
+            String alignment = pSlot.Alignment;
+            if (alignment == "good") {
                 OnGoodPickup(toucher);
-            } else if (prog.Alignment == "evil") {
+            } else if (alignment == "evil") {
                 OnEvilPickup(toucher);
             } else {
                 OnNeutralPickup(toucher);
