@@ -17,52 +17,54 @@ class LemonTreeBranch : Thinker {
         return null;
     }
 
-    virtual void Init() {
-        console.printf("%s: Init", self.GetClassName());
+    virtual play void OnCreate() {
+        console.printf("%s: OnCreate", self.GetClassName());
     }
 
-    virtual void OnReset() {
+    virtual play void OnReset() {
         // called on new game and data already exists
         // used for manually setting data between new games
         console.printf("%s: OnReset", self.GetClassName());
     }
 
-    virtual void OnNewGame() {
+    virtual play void OnNewGame() {
         console.printf("%s: OnNewGame", self.GetClassName());
     }
 
     // Map event handlers
-    virtual void OnMapEnter() {
+    virtual play void OnMapEnter() {
         console.printf("%s: Map Enter", self.GetClassName());
     }
 
-    virtual void OnMapLeave() {
+    virtual play void OnMapLeave() {
         console.printf("%s: Map Leave", self.GetClassName());
     }
 
     // Bound event handlers
-    virtual void WorldLoaded (WorldEvent e) {
+    virtual play void WorldLoaded (WorldEvent e) {
         console.printf("%s: WorldLoaded", self.GetClassName());
     }
-    virtual void WorldUnloaded (WorldEvent e) {}
+    virtual play void WorldUnloaded (WorldEvent e) {}
 
-    virtual void WorldThingDamaged (WorldEvent e) {}
-    virtual void WorldThingGround (WorldEvent e) {}
+    virtual play void WorldTick () {}
 
-	virtual void WorldThingSpawned (WorldEvent e) {}
-    virtual void WorldThingDied (WorldEvent e) {}
-    virtual void WorldThingRevived (WorldEvent e) {}
-    virtual void WorldThingDestroyed (WorldEvent e) {}
+    virtual play void WorldThingDamaged (WorldEvent e) {}
+    virtual play void WorldThingGround (WorldEvent e) {}
 
-    virtual void WorldLightning (WorldEvent e) {}
+	virtual play void WorldThingSpawned (WorldEvent e) {}
+    virtual play void WorldThingDied (WorldEvent e) {}
+    virtual play void WorldThingRevived (WorldEvent e) {}
+    virtual play void WorldThingDestroyed (WorldEvent e) {}
 
-    virtual void WorldLinePreActivated (WorldEvent e) {}
+    virtual play void WorldLightning (WorldEvent e) {}
 
-    virtual void WorldLineActivated (WorldEvent e) {}
+    virtual play void WorldLinePreActivated (WorldEvent e) {}
 
-    virtual void PlayerEntered (PlayerEvent e) {}
-    virtual void PlayerSpawned (PlayerEvent e) {}
-    virtual void PlayerRespawned (PlayerEvent e) {}
-    virtual void PlayerDied (PlayerEvent e) {}
-    virtual void PlayerDisconnected (PlayerEvent e) {}
+    virtual play void WorldLineActivated (WorldEvent e) {}
+
+    virtual play void PlayerEntered (PlayerEvent e) {}
+    virtual play void PlayerSpawned (PlayerEvent e) {}
+    virtual play void PlayerRespawned (PlayerEvent e) {}
+    virtual play void PlayerDied (PlayerEvent e) {}
+    virtual play void PlayerDisconnected (PlayerEvent e) {}
 }
