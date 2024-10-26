@@ -17,20 +17,22 @@ class XGameTranslation {
     XGT_Group DoomEdNums;     // For everything
     XGT_Group SpawnNums;      // For bIsMonster swap checks?
 
-    void Init() {
-        self.CreateDoomEdNums();
-        self.CreateSpawnNums();
+    XGameTranslation Init() {
+        if (self.CreateDoomEdNums() && self.CreateSpawnNums()) {
+            console.printf("XGameTranslation: Initialized");
+        }
+        return self;
     }
 
-    void CreateDoomEdNums() {
-        self.LoadFromJSON("doomednums");
+    bool CreateDoomEdNums() {
+        return self.LoadFromJSON("doomednums");
     }
 
-    void CreateSpawnNums() {
-        self.LoadFromJSON("spawnnums");
+    bool CreateSpawnNums() {
+        return self.LoadFromJSON("spawnnums");
     }
 
-    void LoadFromJSON(String group) {
+    bool LoadFromJSON(String group) {
         FileJSON fJSON = new("FileJSON");
         let success = fJSON.Open(String.format("xgt/%s.xgt", group));
         if (!success) {
@@ -48,7 +50,7 @@ class XGameTranslation {
                 targetGroup = self.SpawnNums;
             } else {
                 console.printf("XGameTranslation: Unknown group [%s]!", group);
-                return;
+                return false;
             }
             for (int i = 0; i < jsonArray.Size(); i++) {
                 HXDD_JsonObject jo = HXDD_JsonObject(jsonArray.arr[i]);
@@ -66,7 +68,10 @@ class XGameTranslation {
             targetGroup.size = targetGroup.Doom.Size();
         } else {
             console.printf("XGameTranslation Error: Group [%s] could not be found!", group);
+            return false;
         }
+
+        return true;
     }
 
     void Add(XGT_Group group, String strDoom, String strHeretic, String strHexen) {
