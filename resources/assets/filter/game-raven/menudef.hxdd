@@ -17,6 +17,7 @@ LISTMENU "MainMenu" {
 
     TextItem "$MNU_NEWGAME", "n", "ZFPreGameSetup"
     TextItem "$MNU_OPTIONS", "o", "OptionsMenu"
+    TextItem "$HXDD.MAIN_MENU.SETTINGS", "o", "HXDDSettings"
     TextItem "$MNU_GAMEFILES", "g", "GameFilesMenu"
     TextItem "$MNU_INFO", "i", "ReadThisMenu"
     TextItem "$MNU_QUITGAME", "q", "QuitMenu"
