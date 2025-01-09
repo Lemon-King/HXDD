@@ -173,7 +173,7 @@ Distributed under the MIT License. See `LICENSE.md` for more information.
 
 ## Contact
 
-Lemon King - [@lemonkingi](https://twitter.com/lemonkingi)
+Lemon King - [@lemonking.bsky.social](https://bsky.app/profile/lemonking.bsky.social) [@lemonkingi](https://twitter.com/lemonkingi)
 
 Doomworld Thread - [HXDD: A Heretic & Hexen WAD Merger](https://www.doomworld.com/forum/topic/136255-hxdd-a-heretic-hexen-wad-merger-071-beta/)
 
