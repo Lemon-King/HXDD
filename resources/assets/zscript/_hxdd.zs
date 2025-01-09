@@ -4,6 +4,7 @@
 #include "zscript/lib/_lib.zs"
 #include "zscript/global/_global.zs"
 #include "zscript/events/_events.zs"
+#include "zscript/stores/_stores.zs"
 #include "zscript/actors/_actors.zs"
 
 #include "zscript/menu/_menu.zs"
