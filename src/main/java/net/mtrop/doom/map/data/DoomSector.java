@@ -139,11 +139,11 @@ public class DoomSector implements BinaryObject
 	/**
 	 * Sets the sector's light level. 
 	 * @param lightLevel the new light level.
-	 * @throws IllegalArgumentException if lightLevel is outside the range 0 to 255.
+	 * @throws IllegalArgumentException if lightLevel is outside the range -32768 to 32767.
 	 */
 	public void setLightLevel(int lightLevel)
 	{
-		RangeUtils.checkByteUnsigned("Light Level", lightLevel);
+		RangeUtils.checkShort("Light Level", lightLevel);
 		this.lightLevel = lightLevel;
 	}
 	
@@ -158,7 +158,7 @@ public class DoomSector implements BinaryObject
 	/**
 	 * Sets the sector's special. 
 	 * @param special the new special number.
-	 * @throws IllegalArgumentException if special is outside the range 0 to 65535.
+	 * @throws IllegalArgumentException if special is outside the range -32768 to 32767.
 	 */
 	public void setSpecial(int special)
 	{
@@ -177,7 +177,7 @@ public class DoomSector implements BinaryObject
 	/**
 	 * Sets the sector's tag. 
 	 * @param tag the new tag.
-	 * @throws IllegalArgumentException if tag is outside the range 0 to 65535.
+	 * @throws IllegalArgumentException if tag is outside the range -32768 to 32767.
 	 */
 	public void setTag(int tag)
 	{

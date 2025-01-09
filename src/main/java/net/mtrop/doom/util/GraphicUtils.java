@@ -1176,7 +1176,7 @@ public final class GraphicUtils
 					out.setPixel(x, y, Picture.PIXEL_TRANSLUCENT);
 				else
 				{
-					int index = palette.getNearestColorIndex((argb & 0x00ff0000) >> 16, (argb & 0x0000ff00) >> 8, (argb & 0x000000ff));
+					int index = palette.getNearestColorIndex((argb & 0x00ff0000) >> 16, (argb & 0x0000ff00) >> 8, (argb & 0x000000ff), true);
 					index = colormap != null ? colormap.getPaletteIndex(index) : index;
 					out.setPixel(x, y, index);
 				}

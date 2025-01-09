@@ -33,7 +33,6 @@ public interface IndexedGraphic
 	 * @return a palette index value from 0 to 255, or {@link Picture#PIXEL_TRANSLUCENT} if translucent.
 	 * @throws ArrayIndexOutOfBoundsException if the provided coordinates is outside the graphic.
 	 */
-	@Deprecated
 	public int getPixel(int x, int y);
 
 }

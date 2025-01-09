@@ -67,7 +67,11 @@ public class Palette implements BinaryObject
 	public Color getColor(int index)
 	{
 		byte[] c = colorPalette[index];
-		return new Color(c[0], c[1], c[2]);
+		return new Color(
+			(int)(c[0] & 0x0ff), 
+			(int)(c[1] & 0x0ff), 
+			(int)(c[2] & 0x0ff)
+		);
 	}
 	
 	/**
@@ -90,7 +94,19 @@ public class Palette implements BinaryObject
 	 */
 	public int getNearestColorIndex(int argb)
 	{
-		return getNearestColorIndex((0x00ff0000 & argb) >> 16, (0x0000ff00 & argb) >> 8, (0x000000ff & argb));
+		return getNearestColorIndex(argb, false);
+	}
+
+	/**
+	 * Returns the index of the color nearest to a color in the palette.
+	 * @param argb the ARGB color.
+	 * @param exclude255 if true, exclude the 255th color in the palette as a candidate (for patches).
+	 * @since 2.16.0
+	 * @return the closest index.
+	 */
+	public int getNearestColorIndex(int argb, boolean exclude255)
+	{
+		return getNearestColorIndex((0x00ff0000 & argb) >> 16, (0x0000ff00 & argb) >> 8, (0x000000ff & argb), exclude255);
 	}
 
 	/**
@@ -102,13 +118,28 @@ public class Palette implements BinaryObject
 	 */
 	public int getNearestColorIndex(int red, int green, int blue)
 	{
+		return getNearestColorIndex(red, green, blue, false);
+	}
+
+	/**
+	 * Returns the index of the color nearest to a color in the palette.
+	 * @param red the red component amount (0 to 255).
+	 * @param green the green component amount (0 to 255).
+	 * @param blue the blue component amount (0 to 255).
+	 * @param exclude255 if true, exclude the 255th color in the palette as a candidate (for patches).
+	 * @since 2.16.0
+	 * @return the closest index.
+	 */
+	public int getNearestColorIndex(int red, int green, int blue, boolean exclude255)
+	{
 		byte[] cbyte = TEMP_COLOR.get();
 		cbyte[0] = (byte)red;
 		cbyte[1] = (byte)green;
 		cbyte[2] = (byte)blue;
 		long minDist = Long.MAX_VALUE;
 		int closest = -1;
-		for (int i = 0; i < NUM_COLORS; i++)
+		int max = exclude255 ? NUM_COLORS - 1 : NUM_COLORS;
+		for (int i = 0; i < max; i++)
 		{
 			long dist = getColorDistance(cbyte, colorPalette[i]);
 			if (dist == 0)

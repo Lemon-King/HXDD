@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015-2023 Matt Tropiano
+ * Copyright (c) 2015-2024 Matt Tropiano
  * This program and the accompanying materials are made available under the 
  * terms of the GNU Lesser Public License v2.1 which accompanies this 
  * distribution, and is available at
@@ -173,6 +173,23 @@ public class TextureSet implements Iterable<TextureSet.Texture>, Sizable
 		String[] outList = new String[out.size()];
 		out.toArray(outList);
 		return outList;
+	}
+	
+	/**
+	 * Replaces a texture in the set with a new one, in-place without affecting texture order.
+	 * @param textureName the name of the texture to replace.
+	 * @return a new, empty texture to serve as the replacement entry, or <code>null</code> if not found.
+	 * @since 2.17.0
+	 */
+	public Texture replaceTextureByName(String textureName)
+	{
+		int index = textureList.getIndexUsingKey(textureName);
+		if (index == -1)
+			return null;
+		textureList.removeIndex(index);
+		Texture out;
+		textureList.add(index, out = new Texture(textureName));
+		return out;
 	}
 	
 	/**
