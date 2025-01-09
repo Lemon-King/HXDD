@@ -13,7 +13,7 @@ class RecoilController: Inventory {
     override void DoEffect() {
         if (self.recoil.x != 0.0 || self.recoil.y != 0.0) {
             vector2 dir = LemonUtil.v2normalize(self.recoil);
-            vector2 amount = dir * -10.0 / 35.0;  // scale by drop speed
+            vector2 amount = dir * -10.0 / TICRATEF;  // scale by drop speed
 
             if (abs(self.recoil.x) <= abs(amount.x)) {
                 amount.x = -self.recoil.x;

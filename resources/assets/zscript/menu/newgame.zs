@@ -697,7 +697,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
         if (!intro) {
             let duration = 1.5;
             if (time <= duration) {
-                time = clamp(time + (1.0 / 35.0), 0, duration);
+                time = clamp(time + (1.0 / TICRATEF), 0, duration);
                 let result = LemonUtil.flerp(self.lastPosY, self.desiredPosY, LemonUtil.Easing_Bounce_Out(time / duration));
                 self.framePlayerClassSelection.frame.setPosY(result);
 
@@ -710,7 +710,7 @@ class ZFPreGameSetup : HXDD_ZF_GenericMenu {
         }
         let duration = 0.750;
         if (time <= duration) {
-            time = clamp(time + (1.0 / 35.0), 0, duration);
+            time = clamp(time + (1.0 / TICRATEF), 0, duration);
             let result = LemonUtil.flerp(self.lastPosX, self.desiredPosX, LemonUtil.Easing_Quadradic_Out(time / duration));
             self.frame.setPosX(result);
         }
