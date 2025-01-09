@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WadFileOrganizer {
+    String gameid;
     WadFile wad;
     public Map<String, Map<String, MetaFile>> entryMaps;
 
@@ -53,7 +54,8 @@ public class WadFileOrganizer {
         this.entryMaps.put("music", new HashMap<>());
     }
 
-    public void SetWadFile(WadFile wad) {
+    public void SetWadFile(String gameid, WadFile wad) {
+        this.gameid = gameid;
         this.wad = wad;
     }
 
@@ -69,11 +71,10 @@ public class WadFileOrganizer {
         String folder = "";
         for (WadEntry entry : this.wad) {
             String entryName = entry.getName();
-            MetaFile mf = new MetaFile();
+            MetaFile mf = new MetaFile(this.gameid);
             mf.SetWad(this.wad);
             if (Arrays.asList(EngineLumps).contains(entryName)) {
                 mf.Define(entryName, "lump","lumps", this.wad);
-                mf.SetWad(this.wad);
                 this.entryMaps.get("lumps").put(entryName, mf);
             } else if (Arrays.asList(GameLumps).contains(entryName.toLowerCase())) {
                 // Will let files be unique and not fight over a single entry.
@@ -166,7 +167,7 @@ public class WadFileOrganizer {
     public MetaFile CopyFile(String folder, String source, String target) {
         MetaFile mfFrom = this.entryMaps.get(folder).get(source);
         if (mfFrom != null) {
-            MetaFile mfCopy = new MetaFile();
+            MetaFile mfCopy = new MetaFile(this.gameid);
             mfCopy.Define(target, mfFrom.decodeType, folder, mfFrom.wad);
             mfCopy.SetWad(mfFrom.wad);
             //mfCopy.sourcePK3 = mfFrom.sourcePK3;

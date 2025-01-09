@@ -179,7 +179,7 @@ public class PackageBuilder implements Runnable {
         AtomicInteger idx = new AtomicInteger();
         this.wads.forEach((p) -> {
             WadFileOrganizer wfo = new WadFileOrganizer();
-            wfo.SetWadFile(p.getValue());
+            wfo.SetWadFile(p.getKey(), p.getValue());
             try {
                 wfo.Parse(p.getValue().getFileAbsolutePath());
                 this.organized.put(p.getKey(), wfo);
@@ -835,7 +835,7 @@ public class PackageBuilder implements Runnable {
         try {
             Wad wadMarineStuff = new WadFile(pathMarineStuff);
 
-            MetaFile f = new MetaFile();
+            MetaFile f = new MetaFile("doom");
             f.SetPalette(GraphicUtils.DOOM);
             f.SetWad(new WadFile(pathMarineStuff));
             f.Define("AHLMA0", "sprite", "sprites", wadMarineStuff);

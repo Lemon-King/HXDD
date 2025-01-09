@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.util.Objects;
 
 public class MetaFile {
-    //String source;
+    String gameid;
     String inputName;
     String outputName;
     String type;
@@ -34,20 +34,19 @@ public class MetaFile {
 
     Wad wad;
 
-    ZipAssets za;
-
     String pathTemp;
 
-    MetaFile() {
+    MetaFile(String gameid) {
+        this.gameid = gameid;
     }
 
     public void Define(String name, String decodeType, String folder, Wad sourceWad) {
         this.wad = sourceWad;
-        this.inputName = name;      // input filename
-        this.outputName = name;     // output filename
-        this.folder = folder;       // export folder
+        this.inputName = name;          // input filename
+        this.outputName = name;         // output filename
+        this.folder = folder;           // export folder
         this.decodeType = decodeType;   // decode method
-        this.dimensions = null;     // used by fullscreen images
+        this.dimensions = null;         // used by fullscreen images
     }
 
     public void SetPalette(Palette p) {
@@ -99,7 +98,7 @@ public class MetaFile {
         } else if (Objects.equals(this.decodeType, "sound")) {
             SoundExport();
         } else if (Objects.equals(this.decodeType, "music")) {
-            boolean lowerVolume = false; //this.source.contains("heretic");
+            boolean lowerVolume = ("heretic").equals(this.gameid);
             MusicExport(lowerVolume);
         } else {
             // lump
@@ -264,22 +263,22 @@ public class MetaFile {
         try {
             String target = filePath + ".mus";
             // MUS is picky, so we're pulling from Wad.
-            MUS music = wad.getDataAs(this.inputName, MUS.class);
+            MUS musSeq = wad.getDataAs(this.inputName, MUS.class);
             if (lowerVolume) {
-                for (int i = 0; i < music.getEventCount(); i++) {
-                    MUS.Event e = music.getEvent(i);
+                for (int i = 0; i < musSeq.getEventCount(); i++) {
+                    MUS.Event e = musSeq.getEvent(i);
                     // note play type
                     if (e.getType() == 1) {
                         MUS.NotePlayEvent c = (MUS.NotePlayEvent)e;
                         int Volume = c.getVolume();
                         if (Volume != -1) {
-                            int newVolume = (int)(Volume * 0.5);
+                            int newVolume = (int)(Volume * 0.7);
                             c.setVolume(newVolume);
                         }
                     }
                 }
             }
-            music.writeBytes(new FileOutputStream(target, false));
+            musSeq.writeBytes(new FileOutputStream(target, false));
             //System.out.println("Exported " + filePath + ".mus");
         } catch (IOException e) {
             System.out.println("Failed to export " + filePath + ".mus");
