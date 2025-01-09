@@ -1,5 +1,8 @@
 
 // REF: 
+// Icon Reading
+// https://discord.com/channels/268086704961748992/268877450652549131/1163242642587521024
+//
 // HX2 Armor Calc: https://github.com/videogamepreservation/hexen2/blob/master/H2MP/hcode/damage.hc#L661
 
 
@@ -219,10 +222,11 @@ class HXDDArmor : Armor {
 				console.printf("incoming %d", damage);
 				double totalHX2Armor = GetHX2();
 				console.printf("totalHX2Armor %d, countHX2Peices %d", totalHX2Armor, countHX2Peices);
-				Progression itemProgression = Progression(Owner.FindInventory("Progression"));
-				if (itemProgression) {
-					totalHX2Armor += itemProgression.currlevel * .001;
-				}
+				
+				//PlayerSlot pStore = HXDDPlayerStore.GetPlayerSlot(Owner.mo.PlayerNumber());
+				//if (pStore) {
+				//	totalHX2Armor += pStore.currlevel * .001;
+				//}
 				double armor_damage = (totalHX2Armor * .01) * damage;
 				console.printf("armor_damage %d", armor_damage);
 				if (armor_damage > self.GetHX2(true)) {
