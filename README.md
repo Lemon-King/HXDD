@@ -39,7 +39,7 @@
 
 <div align="center">
 
-<a href="https://zdoom.org/index">![GZDOOM](https://img.shields.io/badge/GZDOOM-1E3E8C?style=for-the-badge)</a>
+<a href="https://zdoom.org/index">![UZDOOM](https://img.shields.io/badge/GZDOOM-1E3E8C?style=for-the-badge)</a>
 <a href="https://vkdoom.org/">![VKDOOM](https://img.shields.io/badge/VKDOOM-E04006?style=for-the-badge)</a></br>
 <a href="https://store.steampowered.com/sub/439/">![Heretic](https://img.shields.io/badge/HERETIC-DAC06B?style=for-the-badge)</a>
 <a href="https://store.steampowered.com/sub/439/">![Hexen](https://img.shields.io/badge/HEXEN-704330?style=for-the-badge)</a>
@@ -51,7 +51,7 @@
 
 <br/>
 
-**HXDD** takes everything from Heretic, Hexen and other games. Then arranges and converts them into a new GZDOOM compatible format, allowing you play them as if they were a single game.
+**HXDD** takes everything from Heretic, Hexen and other games. Then arranges and converts them into a new UZDOOM compatible format, allowing you play them as if they were a single game.
 There is a fair amount of code acting as glue to make everything functional - not to mention numerous (optional) added features.
 
 This project is inspired by [WADSMOOSH](https://jp.itch.io/wadsmoosh) by JP LeBreton. Go check it out too.
@@ -103,25 +103,25 @@ Items which match functionality with Heretic and Hexen are implemented.
 
 A modern version of Windows or Wine on MacOS and Linux.
 
-HXDD has a minimum requirement with [GZDOOM 4.13+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
-<i>Due to a bug with saved games, [GZDOOM 4.13 Dev Build](https://devbuilds.drdteam.org/gzdoom/) is required for now.</i>
+HXDD has a minimum requirement with [UZDOOM 4.13+](https://zdoom.org/downloads) or [VKDOOM](https://vkdoom.org/), if you do not have it please download it.<br/>
+<i>Due to a bug with saved games, [UZDOOM 4.13 Dev Build](https://devbuilds.drdteam.org/gzdoom/) is required for now.</i>
 
 
 Download HXDD from [Releases](https://github.com/Lemon-King/HXDD/releases) and unzip it into its own folder.
 
 ## - Setup -
 
-HXDD will make use of data from GZDOOM/VKDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.<br/>
+HXDD will make use of data from UZDOOM/VKDOOM, Heretic, Hexen, Hexen's expansion Deathkings, and optionally Hexen II plus its Expansions.<br/>
 
 1. Launch HXDD.exe
-2. Select your GZDOOM or VKDOOM Folder
+2. Select your UZDOOM or VKDOOM Folder
 3. Select your Heretic wad File (**heretic.wad**)
 4. Select your Hexen wad File (**hexen.wad**)
 5. Select your Hexen DeathKings wad file (**hexdd.wad**)
 6. Choose the options you want to utilize - if any.
 7. Click on **Build HXDD** to start building hxdd.ipk3 - this may take more than a few minutes.
-8. When complete, copy hxdd.ipk3 to where you keep your wads for GZDOOM or VKDOOM.
-9. Run GZDOOM or VKDOOM and select HXDD.
+8. When complete, copy hxdd.ipk3 to where you keep your wads for UZDOOM or VKDOOM.
+9. Run UZDOOM or VKDOOM and select HXDD.
 
 Your selections will be stored for the next time you run it.
 
@@ -130,7 +130,7 @@ Your selections will be stored for the next time you run it.
 When using Hexen II PAK files with HXDD you will need [Noesis by Rich Whitehouse](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91).<br/>
 Download and place the Noesis zip file in the same folder as HXDD's exe.<br/>
 Select the PAK files in the application and ensure Enable Hexen II is checked.<br/>
-HXDD will use Noesis to open PAK files and export model data for use with GZDOOM.
+HXDD will use Noesis to open PAK files and export model data for use with UZDOOM.
 
 ## - DOOM Compatibility「PWAD Mode」 -
 You can also use HXDD.ipk3 as a PWAD with DOOM, DOOM II, and [WadSmoosh](https://jp.itch.io/wadsmoosh).</br>
