@@ -20,6 +20,6 @@ module lemon.hxdd {
     exports lemon.hxdd.shared;
     opens lemon.hxdd.shared to javafx.graphics, javafx.fxml;
 
-    exports lemon.hxdd.nightdive;
-    opens lemon.hxdd.nightdive to javafx.graphics, javafx.fxml;
+    //exports lemon.hxdd.nightdive;
+    //opens lemon.hxdd.nightdive to javafx.graphics, javafx.fxml;
 }
