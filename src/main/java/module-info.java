@@ -8,12 +8,18 @@ module lemon.hxdd {
 
     requires com.google.gson;
 
-    opens lemon.hxdd to javafx.fxml;
+    opens lemon.hxdd to javafx.graphics, javafx.fxml;
     exports lemon.hxdd;
+
     exports lemon.hxdd.builder;
-    opens lemon.hxdd.builder to javafx.fxml;
+    opens lemon.hxdd.builder to javafx.graphics, javafx.fxml;
+
     exports lemon.hxdd.gui;
-    opens lemon.hxdd.gui to javafx.fxml;
+    opens lemon.hxdd.gui to javafx.graphics, javafx.fxml;
+
     exports lemon.hxdd.shared;
-    opens lemon.hxdd.shared to javafx.fxml;
+    opens lemon.hxdd.shared to javafx.graphics, javafx.fxml;
+
+    exports lemon.hxdd.nightdive;
+    opens lemon.hxdd.nightdive to javafx.graphics, javafx.fxml;
 }
